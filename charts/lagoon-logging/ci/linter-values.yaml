@@ -1,0 +1,47 @@
+# Linter-specific values for lagoon-logging.
+# This is a YAML-formatted file.
+# Any variables defined here are not used anywhere other than lint
+
+forward:
+  username: lintUser
+  password: lintPass
+  host: example.com
+  sharedKey: lintShared
+  selfHostname: linthost
+  verifyConnectionAtStartup: false
+
+clusterName: lintcluster
+
+tls:
+  caCert: |
+    -----BEGIN CERTIFICATE-----
+    MIIBkjCCATigAwIBAgIUD+qSorvr6FZrB7TLCIu0uovVOJ8wCgYIKoZIzj0EAwIw
+    JzElMCMGA1UEAxMcbG9ncy1jYS5jbHVzdGVyMS5leGFtcGxlLmNvbTAeFw0yMDA3
+    MTYwNjA5MDBaFw0zMDA3MTQwNjA5MDBaMCcxJTAjBgNVBAMTHGxvZ3MtY2EuY2x1
+    c3RlcjEuZXhhbXBsZS5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQphyVs
+    IG3HdY59iwTQsa0QjK7DLLyDmqP8U+toWBdflnRyx4hZo9bwo7RtkLUHLQS/9fxy
+    zX2QxltfebQrvZNZo0IwQDAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB
+    /zAdBgNVHQ4EFgQU6epUZuE1RUCrUaP1q/+12soPKQkwCgYIKoZIzj0EAwIDSAAw
+    RQIgWUyeYJH1/m8x2GBViwdNTIH2qZ0QW1GJc5lnjDnKQt0CIQCuyGnCuohaL9AP
+    vrhH3LECw1VqWG11BkSN2aA+8a08Kw==
+    -----END CERTIFICATE-----
+  clientCert: |
+    -----BEGIN CERTIFICATE-----
+    MIICADCCAaagAwIBAgIUAdgNH+8UkXruYvBCArE7Eov4hqYwCgYIKoZIzj0EAwIw
+    JzElMCMGA1UEAxMcbG9ncy1jYS5jbHVzdGVyMS5leGFtcGxlLmNvbTAeFw0yMDA3
+    MTYwNjEwMDBaFw0zMDA3MTQwNjEwMDBaMC8xLTArBgNVBAMTJGxvZ3MtZGlzcGF0
+    Y2hlci5jbHVzdGVyMi5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEH
+    A0IABHU+OOOz6rFcuAeg/OLbDbefqpimoxFeR/0yO4eK9EEfdO2c1gkMKRXow6w+
+    GrDkXCxfcTdrbDOXxqAbh8vSqVOjgacwgaQwDgYDVR0PAQH/BAQDAgWgMBMGA1Ud
+    JQQMMAoGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFNiO5G03dZ5Y
+    VfVz9aD0/4QZTNWfMB8GA1UdIwQYMBaAFOnqVGbhNUVAq1Gj9av/tdrKDykJMC8G
+    A1UdEQQoMCaCJGxvZ3MtZGlzcGF0Y2hlci5jbHVzdGVyMi5leGFtcGxlLmNvbTAK
+    BggqhkjOPQQDAgNIADBFAiEApEYiK67n5QDoJc0dF4FeGtIIwdYhnhXjdxHuZ6wp
+    z0ECICQ1fmMbZLm4sQLyhl8p7gAiZEfg/fgnM55HJWAts0vT
+    -----END CERTIFICATE-----
+  clientKey: |
+    -----BEGIN EC PRIVATE KEY-----
+    MHcCAQEEIFdJNZeSImjoHp9UXTpzOyITqaDt84tNzChiI1pk8oTzoAoGCCqGSM49
+    AwEHoUQDQgAEdT4447PqsVy4B6D84tsNt5+qmKajEV5H/TI7h4r0QR907ZzWCQwp
+    FejDrD4asORcLF9xN2tsM5fGoBuHy9KpUw==
+    -----END EC PRIVATE KEY-----
