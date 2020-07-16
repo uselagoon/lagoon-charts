@@ -13,6 +13,7 @@ spec:
     command:
     - nc
     args:
-    - vzw5
-    - {{ include "lagoon-logging.logsDispatcher.fullname" . }} 24224
+    - "-vzw5"
+    - "{{ include "lagoon-logging.logsDispatcher.fullname" . }}"
+    - "24224"
   restartPolicy: Never
