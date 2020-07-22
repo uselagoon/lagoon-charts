@@ -72,6 +72,10 @@ tolerations: []
 
 affinity: {}
 
+# this is set to false in CI so that the concentrator will start without ES
+# being installed
+verifyESVersionAtStartup: true
+
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
 # in the README.

@@ -40,3 +40,5 @@ users:
   password: "securepass"
 - username: "example2"
   password: "securepass"
+# allow fluentd to start without connecting to ES
+verifyESVersionAtStartup: false
