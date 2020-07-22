@@ -1,0 +1,42 @@
+# values for CI linting and testing
+elasticsearchHost: "logs-db-service.elasticsearch.svc.cluster.local"
+elasticsearchAdminPassword: "securepass"
+tls:
+  caCert: |
+    -----BEGIN CERTIFICATE-----
+    MIIBkDCCATegAwIBAgITeu31y1+poDceOchLRzHUSicSDzAKBggqhkjOPQQDAjAn
+    MSUwIwYDVQQDExxsb2dzLWNhLmNsdXN0ZXIxLmV4YW1wbGUuY29tMB4XDTIwMDcy
+    MjA3MDcwMFoXDTMwMDcyMDA3MDcwMFowJzElMCMGA1UEAxMcbG9ncy1jYS5jbHVz
+    dGVyMS5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABBUa2EJh
+    5E2gvOy8WMscetM565YuNuhGxnko706BvW9Vn31/SDL8t6+BN6gsSksiu1E9u17g
+    GPswIuSSgt6kOJGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/
+    MB0GA1UdDgQWBBSiahyR8hfwbZZzYtEwDAHaTsi28zAKBggqhkjOPQQDAgNHADBE
+    AiBOGe7ZBHOKWLTsIhomBEWOiQ1Pwld/+uVPfV993iL4LQIgUtYO5ZISk/5lFpOm
+    zZ0GN6zjxYufkBzUIQEPbFUHR24=
+    -----END CERTIFICATE-----
+  serverCert: |
+    -----BEGIN CERTIFICATE-----
+    MIICAzCCAaqgAwIBAgIUfxR4/eiZ9RC699d5ylAJ9nCWVQMwCgYIKoZIzj0EAwIw
+    JzElMCMGA1UEAxMcbG9ncy1jYS5jbHVzdGVyMS5leGFtcGxlLmNvbTAeFw0yMDA3
+    MjIwNzA3MDBaFw0zMDA3MjAwNzA3MDBaMDExLzAtBgNVBAMTJmxvZ3MtY29uY2Vu
+    dHJhdG9yLmNsdXN0ZXIxLmV4YW1wbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0D
+    AQcDQgAEl79v9qQZYB5CepVu+BM7H/8kuNOCep1fcNKTwvRqjkWfu9E3Npw9NV+1
+    25E9TV97gAYLNiohNt0Y4z81LyH6dKOBqTCBpjAOBgNVHQ8BAf8EBAMCBaAwEwYD
+    VR0lBAwwCgYIKwYBBQUHAwEwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUnbCxP47T
+    ZWauKQVIFagxcg9HSiIwHwYDVR0jBBgwFoAUomockfIX8G2Wc2LRMAwB2k7ItvMw
+    MQYDVR0RBCowKIImbG9ncy1jb25jZW50cmF0b3IuY2x1c3RlcjEuZXhhbXBsZS5j
+    b20wCgYIKoZIzj0EAwIDRwAwRAIgU7n9RztcA1e+aJZsx/2UOKemXZjmDA8fblEp
+    ZKFQxDgCIEYq2+7recj7BxLXeQpn5+sYe/qVTLgOFX9ExgGWI9UL
+    -----END CERTIFICATE-----
+  serverKey: |
+    -----BEGIN EC PRIVATE KEY-----
+    MHcCAQEEIB0u+Pe5xwuUSsA6fs/OEVa8s+Gk3vstvE8UMPHohaWIoAoGCCqGSM49
+    AwEHoUQDQgAEl79v9qQZYB5CepVu+BM7H/8kuNOCep1fcNKTwvRqjkWfu9E3Npw9
+    NV+125E9TV97gAYLNiohNt0Y4z81LyH6dA==
+    -----END EC PRIVATE KEY-----
+forwardSharedKey: "securekey"
+users:
+- username: "example1"
+  password: "securepass"
+- username: "example2"
+  password: "securepass"
