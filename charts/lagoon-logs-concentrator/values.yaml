@@ -77,33 +77,33 @@ affinity: {}
 # in the README.
 # Sample data shown below.
 
-#elasticsearchHost: "logs-db-service.elasticsearch.svc.cluster.local"
-#elasticsearchAdminPassword: "securepass"
-#tls:
-#  caCert: |
-#    -----BEGIN CERTIFICATE-----
-#    ...
-#    -----END CERTIFICATE-----
-#  serverCert: |
-#    -----BEGIN CERTIFICATE-----
-#    ...
-#    -----END CERTIFICATE-----
-#  serverKey: |
-#    -----BEGIN EC PRIVATE KEY-----
-#    ...
-#    -----END EC PRIVATE KEY-----
-#forwardSharedKey: "securekey"
-#users:
-#- username: "example1"
-#  password: "securepass"
-#- username: "example2"
-#  password: "securepass"
+# elasticsearchHost: "logs-db-service.elasticsearch.svc.cluster.local"
+# elasticsearchAdminPassword: "securepass"
+# tls:
+#   caCert: |
+#     -----BEGIN CERTIFICATE-----
+#     ...
+#     -----END CERTIFICATE-----
+#   serverCert: |
+#     -----BEGIN CERTIFICATE-----
+#     ...
+#     -----END CERTIFICATE-----
+#   serverKey: |
+#     -----BEGIN EC PRIVATE KEY-----
+#     ...
+#     -----END EC PRIVATE KEY-----
+# forwardSharedKey: "securekey"
+# users:
+# - username: "example1"
+#   password: "securepass"
+# - username: "example2"
+#   password: "securepass"
 
 # The values below are optional.
 
-#elasticsearchHostPort: "443" # default 9200
-#elasticsearchScheme: https   # default http
-#service:
-#  type: LoadBalancer         # default ClusterIP. Set to LoadBalancer to
-#                             # expose the logs-concentrator service
-#                             # publicly.
+# elasticsearchHostPort: "443" # default 9200
+# elasticsearchScheme: https   # default http
+# service:
+#   type: LoadBalancer         # default ClusterIP. Set to LoadBalancer to
+#                              # expose the logs-concentrator service
+#                              # publicly.
