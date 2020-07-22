@@ -13,6 +13,6 @@ spec:
       command: ['nc']
       args:
       - "-zvw5"
-      - {{ include "lagoon-logs-concentrator.fullname" . }}
-      - {{ .Values.service.port }}
+      - "{{ include "lagoon-logs-concentrator.fullname" . }}"
+      - "{{ .Values.service.port }}"
   restartPolicy: Never
