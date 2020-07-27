@@ -61,4 +61,24 @@ entries:
     urls:
     - https://github.com/amazeeio/charts/releases/download/lagoon-logs-concentrator-0.2.2/lagoon-logs-concentrator-0.2.2.tgz
     version: 0.2.2
+  lagoon-remote:
+  - apiVersion: v2
+    appVersion: 1.4.0
+    created: "2020-07-27T13:19:06.263022838Z"
+    description: A Helm chart to run a lagoon-remote
+    digest: f6642a982e6d5c0d1ba312cbe3620945b705da7b855834a1e4be37adbac145f1
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/amazeeio/lagoon/bea89afee1ae4c9f0bd8df50824ed10cd3ea4776/services/ui/src/static/images/favicons/favicon-32x32.png
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/amazeeio/charts/releases/download/lagoon-remote-0.1.4/lagoon-remote-0.1.4.tgz
+    version: 0.1.4
 generated: "2020-07-16T08:28:34.288224716Z"
