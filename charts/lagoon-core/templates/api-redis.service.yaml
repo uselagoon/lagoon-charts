@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.apiRedis.fullname" . }}
+  labels:
+    {{- include "lagoon-core.apiRedis.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.apiRedis.service.type }}
+  ports:
+  - port: {{ .Values.apiRedis.service.port }}
+    targetPort: redis
+    name: redis
+  selector:
+    {{- include "lagoon-core.apiRedis.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,202 @@
+# Default values for lagoon-core.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# These values must be set on install, as they don't have sensible defaults:
+
+# elasticsearchHost:
+
+# These values are randomly generated on install if not otherwise defined:
+
+# apiDBPassword:
+# harborAdminPassword:
+# jwtSecret:
+# keycloakAPIClientSecret:
+# keycloakAdminPassword:
+# keycloakAuthServerClientSecret:
+# keycloakLagoonAdminPassword:
+# keycloakDBPassword:
+# logsDBAdminPassword:
+# rabbitMQPassword:
+# redisPassword:
+
+# These values are the chart defaults:
+
+rabbitMQUsername: lagoon
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+api:
+  replicaCount: 2
+  image:
+    repository: amazeeiolagoon/api
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  affinity: {}
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+    - host: lagoon.example.com
+      paths:
+      - /
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  # this service account is used by the API pod to manipulate k8s APIs
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+apiDB:
+  image:
+    repository: amazeeiolagoon/api-db
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  affinity: {}
+
+  service:
+    type: ClusterIP
+    port: 3306
+
+  podAnnotations:
+    appuio.ch/backupcommand: >
+      /bin/sh -c "mysqldump --max-allowed-packet=500M --events --routines
+      --quick --add-locks --no-autocommit --single-transaction --all-databases"
+    backup.appuio.ch/file-extension: .api-db.sql
+
+apiRedis:
+  image:
+    repository: amazeeiolagoon/api-redis
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  affinity: {}
+
+  service:
+    type: ClusterIP
+    port: 6379
+
+keycloak:
+  replicaCount: 1
+  image:
+    repository: amazeeiolagoon/keycloak
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  affinity: {}
+
+  service:
+    type: ClusterIP
+    port: 8080
+
+keycloakDB:
+  replicaCount: 1
+  image:
+    repository: amazeeiolagoon/keycloak-db
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  affinity: {}
+
+  service:
+    type: ClusterIP
+    port: 3306
+
+  podAnnotations:
+    appuio.ch/backupcommand: >
+      /bin/sh -c "mysqldump --max-allowed-packet=500M --events --routines
+      --quick --add-locks --no-autocommit --single-transaction --all-databases"
+    backup.appuio.ch/file-extension: .keycloak-db.sql
+
+broker:
+  replicaCount: 3
+  image:
+    repository: amazeeiolagoon/broker
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  affinity: {}
+
+  service:
+    type: ClusterIP
+    ports:
+      epmd: 4369
+      amqp: 5672
+      http: 15672
+
+  podAnnotations: {}
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name: ""
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80

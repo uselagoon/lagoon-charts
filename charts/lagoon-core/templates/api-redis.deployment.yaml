@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.apiRedis.fullname" . }}
+  labels:
+    {{- include "lagoon-core.apiRedis.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.apiRedis.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+    {{- with .Values.apiRedis.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.apiRedis.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.apiRedis.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.apiRedis.securityContext | nindent 12 }}
+        image: "{{ .Values.apiRedis.image.repository }}:{{ .Values.apiRedis.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.apiRedis.image.pullPolicy }}
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}-env
+              key: REDIS_PASSWORD
+        ports:
+        - name: redis
+          containerPort: 6379
+        livenessProbe:
+          tcpSocket:
+            port: redis
+        readinessProbe:
+          tcpSocket:
+            port: redis
+        resources:
+          {{- toYaml .Values.apiRedis.resources | nindent 12 }}
+      {{- with .Values.apiRedis.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.apiRedis.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.apiRedis.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
