@@ -328,6 +328,8 @@ data:
         tls_verify_hostname {{ . }}
         {{- end }}
         # endpoint
+        keepalive true # makes sure the connection is not recreated every second
+        keepalive_timeout 10m # reconnect after 10mins in order to handle DNS changes, etc.
         <server>
           port "#{ENV['LOGS_FORWARD_HOST_PORT']}"
           host "#{ENV['LOGS_FORWARD_HOST']}"
