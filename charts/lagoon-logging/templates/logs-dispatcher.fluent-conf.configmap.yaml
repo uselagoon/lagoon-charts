@@ -349,7 +349,10 @@ data:
           # buffer params (per worker)
           total_limit_size 8GB
           # flush params
-          flush_thread_count 2
+          flush_thread_count 8 # 8 threads that flush, makes sure we have enough flushers for all the different buffers
+          flush_interval 2s # flush every 2 seconds
+          flush_thread_burst_interval 0 # don't sleep if there is more data to flush
+          retry_type periodic # no exponential_backoff as this could lead to fluentd wait for easily 2h until it retries
           overflow_action drop_oldest_chunk
         </buffer>
       </store>
