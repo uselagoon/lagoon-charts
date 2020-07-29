@@ -67,7 +67,11 @@ data:
         # buffer params (per worker)
         total_limit_size 8GB
         # flush params
-        flush_thread_count 4
+        flush_thread_count 8 # 8 threads that flush, makes sure we have enough flushers for all the different buffers
+        flush_interval 10s # flush every 10 secs
+        flush_thread_burst_interval 0 # don't sleep if there is more chunks to be flushed
+        retry_type periodic # no exponential_backoff as this could lead to fluentd wait for easily 2h until it retries
+        buffer_chunk_limit 32m # chunks cannot be bigger than the max HTTP limit of Elasticsearch (which is 100MB)
         overflow_action drop_oldest_chunk
       </buffer>
       # silence warnings (these have no effect)
