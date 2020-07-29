@@ -45,3 +45,5 @@ tls:
     AwEHoUQDQgAEdT4447PqsVy4B6D84tsNt5+qmKajEV5H/TI7h4r0QR907ZzWCQwp
     FejDrD4asORcLF9xN2tsM5fGoBuHy9KpUw==
     -----END EC PRIVATE KEY-----
+
+consolidateServiceIndices: true

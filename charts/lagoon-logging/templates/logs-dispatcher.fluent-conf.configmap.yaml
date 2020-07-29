@@ -177,6 +177,7 @@ data:
       @type record_modifier
       remove_keys message
     </filter>
+    {{- if .Values.consolidateServiceIndices }}
     # some cluster services generate namespaces with a random suffix, so
     # consolidate those in a single index for each service
     <filter lagoon.*.container>
@@ -192,6 +193,7 @@ data:
         replace \\k<prefix>_\\k<suffix>
       </replace>
     </filter>
+    {{- end }}
 
     #
     # process application logs
