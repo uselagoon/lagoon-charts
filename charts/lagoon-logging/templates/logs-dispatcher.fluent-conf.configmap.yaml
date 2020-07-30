@@ -46,6 +46,8 @@ data:
     <source>
       @type                syslog
       @id                  in_router_openshift
+      # NOTE: tag is a _prefix_ so final tag will be e.g.
+      # lagoon.test.router.openshift.local1.info
       tag                  "lagoon.#{ENV['CLUSTER_NAME']}.router.openshift"
       emit_unmatched_lines true
       # syslog parameters
@@ -261,7 +263,7 @@ data:
     #
     # retructure the record enough for the kubernetes_metadata plugin to get
     # namespace labels
-    <filter lagoon.*.router.openshift>
+    <filter lagoon.*.router.openshift.**>
       @type record_modifier
       remove_keys _dummy_,kubernetes_namespace_name,kubernetes_pod_name,kubernetes_container_name,docker_container_id
       <record>
@@ -269,7 +271,7 @@ data:
       </record>
     </filter>
     # enrich with k8s metadata
-    <filter lagoon.*.router.openshift>
+    <filter lagoon.*.router.openshift.**>
       @type kubernetes_metadata
       @log_level warn
       skip_container_metadata true
@@ -279,7 +281,7 @@ data:
     #
     # add the router index_name
     #
-    <filter lagoon.*.router.*>
+    <filter lagoon.*.router.**>
       @type record_modifier
       <record>
         index_name router-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project') || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
