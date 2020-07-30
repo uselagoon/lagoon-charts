@@ -141,3 +141,56 @@ exportLogs:
 ```
 
 IMPORTANT: use `ignore_error` so that the main log flow to elasticsearch is not interrupted.
+
+## Local testing
+
+This is useful for quick local testing of `fluent.conf` snippets.
+
+Prerequisite: Ruby gems set up correctly with gems `/bin` dir in `$PATH`.
+
+Install `fluentd`.
+
+```
+gem install fluentd
+```
+
+Create `fluent.conf`:
+
+```
+<source>
+  @type                forward
+  @id                  in_router_openshift
+  tag                  "lagoon.test.router.openshift.unmatched"
+</source>
+
+<filter lagoon.*.router.openshift.unmatched>
+  @type grep
+  <exclude>
+    key message
+    pattern /my_test_pattern/
+  </exclude>
+</filter>
+# keep the rest
+<filter lagoon.*.router.openshift.unmatched>
+  @type record_modifier
+  <record>
+    index_name router-logs-openshift_parse_error_test-${Time.at(time).strftime("%Y.%m")}
+  </record>
+</filter>
+
+<match lagoon.**>
+  @type stdout
+</match>
+```
+
+Start `fluentd`:
+
+```
+fluentd -c fluent.conf
+```
+
+Send some test logs:
+
+```
+fluent-cat --none tag.discard < sample.log
+```
