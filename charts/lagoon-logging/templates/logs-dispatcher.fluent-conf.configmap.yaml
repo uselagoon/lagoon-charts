@@ -177,6 +177,23 @@ data:
       @type record_modifier
       remove_keys message
     </filter>
+    {{- if .Values.consolidateServiceIndices }}
+    # some cluster services generate namespaces with a random suffix, so
+    # consolidate those in a single index for each service
+    <filter lagoon.*.container>
+      @type record_modifier
+      <replace>
+        key index_name
+        expression /^(?<prefix>container-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
+        replace \\k<prefix>_\\k<suffix>
+      </replace>
+      <replace>
+        key index_name
+        expression /^(?<prefix>container-logs-.+-apb)-(?:prov|depr)-[^-]{5}_(?<suffix>.+)$/
+        replace \\k<prefix>_\\k<suffix>
+      </replace>
+    </filter>
+    {{- end }}
 
     #
     # process application logs
