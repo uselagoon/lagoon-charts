@@ -75,8 +75,17 @@ data:
     @include source.d/*.conf
 
     #
-    # capture unmatched openshift router logs
+    # unmatched openshift router logs
     #
+    # drop the ones we aren't interested in
+    <filter lagoon.*.router.openshift.unmatched>
+      @type grep
+      <exclude>
+        key message
+        pattern /"<BADREQ>"$| public_ssl be_no_sni\/<NOSRV> -1\/-1\/\+\d+ \+0 -- | public_ssl be_sni\/fe_sni \d+\/\d+\/\+\d+ \+0 -- |haproxy\[\d+\]: (Proxy .+ (started|stopped \(FE: \d+ conns, BE: \d+ conns\)).|Stopping .+ in \d+ ms.)$/
+      </exclude>
+    </filter>
+    # keep the rest
     <filter lagoon.*.router.openshift.unmatched>
       @type record_modifier
       <record>
