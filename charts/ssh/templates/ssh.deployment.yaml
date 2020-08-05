@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ssh.fullname" . }}
+  labels:
+    {{- include "ssh.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.ssh.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "ssh.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "ssh.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          env:
+          - name: RABBITMQ_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: RABBITMQ_USERNAME
+                name: ssh-env
+          - name: RABBITMQ_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: RABBITMQ_PASSWORD
+                name: ssh-env
+          - name: JWTSECRET
+            valueFrom:
+              secretKeyRef:
+                key: JWTSECRET
+                name: ssh-env
+          - name: SERVICE_NAME
+            value: ssh
+          - name: CRONJOBS
+          - name: API_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: API_DB_PASSWORD
+                name: ssh-env
+          securityContext: {}
+          image: "{{ .Values.ssh.image.repository }}:{{ .Values.ssh.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.ssh.image.pullPolicy }}
+          ports:
+            - name: ssh
+              containerPort: {{ .Values.ssh.containerPort }}
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: ssh
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: ssh
+            timeoutSeconds: 1
+          resources:
+            {{- toYaml .Values.ssh.resources | nindent 12 }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: service
+                operator: In
+                values:
+                - ssh
+            topologyKey: kubernetes.io/hostname
