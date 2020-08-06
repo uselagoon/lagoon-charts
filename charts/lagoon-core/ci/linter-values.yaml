@@ -1,0 +1,15 @@
+# Any variables defined here are not used anywhere other than lint/CI.
+
+elasticsearchHost: logs.example.com
+
+api:
+  replicaCount: 1
+  image:
+    tag: lagoon-core
+
+keycloak:
+  image:
+    tag: lagoon-core
+
+broker:
+  replicaCount: 1

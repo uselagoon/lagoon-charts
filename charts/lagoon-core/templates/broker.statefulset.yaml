@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "lagoon-core.broker.fullname" . }}
+  labels:
+    {{- include "lagoon-core.broker.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.broker.autoscaling.enabled }}
+  replicas: {{ .Values.broker.replicaCount }}
+{{- end }}
+  serviceName: {{ include "lagoon-core.broker.fullname" . }}-headless
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.broker.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+    {{- with .Values.broker.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.broker.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.broker.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "lagoon-core.broker.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.broker.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.broker.securityContext | nindent 12 }}
+        image: "{{ .Values.broker.image.repository }}:{{ .Values.broker.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.broker.image.pullPolicy }}
+        command:
+        - sh
+        args:
+        - /cluster-rabbit.sh
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}-env
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}-env
+              key: RABBITMQ_PASSWORD
+        - name: RABBITMQ_USE_LONGNAME
+          value: "true"
+        # these variables are used by the /cluster-rabbit.sh entrypoint
+        - name: POD_NAMESPACE
+          value: {{ .Release.Namespace | quote }}
+        - name: SERVICE_NAME
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        ports:
+        - name: epmd
+          containerPort: 4396
+        - name: amqp
+          containerPort: 5672
+        - name: http
+          containerPort: 15672
+        volumeMounts:
+        - name: {{ include "lagoon-core.broker.fullname" . }}-data
+          mountPath: /var/lib/rabbitmq
+        livenessProbe:
+          tcpSocket:
+            port: amqp
+        readinessProbe:
+          tcpSocket:
+            port: amqp
+        resources:
+          {{- toYaml .Values.broker.resources | nindent 12 }}
+      volumes:
+      - name: {{ include "lagoon-core.broker.fullname" . }}-data
+        persistentVolumeClaim:
+          claimName: {{ include "lagoon-core.broker.fullname" . }}-data
+      {{- with .Values.broker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.broker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.broker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ include "lagoon-core.broker.fullname" . }}-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 8Gi

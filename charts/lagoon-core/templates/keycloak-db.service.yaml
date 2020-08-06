@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.keycloakDB.fullname" . }}-headless
+  labels:
+    {{- include "lagoon-core.keycloakDB.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.keycloakDB.service.type }}
+  ports:
+  - port: {{ .Values.keycloakDB.service.port }}
+    targetPort: mariadb
+    name: mariadb
+  clusterIP: None
+  selector:
+    {{- include "lagoon-core.keycloakDB.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.keycloakDB.fullname" . }}
+  labels:
+    {{- include "lagoon-core.keycloakDB.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.keycloakDB.service.type }}
+  ports:
+  - port: {{ .Values.keycloakDB.service.port }}
+    targetPort: mariadb
+    name: mariadb
+  selector:
+    {{- include "lagoon-core.keycloakDB.selectorLabels" . | nindent 4 }}

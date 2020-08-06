@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.api.fullname" . }}
+  labels:
+    {{- include "lagoon-core.api.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.api.service.type }}
+  ports:
+  - port: {{ .Values.api.service.port }}
+    targetPort: http-3000
+    name: http-3000
+  selector:
+    {{- include "lagoon-core.api.selectorLabels" . | nindent 4 }}

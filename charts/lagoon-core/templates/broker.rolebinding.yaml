@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "lagoon-core.broker.fullname" . }}-endpoint-reader
+  labels:
+    {{- include "lagoon-core.broker.labels" . | nindent 4 }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "lagoon-core.broker.serviceAccountName" . }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "lagoon-core.broker.fullname" . }}-endpoint-reader

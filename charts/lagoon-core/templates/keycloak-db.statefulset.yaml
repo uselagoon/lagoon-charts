@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "lagoon-core.keycloakDB.fullname" . }}
+  labels:
+    {{- include "lagoon-core.keycloakDB.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "lagoon-core.keycloakDB.fullname" . }}-headless
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.keycloakDB.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
+    {{- with .Values.keycloakDB.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.keycloakDB.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.keycloakDB.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.keycloakDB.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.keycloakDB.securityContext | nindent 12 }}
+        image: "{{ .Values.keycloakDB.image.repository }}:{{ .Values.keycloakDB.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.keycloakDB.image.pullPolicy }}
+        env:
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}-env
+              key: DB_PASSWORD
+        ports:
+        - name: mariadb
+          containerPort: 3306
+        volumeMounts:
+        - name: {{ include "lagoon-core.keycloakDB.fullname" . }}-data
+          mountPath: /var/lib/mysql
+        livenessProbe:
+          tcpSocket:
+            port: mariadb
+        readinessProbe:
+          tcpSocket:
+            port: mariadb
+        resources:
+          {{- toYaml .Values.keycloakDB.resources | nindent 12 }}
+      volumes:
+      - name: {{ include "lagoon-core.keycloakDB.fullname" . }}-data
+        persistentVolumeClaim:
+          claimName: {{ include "lagoon-core.keycloakDB.fullname" . }}-data
+      {{- with .Values.keycloakDB.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.keycloakDB.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.keycloakDB.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ include "lagoon-core.keycloakDB.fullname" . }}-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 16Gi

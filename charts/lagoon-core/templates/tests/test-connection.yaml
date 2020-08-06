@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "lagoon-core.api.fullname" . }}-test-connection"
+  labels:
+    {{- include "lagoon-core.api.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: nc-api
+    image: busybox:musl
+    command:
+    - nc
+    args:
+    - "-vzw5"
+    - "{{ include "lagoon-core.api.fullname" . }}"
+    - "{{ .Values.api.service.port }}"
+  - name: nc-keycloak
+    image: busybox:musl
+    command:
+    - nc
+    args:
+    - "-vzw5"
+    - "{{ include "lagoon-core.keycloak.fullname" . }}"
+    - "{{ .Values.keycloak.service.port }}"
+  restartPolicy: Never

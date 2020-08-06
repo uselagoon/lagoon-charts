@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "lagoon-core.apiDB.fullname" . }}
+  labels:
+    {{- include "lagoon-core.apiDB.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "lagoon-core.apiDB.fullname" . }}-headless
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.apiDB.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+    {{- with .Values.apiDB.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.apiDB.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.apiDB.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.apiDB.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.apiDB.securityContext | nindent 12 }}
+        image: "{{ .Values.apiDB.image.repository }}:{{ .Values.apiDB.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.apiDB.image.pullPolicy }}
+        env:
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}-env
+              key: API_DB_PASSWORD
+        ports:
+        - name: mariadb
+          containerPort: 3306
+        volumeMounts:
+        - name: {{ include "lagoon-core.apiDB.fullname" . }}-data
+          mountPath: /var/lib/mysql
+        livenessProbe:
+          tcpSocket:
+            port: mariadb
+        readinessProbe:
+          tcpSocket:
+            port: mariadb
+        resources:
+          {{- toYaml .Values.apiDB.resources | nindent 12 }}
+      volumes:
+      - name: {{ include "lagoon-core.apiDB.fullname" . }}-data
+        persistentVolumeClaim:
+          claimName: {{ include "lagoon-core.apiDB.fullname" . }}-data
+      {{- with .Values.apiDB.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.apiDB.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.apiDB.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ include "lagoon-core.apiDB.fullname" . }}-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 128Gi
