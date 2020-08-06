@@ -22,3 +22,7 @@ Please ensure that any new chart:
 * has some kind of test, even if it is just a simple connection test ([example](https://github.com/amazeeio/charts/blob/master/charts/lagoon-logging/templates/tests/test-connection.yaml)).
 * has a useful `templates/NOTES.txt`.
 * has a `README.md` with some basic information about the chart.
+
+#### Bonus points: well-tuned probes
+
+The CI runs in a [constrained environment](https://docs.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners#supported-runners-and-hardware-resources) which makes it a good place to test how your chart handles slow-starting pods. Ideally pods should never be killed due to failing liveness probes during chart-install, even if they do eventually start and the chart installation succeeds. Documentation on probes for pod startup is [here](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes).
