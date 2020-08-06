@@ -1,5 +1,7 @@
 # amazee.io Helm charts
 
+[![Actions Status](https://github.com/amazeeio/charts/workflows/Release%20Charts/badge.svg)](https://github.com/amazeeio/charts/actions)
+
 This repository contains [Helm](https://helm.sh/) charts related to [Lagoon](https://github.com/amazeeio/lagoon/).
 
 ## Usage
