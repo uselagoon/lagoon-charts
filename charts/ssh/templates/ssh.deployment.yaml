@@ -16,29 +16,8 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          env:
-          - name: RABBITMQ_USERNAME
-            valueFrom:
-              secretKeyRef:
-                key: RABBITMQ_USERNAME
-                name: ssh-env
-          - name: RABBITMQ_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: RABBITMQ_PASSWORD
-                name: ssh-env
-          - name: JWTSECRET
-            valueFrom:
-              secretKeyRef:
-                key: JWTSECRET
-                name: ssh-env
-          - name: SERVICE_NAME
-            value: ssh
-          - name: CRONJOBS
-          - name: API_DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: API_DB_PASSWORD
+          envFrom:
+          -  secretRef:
                 name: ssh-env
           securityContext: {}
           image: "{{ .Values.ssh.image.repository }}:{{ .Values.ssh.image.tag | default .Chart.AppVersion }}"
@@ -48,18 +27,10 @@ spec:
               containerPort: {{ .Values.ssh.containerPort }}
               protocol: TCP
           livenessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 120
-            periodSeconds: 10
-            successThreshold: 1
             tcpSocket:
               port: ssh
             timeoutSeconds: 1
           readinessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            successThreshold: 1
             tcpSocket:
               port: ssh
             timeoutSeconds: 1
