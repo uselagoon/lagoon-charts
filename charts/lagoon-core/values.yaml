@@ -223,3 +223,22 @@ authServer:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+webhooks2tasks:
+  replicaCount: 2
+  image:
+    repository: amazeeiolagoon/webhooks2tasks
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  affinity: {}
+
+  podAnnotations: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80

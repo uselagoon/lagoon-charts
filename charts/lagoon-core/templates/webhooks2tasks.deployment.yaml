@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.webhooks2tasks.fullname" . }}
+  labels:
+    {{- include "lagoon-core.webhooks2tasks.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.webhooks2tasks.autoscaling.enabled }}
+  replicas: {{ .Values.webhooks2tasks.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.webhooks2tasks.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+    {{- with .Values.webhooks2tasks.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.webhooks2tasks.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.webhooks2tasks.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.webhooks2tasks.securityContext | nindent 12 }}
+        image: "{{ .Values.webhooks2tasks.image.repository }}:{{ .Values.webhooks2tasks.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.webhooks2tasks.image.pullPolicy }}
+        env:
+        - name: RABBITMQ_HOST
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}-env
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}-env
+              key: RABBITMQ_PASSWORD
+        resources:
+          {{- toYaml .Values.webhooks2tasks.resources | nindent 12 }}
+      {{- with .Values.webhooks2tasks.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhooks2tasks.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhooks2tasks.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

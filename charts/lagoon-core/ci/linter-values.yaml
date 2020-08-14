@@ -16,3 +16,6 @@ broker:
 
 authServer:
   replicaCount: 1
+
+webhooks2tasks:
+  replicaCount: 1
