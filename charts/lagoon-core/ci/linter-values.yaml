@@ -19,3 +19,6 @@ authServer:
 
 webhooks2tasks:
   replicaCount: 1
+
+webhookHandler:
+  replicaCount: 1
