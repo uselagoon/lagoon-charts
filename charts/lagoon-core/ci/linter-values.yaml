@@ -13,3 +13,6 @@ keycloak:
 
 broker:
   replicaCount: 1
+
+authServer:
+  replicaCount: 1
