@@ -8,8 +8,12 @@ metadata:
     "helm.sh/hook": test-success
 spec:
   containers:
-    - name: wget
-      image: busybox
-      command: ['nc']
-      args: ['{{ include "ssh.fullname" . }}:{{ .Values.ssh.containerPort }}','-z']
+  - name: nc-ssh
+    image: busybox:musl
+    command:
+    - nc
+    args:
+    - "-vzw5"
+    - "{{ include "ssh.fullname" . }}"
+    - "{{ .Values.ssh.service.port }}"
   restartPolicy: Never

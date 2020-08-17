@@ -8,8 +8,8 @@ spec:
   type: {{ .Values.ssh.service.type }}
   ports:
     - port: {{ .Values.ssh.service.port }}
-      targetPort: {{ .Values.ssh.service.port }}
+      targetPort: ssh
       protocol: TCP
-      name: ssh-tcp
+      name: ssh
   selector:
     {{- include "ssh.selectorLabels" . | nindent 4 }}

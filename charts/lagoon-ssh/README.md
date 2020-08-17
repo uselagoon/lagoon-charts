@@ -6,4 +6,3 @@ projects' PODs.
 ## Requirements
 
 - Helm 3.2.1 or newer
-
