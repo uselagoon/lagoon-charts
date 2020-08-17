@@ -252,3 +252,93 @@ app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-core.broker.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for auth-server.
+*/}}
+{{- define "lagoon-core.authServer.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-auth-server
+{{- end }}
+
+{{/*
+Common labels auth-server
+*/}}
+{{- define "lagoon-core.authServer.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.authServer.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels auth-server
+*/}}
+{{- define "lagoon-core.authServer.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.authServer.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for webhooks2tasks.
+*/}}
+{{- define "lagoon-core.webhooks2tasks.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-webhooks2tasks
+{{- end }}
+
+{{/*
+Common labels webhooks2tasks
+*/}}
+{{- define "lagoon-core.webhooks2tasks.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.webhooks2tasks.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels webhooks2tasks
+*/}}
+{{- define "lagoon-core.webhooks2tasks.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.webhooks2tasks.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for webhookHandler.
+*/}}
+{{- define "lagoon-core.webhookHandler.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-webhook-handler
+{{- end }}
+
+{{/*
+Common labels webhookHandler
+*/}}
+{{- define "lagoon-core.webhookHandler.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.webhookHandler.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels webhookHandler
+*/}}
+{{- define "lagoon-core.webhookHandler.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.webhookHandler.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

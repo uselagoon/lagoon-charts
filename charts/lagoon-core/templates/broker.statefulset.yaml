@@ -15,7 +15,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+        checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
     {{- with .Values.broker.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
@@ -43,12 +43,12 @@ spec:
         - name: RABBITMQ_DEFAULT_USER
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.api.fullname" . }}-env
+              name: {{ include "lagoon-core.broker.fullname" . }}-env
               key: RABBITMQ_USERNAME
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.api.fullname" . }}-env
+              name: {{ include "lagoon-core.broker.fullname" . }}-env
               key: RABBITMQ_PASSWORD
         - name: RABBITMQ_USE_LONGNAME
           value: "true"

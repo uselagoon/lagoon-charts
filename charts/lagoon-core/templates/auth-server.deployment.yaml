@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.authServer.fullname" . }}
+  labels:
+    {{- include "lagoon-core.authServer.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.authServer.autoscaling.enabled }}
+  replicas: {{ .Values.authServer.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.authServer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+        checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
+    {{- with .Values.authServer.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.authServer.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.authServer.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.authServer.securityContext | nindent 12 }}
+        image: "{{ .Values.authServer.image.repository }}:{{ .Values.authServer.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.authServer.image.pullPolicy }}
+        env:
+        - name: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}-env
+              key: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
+        - name: JWTSECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}-env
+              key: JWTSECRET
+        ports:
+        - name: http-3000
+          containerPort: 3000
+        livenessProbe:
+          tcpSocket:
+            port: http-3000
+        readinessProbe:
+          tcpSocket:
+            port: http-3000
+        resources:
+          {{- toYaml .Values.authServer.resources | nindent 12 }}
+      {{- with .Values.authServer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.authServer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.authServer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

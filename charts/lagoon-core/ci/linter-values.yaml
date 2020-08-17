@@ -13,3 +13,12 @@ keycloak:
 
 broker:
   replicaCount: 1
+
+authServer:
+  replicaCount: 1
+
+webhooks2tasks:
+  replicaCount: 1
+
+webhookHandler:
+  replicaCount: 1

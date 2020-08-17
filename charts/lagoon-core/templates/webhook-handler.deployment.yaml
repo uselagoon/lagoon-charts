@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.webhookHandler.fullname" . }}
+  labels:
+    {{- include "lagoon-core.webhookHandler.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.webhookHandler.autoscaling.enabled }}
+  replicas: {{ .Values.webhookHandler.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.webhookHandler.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
+    {{- with .Values.webhookHandler.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.webhookHandler.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.webhookHandler.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.webhookHandler.securityContext | nindent 12 }}
+        image: "{{ .Values.webhookHandler.image.repository }}:{{ .Values.webhookHandler.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.webhookHandler.image.pullPolicy }}
+        env:
+        - name: RABBITMQ_HOST
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}-env
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}-env
+              key: RABBITMQ_PASSWORD
+        ports:
+        - name: http-3000
+          containerPort: 3000
+        livenessProbe:
+          tcpSocket:
+            port: http-3000
+        readinessProbe:
+          tcpSocket:
+            port: http-3000
+        resources:
+          {{- toYaml .Values.webhookHandler.resources | nindent 12 }}
+      {{- with .Values.webhookHandler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhookHandler.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhookHandler.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

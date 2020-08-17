@@ -48,7 +48,7 @@ api:
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
-    - host: lagoon.example.com
+    - host: api.example.com
       paths:
       - /
     tls: []
@@ -106,8 +106,6 @@ apiDB:
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
-  affinity: {}
-
   service:
     type: ClusterIP
     port: 3306
@@ -125,8 +123,6 @@ apiRedis:
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
-  affinity: {}
-
   service:
     type: ClusterIP
     port: 6379
@@ -139,8 +135,6 @@ keycloak:
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
-  affinity: {}
-
   service:
     type: ClusterIP
     port: 8080
@@ -152,8 +146,6 @@ keycloakDB:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
-
-  affinity: {}
 
   service:
     type: ClusterIP
@@ -173,8 +165,6 @@ broker:
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
-  affinity: {}
-
   service:
     type: ClusterIP
     ports:
@@ -193,6 +183,75 @@ broker:
     # If not set and create is true, a name is generated using the fullname
     # template
     name: ""
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+authServer:
+  replicaCount: 2
+  image:
+    repository: amazeeiolagoon/auth-server
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  podAnnotations: {}
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+webhooks2tasks:
+  replicaCount: 2
+  image:
+    repository: amazeeiolagoon/webhooks2tasks
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+webhookHandler:
+  replicaCount: 2
+  image:
+    repository: amazeeiolagoon/webhook-handler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  ingress:
+    enabled: false
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+    - host: webhook.example.com
+      paths:
+      - /
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
 
   autoscaling:
     enabled: false
