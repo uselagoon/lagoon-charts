@@ -35,7 +35,7 @@ spec:
         - name: MARIADB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.keycloak.fullname" . }}-env
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: DB_PASSWORD
         ports:
         - name: mariadb

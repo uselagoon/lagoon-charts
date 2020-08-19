@@ -43,12 +43,12 @@ spec:
         - name: RABBITMQ_DEFAULT_USER
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.broker.fullname" . }}-env
+              name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_USERNAME
         - name: RABBITMQ_DEFAULT_PASS
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.broker.fullname" . }}-env
+              name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_PASSWORD
         - name: RABBITMQ_USE_LONGNAME
           value: "true"

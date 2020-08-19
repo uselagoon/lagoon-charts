@@ -38,12 +38,12 @@ spec:
         - name: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.keycloak.fullname" . }}-env
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.api.fullname" . }}-env
+              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
               key: JWTSECRET
         ports:
         - name: http-3000
