@@ -15,7 +15,9 @@ spec:
     metadata:
       annotations:
         checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
-        checksum/common.secret: {{ include (print $.Template.BasePath "/common.secret.yaml") . | sha256sum }}
+        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+        checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     {{- with .Values.api.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
@@ -42,11 +44,29 @@ spec:
           value: {{ include "lagoon-core.apiRedis.fullname" . }}
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: API_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_PASSWORD
+        - name: JWTSECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              key: JWTSECRET
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_ADMIN_PASSWORD
+        - name: KEYCLOAK_API_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_API_CLIENT_SECRET
         envFrom:
         - secretRef:
-            name: {{ include "lagoon-core.api.fullname" . }}-env
-        - secretRef:
-            name: {{ include "lagoon-core.fullname" . }}-common-env
+            name: {{ include "lagoon-core.api.fullname" . }}
         ports:
         - name: http-3000
           containerPort: 3000

@@ -25,7 +25,7 @@ The dashboard is available at:
   {{- end }}
 {{- end }}
 
-{{- $data := index (lookup "v1" "Secret" .Release.Namespace (print (include "lagoon-core.keycloak.fullname" . ) "-env")) "data" | default dict }}
+{{- $data := index (lookup "v1" "Secret" .Release.Namespace (include "lagoon-core.keycloak.fullname" .)) "data" | default dict }}
 {{- if $data }}
 Lagoon Admin credentials are: lagoonadmin / {{ index $data "KEYCLOAK_LAGOON_ADMIN_PASSWORD" | b64dec }}
 {{- end }}

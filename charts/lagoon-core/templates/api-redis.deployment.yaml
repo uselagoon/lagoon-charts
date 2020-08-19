@@ -34,7 +34,7 @@ spec:
         - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.api.fullname" . }}-env
+              name: {{ include "lagoon-core.api.fullname" . }}
               key: REDIS_PASSWORD
         ports:
         - name: redis

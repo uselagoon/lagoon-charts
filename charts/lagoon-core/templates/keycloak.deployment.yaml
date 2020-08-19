@@ -12,7 +12,6 @@ spec:
     metadata:
       annotations:
         checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
-        checksum/common.secret: {{ include (print $.Template.BasePath "/common.secret.yaml") . | sha256sum }}
     {{- with .Values.keycloak.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
@@ -42,9 +41,7 @@ spec:
           value: {{ include "lagoon-core.keycloakDB.fullname" . }}
         envFrom:
         - secretRef:
-            name: {{ include "lagoon-core.keycloak.fullname" . }}-env
-        - secretRef:
-            name: {{ include "lagoon-core.fullname" . }}-common-env
+            name: {{ include "lagoon-core.keycloak.fullname" . }}
         ports:
         - name: http-8080
           containerPort: 8080

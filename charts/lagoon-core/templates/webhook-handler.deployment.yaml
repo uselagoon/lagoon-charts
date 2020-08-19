@@ -39,12 +39,12 @@ spec:
         - name: RABBITMQ_USERNAME
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.broker.fullname" . }}-env
+              name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_USERNAME
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.broker.fullname" . }}-env
+              name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_PASSWORD
         ports:
         - name: http-3000
