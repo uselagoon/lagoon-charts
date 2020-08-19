@@ -274,4 +274,25 @@ entries:
     urls:
     - https://github.com/amazeeio/charts/releases/download/lagoon-remote-0.1.4/lagoon-remote-0.1.4.tgz
     version: 0.1.4
+  lagoon-ssh:
+  - apiVersion: v2
+    appVersion: v1-8-2
+    created: "2020-08-19T07:52:25.177816795Z"
+    description: |
+      A Helm chart for Kubernetes which installs the lagoon ssh service.
+    digest: 2fe6d2aac5c9a4452e76b05886de486cc5ac29046f9fd582633b7beedbb0c772
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+    maintainers:
+    - email: vincenzo@amazee.io
+      name: vincenzodnp
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-ssh
+    type: application
+    urls:
+    - https://github.com/amazeeio/charts/releases/download/lagoon-ssh-0.1.0/lagoon-ssh-0.1.0.tgz
+    version: 0.1.0
 generated: "2020-07-16T08:28:34.288224716Z"
