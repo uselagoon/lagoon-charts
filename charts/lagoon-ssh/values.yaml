@@ -1,0 +1,37 @@
+# Default values for ssh.
+
+# These Secrets/Keys are used to pass values from a parent chart.
+apiDBPasswordSecret:
+apiDBPasswordKey: API_DB_PASSWORD
+
+jwtSecretSecret:
+jwtSecretKey: JWTSECRET
+
+# These values take precedence over the Secret/Key mechanism above, if set.
+apiDBPassword:
+jwtSecret:
+
+# These values must be provided.
+apiDBHost:
+apiDBUser: api
+apiHost:
+authServer:
+
+ssh:
+  replicaCount: 2
+
+  image:
+    repository: amazeeiolagoon/ssh
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  podSecurityContext:
+    runAsUser: 1000
+    fsGroup: 0
+
+  resources: {}
+
+  service:
+    type: ClusterIP
+    port: 2020
