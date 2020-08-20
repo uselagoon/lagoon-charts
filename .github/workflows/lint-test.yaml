@@ -16,7 +16,7 @@ jobs:
       id: lint
       uses: helm/chart-testing-action@v1.0.0
       with:
-        image: smlx/chart-testing:v3.0.0-patch.1
+        image: smlx/chart-testing:v3.0.0-patch.2
         command: lint
         config: ct.yaml
 
@@ -27,6 +27,6 @@ jobs:
     - name: Run chart-testing (install)
       uses: helm/chart-testing-action@v1.0.0
       with:
-        image: smlx/chart-testing:v3.0.0-patch.1
+        image: smlx/chart-testing:v3.0.0-patch.2
         command: install
         config: ct.yaml
