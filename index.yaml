@@ -3,6 +3,29 @@ entries:
   lagoon-core:
   - apiVersion: v2
     appVersion: v1-8-2
+    created: "2020-08-20T12:39:06.560380721Z"
+    dependencies:
+    - alias: ssh
+      condition: ssh.enabled
+      name: lagoon-ssh
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.2.0
+    description: |
+      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    digest: df80d61389b844a3d3b13994200d837496f85727e44604786564c94fa0929c59
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/amazeeio/charts/releases/download/lagoon-core-0.3.1/lagoon-core-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
+    appVersion: v1-8-2
     created: "2020-08-20T06:32:44.554351887Z"
     dependencies:
     - alias: ssh
@@ -76,6 +99,27 @@ entries:
     - https://github.com/amazeeio/charts/releases/download/lagoon-core-0.1.0/lagoon-core-0.1.0.tgz
     version: 0.1.0
   lagoon-logging:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2020-08-20T12:39:07.375464461Z"
+    dependencies:
+    - name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.4.0
+    description: |
+      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    digest: 3f4faf5a0cbe710d61d565314c724d9cafb719a6152f0068e4767fcbf7ecce53
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/amazeeio/charts/releases/download/lagoon-logging-0.7.2/lagoon-logging-0.7.2.tgz
+    version: 0.7.2
   - apiVersion: v2
     appVersion: 0.1.0
     created: "2020-07-31T02:43:56.982976321Z"
