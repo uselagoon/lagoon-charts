@@ -2,6 +2,11 @@
 
 elasticsearchHost: logs.example.com
 
+# SSH subchart is currently enabled for CI.
+#
+# ssh:
+#   enabled: false
+
 api:
   replicaCount: 1
   image:
