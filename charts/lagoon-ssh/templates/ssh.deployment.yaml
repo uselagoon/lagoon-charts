@@ -30,14 +30,14 @@ spec:
         - name: API_DB_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ required "Either .Values.apiDBPassword or .Values.apiDBPasswordSecret must be provided" .Values.apiDBPasswordSecret }}
+              name: {{ tpl (required "Either .Values.apiDBPassword or .Values.apiDBPasswordSecret must be provided" .Values.apiDBPasswordSecret) . }}
               key: {{ .Values.apiDBPasswordKey }}
         {{- end }}
         {{- if not .Values.jwtSecret }}
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ required "Either .Values.jwtSecret or .Values.jwtSecretSecret must be provided" .Values.jwtSecretSecret }}
+              name: {{ tpl (required "Either .Values.jwtSecret or .Values.jwtSecretSecret must be provided" .Values.jwtSecretSecret) . }}
               key: {{ .Values.jwtSecretKey }}
         {{- end }}
         ports:
