@@ -1,4 +1,4 @@
-# Any variables defined here are not used anywhere other than lint/CI.
+# Any values defined here are not used anywhere other than lint/CI.
 
 elasticsearchHost: logs.example.com
 
