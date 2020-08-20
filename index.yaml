@@ -3,6 +3,29 @@ entries:
   lagoon-core:
   - apiVersion: v2
     appVersion: v1-8-2
+    created: "2020-08-20T06:32:44.554351887Z"
+    dependencies:
+    - alias: ssh
+      condition: ssh.enabled
+      name: lagoon-ssh
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.2.0
+    description: |
+      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    digest: 4a14da89523eb8ebc26507cda1241e725f6094602d2d953c4688e7c5641a6048
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/amazeeio/charts/releases/download/lagoon-core-0.3.0/lagoon-core-0.3.0.tgz
+    version: 0.3.0
+  - apiVersion: v2
+    appVersion: v1-8-2
     created: "2020-08-19T06:56:07.153363799Z"
     description: |
       A Helm chart for Kubernetes which deploys Lagoon's core components.
