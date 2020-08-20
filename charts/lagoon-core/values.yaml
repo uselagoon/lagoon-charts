@@ -28,6 +28,20 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# this is a chart dependency
+ssh:
+  enabled: true
+  apiDBHost: >-
+    {{ .Release.Name }}-api-db
+  apiDBPasswordSecret: >-
+    {{ .Release.Name }}-api-db
+  apiHost: >-
+    {{ .Release.Name }}-api
+  authServer: >-
+    {{ .Release.Name }}-auth-server
+  jwtSecretSecret: >-
+    {{ .Release.Name }}-jwtsecret
+
 api:
   replicaCount: 2
   image:

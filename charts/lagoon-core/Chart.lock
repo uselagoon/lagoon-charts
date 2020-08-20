@@ -1,0 +1,6 @@
+dependencies:
+- name: lagoon-ssh
+  repository: https://amazeeio.github.io/charts/
+  version: 0.2.0
+digest: sha256:c344efdec6a2e2ae6a5a80260999b141716fefe13f5fb6c937b0c77e3cbde536
+generated: "2020-08-20T13:49:09.804348013+08:00"
