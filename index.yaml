@@ -277,6 +277,26 @@ entries:
   lagoon-ssh:
   - apiVersion: v2
     appVersion: v1-8-2
+    created: "2020-08-20T05:48:36.372217387Z"
+    description: |
+      A Helm chart for Kubernetes which installs the lagoon ssh service.
+    digest: d8c3e2ded20fd22ade359b479d8d5a96617fa8d9d60aebee901d1edf41350aed
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+    maintainers:
+    - email: vincenzo@amazee.io
+      name: vincenzodnp
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-ssh
+    type: application
+    urls:
+    - https://github.com/amazeeio/charts/releases/download/lagoon-ssh-0.2.0/lagoon-ssh-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: v1-8-2
     created: "2020-08-19T07:52:25.177816795Z"
     description: |
       A Helm chart for Kubernetes which installs the lagoon ssh service.
