@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.ui.fullname" . }}
+  labels:
+    {{- include "lagoon-core.ui.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.ui.autoscaling.enabled }}
+  replicas: {{ .Values.ui.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.ui.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+        checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    {{- with .Values.ui.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.ui.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.ui.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.ui.securityContext | nindent 12 }}
+        image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
+        env:
+        - name: GRAPHQL_API
+          {{- if .Values.lagoonAPIURL }}
+          value: {{ .Values.lagoonAPIURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.api.ingress.hosts 0 "host" }}/graphql
+          {{- end }}
+        - name: KEYCLOAK_API
+          {{- if .Values.keycloakAPIURL }}
+          value: {{ .Values.keycloakAPIURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}/auth
+          {{- end }}
+        - name: LAGOON_VERSION
+          value: {{ .Chart.AppVersion | replace "-" "." }}
+        ports:
+        - name: http-3000
+          containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http-3000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http-3000
+        resources:
+          {{- toYaml .Values.ui.resources | nindent 12 }}
+      {{- with .Values.ui.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ui.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
