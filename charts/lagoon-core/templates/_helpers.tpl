@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "lagoon-core.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- .Chart.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -12,15 +12,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "lagoon-core.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
+{{- if contains .Chart.Name .Release.Name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
 
@@ -341,4 +336,20 @@ Selector labels webhookHandler
 app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-core.webhookHandler.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+
+{{/*
+This template can be passed to subcharts that need the parent chart fullname.
+It is the same as the regular fullname template, but has a hard-coded
+.Chart.Name as this parent chart field is otherwise unavailable in subcharts.
+*/}}
+{{- define "lagoon-core.fullname.subchart" -}}
+{{- if contains "lagoon-core" .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name "lagoon-core" | trunc 63 | trimSuffix "-" }}
+{{- end }}
 {{- end }}
