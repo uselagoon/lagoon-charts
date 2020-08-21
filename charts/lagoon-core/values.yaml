@@ -25,22 +25,20 @@
 rabbitMQUsername: lagoon
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
 
 # this is a chart dependency
 ssh:
   enabled: true
   apiDBHost: >-
-    {{ .Release.Name }}-api-db
+    {{ include "lagoon-core.fullname.subchart" . }}-api-db
   apiDBPasswordSecret: >-
-    {{ .Release.Name }}-api-db
+    {{ include "lagoon-core.fullname.subchart" . }}-api-db
   apiHost: >-
-    {{ .Release.Name }}-api
+    {{ include "lagoon-core.fullname.subchart" . }}-api
   authServer: >-
-    {{ .Release.Name }}-auth-server
+    {{ include "lagoon-core.fullname.subchart" . }}-auth-server
   jwtSecretSecret: >-
-    {{ .Release.Name }}-jwtsecret
+    {{ include "lagoon-core.fullname.subchart" . }}-jwtsecret
 
 api:
   replicaCount: 2
