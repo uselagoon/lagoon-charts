@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.backupHandler.fullname" . }}
+  labels:
+    {{- include "lagoon-core.backupHandler.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.backupHandler.service.type }}
+  ports:
+  - port: {{ .Values.backupHandler.service.port }}
+    targetPort: http-3000
+    name: http-3000
+  selector:
+    {{- include "lagoon-core.backupHandler.selectorLabels" . | nindent 4 }}
