@@ -1,6 +1,11 @@
 # Any values defined here are not used anywhere other than lint/CI.
 
+# used in api
 elasticsearchHost: logs.example.com
+
+# used in ui
+lagoonAPIURL: https://api.example.com/graphql
+keycloakAPIURL: https://keycloak.example.com/auth
 
 # SSH subchart is currently enabled for CI.
 #
@@ -26,4 +31,7 @@ webhooks2tasks:
   replicaCount: 1
 
 webhookHandler:
+  replicaCount: 1
+
+ui:
   replicaCount: 1
