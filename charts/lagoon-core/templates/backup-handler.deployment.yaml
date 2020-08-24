@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.backupHandler.fullname" . }}
+  labels:
+    {{- include "lagoon-core.backupHandler.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.backupHandler.autoscaling.enabled }}
+  replicas: {{ .Values.backupHandler.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.backupHandler.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
+    {{- with .Values.backupHandler.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.backupHandler.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.backupHandler.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.backupHandler.securityContext | nindent 12 }}
+        image: "{{ .Values.backupHandler.image.repository }}:{{ .Values.backupHandler.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.backupHandler.image.pullPolicy }}
+        env:
+        - name: RABBITMQ_ADDRESS
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              key: JWTSECRET
+        - name: JWT_AUDIENCE
+          value: api.dev
+        - name: GRAPHQL_ENDPOINT
+          {{- if .Values.lagoonAPIURL }}
+          value: {{ .Values.lagoonAPIURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.api.ingress.hosts 0 "host" }}/graphql
+          {{- end }}
+        - name: HTTP_LISTEN_PORT
+          value: "3000"
+        ports:
+        - name: http-3000
+          containerPort: 3000
+        livenessProbe:
+          tcpSocket:
+            port: http-3000
+        readinessProbe:
+          tcpSocket:
+            port: http-3000
+        resources:
+          {{- toYaml .Values.backupHandler.resources | nindent 12 }}
+      {{- with .Values.backupHandler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backupHandler.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backupHandler.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

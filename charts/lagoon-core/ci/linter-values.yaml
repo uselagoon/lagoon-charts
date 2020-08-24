@@ -35,3 +35,6 @@ webhookHandler:
 
 ui:
   replicaCount: 1
+
+backupHandler:
+  replicaCount: 1
