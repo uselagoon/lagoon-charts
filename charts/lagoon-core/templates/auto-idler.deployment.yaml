@@ -50,6 +50,9 @@ spec:
           value: |-
             30 * * * * /idle-clis.sh
             0 */4 * * * /idle-services.sh
+        # for historical reasons this variable must be set
+        - name: LAGOON_ENVIRONMENT_TYPE
+          value: production
         resources:
           {{- toYaml .Values.autoIdler.resources | nindent 12 }}
       {{- with .Values.autoIdler.nodeSelector }}
