@@ -431,6 +431,36 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
+Create a default fully qualified app name for storage-calculator.
+*/}}
+{{- define "lagoon-core.storageCalculator.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-storage-calculator
+{{- end }}
+
+{{/*
+Common labels storage-calculator.
+*/}}
+{{- define "lagoon-core.storageCalculator.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.storageCalculator.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels storage-calculator.
+*/}}
+{{- define "lagoon-core.storageCalculator.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.storageCalculator.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
 This template can be passed to subcharts that need the parent chart fullname.
 It is the same as the regular fullname template, but has a hard-coded
 .Chart.Name as this parent chart field is otherwise unavailable in subcharts.

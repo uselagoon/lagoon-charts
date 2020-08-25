@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.storageCalculator.fullname" . }}
+  labels:
+    {{- include "lagoon-core.storageCalculator.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.storageCalculator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    {{- with .Values.storageCalculator.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.storageCalculator.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.storageCalculator.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.storageCalculator.securityContext | nindent 12 }}
+        image: "{{ .Values.storageCalculator.image.repository }}:{{ .Values.storageCalculator.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.storageCalculator.image.pullPolicy }}
+        env:
+        - name: JWTSECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              key: JWTSECRET
+        - name: CRONJOBS
+          value: |-
+            5 */12 * * * /lagoon/cronjob.sh /calculate-storage.sh
+        resources:
+          {{- toYaml .Values.storageCalculator.resources | nindent 12 }}
+      {{- with .Values.storageCalculator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.storageCalculator.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.storageCalculator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
