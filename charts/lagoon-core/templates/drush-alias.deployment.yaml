@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.drushAlias.fullname" . }}
+  labels:
+    {{- include "lagoon-core.drushAlias.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.drushAlias.autoscaling.enabled }}
+  replicas: {{ .Values.drushAlias.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.drushAlias.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+    {{- with .Values.drushAlias.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.drushAlias.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.drushAlias.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.drushAlias.securityContext | nindent 12 }}
+        image: "{{ .Values.drushAlias.image.repository }}:{{ .Values.drushAlias.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.drushAlias.image.pullPolicy }}
+        ports:
+        - name: http-8080
+          containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /aliases.drushrc.php.stub
+            port: http-8080
+        readinessProbe:
+          httpGet:
+            path: /aliases.drushrc.php.stub
+            port: http-8080
+        resources:
+          {{- toYaml .Values.webhookHandler.resources | nindent 12 }}
+      {{- with .Values.webhookHandler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhookHandler.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.webhookHandler.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
