@@ -55,11 +55,7 @@ spec:
         - name: JWT_AUDIENCE
           value: api.dev
         - name: GRAPHQL_ENDPOINT
-          {{- if .Values.lagoonAPIURL }}
-          value: {{ .Values.lagoonAPIURL | quote }}
-          {{- else }}
-          value: https://{{ index .Values.api.ingress.hosts 0 "host" }}/graphql
-          {{- end }}
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
         - name: HTTP_LISTEN_PORT
           value: "3000"
         ports:
