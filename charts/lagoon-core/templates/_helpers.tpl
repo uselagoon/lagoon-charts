@@ -461,6 +461,126 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
+Create a default fully qualified app name for logs2slack.
+*/}}
+{{- define "lagoon-core.logs2slack.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-logs2slack
+{{- end }}
+
+{{/*
+Common labels logs2slack.
+*/}}
+{{- define "lagoon-core.logs2slack.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.logs2slack.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels logs2slack.
+*/}}
+{{- define "lagoon-core.logs2slack.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.logs2slack.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for logs2microsoftteams.
+*/}}
+{{- define "lagoon-core.logs2microsoftteams.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-logs2microsoftteams
+{{- end }}
+
+{{/*
+Common labels logs2microsoftteams.
+*/}}
+{{- define "lagoon-core.logs2microsoftteams.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.logs2microsoftteams.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels logs2microsoftteams.
+*/}}
+{{- define "lagoon-core.logs2microsoftteams.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.logs2microsoftteams.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for logs2rocketchat.
+*/}}
+{{- define "lagoon-core.logs2rocketchat.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-logs2rocketchat
+{{- end }}
+
+{{/*
+Common labels logs2rocketchat.
+*/}}
+{{- define "lagoon-core.logs2rocketchat.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.logs2rocketchat.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels logs2rocketchat.
+*/}}
+{{- define "lagoon-core.logs2rocketchat.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.logs2rocketchat.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for logs2email.
+*/}}
+{{- define "lagoon-core.logs2email.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-logs2email
+{{- end }}
+
+{{/*
+Common labels logs2email.
+*/}}
+{{- define "lagoon-core.logs2email.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.logs2email.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels logs2email.
+*/}}
+{{- define "lagoon-core.logs2email.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.logs2email.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
 This template can be passed to subcharts that need the parent chart fullname.
 It is the same as the regular fullname template, but has a hard-coded
 .Chart.Name as this parent chart field is otherwise unavailable in subcharts.

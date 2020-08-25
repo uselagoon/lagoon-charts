@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.logs2slack.fullname" . }}
+  labels:
+    {{- include "lagoon-core.logs2slack.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.logs2slack.autoscaling.enabled }}
+  replicas: {{ .Values.logs2slack.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.logs2slack.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
+    {{- with .Values.logs2slack.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.logs2slack.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.logs2slack.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.logs2slack.securityContext | nindent 12 }}
+        image: "{{ .Values.logs2slack.image.repository }}:{{ .Values.logs2slack.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.logs2slack.image.pullPolicy }}
+        env:
+        - name: RABBITMQ_HOST
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        resources:
+          {{- toYaml .Values.logs2slack.resources | nindent 12 }}
+      {{- with .Values.logs2slack.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.logs2slack.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.logs2slack.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
