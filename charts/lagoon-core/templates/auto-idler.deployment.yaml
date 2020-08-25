@@ -44,10 +44,15 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.api.fullname" . }}
               key: LOGSDB_ADMIN_PASSWORD
+        - name: GRAPHQL_ENDPOINT
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
         - name: CRONJOBS
           value: |-
             30 * * * * /idle-clis.sh
             0 */4 * * * /idle-services.sh
+        # for historical reasons this variable must be set
+        - name: LAGOON_ENVIRONMENT_TYPE
+          value: production
         resources:
           {{- toYaml .Values.autoIdler.resources | nindent 12 }}
       {{- with .Values.autoIdler.nodeSelector }}

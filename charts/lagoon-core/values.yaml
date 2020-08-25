@@ -368,3 +368,10 @@ autoIdler:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
+
+storageCalculator:
+  image:
+    repository: amazeeiolagoon/storage-calculator
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""

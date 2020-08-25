@@ -38,3 +38,11 @@ ui:
 
 backupHandler:
   replicaCount: 1
+
+autoIdler:
+  image:
+    tag: lagoon-core
+
+storageCalculator:
+  image:
+    tag: lagoon-core
