@@ -46,3 +46,15 @@ autoIdler:
 storageCalculator:
   image:
     tag: lagoon-core
+
+logs2slack:
+  replicaCount: 1
+
+logs2microsoftteams:
+  replicaCount: 1
+
+logs2rocketchat:
+  replicaCount: 1
+
+logs2email:
+  replicaCount: 1
