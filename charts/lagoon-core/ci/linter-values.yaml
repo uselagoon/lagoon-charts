@@ -58,3 +58,6 @@ logs2rocketchat:
 
 logs2email:
   replicaCount: 1
+
+drushAlias:
+  replicaCount: 1
