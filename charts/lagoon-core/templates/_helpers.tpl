@@ -340,7 +340,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 
-
 {{/*
 Create a default fully qualified app name for ui.
 */}}
@@ -368,7 +367,6 @@ app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-core.ui.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
 
 
 
@@ -400,6 +398,35 @@ app.kubernetes.io/component: {{ include "lagoon-core.backupHandler.fullname" . }
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+
+
+{{/*
+Create a default fully qualified app name for auto-idler.
+*/}}
+{{- define "lagoon-core.autoIdler.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-auto-idler
+{{- end }}
+
+{{/*
+Common labels auto-idler.
+*/}}
+{{- define "lagoon-core.autoIdler.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.autoIdler.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels auto-idler.
+*/}}
+{{- define "lagoon-core.autoIdler.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.autoIdler.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 
 

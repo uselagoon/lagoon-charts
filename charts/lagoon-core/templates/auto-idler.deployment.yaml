@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.autoIdler.fullname" . }}
+  labels:
+    {{- include "lagoon-core.autoIdler.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.autoIdler.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    {{- with .Values.autoIdler.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.autoIdler.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.autoIdler.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.autoIdler.securityContext | nindent 12 }}
+        image: "{{ .Values.autoIdler.image.repository }}:{{ .Values.autoIdler.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.autoIdler.image.pullPolicy }}
+        env:
+        - name: ELASTICSEARCH_URL
+          value: {{ .Values.elasticsearchScheme }}://{{ .Values.elasticsearchHost }}
+        - name: JWTSECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              key: JWTSECRET
+        - name: LOGSDB_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}
+              key: LOGSDB_ADMIN_PASSWORD
+        - name: CRONJOBS
+          value: |-
+            30 * * * * /idle-clis.sh
+            0 */4 * * * /idle-services.sh
+        resources:
+          {{- toYaml .Values.autoIdler.resources | nindent 12 }}
+      {{- with .Values.autoIdler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.autoIdler.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.autoIdler.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

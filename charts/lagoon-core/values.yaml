@@ -28,6 +28,8 @@
 
 # These values are the chart defaults:
 
+elasticsearchScheme: https
+
 rabbitMQUsername: lagoon
 
 imagePullSecrets: []
@@ -359,3 +361,10 @@ backupHandler:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+autoIdler:
+  image:
+    repository: amazeeiolagoon/auto-idler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
