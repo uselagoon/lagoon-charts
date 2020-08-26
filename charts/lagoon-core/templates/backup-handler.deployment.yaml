@@ -29,11 +29,17 @@ spec:
       securityContext:
         {{- toYaml .Values.backupHandler.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: backup-handler
         securityContext:
           {{- toYaml .Values.backupHandler.securityContext | nindent 12 }}
         image: "{{ .Values.backupHandler.image.repository }}:{{ .Values.backupHandler.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.backupHandler.image.pullPolicy }}
+        command:
+        - "sh"
+        - "-c"
+        - |
+          while ! nc -zvw5 $RABBITMQ_ADDRESS $RABBITMQ_PORT; do sleep 2; done
+          exec /app/backup-handler
         env:
         - name: RABBITMQ_ADDRESS
           value: {{ include "lagoon-core.broker.fullname" . }}
