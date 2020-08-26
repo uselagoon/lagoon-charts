@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.logs2slack.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: logs2slack
         securityContext:
           {{- toYaml .Values.logs2slack.securityContext | nindent 12 }}
         image: "{{ .Values.logs2slack.image.repository }}:{{ .Values.logs2slack.image.tag | default .Chart.AppVersion }}"

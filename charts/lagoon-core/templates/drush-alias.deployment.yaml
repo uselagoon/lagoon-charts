@@ -27,7 +27,7 @@ spec:
       securityContext:
         {{- toYaml .Values.drushAlias.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: drush-alias
         securityContext:
           {{- toYaml .Values.drushAlias.securityContext | nindent 12 }}
         image: "{{ .Values.drushAlias.image.repository }}:{{ .Values.drushAlias.image.tag | default .Chart.AppVersion }}"

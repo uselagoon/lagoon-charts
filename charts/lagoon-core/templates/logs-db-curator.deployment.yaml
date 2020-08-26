@@ -25,7 +25,7 @@ spec:
       securityContext:
         {{- toYaml .Values.logsDBCurator.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: logs-db-curator
         securityContext:
           {{- toYaml .Values.logsDBCurator.securityContext | nindent 12 }}
         image: "{{ .Values.logsDBCurator.image.repository }}:{{ .Values.logsDBCurator.image.tag | default .Chart.AppVersion }}"

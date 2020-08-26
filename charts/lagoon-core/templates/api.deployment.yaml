@@ -32,7 +32,7 @@ spec:
       securityContext:
         {{- toYaml .Values.api.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: api
         securityContext:
           {{- toYaml .Values.api.securityContext | nindent 12 }}
         image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default .Chart.AppVersion }}"

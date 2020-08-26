@@ -29,7 +29,7 @@ spec:
       securityContext:
         {{- toYaml .Values.authServer.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: auth-server
         securityContext:
           {{- toYaml .Values.authServer.securityContext | nindent 12 }}
         image: "{{ .Values.authServer.image.repository }}:{{ .Values.authServer.image.tag | default .Chart.AppVersion }}"

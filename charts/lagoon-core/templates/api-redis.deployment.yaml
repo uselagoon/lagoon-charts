@@ -25,7 +25,7 @@ spec:
       securityContext:
         {{- toYaml .Values.apiRedis.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: api-redis
         securityContext:
           {{- toYaml .Values.apiRedis.securityContext | nindent 12 }}
         image: "{{ .Values.apiRedis.image.repository }}:{{ .Values.apiRedis.image.tag | default .Chart.AppVersion }}"
