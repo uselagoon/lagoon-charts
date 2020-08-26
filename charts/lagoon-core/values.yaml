@@ -35,20 +35,6 @@ rabbitMQUsername: lagoon
 
 imagePullSecrets: []
 
-# this is a chart dependency
-ssh:
-  enabled: true
-  apiDBHost: >-
-    {{ include "lagoon-core.fullname.subchart" . }}-api-db
-  apiDBPasswordSecret: >-
-    {{ include "lagoon-core.fullname.subchart" . }}-api-db
-  apiHost: >-
-    {{ include "lagoon-core.fullname.subchart" . }}-api
-  authServer: >-
-    {{ include "lagoon-core.fullname.subchart" . }}-auth-server
-  jwtSecretSecret: >-
-    {{ include "lagoon-core.fullname.subchart" . }}-jwtsecret
-
 # the following services are part of the lagoon-core chart
 
 api:
@@ -476,3 +462,26 @@ logsDBCurator:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
+
+ssh:
+  replicaCount: 2
+  image:
+    repository: amazeeiolagoon/ssh
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  podSecurityContext:
+    runAsUser: 1000
+    fsGroup: 0
+
+  service:
+    type: ClusterIP
+    port: 2020
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
