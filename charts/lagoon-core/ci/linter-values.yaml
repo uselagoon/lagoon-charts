@@ -61,3 +61,8 @@ logs2email:
 
 drushAlias:
   replicaCount: 1
+
+ssh:
+  replicaCount: 1
+  image:
+    tag: lagoon-core

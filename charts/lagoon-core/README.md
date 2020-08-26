@@ -67,6 +67,11 @@ keycloak:
     - secretName: keycloak-tls
       hosts:
       - lagoon-keycloak.example.com
+
+ssh:
+  service:
+    type: LoadBalancer
+    port: 22
 ```
 
 Ingress configuration in this case relies on correctly configured DNS and [cert-manager](https://cert-manager.io/docs/usage/ingress/).
