@@ -29,6 +29,7 @@
 # These values are the chart defaults:
 
 elasticsearchScheme: https
+elasticsearchHostPort: 9200
 
 rabbitMQUsername: lagoon
 
@@ -468,3 +469,10 @@ drushAlias:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+logsDBCurator:
+  image:
+    repository: amazeeiolagoon/logs-db-curator
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
