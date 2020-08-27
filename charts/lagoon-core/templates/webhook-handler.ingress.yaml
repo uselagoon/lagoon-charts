@@ -1,4 +1,4 @@
-{{- if .Values.webhookHandler.ingress.enabled -}}
+{{- if and .Values.webhookHandler.enabled .Values.webhookHandler.ingress.enabled -}}
 {{- $fullName := include "lagoon-core.webhookHandler.fullname" . -}}
 {{- $svcPort := .Values.webhookHandler.service.port -}}
 apiVersion: networking.k8s.io/v1beta1

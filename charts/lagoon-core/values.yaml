@@ -236,6 +236,7 @@ authServer:
     # targetMemoryUtilizationPercentage: 80
 
 webhooks2tasks:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/webhooks2tasks
@@ -251,6 +252,7 @@ webhooks2tasks:
     # targetMemoryUtilizationPercentage: 80
 
 webhookHandler:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/webhook-handler
@@ -350,6 +352,7 @@ backupHandler:
     # targetMemoryUtilizationPercentage: 80
 
 autoIdler:
+  enabled: true
   image:
     repository: amazeeiolagoon/auto-idler
     pullPolicy: Always
@@ -357,6 +360,7 @@ autoIdler:
     tag: ""
 
 storageCalculator:
+  enabled: true
   image:
     repository: amazeeiolagoon/storage-calculator
     pullPolicy: Always
@@ -364,6 +368,7 @@ storageCalculator:
     tag: ""
 
 logs2slack:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/logs2slack
@@ -379,6 +384,7 @@ logs2slack:
     # targetMemoryUtilizationPercentage: 80
 
 logs2microsoftteams:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/logs2microsoftteams
@@ -394,6 +400,7 @@ logs2microsoftteams:
     # targetMemoryUtilizationPercentage: 80
 
 logs2rocketchat:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/logs2rocketchat
@@ -409,6 +416,7 @@ logs2rocketchat:
     # targetMemoryUtilizationPercentage: 80
 
 logs2email:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/logs2email
@@ -424,6 +432,7 @@ logs2email:
     # targetMemoryUtilizationPercentage: 80
 
 drushAlias:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/drush-alias
@@ -457,6 +466,7 @@ drushAlias:
     # targetMemoryUtilizationPercentage: 80
 
 logsDBCurator:
+  enabled: true
   image:
     repository: amazeeiolagoon/logs-db-curator
     pullPolicy: Always
