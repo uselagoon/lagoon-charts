@@ -1,10 +1,35 @@
 # Lagoon Core
 
-This chart installs the core services for [Lagoon](https://github.com/amazeeio/lagoon/).
+This chart installs the core services for [Lagoon](https://github.com/amazeeio/lagoon/). See that repository for details on each of the microservices that make up Lagoon.
 
 ## Configuration
 
 See the comments at the top of `values.yaml`.
+
+All services are enabled by default. The following auxiliary services can be disabled like so:
+
+```yaml
+autoIdler:
+  enabled: false
+drushAlias:
+  enabled: false
+logs2email:
+  enabled: false
+logs2microsoftteams:
+  enabled: false
+logs2rocketchat:
+  enabled: false
+logs2slack:
+  enabled: false
+logsDBCurator:
+  enabled: false
+storageCalculator:
+  enabled: false
+webhookHandler:
+  enabled: false
+webhooks2tasks:
+  enabled: false
+```
 
 ## TL;DR Local testing
 
@@ -24,7 +49,12 @@ Visit [http://localhost:6060/](http://localhost:6060/).
 
 ## Quick Start
 
-A minimal sensible `values.yaml` for this chart would set these values:
+Here is a minimal sensible `values.yaml`.
+
+Important notes:
+
+* Ingress configuration in this case relies on correctly configured DNS and [cert-manager](https://cert-manager.io/docs/usage/ingress/).
+* Because the SSH service is non-http it requires a `LoadBalancer` Service type.
 
 ```yaml
 elasticsearchHost: logs.example.com
@@ -74,4 +104,3 @@ ssh:
     port: 22
 ```
 
-Ingress configuration in this case relies on correctly configured DNS and [cert-manager](https://cert-manager.io/docs/usage/ingress/).
