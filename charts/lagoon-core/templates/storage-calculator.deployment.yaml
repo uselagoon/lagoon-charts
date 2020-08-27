@@ -25,7 +25,7 @@ spec:
       securityContext:
         {{- toYaml .Values.storageCalculator.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: storage-calculator
         securityContext:
           {{- toYaml .Values.storageCalculator.securityContext | nindent 12 }}
         image: "{{ .Values.storageCalculator.image.repository }}:{{ .Values.storageCalculator.image.tag | default .Chart.AppVersion }}"

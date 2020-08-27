@@ -30,7 +30,7 @@ spec:
       securityContext:
         {{- toYaml .Values.broker.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: broker
         securityContext:
           {{- toYaml .Values.broker.securityContext | nindent 12 }}
         image: "{{ .Values.broker.image.repository }}:{{ .Values.broker.image.tag | default .Chart.AppVersion }}"

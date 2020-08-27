@@ -26,7 +26,7 @@ spec:
       securityContext:
         {{- toYaml .Values.apiDB.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: api-db
         securityContext:
           {{- toYaml .Values.apiDB.securityContext | nindent 12 }}
         image: "{{ .Values.apiDB.image.repository }}:{{ .Values.apiDB.image.tag | default .Chart.AppVersion }}"

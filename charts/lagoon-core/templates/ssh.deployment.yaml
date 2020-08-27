@@ -22,7 +22,7 @@ spec:
       securityContext:
         {{- toYaml .Values.ssh.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: ssh
         image: "{{ .Values.ssh.image.repository }}:{{ .Values.ssh.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.ssh.image.pullPolicy }}
         env:

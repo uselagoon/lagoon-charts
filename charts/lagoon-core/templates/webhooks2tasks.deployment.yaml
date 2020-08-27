@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.webhooks2tasks.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: webhooks2tasks
         securityContext:
           {{- toYaml .Values.webhooks2tasks.securityContext | nindent 12 }}
         image: "{{ .Values.webhooks2tasks.image.repository }}:{{ .Values.webhooks2tasks.image.tag | default .Chart.AppVersion }}"

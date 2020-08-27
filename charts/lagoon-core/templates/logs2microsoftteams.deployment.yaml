@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.logs2microsoftteams.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: logs2microsoftteams
         securityContext:
           {{- toYaml .Values.logs2microsoftteams.securityContext | nindent 12 }}
         image: "{{ .Values.logs2microsoftteams.image.repository }}:{{ .Values.logs2microsoftteams.image.tag | default .Chart.AppVersion }}"

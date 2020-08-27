@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.logs2rocketchat.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: logs2rocketchat
         securityContext:
           {{- toYaml .Values.logs2rocketchat.securityContext | nindent 12 }}
         image: "{{ .Values.logs2rocketchat.image.repository }}:{{ .Values.logs2rocketchat.image.tag | default .Chart.AppVersion }}"

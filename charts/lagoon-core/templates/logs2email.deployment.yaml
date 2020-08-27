@@ -28,7 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.logs2email.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: logs2email
         securityContext:
           {{- toYaml .Values.logs2email.securityContext | nindent 12 }}
         image: "{{ .Values.logs2email.image.repository }}:{{ .Values.logs2email.image.tag | default .Chart.AppVersion }}"

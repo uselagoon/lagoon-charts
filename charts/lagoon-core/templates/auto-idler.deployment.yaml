@@ -26,7 +26,7 @@ spec:
       securityContext:
         {{- toYaml .Values.autoIdler.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: auto-idler
         securityContext:
           {{- toYaml .Values.autoIdler.securityContext | nindent 12 }}
         image: "{{ .Values.autoIdler.image.repository }}:{{ .Values.autoIdler.image.tag | default .Chart.AppVersion }}"
