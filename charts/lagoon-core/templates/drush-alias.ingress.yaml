@@ -1,4 +1,4 @@
-{{- if .Values.drushAlias.ingress.enabled -}}
+{{- if and .Values.drushAlias.enabled .Values.drushAlias.ingress.enabled -}}
 {{- $fullName := include "lagoon-core.drushAlias.fullname" . -}}
 {{- $svcPort := .Values.drushAlias.service.port -}}
 apiVersion: networking.k8s.io/v1beta1
