@@ -3,6 +3,8 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+logsDispatcherHost: |-
+  lagoon-logging-logs-dispatcher.lagoon-logging.svc.cluster.local
 
 dockerHost:
   image:
