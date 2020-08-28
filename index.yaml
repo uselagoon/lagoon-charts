@@ -557,6 +557,25 @@ entries:
   lagoon-remote:
   - apiVersion: v2
     appVersion: 1.4.0
+    created: "2020-08-28T03:22:09.013389033Z"
+    description: A Helm chart to run a lagoon-remote
+    digest: 077255281b918eaaf191519b1178d8f4540e7bbd49e95442088dbd4793c206f3
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/amazeeio/charts/releases/download/lagoon-remote-0.2.0/lagoon-remote-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.4.0
     created: "2020-07-31T02:43:57.558888696Z"
     description: A Helm chart to run a lagoon-remote
     digest: 995534a9e98daaed4ed26608939a67580d895f1047c2ea134504af6939aa03bd
