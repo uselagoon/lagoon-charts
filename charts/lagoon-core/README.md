@@ -104,3 +104,6 @@ ssh:
     port: 22
 ```
 
+## ServiceAccounts
+
+* The `broker` has a serviceaccount bound to a role to allow service discovery for HA clustering.
