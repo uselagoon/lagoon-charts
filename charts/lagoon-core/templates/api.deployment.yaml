@@ -91,8 +91,27 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.api.affinity }}
       affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.name" . }}
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.api.fullname" . }}
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- with .Values.api.affinity }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.api.tolerations }}
