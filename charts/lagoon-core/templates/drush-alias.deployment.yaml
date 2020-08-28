@@ -45,16 +45,35 @@ spec:
             path: /aliases.drushrc.php.stub
             port: http-8080
         resources:
-          {{- toYaml .Values.webhookHandler.resources | nindent 12 }}
-      {{- with .Values.webhookHandler.nodeSelector }}
+          {{- toYaml .Values.drushAlias.resources | nindent 12 }}
+      {{- with .Values.drushAlias.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.webhookHandler.affinity }}
       affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.name" . }}
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.drushAlias.fullname" . }}
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- with .Values.drushAlias.affinity }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.webhookHandler.tolerations }}
+      {{- with .Values.drushAlias.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -58,6 +58,10 @@ spec:
             port: ssh
         resources:
           {{- toYaml .Values.ssh.resources | nindent 12 }}
+      {{- with .Values.ssh.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -78,3 +82,10 @@ spec:
                   values:
                   - {{ .Release.Name }}
               topologyKey: kubernetes.io/hostname
+      {{- with .Values.ssh.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ssh.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

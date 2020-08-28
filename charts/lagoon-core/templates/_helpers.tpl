@@ -49,17 +49,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Create the name of the service account to use for api.
-*/}}
-{{- define "lagoon-core.api.serviceAccountName" -}}
-{{- if .Values.api.serviceAccount.create }}
-{{- default (include "lagoon-core.api.fullname" .) .Values.api.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.api.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
 Create a default fully qualified app name for api.
 */}}
 {{- define "lagoon-core.api.fullname" -}}

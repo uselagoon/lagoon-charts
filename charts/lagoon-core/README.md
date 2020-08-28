@@ -47,6 +47,13 @@ kubectl port-forward svc/lagoon-core-ui 6060:3000 &
 
 Visit [http://localhost:6060/](http://localhost:6060/).
 
+To uninstall:
+```
+helm uninstall lagoon-core
+# clean up the pvcs that kind doesn't reclaim automatically
+kubectl delete pvc --all
+```
+
 ## Quick Start
 
 Here is a minimal sensible `values.yaml`.
@@ -104,3 +111,6 @@ ssh:
     port: 22
 ```
 
+## ServiceAccounts
+
+* The `broker` has a serviceaccount bound to a role to allow service discovery for HA clustering.
