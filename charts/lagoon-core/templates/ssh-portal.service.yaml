@@ -1,0 +1,17 @@
+{{- if .Values.sshPortal.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.sshPortal.fullname" . }}
+  labels:
+    {{- include "lagoon-core.sshPortal.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sshPortal.service.type }}
+  ports:
+    - port: {{ .Values.sshPortal.service.port }}
+      targetPort: ssh
+      protocol: TCP
+      name: ssh
+  selector:
+    {{- include "lagoon-core.sshPortal.selectorLabels" . | nindent 4 }}
+{{- end }}

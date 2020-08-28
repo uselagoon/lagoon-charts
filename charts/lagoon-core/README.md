@@ -43,6 +43,7 @@ helm upgrade --install --create-namespace --namespace lagoon-core --values ./cha
 kubectl port-forward svc/lagoon-core-keycloak 8080 &
 kubectl port-forward svc/lagoon-core-api 7070:80 &
 kubectl port-forward svc/lagoon-core-ui 6060:3000 &
+kubectl port-forward svc/lagoon-core-ssh 2020 &
 ```
 
 Visit [http://localhost:6060/](http://localhost:6060/).
