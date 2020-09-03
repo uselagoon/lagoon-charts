@@ -9,6 +9,6 @@ spec:
   ports:
   - port: {{ .Values.authServer.service.port }}
     targetPort: http-3000
-    name: http-3000
+    name: http
   selector:
     {{- include "lagoon-core.authServer.selectorLabels" . | nindent 4 }}
