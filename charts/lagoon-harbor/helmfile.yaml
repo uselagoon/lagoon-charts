@@ -1,0 +1,14 @@
+releases:
+- name: harbor
+  namespace: lagoon
+  chart: harbor/harbor
+  version: v1.4.2
+  wait: true
+  values:
+    - values.yaml
+
+repositories:
+- name: stable
+  url: https://kubernetes-charts.storage.googleapis.com
+- name: harbor
+  url: https://helm.goharbor.io
