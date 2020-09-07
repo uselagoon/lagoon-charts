@@ -1,0 +1,16 @@
+{{- if .Values.sshPortal.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "lagoon-core.sshPortal.fullname" . }}-pod-exec
+  labels:
+    {{- include "lagoon-core.sshPortal.labels" . | nindent 4 }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "lagoon-core.sshPortal.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "lagoon-core.sshPortal.fullname" . }}-pod-exec
+{{- end }}

@@ -29,9 +29,17 @@ webhookHandler:
   enabled: false
 webhooks2tasks:
   enabled: false
+sshPortal:
+  enabled: false
 ```
 
-## TL;DR Local testing
+## TL;DR Local testing using kind
+
+Prerequisite: download and install the [Lagoon CLI](https://github.com/amazeeio/lagoon-cli).
+
+NOTE: these instructions make use of the experimental `ssh-portal` service, which will eventually be moved to `lagoon-remote`. See [amazeeio/lagoon#2179](https://github.com/amazeeio/lagoon/pull/2179) for details.
+
+### Install
 
 Run these commands:
 
@@ -40,14 +48,44 @@ kind create cluster
 
 helm upgrade --install --create-namespace --namespace lagoon-core --values ./charts/lagoon-core/ci/linter-values.yaml --set lagoonAPIURL=http://localhost:7070/graphql --set keycloakAPIURL=http://localhost:8080/auth lagoon-core ./charts/lagoon-core
 
+# make a note of the lagoonadmin credentials
+
 kubectl port-forward svc/lagoon-core-keycloak 8080 &
 kubectl port-forward svc/lagoon-core-api 7070:80 &
 kubectl port-forward svc/lagoon-core-ui 6060:3000 &
+kubectl port-forward svc/lagoon-core-ssh 2020 &
+kubectl port-forward svc/lagoon-core-ssh-portal 2222 &
 ```
 
-Visit [http://localhost:6060/](http://localhost:6060/).
+### Use
 
-To uninstall:
+1. Visit [http://localhost:6060/](http://localhost:6060/).
+2. Log in using the `lagoonadmin` credentials from the helm chart installation.
+3. Click settings (top right).
+4. Add your ssh key.
+5. Add this config to `~/.lagoon.yml`:
+```
+current: local
+default: local
+lagoons:
+  local:
+    graphql: http://localhost:7070/graphql
+    hostname: localhost
+    port: 2222
+    ui: http://localhost:6060
+```
+6. Check you can log in:
+```
+$ lagoon whoami
+ID                                  	EMAIL	FIRSTNAME	LASTNAME	SSHKEYS 
+f57455c1-0d6b-491a-9117-89a9763dc940	-    	-        	-       	1	
+```
+
+At this point `lagoon-core` is installed.
+To actually deploy a project a `lagoon-remote` must be configured, which is beyond the scope of this README.
+
+### Uninstall
+
 ```
 helm uninstall lagoon-core
 # clean up the pvcs that kind doesn't reclaim automatically
@@ -56,7 +94,7 @@ kubectl delete pvc --all
 
 ## Quick Start
 
-Here is a minimal sensible `values.yaml`.
+Here is a super-minimal `values.yaml` for a real Lagoon installation.
 
 Important notes:
 
@@ -114,3 +152,4 @@ ssh:
 ## ServiceAccounts
 
 * The `broker` has a serviceaccount bound to a role to allow service discovery for HA clustering.
+* The `ssh-portal` (disabled by default, see [amazeeio/lagoon#2179](https://github.com/amazeeio/lagoon/pull/2179)) has a serviceaccount bound to a clusterrole to allow exec into pods.

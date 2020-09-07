@@ -202,11 +202,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use for broker.
 */}}
 {{- define "lagoon-core.broker.serviceAccountName" -}}
-{{- if .Values.broker.serviceAccount.create }}
 {{- default (include "lagoon-core.broker.fullname" .) .Values.broker.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.broker.serviceAccount.name }}
-{{- end }}
 {{- end }}
 
 {{/*
@@ -654,6 +650,43 @@ Selector labels ssh.
 {{- define "lagoon-core.ssh.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-core.ssh.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create the name of the service account to use for ssh-portal.
+*/}}
+{{- define "lagoon-core.sshPortal.serviceAccountName" -}}
+{{- default (include "lagoon-core.sshPortal.fullname" .) .Values.sshPortal.serviceAccount.name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for ssh-portal.
+*/}}
+{{- define "lagoon-core.sshPortal.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-ssh-portal
+{{- end }}
+
+{{/*
+Common labels ssh-portal.
+*/}}
+{{- define "lagoon-core.sshPortal.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.sshPortal.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels ssh-portal.
+*/}}
+{{- define "lagoon-core.sshPortal.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.sshPortal.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

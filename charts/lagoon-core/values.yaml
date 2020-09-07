@@ -11,6 +11,8 @@
 
 # lagoonAPIURL: https://api.example.com/graphql
 # keycloakAPIURL: https://keycloak.example.com/auth
+# sshHostKeyRSA: ...
+# sshHostKeyED25519: ...
 
 # These values are randomly generated on install if not otherwise defined:
 
@@ -187,8 +189,6 @@ broker:
   podAnnotations: {}
 
   serviceAccount:
-    # Specifies whether a service account should be created
-    create: true
     # Annotations to add to the service account
     annotations: {}
     # The name of the service account to use.
@@ -213,7 +213,7 @@ authServer:
 
   service:
     type: ClusterIP
-    port: 3000
+    port: 80
 
   podAnnotations: {}
 
@@ -484,3 +484,31 @@ ssh:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+sshPortal:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: amazeeiolagoon/ssh-portal
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "pr-2179"
+
+  service:
+    type: ClusterIP
+    port: 2222
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  serviceAccount:
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name: ""
