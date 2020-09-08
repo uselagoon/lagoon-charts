@@ -1,0 +1,28 @@
+{{- if .Values.logs2microsoftteams.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.logs2microsoftteams.fullname" . }}
+  labels:
+    {{- include "lagoon-core.logs2microsoftteams.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.logs2microsoftteams.fullname" . }}
+  minReplicas: {{ .Values.logs2microsoftteams.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.logs2microsoftteams.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.logs2microsoftteams.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.logs2microsoftteams.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.logs2microsoftteams.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.logs2microsoftteams.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}

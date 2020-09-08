@@ -1,0 +1,28 @@
+{{- if .Values.backupHandler.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.backupHandler.fullname" . }}
+  labels:
+    {{- include "lagoon-core.backupHandler.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.backupHandler.fullname" . }}
+  minReplicas: {{ .Values.backupHandler.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.backupHandler.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.backupHandler.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.backupHandler.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.backupHandler.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.backupHandler.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}

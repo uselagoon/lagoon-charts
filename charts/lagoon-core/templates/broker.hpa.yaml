@@ -1,0 +1,28 @@
+{{- if .Values.broker.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.broker.fullname" . }}
+  labels:
+    {{- include "lagoon-core.broker.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.broker.fullname" . }}
+  minReplicas: {{ .Values.broker.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.broker.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.broker.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.broker.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.broker.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.broker.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}

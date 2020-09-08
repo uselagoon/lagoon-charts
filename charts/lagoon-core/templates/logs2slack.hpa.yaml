@@ -1,0 +1,28 @@
+{{- if .Values.logs2slack.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.logs2slack.fullname" . }}
+  labels:
+    {{- include "lagoon-core.logs2slack.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.logs2slack.fullname" . }}
+  minReplicas: {{ .Values.logs2slack.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.logs2slack.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.logs2slack.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.logs2slack.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.logs2slack.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.logs2slack.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}
