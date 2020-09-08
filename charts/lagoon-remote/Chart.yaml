@@ -2,7 +2,7 @@ apiVersion: v2
 name: lagoon-remote
 description: A Helm chart to run a lagoon-remote
 home: https://github.com/amazeeio/charts
-icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
 - name: schnitzel
   email: michael@amazee.com
@@ -11,14 +11,15 @@ maintainers:
   email: scott.leggett@amazee.io
   url: https://amazee.io
 
-# Application charts are a collection of templates that can be packaged into versioned archives
-# to be deployed.
+# Application charts are a collection of templates that can be packaged into
+# versioned archives to be deployed.
 type: application
 
-# This is the chart version. This version number should be incremented each time you make changes
-# to the chart and its templates, including the app version.
+# This is the chart version. This version number should be incremented each
+# time you make changes to the chart and its templates, including the app
+# version.
 version: 0.2.0
 
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application.
+# This is the version number of the application being deployed. This version
+# number should be incremented each time you make changes to the application.
 appVersion: 1.4.0

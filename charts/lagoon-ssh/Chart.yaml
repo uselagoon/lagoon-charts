@@ -3,7 +3,7 @@ name: lagoon-ssh
 description: >
   A Helm chart for Kubernetes which installs the lagoon ssh service.
 home: https://github.com/amazeeio/charts
-icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
 - name: vincenzodnp
   email: vincenzo@amazee.io

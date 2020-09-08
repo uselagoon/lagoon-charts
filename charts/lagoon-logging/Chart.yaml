@@ -4,7 +4,7 @@ description: >
   A Helm chart for Kubernetes which installs the Lagoon container and router
   logs collection system.
 home: https://github.com/amazeeio/charts
-icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
