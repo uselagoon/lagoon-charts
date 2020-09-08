@@ -19,7 +19,7 @@ spec:
       labels:
         {{- include "lagoon-core.keycloakDB.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.keycloakDB.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}

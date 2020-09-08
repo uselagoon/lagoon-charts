@@ -22,7 +22,7 @@ spec:
       labels:
         {{- include "lagoon-core.broker.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.broker.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
