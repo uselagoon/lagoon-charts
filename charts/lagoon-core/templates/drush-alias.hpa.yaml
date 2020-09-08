@@ -1,0 +1,28 @@
+{{- if .Values.drushAlias.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.drushAlias.fullname" . }}
+  labels:
+    {{- include "lagoon-core.drushAlias.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.drushAlias.fullname" . }}
+  minReplicas: {{ .Values.drushAlias.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.drushAlias.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.drushAlias.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.drushAlias.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.drushAlias.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.drushAlias.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}

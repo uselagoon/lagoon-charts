@@ -1,0 +1,28 @@
+{{- if .Values.webhookHandler.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.webhookHandler.fullname" . }}
+  labels:
+    {{- include "lagoon-core.webhookHandler.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.webhookHandler.fullname" . }}
+  minReplicas: {{ .Values.webhookHandler.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.webhookHandler.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.webhookHandler.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.webhookHandler.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.webhookHandler.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.webhookHandler.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}

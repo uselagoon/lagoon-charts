@@ -1,0 +1,28 @@
+{{- if .Values.logs2rocketchat.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.logs2rocketchat.fullname" . }}
+  labels:
+    {{- include "lagoon-core.logs2rocketchat.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.logs2rocketchat.fullname" . }}
+  minReplicas: {{ .Values.logs2rocketchat.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.logs2rocketchat.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.logs2rocketchat.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.logs2rocketchat.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.logs2rocketchat.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.logs2rocketchat.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}

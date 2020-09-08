@@ -1,0 +1,28 @@
+{{- if .Values.authServer.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.authServer.fullname" . }}
+  labels:
+    {{- include "lagoon-core.authServer.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.authServer.fullname" . }}
+  minReplicas: {{ .Values.authServer.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.authServer.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.authServer.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.authServer.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.authServer.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.authServer.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}
