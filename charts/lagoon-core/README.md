@@ -37,8 +37,6 @@ sshPortal:
 
 Prerequisite: download and install the [Lagoon CLI](https://github.com/amazeeio/lagoon-cli).
 
-NOTE: these instructions make use of the experimental `ssh-portal` service, which will eventually be moved to `lagoon-remote`. See [amazeeio/lagoon#2179](https://github.com/amazeeio/lagoon/pull/2179) for details.
-
 ### Install
 
 Run these commands:
@@ -54,7 +52,6 @@ kubectl port-forward svc/lagoon-core-keycloak 8080 &
 kubectl port-forward svc/lagoon-core-api 7070:80 &
 kubectl port-forward svc/lagoon-core-ui 6060:3000 &
 kubectl port-forward svc/lagoon-core-ssh 2020 &
-kubectl port-forward svc/lagoon-core-ssh-portal 2222 &
 ```
 
 ### Use
@@ -71,7 +68,7 @@ lagoons:
   local:
     graphql: http://localhost:7070/graphql
     hostname: localhost
-    port: 2222
+    port: 2020
     ui: http://localhost:6060
 ```
 6. Check you can log in:
@@ -152,4 +149,4 @@ ssh:
 ## ServiceAccounts
 
 * The `broker` has a serviceaccount bound to a role to allow service discovery for HA clustering.
-* The `ssh-portal` (disabled by default, see [amazeeio/lagoon#2179](https://github.com/amazeeio/lagoon/pull/2179)) has a serviceaccount bound to a clusterrole to allow exec into pods.
+* The `ssh-portal` (disabled by default, eventually will be moved to `lagoon-remote`, see [amazeeio/lagoon#2179](https://github.com/amazeeio/lagoon/pull/2179)) has a serviceaccount bound to a clusterrole to allow exec into pods.
