@@ -3,7 +3,7 @@ name: lagoon-ssh
 description: >
   A Helm chart for Kubernetes which installs the lagoon ssh service.
 home: https://github.com/amazeeio/charts
-icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
+icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
 - name: vincenzodnp
   email: vincenzo@amazee.io
@@ -20,7 +20,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.2.1
+version: 0.2.2
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.

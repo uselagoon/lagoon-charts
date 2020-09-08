@@ -5,5 +5,4 @@ chart-dirs:
 - charts
 chart-repos:
 - banzaicloud-stable=https://kubernetes-charts.banzaicloud.com
-- amazeeio=https://amazeeio.github.io/charts
 helm-extra-args: --timeout 600s
