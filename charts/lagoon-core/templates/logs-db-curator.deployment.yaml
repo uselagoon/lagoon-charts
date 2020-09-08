@@ -24,11 +24,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.logsDBCurator.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.logsDBCurator.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: logs-db-curator
         securityContext:
-          {{- toYaml .Values.logsDBCurator.securityContext | nindent 12 }}
+          {{- toYaml .Values.logsDBCurator.securityContext | nindent 10 }}
         image: "{{ .Values.logsDBCurator.image.repository }}:{{ .Values.logsDBCurator.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logsDBCurator.image.pullPolicy }}
         env:

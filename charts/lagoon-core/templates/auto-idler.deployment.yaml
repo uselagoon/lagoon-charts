@@ -25,11 +25,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.autoIdler.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.autoIdler.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: auto-idler
         securityContext:
-          {{- toYaml .Values.autoIdler.securityContext | nindent 12 }}
+          {{- toYaml .Values.autoIdler.securityContext | nindent 10 }}
         image: "{{ .Values.autoIdler.image.repository }}:{{ .Values.autoIdler.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.autoIdler.image.pullPolicy }}
         env:

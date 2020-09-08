@@ -27,11 +27,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.backupHandler.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.backupHandler.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: backup-handler
         securityContext:
-          {{- toYaml .Values.backupHandler.securityContext | nindent 12 }}
+          {{- toYaml .Values.backupHandler.securityContext | nindent 10 }}
         image: "{{ .Values.backupHandler.image.repository }}:{{ .Values.backupHandler.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.backupHandler.image.pullPolicy }}
         command:

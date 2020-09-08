@@ -27,11 +27,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.webhooks2tasks.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.webhooks2tasks.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: webhooks2tasks
         securityContext:
-          {{- toYaml .Values.webhooks2tasks.securityContext | nindent 12 }}
+          {{- toYaml .Values.webhooks2tasks.securityContext | nindent 10 }}
         image: "{{ .Values.webhooks2tasks.image.repository }}:{{ .Values.webhooks2tasks.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.webhooks2tasks.image.pullPolicy }}
         env:

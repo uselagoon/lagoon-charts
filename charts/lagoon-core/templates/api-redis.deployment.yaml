@@ -23,11 +23,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.apiRedis.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.apiRedis.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: api-redis
         securityContext:
-          {{- toYaml .Values.apiRedis.securityContext | nindent 12 }}
+          {{- toYaml .Values.apiRedis.securityContext | nindent 10 }}
         image: "{{ .Values.apiRedis.image.repository }}:{{ .Values.apiRedis.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.apiRedis.image.pullPolicy }}
         env:

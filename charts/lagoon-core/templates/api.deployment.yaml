@@ -29,11 +29,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.api.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.api.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: api
         securityContext:
-          {{- toYaml .Values.api.securityContext | nindent 12 }}
+          {{- toYaml .Values.api.securityContext | nindent 10 }}
         image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.api.image.pullPolicy }}
         env:

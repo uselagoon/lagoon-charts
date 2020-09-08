@@ -20,9 +20,11 @@ spec:
         {{- include "lagoon-core.ssh.selectorLabels" . | nindent 8 }}
     spec:
       securityContext:
-        {{- toYaml .Values.ssh.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.ssh.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: ssh
+        securityContext:
+          {{- toYaml .Values.ssh.securityContext | nindent 10 }}
         image: "{{ .Values.ssh.image.repository }}:{{ .Values.ssh.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.ssh.image.pullPolicy }}
         env:
