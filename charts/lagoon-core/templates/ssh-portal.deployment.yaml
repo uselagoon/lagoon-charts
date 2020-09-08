@@ -22,9 +22,11 @@ spec:
     spec:
       serviceAccountName: {{ include "lagoon-core.sshPortal.serviceAccountName" . }}
       securityContext:
-        {{- toYaml .Values.sshPortal.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.sshPortal.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
-      - name: ssh
+      - name: ssh-portal
+        securityContext:
+          {{- toYaml .Values.sshPortal.securityContext | nindent 10 }}
         image: "{{ .Values.sshPortal.image.repository }}:{{ .Values.sshPortal.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.sshPortal.image.pullPolicy }}
         command:

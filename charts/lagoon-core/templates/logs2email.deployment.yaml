@@ -27,11 +27,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.logs2email.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.logs2email.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: logs2email
         securityContext:
-          {{- toYaml .Values.logs2email.securityContext | nindent 12 }}
+          {{- toYaml .Values.logs2email.securityContext | nindent 10 }}
         image: "{{ .Values.logs2email.image.repository }}:{{ .Values.logs2email.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logs2email.image.pullPolicy }}
         env:

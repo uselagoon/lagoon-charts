@@ -24,11 +24,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.keycloakDB.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.keycloakDB.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: keycloak-db
         securityContext:
-          {{- toYaml .Values.keycloakDB.securityContext | nindent 12 }}
+          {{- toYaml .Values.keycloakDB.securityContext | nindent 10 }}
         image: "{{ .Values.keycloakDB.image.repository }}:{{ .Values.keycloakDB.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.keycloakDB.image.pullPolicy }}
         env:

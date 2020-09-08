@@ -27,11 +27,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.logs2slack.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.logs2slack.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: logs2slack
         securityContext:
-          {{- toYaml .Values.logs2slack.securityContext | nindent 12 }}
+          {{- toYaml .Values.logs2slack.securityContext | nindent 10 }}
         image: "{{ .Values.logs2slack.image.repository }}:{{ .Values.logs2slack.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logs2slack.image.pullPolicy }}
         env:

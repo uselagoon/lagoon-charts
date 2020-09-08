@@ -24,11 +24,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.storageCalculator.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.storageCalculator.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: storage-calculator
         securityContext:
-          {{- toYaml .Values.storageCalculator.securityContext | nindent 12 }}
+          {{- toYaml .Values.storageCalculator.securityContext | nindent 10 }}
         image: "{{ .Values.storageCalculator.image.repository }}:{{ .Values.storageCalculator.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.storageCalculator.image.pullPolicy }}
         env:

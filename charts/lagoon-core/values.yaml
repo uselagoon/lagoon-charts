@@ -37,6 +37,11 @@ rabbitMQUsername: lagoon
 
 imagePullSecrets: []
 
+# this default podSecurityContext is set for all services and can be overridden
+# on the service level
+podSecurityContext:
+  runAsUser: 100
+
 # the following services are part of the lagoon-core chart
 
 api:
@@ -46,8 +51,6 @@ api:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
-
-  affinity: {}
 
   service:
     type: ClusterIP
@@ -67,37 +70,12 @@ api:
     #    hosts:
     #      - chart-example.local
 
-  podAnnotations: {}
-
-  podSecurityContext: {}
-    # fsGroup: 2000
-
-  securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-
-  resources: {}
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-
   autoscaling:
     enabled: false
     minReplicas: 1
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
-
-  nodeSelector: {}
-
-  tolerations: []
 
 apiDB:
   image:
@@ -202,6 +180,10 @@ broker:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+  podSecurityContext:
+    runAsUser: 100
+    fsGroup: 0
 
 authServer:
   replicaCount: 2
@@ -471,7 +453,7 @@ ssh:
     tag: ""
 
   podSecurityContext:
-    runAsUser: 1000
+    runAsUser: 100
     fsGroup: 0
 
   service:

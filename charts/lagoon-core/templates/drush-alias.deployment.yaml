@@ -26,11 +26,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.drushAlias.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.drushAlias.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: drush-alias
         securityContext:
-          {{- toYaml .Values.drushAlias.securityContext | nindent 12 }}
+          {{- toYaml .Values.drushAlias.securityContext | nindent 10 }}
         image: "{{ .Values.drushAlias.image.repository }}:{{ .Values.drushAlias.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.drushAlias.image.pullPolicy }}
         ports:

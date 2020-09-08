@@ -27,11 +27,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml .Values.webhookHandler.podSecurityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.webhookHandler.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
       - name: webhook-handler
         securityContext:
-          {{- toYaml .Values.webhookHandler.securityContext | nindent 12 }}
+          {{- toYaml .Values.webhookHandler.securityContext | nindent 10 }}
         image: "{{ .Values.webhookHandler.image.repository }}:{{ .Values.webhookHandler.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.webhookHandler.image.pullPolicy }}
         env:
