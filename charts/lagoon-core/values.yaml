@@ -1,20 +1,25 @@
-# Default values for lagoon-core.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-# These values must be set on install, as they don't have sensible defaults:
+# These values must be set on install, as they don't have sensible defaults.
 
 # elasticsearchHost:
+# harborURL:
+# sshHostKeyRSA:
+# sshHostKeyED25519:
+# s3AccessKeyID:
+# s3Bucket:
+# s3Host:
+# s3SecretAccessKey:
+
+# These values are optional.
+
+# s3Region:
 
 # These values may be set on install, otherwise the chart tries to guess
-# sensible defaults based on the ingress.
+# sensible defaults.
 
 # lagoonAPIURL: https://api.example.com/graphql
 # keycloakAPIURL: https://keycloak.example.com/auth
-# sshHostKeyRSA: ...
-# sshHostKeyED25519: ...
 
-# These values are randomly generated on install if not otherwise defined:
+# These values are randomly generated on install if not otherwise defined.
 
 # apiDBPassword:
 # harborAdminPassword:
@@ -28,7 +33,7 @@
 # rabbitMQPassword:
 # redisPassword:
 
-# These values are the chart defaults:
+# These values are the chart defaults.
 
 elasticsearchScheme: https
 elasticsearchHostPort: 9200
