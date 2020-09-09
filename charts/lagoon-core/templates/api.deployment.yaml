@@ -69,6 +69,8 @@ spec:
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
         - name: KIBANA_URL
           value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
+        - name: LAGOON_VERSION
+          value: {{ .Chart.AppVersion | replace "-" "." }}
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
         - name: REDIS_HOST
