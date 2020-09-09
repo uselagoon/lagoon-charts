@@ -2,6 +2,7 @@
 
 # elasticsearchHost:
 # harborURL:
+# kibanaURL:
 # sshHostKeyRSA:
 # sshHostKeyED25519:
 # s3AccessKeyID:

@@ -3,6 +3,7 @@
 # used in api
 elasticsearchHost: logs.example.com
 harborURL: http://harbor:1234
+kibanaURL: http://kibana:5678
 s3AccessKeyID: minio
 s3Bucket: lagoon-files
 s3Host: http://minio:9000

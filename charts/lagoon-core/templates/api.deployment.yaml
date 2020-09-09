@@ -65,6 +65,8 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KIBANA_URL
+          value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
         - name: REDIS_HOST
