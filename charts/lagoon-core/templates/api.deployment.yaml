@@ -81,6 +81,8 @@ spec:
         - name: S3_REGION
           value: {{ . | quote }}
         {{- end }}
+        - name: UI_URL
+          value: {{ required "A valid .Values.uiURL required!" .Values.uiURL | quote }}
         envFrom:
         - secretRef:
             name: {{ include "lagoon-core.api.fullname" . }}

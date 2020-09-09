@@ -11,6 +11,7 @@
 # s3SecretAccessKey:
 # s3BAASAccessKeyID:
 # s3BAASSecretAccessKey:
+# uiURL:
 
 # These values are optional.
 
