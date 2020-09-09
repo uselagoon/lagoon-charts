@@ -65,6 +65,8 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KEYCLOAK_URL
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
         - name: KIBANA_URL
           value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
         - name: RABBITMQ_HOST
