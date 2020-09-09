@@ -11,6 +11,7 @@ s3SecretAccessKey: minio123
 s3BAASAccessKeyID: baas
 s3BAASSecretAccessKey: baas123
 uiURL: http://ui:9101
+webhookURL: http://webhook:11213
 
 # used in ui
 lagoonAPIURL: https://api.example.com/graphql

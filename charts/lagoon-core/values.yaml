@@ -12,6 +12,7 @@
 # s3BAASAccessKeyID:
 # s3BAASSecretAccessKey:
 # uiURL:
+# webhookURL:
 
 # These values are optional.
 
