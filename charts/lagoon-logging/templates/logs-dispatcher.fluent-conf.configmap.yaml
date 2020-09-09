@@ -313,6 +313,7 @@ data:
     #
     <match lagoon.**>
       @type copy
+      {{- if .Values.enableDefaultForwarding }}
       <store>
         @type forward
         @id out_forward
@@ -350,5 +351,6 @@ data:
           overflow_action drop_oldest_chunk
         </buffer>
       </store>
+      {{- end }}
       @include store.d/*.conf
     </match>

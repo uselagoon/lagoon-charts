@@ -83,8 +83,10 @@ spec:
         {{- end }}
         - mountPath: /fluentd/buffer/
           name: buffer
+        {{- if .Values.enableDefaultForwarding }}
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
+        {{- end }}
         envFrom:
         - secretRef:
             name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
@@ -124,10 +126,12 @@ spec:
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-source-lagoon
         name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-source-lagoon
       {{- end }}
+      {{- if .Values.enableDefaultForwarding }}
       - secret:
           defaultMode: 420
           secretName: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
         name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
+      {{- end }}
   volumeClaimTemplates:
   - metadata:
       name: buffer
