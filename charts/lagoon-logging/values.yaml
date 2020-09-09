@@ -255,6 +255,10 @@ forward:
 # to be consolidated into a single index per service.
 consolidateServiceIndices: false
 
+# Optionally default logs forwarding may be disabled if e.g. all logs are being
+# sent to a third-party service and not to a central elasticsearch.
+enableDefaultForwarding: true
+
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
 # in the README for the lagoon-logs-concentrator chart.

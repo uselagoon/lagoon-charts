@@ -142,6 +142,8 @@ exportLogs:
 
 IMPORTANT: use `ignore_error` so that the main log flow to elasticsearch is not interrupted.
 
+Optionally you may also set `enableDefaultForwarding: false` to disable the default logs forwarding to logs-concentrator and Elasticsearch.
+
 ## Local testing
 
 This is useful for quick local testing of `fluent.conf` snippets.
