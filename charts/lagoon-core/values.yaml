@@ -9,6 +9,8 @@
 # s3Bucket:
 # s3Host:
 # s3SecretAccessKey:
+# s3BAASAccessKeyID:
+# s3BAASSecretAccessKey:
 
 # These values are optional.
 

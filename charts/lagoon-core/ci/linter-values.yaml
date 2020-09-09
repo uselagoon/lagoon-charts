@@ -8,6 +8,8 @@ s3AccessKeyID: minio
 s3Bucket: lagoon-files
 s3Host: http://minio:9000
 s3SecretAccessKey: minio123
+s3BAASAccessKeyID: baas
+s3BAASSecretAccessKey: baas123
 
 # used in ui
 lagoonAPIURL: https://api.example.com/graphql
