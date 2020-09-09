@@ -3,6 +3,28 @@ entries:
   lagoon-core:
   - apiVersion: v2
     appVersion: v1-8-2
+    created: "2020-09-09T08:35:34.872015052Z"
+    dependencies:
+    - condition: harbor.enabled
+      name: harbor
+      repository: https://helm.goharbor.io
+      version: ~1.4.2
+    description: |
+      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    digest: 7c7c071e5701440a380d33144247e72b1b6957a7002ca8ce45899cd40bec75cf
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-0.19.0/lagoon-core-0.19.0.tgz
+    version: 0.19.0
+  - apiVersion: v2
+    appVersion: v1-8-2
     created: "2020-09-09T06:41:55.65799052Z"
     description: |
       A Helm chart for Kubernetes which deploys Lagoon's core components.
