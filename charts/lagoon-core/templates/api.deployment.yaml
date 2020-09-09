@@ -39,15 +39,17 @@ spec:
         env:
         - name: API_DB_HOST
           value: {{ include "lagoon-core.apiDB.fullname" . }}
-        - name: REDIS_HOST
-          value: {{ include "lagoon-core.apiRedis.fullname" . }}
-        - name: RABBITMQ_HOST
-          value: {{ include "lagoon-core.broker.fullname" . }}
         - name: API_DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
+        - name: ELASTICSEARCH_HOST
+          value: {{ required "A valid .Values.elasticsearchHost required!" .Values.elasticsearchHost | quote }}
+        - name: ELASTICSEARCH_URL
+          value: {{ .Values.elasticsearchScheme }}://{{ .Values.elasticsearchHost }}
+        - name: HARBOR_URL
+          value: {{ required "A valid .Values.harborURL required!" .Values.harborURL | quote }}
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
@@ -63,6 +65,22 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KEYCLOAK_URL
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
+        - name: KIBANA_URL
+          value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
+        - name: RABBITMQ_HOST
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: REDIS_HOST
+          value: {{ include "lagoon-core.apiRedis.fullname" . }}
+        - name: S3_BUCKET
+          value: {{ required "A valid .Values.s3Bucket required!" .Values.s3Bucket | quote }}
+        - name: S3_HOST
+          value: {{ required "A valid .Values.s3Host required!" .Values.s3Host | quote }}
+        {{- with .Values.s3Region }}
+        - name: S3_REGION
+          value: {{ . | quote }}
+        {{- end }}
         envFrom:
         - secretRef:
             name: {{ include "lagoon-core.api.fullname" . }}

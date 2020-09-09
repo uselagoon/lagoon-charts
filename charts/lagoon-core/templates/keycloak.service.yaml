@@ -12,19 +12,3 @@ spec:
     name: http-8080
   selector:
     {{- include "lagoon-core.keycloak.selectorLabels" . | nindent 4 }}
----
-# this is a hack to work around hard-coded service name in api
-apiVersion: v1
-kind: Service
-metadata:
-  name: keycloak
-  labels:
-    {{- include "lagoon-core.keycloak.labels" . | nindent 4 }}
-spec:
-  type: {{ .Values.keycloak.service.type }}
-  ports:
-  - port: {{ .Values.keycloak.service.port }}
-    targetPort: http-8080
-    name: http-8080
-  selector:
-    {{- include "lagoon-core.keycloak.selectorLabels" . | nindent 4 }}
