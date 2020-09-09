@@ -500,3 +500,8 @@ sshPortal:
     # If not set and create is true, a name is generated using the fullname
     # template
     name: ""
+
+# these services are chart dependencies
+
+harbor:
+  enabled: true
