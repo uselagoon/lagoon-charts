@@ -15,6 +15,7 @@ spec:
   template:
     metadata:
       annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
     {{- with .Values.logs2slack.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -35,6 +36,13 @@ spec:
         image: "{{ .Values.logs2slack.image.repository }}:{{ .Values.logs2slack.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logs2slack.image.pullPolicy }}
         env:
+        - name: API_HOST
+          value: {{ include "lagoon-core.api.fullname" . }}
+        - name: JWTSECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              key: JWTSECRET
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
         - name: RABBITMQ_USERNAME
