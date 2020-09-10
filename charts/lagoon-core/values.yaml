@@ -9,6 +9,10 @@
 # s3Bucket:
 # s3Host:
 # s3SecretAccessKey:
+# s3BAASAccessKeyID:
+# s3BAASSecretAccessKey:
+# uiURL:
+# webhookURL:
 
 # These values are optional.
 
