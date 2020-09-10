@@ -71,10 +71,6 @@ api:
   image:
     tag: lagoon-core
 
-keycloak:
-  image:
-    tag: lagoon-core
-
 broker:
   replicaCount: 1
 
@@ -93,14 +89,6 @@ ui:
 backupHandler:
   replicaCount: 1
 
-autoIdler:
-  image:
-    tag: lagoon-core
-
-storageCalculator:
-  image:
-    tag: lagoon-core
-
 logs2slack:
   replicaCount: 1
 
@@ -118,8 +106,6 @@ drushAlias:
 
 ssh:
   replicaCount: 1
-  image:
-    tag: lagoon-core
 
 sshPortal:
   enabled: true
