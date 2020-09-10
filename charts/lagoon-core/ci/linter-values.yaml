@@ -112,5 +112,8 @@ sshPortal:
   replicaCount: 1
   debug: true
 
+controllerhandler:
+  replicaCount: 1
+
 harbor:
   enabled: false
