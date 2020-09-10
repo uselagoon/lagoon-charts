@@ -693,14 +693,29 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-This template can be passed to subcharts that need the parent chart fullname.
-It is the same as the regular fullname template, but has a hard-coded
-.Chart.Name as this parent chart field is otherwise unavailable in subcharts.
+Create a default fully qualified app name for controllerhandler.
 */}}
-{{- define "lagoon-core.fullname.subchart" -}}
-{{- if contains "lagoon-core" .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name "lagoon-core" | trunc 63 | trimSuffix "-" }}
+{{- define "lagoon-core.controllerhandler.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-controllerhandler
 {{- end }}
+
+{{/*
+Common labels controllerhandler.
+*/}}
+{{- define "lagoon-core.controllerhandler.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.controllerhandler.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels controllerhandler.
+*/}}
+{{- define "lagoon-core.controllerhandler.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.controllerhandler.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

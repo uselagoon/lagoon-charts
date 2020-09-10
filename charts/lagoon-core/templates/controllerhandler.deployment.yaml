@@ -1,0 +1,74 @@
+{{- if .Values.controllerhandler.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.controllerhandler.fullname" . }}
+  labels:
+    {{- include "lagoon-core.controllerhandler.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.controllerhandler.autoscaling.enabled }}
+  replicas: {{ .Values.controllerhandler.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.controllerhandler.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
+    {{- with .Values.controllerhandler.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.controllerhandler.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml (coalesce .Values.controllerhandler.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      containers:
+      - name: controllerhandler
+        securityContext:
+          {{- toYaml .Values.controllerhandler.securityContext | nindent 10 }}
+        image: "{{ .Values.controllerhandler.image.repository }}:{{ .Values.controllerhandler.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.controllerhandler.image.pullPolicy }}
+        env:
+        - name: API_HOST
+          value: {{ include "lagoon-core.api.fullname" . }}
+        - name: JWTSECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              key: JWTSECRET
+        - name: LAGOON_VERSION
+          value: {{ .Chart.AppVersion | replace "-" "." }}
+        - name: RABBITMQ_HOST
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_USERNAME
+        resources:
+          {{- toYaml .Values.controllerhandler.resources | nindent 12 }}
+      {{- with .Values.controllerhandler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controllerhandler.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.controllerhandler.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
