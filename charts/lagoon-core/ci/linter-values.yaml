@@ -125,3 +125,6 @@ sshPortal:
   enabled: true
   replicaCount: 1
   debug: true
+
+harbor:
+  enabled: false
