@@ -43,18 +43,27 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.fullname" . }}-jwtsecret
               key: JWTSECRET
-        - name: RABBITMQ_HOST
-          value: {{ include "lagoon-core.broker.fullname" . }}
-        - name: RABBITMQ_USERNAME
+        - name: HARBOR_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.broker.fullname" . }}
-              key: RABBITMQ_USERNAME
+              name: {{ include "lagoon-core.api.fullname" . }}
+              key: HARBOR_ADMIN_PASSWORD
+        - name: HARBOR_BASE_API_URL
+          value: {{ required "A valid .Values.harborURL required!" .Values.harborURL }}/api/repositories/
+        - name: LAGOON_VERSION
+          value: {{ .Chart.AppVersion | replace "-" "." }}
+        - name: RABBITMQ_HOST
+          value: {{ include "lagoon-core.broker.fullname" . }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_PASSWORD
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_USERNAME
         resources:
           {{- toYaml .Values.webhooks2tasks.resources | nindent 12 }}
       {{- with .Values.webhooks2tasks.nodeSelector }}
