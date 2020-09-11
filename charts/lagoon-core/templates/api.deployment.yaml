@@ -44,6 +44,8 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
+        - name: API_HOST
+          value: {{ include "lagoon-core.api.fullname" . }}
         - name: ELASTICSEARCH_HOST
           value: {{ required "A valid .Values.elasticsearchHost required!" .Values.elasticsearchHost | quote }}
         - name: ELASTICSEARCH_URL
@@ -73,6 +75,16 @@ spec:
           value: {{ .Chart.AppVersion | replace "-" "." }}
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_USERNAME
         - name: REDIS_HOST
           value: {{ include "lagoon-core.apiRedis.fullname" . }}
         - name: S3_BUCKET

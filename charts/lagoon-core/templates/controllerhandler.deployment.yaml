@@ -1,40 +1,40 @@
-{{- if .Values.webhooks2tasks.enabled -}}
+{{- if .Values.controllerhandler.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "lagoon-core.webhooks2tasks.fullname" . }}
+  name: {{ include "lagoon-core.controllerhandler.fullname" . }}
   labels:
-    {{- include "lagoon-core.webhooks2tasks.labels" . | nindent 4 }}
+    {{- include "lagoon-core.controllerhandler.labels" . | nindent 4 }}
 spec:
-{{- if not .Values.webhooks2tasks.autoscaling.enabled }}
-  replicas: {{ .Values.webhooks2tasks.replicaCount }}
+{{- if not .Values.controllerhandler.autoscaling.enabled }}
+  replicas: {{ .Values.controllerhandler.replicaCount }}
 {{- end }}
   selector:
     matchLabels:
-      {{- include "lagoon-core.webhooks2tasks.selectorLabels" . | nindent 6 }}
+      {{- include "lagoon-core.controllerhandler.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
-    {{- with .Values.webhooks2tasks.podAnnotations }}
+    {{- with .Values.controllerhandler.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{- include "lagoon-core.webhooks2tasks.selectorLabels" . | nindent 8 }}
+        {{- include "lagoon-core.controllerhandler.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml (coalesce .Values.webhooks2tasks.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+        {{- toYaml (coalesce .Values.controllerhandler.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
-      - name: webhooks2tasks
+      - name: controllerhandler
         securityContext:
-          {{- toYaml .Values.webhooks2tasks.securityContext | nindent 10 }}
-        image: "{{ .Values.webhooks2tasks.image.repository }}:{{ .Values.webhooks2tasks.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.webhooks2tasks.image.pullPolicy }}
+          {{- toYaml .Values.controllerhandler.securityContext | nindent 10 }}
+        image: "{{ .Values.controllerhandler.image.repository }}:{{ .Values.controllerhandler.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.controllerhandler.image.pullPolicy }}
         env:
         - name: API_HOST
           value: {{ include "lagoon-core.api.fullname" . }}
@@ -43,13 +43,6 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.fullname" . }}-jwtsecret
               key: JWTSECRET
-        - name: HARBOR_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.api.fullname" . }}
-              key: HARBOR_ADMIN_PASSWORD
-        - name: HARBOR_BASE_API_URL
-          value: {{ required "A valid .Values.harborURL required!" .Values.harborURL }}/api/repositories/
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}
         - name: RABBITMQ_HOST
@@ -65,16 +58,16 @@ spec:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_USERNAME
         resources:
-          {{- toYaml .Values.webhooks2tasks.resources | nindent 12 }}
-      {{- with .Values.webhooks2tasks.nodeSelector }}
+          {{- toYaml .Values.controllerhandler.resources | nindent 12 }}
+      {{- with .Values.controllerhandler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.webhooks2tasks.affinity }}
+      {{- with .Values.controllerhandler.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.webhooks2tasks.tolerations }}
+      {{- with .Values.controllerhandler.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
