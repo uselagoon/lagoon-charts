@@ -38,6 +38,14 @@ spec:
         env:
         - name: API_HOST
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
+        {{- with .Values.gitlabAPIURL }}
+        - name: GITLAB_API_HOST
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.gitlabAPIToken }}
+        - name: GITLAB_API_TOKEN
+          value: {{ . | quote }}
+        {{- end }}
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
