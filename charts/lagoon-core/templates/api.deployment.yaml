@@ -45,7 +45,7 @@ spec:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
         - name: API_HOST
-          value: {{ include "lagoon-core.api.fullname" . }}
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
         - name: ELASTICSEARCH_HOST
           value: {{ required "A valid .Values.elasticsearchHost required!" .Values.elasticsearchHost | quote }}
         - name: ELASTICSEARCH_URL
