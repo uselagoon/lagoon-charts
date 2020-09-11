@@ -37,7 +37,7 @@ spec:
         imagePullPolicy: {{ .Values.controllerhandler.image.pullPolicy }}
         env:
         - name: API_HOST
-          value: {{ include "lagoon-core.api.fullname" . }}
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
