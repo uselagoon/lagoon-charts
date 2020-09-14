@@ -1,10 +1,19 @@
 # Default values for lagoon-remote.
+
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
 
 logsDispatcherHost: |-
   lagoon-logging-logs-dispatcher.lagoon-logging.svc.cluster.local
+
+# these values are used by the lagoon-build-deploy controller and do not have
+# sensible defaults
+
+# rabbitMQUsername:
+# rabbitMQPassword:
+# rabbitMQHostname:
+# lagoonTargetName:
+
+pendingMessageCron: "*/5 * * * *"
 
 dockerHost:
   image:
@@ -27,56 +36,61 @@ dockerHost:
     # Specifies whether a service account should be created
     create: true
     # The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname template
+    # If not set and create is true, a name is generated using the fullname
+    # template
     name:
-
-  podSecurityContext: {}
-    # fsGroup: 2000
 
   securityContext:
     privileged: true
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
 
   service:
     type: ClusterIP
     port: 2375
 
-  nodeSelector: {}
-
   tolerations:
-    - key: lagoon/build
-      effect: NoSchedule
-      operator: Exists
-    - key: lagoon/build
-      effect: PreferNoSchedule
-      operator: Exists
-    - key: lagoon.sh/build
-      effect: NoSchedule
-      operator: Exists
-    - key: lagoon.sh/build
-      effect: PreferNoSchedule
-      operator: Exists
+  - key: lagoon/build
+    effect: NoSchedule
+    operator: Exists
+  - key: lagoon/build
+    effect: PreferNoSchedule
+    operator: Exists
+  - key: lagoon.sh/build
+    effect: NoSchedule
+    operator: Exists
+  - key: lagoon.sh/build
+    effect: PreferNoSchedule
+    operator: Exists
 
+lagoonBuildDeploy:
+  enabled: false
+  image:
+    repository: amazeeio/lagoon-builddeploy
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.1.2"
 
-  affinity: {}
+  extraArgs:
+  - "--metrics-addr=127.0.0.1:8080"
+  - "--enable-leader-election=true"
 
+  service:
+    type: ClusterIP
+    port: 8443
 
-kubernetesbuilddeploy:
-  serviceAccountName: kubernetesbuilddeploy
+  serviceAccount:
+    # The name of the service account to use.
+    # If not set, a name is generated using the fullname template.
+    name:
+
+# this is a sidecar in the same pod as the lagoonBuildDeploy container
+kubeRBACProxy:
+  image:
+    repository: gcr.io/kubebuilder/kube-rbac-proxy
+    pullPolicy: Always
+    tag: v0.4.1
+
+kubernetesBuildDeploy:
+  serviceAccount:
+    # The name of the service account to use.
+    # If not set, a name is generated using the fullname template.
+    name:
