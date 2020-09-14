@@ -1,0 +1,6 @@
+rabbitMQUsername: ci
+rabbitMQPassword: ci
+rabbitMQHostname: ci.example.com
+lagoonTargetName: ci
+lagoonBuildDeploy:
+  enabled: true

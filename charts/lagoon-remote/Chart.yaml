@@ -1,7 +1,7 @@
 apiVersion: v2
 name: lagoon-remote
 description: A Helm chart to run a lagoon-remote
-home: https://github.com/amazeeio/charts
+home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
 - name: schnitzel
@@ -18,8 +18,8 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.2.2
+version: 0.3.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
-appVersion: 1.4.0
+appVersion: 1.9.0
