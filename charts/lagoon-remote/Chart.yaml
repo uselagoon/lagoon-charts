@@ -1,7 +1,7 @@
 apiVersion: v2
 name: lagoon-remote
 description: A Helm chart to run a lagoon-remote
-home: https://github.com/amazeeio/charts
+home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
 - name: schnitzel
