@@ -27,7 +27,7 @@ spec:
       securityContext:
         {{- toYaml .Values.dockerHost.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ include "lagoon-remote.dockerHost.fullname" . }}
+        - name: docker-host
           securityContext:
             {{- toYaml .Values.dockerHost.securityContext | nindent 12 }}
           image: {{ .Values.dockerHost.image.name | quote }}
@@ -47,6 +47,7 @@ spec:
           ports:
           - containerPort: 2375
             protocol: TCP
+            name: docker-daemon
           livenessProbe:
             failureThreshold: 3
             periodSeconds: 10

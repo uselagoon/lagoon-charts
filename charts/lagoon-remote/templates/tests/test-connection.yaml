@@ -13,6 +13,6 @@ spec:
     command: ['nc']
     args:
     - "-zvw5"
-    - "{{ include "lagoon-remote.dockerHost.fullname" . }}"
+    - "docker-host"
     - "{{ .Values.dockerHost.service.port }}"
   restartPolicy: Never
