@@ -5,5 +5,4 @@ chart-dirs:
 - charts
 chart-repos:
 - banzaicloud-stable=https://kubernetes-charts.banzaicloud.com
-- harbor=https://helm.goharbor.io
 helm-extra-args: --timeout 600s

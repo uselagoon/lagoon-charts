@@ -525,8 +525,3 @@ controllerhandler:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
-
-# these services are chart dependencies
-
-harbor:
-  enabled: true
