@@ -14,9 +14,14 @@
 # uiURL:
 # webhookURL:
 
-# These values are optional.
+# These values are optional depending on the services Lagoon is integrated with
+# in your environment.
 
 # s3Region:
+# gitlabAPIURL:
+# gitlabAPIToken:
+# bitbucketAPIURL:
+# bitbucketAPIToken:
 
 # These values may be set on install, otherwise the chart tries to guess
 # sensible defaults.

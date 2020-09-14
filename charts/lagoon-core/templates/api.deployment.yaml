@@ -46,10 +46,26 @@ spec:
               key: API_DB_PASSWORD
         - name: API_HOST
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
+        {{- with .Values.bitbucketAPIURL }}
+        - name: BITBUCKET_API_HOST
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.bitbucketAPIToken }}
+        - name: BITBUCKET_API_TOKEN
+          value: {{ . | quote }}
+        {{- end }}
         - name: ELASTICSEARCH_HOST
           value: {{ required "A valid .Values.elasticsearchHost required!" .Values.elasticsearchHost | quote }}
         - name: ELASTICSEARCH_URL
           value: {{ .Values.elasticsearchScheme }}://{{ .Values.elasticsearchHost }}
+        {{- with .Values.gitlabAPIURL }}
+        - name: GITLAB_API_HOST
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.gitlabAPIToken }}
+        - name: GITLAB_API_TOKEN
+          value: {{ . | quote }}
+        {{- end }}
         - name: HARBOR_URL
           value: {{ required "A valid .Values.harborURL required!" .Values.harborURL | quote }}
         - name: JWTSECRET
