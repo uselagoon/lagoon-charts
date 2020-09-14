@@ -17,11 +17,13 @@ spec:
       labels:
         {{- include "lagoon-remote.dockerHost.selectorLabels" . | nindent 8 }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
+      {{- if .Values.dockerHost.serviceAccount.create }}
       serviceAccountName: {{ include "lagoon-remote.dockerHost.serviceAccountName" . }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.dockerHost.podSecurityContext | nindent 8 }}
       containers:
