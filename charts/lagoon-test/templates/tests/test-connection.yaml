@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "lagoon-test.fullname" . }}-test-connection"
+  labels:
+    {{- include "lagoon-test.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: nc
+    image: busybox
+    command:
+    - nc
+    args:
+    - "-vzw5"
+    - {{ include "lagoon-test.localGit.fullname" . }}
+    - {{ .Values.localGit.service.port | quote }}
+  restartPolicy: Never

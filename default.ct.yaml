@@ -5,4 +5,6 @@ chart-dirs:
 - charts
 chart-repos:
 - banzaicloud-stable=https://kubernetes-charts.banzaicloud.com
+excluded-charts:
+- lagoon-test
 helm-extra-args: --timeout 600s

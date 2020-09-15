@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-test.localGit.fullname" . }}
+  labels:
+    {{- include "lagoon-test.localGit.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-test.localGit.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.localGit.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-test.localGit.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.localGit.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.localGit.podSecurityContext | nindent 8 }}
+      containers:
+      - name: git
+        securityContext:
+          {{- toYaml .Values.localGit.securityContext | nindent 12 }}
+        image: "{{ .Values.localGit.image.repository }}:{{ .Values.localGit.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.localGit.image.pullPolicy }}
+        env:
+        - name: GIT_AUTHORIZED_KEYS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-test.fullname" . }}
+              key: GIT_AUTHORIZED_KEYS
+        ports:
+        - name: ssh
+          containerPort: 22
+          protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: ssh
+        readinessProbe:
+          tcpSocket:
+            port: ssh
+        resources:
+          {{- toYaml .Values.localGit.resources | nindent 12 }}
+      {{- with .Values.localGit.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.localGit.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.localGit.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
