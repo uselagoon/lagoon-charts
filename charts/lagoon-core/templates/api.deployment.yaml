@@ -89,6 +89,10 @@ spec:
           value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}
+        {{- with .Values.overwriteKubectlBuildDeployDindImage }}
+        - name: OVERWRITE_KUBECTL_BUILD_DEPLOY_DIND_IMAGE
+          value: {{ . | quote }}
+        {{- end }}
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
         - name: RABBITMQ_PASSWORD
