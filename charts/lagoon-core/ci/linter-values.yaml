@@ -1,9 +1,11 @@
 # Any values defined here are not used anywhere other than lint/CI.
 
 # used in api
-elasticsearchHost: logs.example.com
+elasticsearchHost: opendistro-es-client-service.opendistro-es.svc.cluster.local
+elasticsearchScheme: http
 harborURL: http://harbor:1234
-kibanaURL: http://kibana:5678
+kibanaURL: http://opendistro-es-kibana-svc.opendistro-es.svc.cluster.local:443
+logsDBAdminPassword: admin
 s3AccessKeyID: minio
 s3Bucket: lagoon-files
 s3Host: http://minio:9000
