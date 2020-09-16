@@ -468,7 +468,7 @@ ssh:
     tag: ""
 
   podSecurityContext:
-    runAsUser: 100
+    runAsUser: 1000
     fsGroup: 0
 
   service:
