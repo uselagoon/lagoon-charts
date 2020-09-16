@@ -78,6 +78,8 @@ broker:
 
 authServer:
   replicaCount: 1
+  image:
+    tag: lagoon-core
 
 webhooks2tasks:
   replicaCount: 1
