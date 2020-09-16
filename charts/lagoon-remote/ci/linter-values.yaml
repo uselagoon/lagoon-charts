@@ -1,6 +1,6 @@
-rabbitMQUsername: ci
+rabbitMQUsername: lagoon
 rabbitMQPassword: ci
-rabbitMQHostname: ci.example.com
-lagoonTargetName: ci
+rabbitMQHostname: lagoon-core-broker
+lagoonTargetName: ci-local-control-k8s
 lagoonBuildDeploy:
   enabled: true
