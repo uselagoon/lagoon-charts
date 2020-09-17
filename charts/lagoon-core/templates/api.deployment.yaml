@@ -66,6 +66,10 @@ spec:
         - name: GITLAB_API_TOKEN
           value: {{ . | quote }}
         {{- end }}
+        {{- with .Values.harborAdminPassword }}
+        - name: HARBOR_ADMIN_PASSWORD
+          value: {{ . | quote }}
+        {{- end }}
         - name: HARBOR_URL
           value: {{ required "A valid .Values.harborURL required!" .Values.harborURL | quote }}
         - name: JWTSECRET
