@@ -119,6 +119,3 @@ sshPortal:
 
 controllerhandler:
   replicaCount: 1
-
-harbor:
-  enabled: false
