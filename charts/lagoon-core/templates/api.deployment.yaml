@@ -57,13 +57,17 @@ spec:
         - name: ELASTICSEARCH_HOST
           value: {{ required "A valid .Values.elasticsearchHost required!" .Values.elasticsearchHost | quote }}
         - name: ELASTICSEARCH_URL
-          value: {{ .Values.elasticsearchScheme }}://{{ .Values.elasticsearchHost }}
+          value: {{ .Values.elasticsearchScheme }}://{{ .Values.elasticsearchHost }}:{{ .Values.elasticsearchHostPort }}
         {{- with .Values.gitlabAPIURL }}
         - name: GITLAB_API_HOST
           value: {{ . | quote }}
         {{- end }}
         {{- with .Values.gitlabAPIToken }}
         - name: GITLAB_API_TOKEN
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.harborAdminPassword }}
+        - name: HARBOR_ADMIN_PASSWORD
           value: {{ . | quote }}
         {{- end }}
         - name: HARBOR_URL
@@ -89,6 +93,10 @@ spec:
           value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}
+        {{- with .Values.overwriteKubectlBuildDeployDindImage }}
+        - name: OVERWRITE_KUBECTL_BUILD_DEPLOY_DIND_IMAGE
+          value: {{ . | quote }}
+        {{- end }}
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
         - name: RABBITMQ_PASSWORD
@@ -103,6 +111,8 @@ spec:
               key: RABBITMQ_USERNAME
         - name: REDIS_HOST
           value: {{ include "lagoon-core.apiRedis.fullname" . }}
+        - name: REGISTRY
+          value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
         - name: S3_BUCKET
           value: {{ required "A valid .Values.s3Bucket required!" .Values.s3Bucket | quote }}
         - name: S3_HOST

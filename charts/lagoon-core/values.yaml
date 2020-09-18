@@ -2,7 +2,9 @@
 
 # elasticsearchHost:
 # harborURL:
+# harborAdminPassword:
 # kibanaURL:
+# registry:
 # sshHostKeyRSA:
 # sshHostKeyED25519:
 # s3AccessKeyID:
@@ -13,6 +15,10 @@
 # s3BAASSecretAccessKey:
 # uiURL:
 # webhookURL:
+
+# These values are optional.
+
+# overwriteKubectlBuildDeployDindImage:
 
 # These values are optional depending on the services Lagoon is integrated with
 # in your environment.
@@ -468,7 +474,7 @@ ssh:
     tag: ""
 
   podSecurityContext:
-    runAsUser: 100
+    runAsUser: 1000
     fsGroup: 0
 
   service:

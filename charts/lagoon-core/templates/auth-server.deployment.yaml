@@ -35,16 +35,18 @@ spec:
         image: "{{ .Values.authServer.image.repository }}:{{ .Values.authServer.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.authServer.image.pullPolicy }}
         env:
-        - name: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.keycloak.fullname" . }}
-              key: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
               name: {{ include "lagoon-core.fullname" . }}-jwtsecret
               key: JWTSECRET
+        - name: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
+        - name: KEYCLOAK_URL
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
         ports:
         - name: http-3000
           containerPort: 3000
