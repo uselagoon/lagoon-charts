@@ -33,7 +33,7 @@ spec:
       - name: logs2slack
         securityContext:
           {{- toYaml .Values.logs2slack.securityContext | nindent 10 }}
-        image: "{{ .Values.logs2slack.image.repository }}:{{ .Values.logs2slack.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.logs2slack.image.repository }}:{{ coalesce .Values.logs2slack.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logs2slack.image.pullPolicy }}
         env:
         - name: API_HOST

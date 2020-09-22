@@ -33,7 +33,7 @@ spec:
       - name: broker
         securityContext:
           {{- toYaml .Values.broker.securityContext | nindent 10 }}
-        image: "{{ .Values.broker.image.repository }}:{{ .Values.broker.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.broker.image.repository }}:{{ coalesce .Values.broker.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.broker.image.pullPolicy }}
         command:
         - sh

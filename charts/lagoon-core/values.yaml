@@ -63,6 +63,10 @@ imagePullSecrets: []
 podSecurityContext:
   runAsUser: 100
 
+# this default image tag is set for all services and can be overridden
+# on the service level, if not set is uses chart appVersion
+imageTag: ""
+
 # the following services are part of the lagoon-core chart
 
 api:

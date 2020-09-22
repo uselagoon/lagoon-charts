@@ -25,7 +25,7 @@ spec:
       - name: ssh
         securityContext:
           {{- toYaml .Values.ssh.securityContext | nindent 10 }}
-        image: "{{ .Values.ssh.image.repository }}:{{ .Values.ssh.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.ssh.image.repository }}:{{ coalesce .Values.ssh.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.ssh.image.pullPolicy }}
         env:
         - name: API_DB_HOST

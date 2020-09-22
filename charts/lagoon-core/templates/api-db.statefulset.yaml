@@ -29,7 +29,7 @@ spec:
       - name: api-db
         securityContext:
           {{- toYaml .Values.apiDB.securityContext | nindent 10 }}
-        image: "{{ .Values.apiDB.image.repository }}:{{ .Values.apiDB.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.apiDB.image.repository }}:{{ coalesce .Values.apiDB.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.apiDB.image.pullPolicy }}
         env:
         - name: MARIADB_PASSWORD

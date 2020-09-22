@@ -34,7 +34,7 @@ spec:
       - name: api
         securityContext:
           {{- toYaml .Values.api.securityContext | nindent 10 }}
-        image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.api.image.repository }}:{{ coalesce .Values.api.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.api.image.pullPolicy }}
         env:
         - name: API_DB_HOST

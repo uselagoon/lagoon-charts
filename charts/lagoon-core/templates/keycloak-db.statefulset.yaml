@@ -29,7 +29,7 @@ spec:
       - name: keycloak-db
         securityContext:
           {{- toYaml .Values.keycloakDB.securityContext | nindent 10 }}
-        image: "{{ .Values.keycloakDB.image.repository }}:{{ .Values.keycloakDB.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.keycloakDB.image.repository }}:{{ coalesce .Values.keycloakDB.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.keycloakDB.image.pullPolicy }}
         env:
         - name: MARIADB_PASSWORD

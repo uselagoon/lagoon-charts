@@ -29,7 +29,7 @@ spec:
       - name: logs-db-curator
         securityContext:
           {{- toYaml .Values.logsDBCurator.securityContext | nindent 10 }}
-        image: "{{ .Values.logsDBCurator.image.repository }}:{{ .Values.logsDBCurator.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.logsDBCurator.image.repository }}:{{ coalesce .Values.logsDBCurator.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logsDBCurator.image.pullPolicy }}
         env:
         - name: ELASTICSEARCH_HOST

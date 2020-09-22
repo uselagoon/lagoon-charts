@@ -33,7 +33,7 @@ spec:
       - name: logs2email
         securityContext:
           {{- toYaml .Values.logs2email.securityContext | nindent 10 }}
-        image: "{{ .Values.logs2email.image.repository }}:{{ .Values.logs2email.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.logs2email.image.repository }}:{{ coalesce .Values.logs2email.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logs2email.image.pullPolicy }}
         env:
         - name: API_HOST
