@@ -27,7 +27,7 @@ spec:
       - name: ssh-portal
         securityContext:
           {{- toYaml .Values.sshPortal.securityContext | nindent 10 }}
-        image: "{{ .Values.sshPortal.image.repository }}:{{ .Values.sshPortal.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.sshPortal.image.repository }}:{{ coalesce .Values.sshPortal.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.sshPortal.image.pullPolicy }}
         command:
         - "/ssh-portal"

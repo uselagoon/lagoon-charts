@@ -33,7 +33,7 @@ spec:
       - name: controllerhandler
         securityContext:
           {{- toYaml .Values.controllerhandler.securityContext | nindent 10 }}
-        image: "{{ .Values.controllerhandler.image.repository }}:{{ .Values.controllerhandler.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.controllerhandler.image.repository }}:{{ coalesce .Values.controllerhandler.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.controllerhandler.image.pullPolicy }}
         env:
         - name: API_HOST

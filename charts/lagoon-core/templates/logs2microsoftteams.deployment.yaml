@@ -33,7 +33,7 @@ spec:
       - name: logs2microsoftteams
         securityContext:
           {{- toYaml .Values.logs2microsoftteams.securityContext | nindent 10 }}
-        image: "{{ .Values.logs2microsoftteams.image.repository }}:{{ .Values.logs2microsoftteams.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.logs2microsoftteams.image.repository }}:{{ coalesce .Values.logs2microsoftteams.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logs2microsoftteams.image.pullPolicy }}
         env:
         - name: API_HOST

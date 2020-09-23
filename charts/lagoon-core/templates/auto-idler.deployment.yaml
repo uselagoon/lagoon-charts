@@ -30,7 +30,7 @@ spec:
       - name: auto-idler
         securityContext:
           {{- toYaml .Values.autoIdler.securityContext | nindent 10 }}
-        image: "{{ .Values.autoIdler.image.repository }}:{{ .Values.autoIdler.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.autoIdler.image.repository }}:{{ coalesce .Values.autoIdler.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.autoIdler.image.pullPolicy }}
         env:
         - name: ELASTICSEARCH_URL

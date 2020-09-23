@@ -32,7 +32,7 @@ spec:
       - name: webhook-handler
         securityContext:
           {{- toYaml .Values.webhookHandler.securityContext | nindent 10 }}
-        image: "{{ .Values.webhookHandler.image.repository }}:{{ .Values.webhookHandler.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.webhookHandler.image.repository }}:{{ coalesce .Values.webhookHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.webhookHandler.image.pullPolicy }}
         env:
         - name: RABBITMQ_HOST

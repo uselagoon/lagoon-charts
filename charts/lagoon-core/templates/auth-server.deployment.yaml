@@ -32,7 +32,7 @@ spec:
       - name: auth-server
         securityContext:
           {{- toYaml .Values.authServer.securityContext | nindent 10 }}
-        image: "{{ .Values.authServer.image.repository }}:{{ .Values.authServer.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.authServer.image.repository }}:{{ coalesce .Values.authServer.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.authServer.image.pullPolicy }}
         env:
         - name: JWTSECRET

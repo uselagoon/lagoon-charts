@@ -33,7 +33,7 @@ spec:
       - name: webhooks2tasks
         securityContext:
           {{- toYaml .Values.webhooks2tasks.securityContext | nindent 10 }}
-        image: "{{ .Values.webhooks2tasks.image.repository }}:{{ .Values.webhooks2tasks.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.webhooks2tasks.image.repository }}:{{ coalesce .Values.webhooks2tasks.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.webhooks2tasks.image.pullPolicy }}
         env:
         - name: API_HOST
