@@ -7,9 +7,9 @@
 # registry:
 # sshHostKeyRSA:
 # sshHostKeyED25519:
-# s3AccessKeyID:
-# s3Bucket:
-# s3Host:
+# s3FilesAccessKeyID:
+# s3FilesBucket:
+# s3FilesHost:
 # s3SecretAccessKey:
 # s3BAASAccessKeyID:
 # s3BAASSecretAccessKey:
