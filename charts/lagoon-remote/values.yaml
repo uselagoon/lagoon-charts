@@ -15,10 +15,15 @@ logsDispatcherHost: |-
 
 pendingMessageCron: "*/5 * * * *"
 
+# this default image tag is set for all services and can be overridden
+# on the service level, if not set it uses chart appVersion
+imageTag: ""
+
 dockerHost:
   image:
-    name: amazeeiolagoon/docker-host:kubernetes
+    repository: amazeeiolagoon/docker-host
     pullPolicy: Always
+    tag: ""
 
   name: docker-host
 
