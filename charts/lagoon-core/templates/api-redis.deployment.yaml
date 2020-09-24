@@ -28,7 +28,7 @@ spec:
       - name: api-redis
         securityContext:
           {{- toYaml .Values.apiRedis.securityContext | nindent 10 }}
-        image: "{{ .Values.apiRedis.image.repository }}:{{ .Values.apiRedis.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.apiRedis.image.repository }}:{{ coalesce .Values.apiRedis.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.apiRedis.image.pullPolicy }}
         env:
         - name: REDIS_PASSWORD
