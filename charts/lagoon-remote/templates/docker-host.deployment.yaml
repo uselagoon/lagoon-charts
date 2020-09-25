@@ -30,7 +30,7 @@ spec:
         - name: docker-host
           securityContext:
             {{- toYaml .Values.dockerHost.securityContext | nindent 12 }}
-          image: {{ .Values.dockerHost.image.name | quote }}
+          image: "{{ .Values.dockerHost.image.repository }}:{{ coalesce .Values.dockerHost.image.tag .Values.imageTag .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.dockerHost.image.pullPolicy }}
           env:
             - name: DOCKER_HOST

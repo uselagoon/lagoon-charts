@@ -4,7 +4,6 @@
 # harborURL:
 # harborAdminPassword:
 # kibanaURL:
-# registry:
 # sshHostKeyRSA:
 # sshHostKeyED25519:
 # s3FilesAccessKeyID:
@@ -13,8 +12,7 @@
 # s3SecretAccessKey:
 # s3BAASAccessKeyID:
 # s3BAASSecretAccessKey:
-# uiURL:
-# webhookURL:
+
 
 # These values are optional.
 
@@ -34,6 +32,8 @@
 
 # lagoonAPIURL: https://api.example.com/graphql
 # keycloakAPIURL: https://keycloak.example.com/auth
+# lagoonUIURL: https://ui.example.com/
+# lagoonWebhookURL: https://webhook-handler.example.com/
 
 # These values are randomly generated on install if not otherwise defined.
 
