@@ -2,8 +2,8 @@ name: Release Charts
 
 on:
   push:
-    tags:
-      - lagoon-*
+    branches:
+    - main
 
 jobs:
   release:
