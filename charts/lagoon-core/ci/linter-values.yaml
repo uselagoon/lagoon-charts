@@ -6,15 +6,14 @@ elasticsearchScheme: http
 harborURL: http://harbor:1234
 kibanaURL: http://opendistro-es-kibana-svc.opendistro-es.svc.cluster.local:443
 logsDBAdminPassword: admin
-registry: registry.example.com:5000
-s3AccessKeyID: minio
-s3Bucket: lagoon-files
-s3Host: http://minio:9000
-s3SecretAccessKey: minio123
+s3FilesAccessKeyID: minio
+s3FilesBucket: lagoon-files
+s3FilesHost: http://minio:9000
+s3FilesSecretAccessKey: minio123
 s3BAASAccessKeyID: baas
 s3BAASSecretAccessKey: baas123
-uiURL: http://ui:9101
-webhookURL: http://webhook:11213
+lagoonUIURL: http://ui:9101
+lagoonWebhookURL: http://webhook:11213
 
 # used in ui
 lagoonAPIURL: https://api.example.com/graphql
