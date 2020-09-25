@@ -120,9 +120,17 @@ spec:
           value: {{ . | quote }}
         {{- end }}
         - name: UI_URL
-          value: {{ required "A valid .Values.uiURL required!" .Values.uiURL | quote }}
+          {{- if .Values.lagoonUIURL }}
+          value: {{ .Values.lagoonUIURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.ui.ingress.hosts 0 "host" }}/
+          {{- end }}
         - name: WEBHOOK_URL
-          value: {{ required "A valid .Values.webhookURL required!" .Values.webhookURL | quote }}
+          {{- if .Values.lagoonWebhookURL }}
+          value: {{ .Values.lagoonWebhookURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.webhookHandler.ingress.hosts 0 "host" }}/
+          {{- end }}
         envFrom:
         - secretRef:
             name: {{ include "lagoon-core.api.fullname" . }}
