@@ -1,6 +1,6 @@
 name: Lint and Test Charts
 
-on: pull_request
+on: [push, pull_request]
 
 jobs:
   lint-test:
@@ -29,4 +29,11 @@ jobs:
       with:
         image: smlx/chart-testing:v3.0.0-patch.2
         command: install
+        config: ct.yaml
+
+    - name: Show changed charts
+      uses: helm/chart-testing-action@v1.0.0
+      with:
+        image: smlx/chart-testing:v3.0.0-patch.2
+        command: list-changed
         config: ct.yaml
