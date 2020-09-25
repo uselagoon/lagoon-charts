@@ -109,8 +109,6 @@ spec:
               key: RABBITMQ_USERNAME
         - name: REDIS_HOST
           value: {{ include "lagoon-core.apiRedis.fullname" . }}
-        - name: REGISTRY
-          value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
         - name: S3_BUCKET
           value: {{ required "A valid .Values.s3Bucket required!" .Values.s3Bucket | quote }}
         - name: S3_HOST

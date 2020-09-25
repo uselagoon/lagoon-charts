@@ -57,8 +57,6 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_USERNAME
-        - name: REGISTRY
-          value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
         resources:
           {{- toYaml .Values.controllerhandler.resources | nindent 12 }}
       {{- with .Values.controllerhandler.nodeSelector }}
