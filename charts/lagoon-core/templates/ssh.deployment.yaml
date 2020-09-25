@@ -16,6 +16,9 @@ spec:
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+    {{- with .Values.ssh.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
       labels:
         {{- include "lagoon-core.ssh.selectorLabels" . | nindent 8 }}
     spec:
