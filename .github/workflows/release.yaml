@@ -2,8 +2,8 @@ name: Release Charts
 
 on:
   push:
-    branches:
-    - main
+    tags:
+      - lagoon-*
 
 jobs:
   release:
@@ -14,6 +14,17 @@ jobs:
 
     - name: Fetch history
       run: git fetch --prune --unshallow
+
+    - name: Override check-version-increment
+      run: sed -i "/^check-version-increment/ s/false/true/" ct.yaml
+
+    - name: Run chart-testing (lint)
+      id: lint
+      uses: helm/chart-testing-action@v1.0.0
+      with:
+        image: smlx/chart-testing:v3.0.0-patch.2
+        command: lint
+        config: ct.yaml
 
     - name: Configure Git
       run: |
