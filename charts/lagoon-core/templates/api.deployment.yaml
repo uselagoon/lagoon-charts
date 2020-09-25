@@ -110,9 +110,9 @@ spec:
         - name: REDIS_HOST
           value: {{ include "lagoon-core.apiRedis.fullname" . }}
         - name: S3_FILES_BUCKET
-          value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3Bucket | quote }}
+          value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3FilesBucket | quote }}
         - name: S3_FILES_HOST
-          value: {{ required "A valid .Values.s3FilesHost required!" .Values.s3Host | quote }}
+          value: {{ required "A valid .Values.s3FilesHost required!" .Values.s3FilesHost | quote }}
         {{- with .Values.s3FilesRegion }}
         - name: S3_FILES_REGION
           value: {{ . | quote }}
