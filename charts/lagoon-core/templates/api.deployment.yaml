@@ -44,6 +44,8 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
+        - name: API_HOST
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
         {{- with .Values.bitbucketAPIURL }}
         - name: BITBUCKET_API_HOST
           value: {{ . | quote }}
