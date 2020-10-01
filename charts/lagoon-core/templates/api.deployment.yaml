@@ -66,10 +66,13 @@ spec:
         - name: GITLAB_API_TOKEN
           value: {{ . | quote }}
         {{- end }}
-        {{- with .Values.harborAdminPassword }}
+        - name: API_HOST
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
         - name: HARBOR_ADMIN_PASSWORD
-          value: {{ . | quote }}
-        {{- end }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}
+              key: HARBOR_ADMIN_PASSWORD
         - name: HARBOR_URL
           value: {{ required "A valid .Values.harborURL required!" .Values.harborURL | quote }}
         - name: JWTSECRET
