@@ -1,20 +1,18 @@
 # These values must be set on install, as they don't have sensible defaults.
 
 # elasticsearchHost:
-# harborURL:
 # harborAdminPassword:
-# harborAPIVersion:
+# harborURL:
 # kibanaURL:
 # registry:
-# sshHostKeyRSA:
 # sshHostKeyED25519:
+# sshHostKeyRSA:
+# s3BAASSecretAccessKey:
+# s3BAASAccessKeyID:
 # s3FilesAccessKeyID:
 # s3FilesBucket:
 # s3FilesHost:
 # s3SecretAccessKey:
-# s3BAASAccessKeyID:
-# s3BAASSecretAccessKey:
-
 
 # These values are optional.
 
@@ -23,17 +21,18 @@
 # These values are optional depending on the services Lagoon is integrated with
 # in your environment.
 
-# s3Region:
-# gitlabAPIURL:
 # gitlabAPIToken:
-# bitbucketAPIURL:
+# gitlabAPIURL:
 # bitbucketAPIToken:
+# bitbucketAPIURL:
+# s3Region:
 
 # These values may be set on install, otherwise the chart tries to guess
 # sensible defaults.
 
-# lagoonAPIURL: https://api.example.com/graphql
+# harborAPIVersion: "v2.0"
 # keycloakAPIURL: https://keycloak.example.com/auth
+# lagoonAPIURL: https://api.example.com/graphql
 # lagoonUIURL: https://ui.example.com/
 # lagoonWebhookURL: https://webhook-handler.example.com/
 
@@ -42,11 +41,11 @@
 # apiDBPassword:
 # harborAdminPassword:
 # jwtSecret:
-# keycloakAPIClientSecret:
 # keycloakAdminPassword:
+# keycloakAPIClientSecret:
 # keycloakAuthServerClientSecret:
-# keycloakLagoonAdminPassword:
 # keycloakDBPassword:
+# keycloakLagoonAdminPassword:
 # logsDBAdminPassword:
 # rabbitMQPassword:
 # redisPassword:
@@ -56,9 +55,9 @@
 elasticsearchScheme: https
 elasticsearchHostPort: 9200
 
-rabbitMQUsername: lagoon
-
 imagePullSecrets: []
+
+rabbitMQUsername: lagoon
 
 # this default podSecurityContext is set for all services and can be overridden
 # on the service level
