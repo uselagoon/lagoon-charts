@@ -3,6 +3,7 @@
 # elasticsearchHost:
 # harborURL:
 # harborAdminPassword:
+# harborAPIVersion:
 # kibanaURL:
 # registry:
 # sshHostKeyRSA:
