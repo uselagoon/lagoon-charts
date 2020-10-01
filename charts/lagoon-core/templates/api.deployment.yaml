@@ -44,6 +44,8 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
+        - name: API_HOST
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
         {{- with .Values.bitbucketAPIURL }}
         - name: BITBUCKET_API_HOST
           value: {{ . | quote }}
@@ -109,6 +111,8 @@ spec:
               key: RABBITMQ_USERNAME
         - name: REDIS_HOST
           value: {{ include "lagoon-core.apiRedis.fullname" . }}
+        - name: REGISTRY
+          value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
         - name: S3_FILES_BUCKET
           value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3FilesBucket | quote }}
         - name: S3_FILES_HOST

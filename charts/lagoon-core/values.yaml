@@ -4,6 +4,7 @@
 # harborURL:
 # harborAdminPassword:
 # kibanaURL:
+# registry:
 # sshHostKeyRSA:
 # sshHostKeyED25519:
 # s3FilesAccessKeyID:
