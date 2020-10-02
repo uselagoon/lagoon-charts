@@ -1,0 +1,6 @@
+# See https://github.com/helm/chart-testing#configuration
+target-branch: main
+excluded-charts:
+- lagoon-logging
+- lagoon-logs-concentrator
+helm-extra-args: --timeout 10m

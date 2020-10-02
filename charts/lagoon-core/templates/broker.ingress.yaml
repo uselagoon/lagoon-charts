@@ -1,0 +1,37 @@
+{{- if .Values.broker.ingress.enabled -}}
+{{- $fullName := include "lagoon-core.broker.fullname" . -}}
+{{- $svcPort := .Values.broker.service.ports.http -}}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "lagoon-core.broker.labels" . | nindent 4 }}
+  {{- with .Values.broker.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.broker.ingress.tls }}
+  tls:
+    {{- range .Values.broker.ingress.tls }}
+  - hosts:
+      {{- range .hosts }}
+      - {{ . | quote }}
+      {{- end }}
+    secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+  {{- range .Values.broker.ingress.hosts }}
+  - host: {{ .host | quote }}
+    http:
+      paths:
+      {{- range .paths }}
+      - path: {{ . }}
+        backend:
+          serviceName: {{ $fullName }}
+          servicePort: {{ $svcPort }}
+      {{- end }}
+  {{- end }}
+{{- end }}

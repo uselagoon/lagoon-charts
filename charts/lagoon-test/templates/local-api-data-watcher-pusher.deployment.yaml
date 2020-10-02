@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-test.localAPIDataWatcherPusher.fullname" . }}
+  labels:
+    {{- include "lagoon-test.localAPIDataWatcherPusher.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-test.localAPIDataWatcherPusher.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.localAPIDataWatcherPusher.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-test.localAPIDataWatcherPusher.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.localAPIDataWatcherPusher.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.localAPIDataWatcherPusher.podSecurityContext | nindent 8 }}
+      containers:
+      - name: api-data-watcher-pusher
+        securityContext:
+          {{- toYaml .Values.localAPIDataWatcherPusher.securityContext | nindent 12 }}
+        image: "{{ .Values.localAPIDataWatcherPusher.image.repository }}:{{ .Values.localAPIDataWatcherPusher.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.localAPIDataWatcherPusher.image.pullPolicy }}
+        env:
+        - name: API_HOST
+          value: {{ .Values.apiHost | quote }}
+        - name: API_PORT
+          value: {{ .Values.apiPort | quote }}
+        - name: CONSOLE_URL
+          value: {{ .Values.consoleURL | quote }}
+        - name: GIT_HOST
+          value: "{{ include "lagoon-test.localGit.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+        - name: GIT_PORT
+          value: {{ .Values.localGit.service.port | quote }}
+        - name: INGRESS_IP
+          value: {{ required "A valid .Values.ingressIP required!" .Values.ingressIP | quote }}
+        - name: JWTSECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.jwtSecretSecret | quote }}
+              key: JWTSECRET
+        - name: TOKEN
+          value: {{ required "A valid .Values.token required!" .Values.token | quote }}
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "! pgrep wget"
+          initialDelaySeconds: 16
+        resources:
+          {{- toYaml .Values.localAPIDataWatcherPusher.resources | nindent 12 }}
+      {{- with .Values.localAPIDataWatcherPusher.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.localAPIDataWatcherPusher.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.localAPIDataWatcherPusher.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

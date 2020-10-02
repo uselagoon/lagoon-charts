@@ -203,6 +203,10 @@ broker:
       epmd: 4369
       amqp: 5672
       http: 15672
+    amqpExternal:
+      enabled: false
+      type: LoadBalancer
+      port: 5672
 
   podAnnotations: {}
 
@@ -224,6 +228,21 @@ broker:
   podSecurityContext:
     runAsUser: 100
     fsGroup: 0
+
+  ingress:
+    enabled: false
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+    - host: broker.example.com
+      paths:
+      - /
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
 
 authServer:
   replicaCount: 2

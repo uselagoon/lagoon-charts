@@ -1,0 +1,6 @@
+# This template is filled by the test-suite job.
+ingressIP: "${ingressIP}"
+keycloakAuthServerClientSecret: "${keycloakAuthServerClientSecret}"
+routeSuffixHTTP: "${routeSuffixHTTP}"
+routeSuffixHTTPS: "${routeSuffixHTTPS}"
+token: "${token}"
