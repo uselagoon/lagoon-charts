@@ -1,0 +1,15 @@
+apiVersion: v2
+name: lagoon-test
+description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+home: https://github.com/uselagoon/lagoon-charts
+icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+maintainers:
+- name: smlx
+  email: scott.leggett@amazee.io
+  url: https://amazee.io
+
+type: application
+
+version: 0.1.0
+
+appVersion: v1-9-1

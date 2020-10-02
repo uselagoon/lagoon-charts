@@ -1,0 +1,2 @@
+Lagoon test fixtures installed successfully!
+`helm test {{ .Release.Name }}` will now run the Lagoon test suite.
