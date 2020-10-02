@@ -66,8 +66,6 @@ spec:
         - name: GITLAB_API_TOKEN
           value: {{ . | quote }}
         {{- end }}
-        - name: API_HOST
-          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
         - name: HARBOR_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
