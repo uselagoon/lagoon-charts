@@ -14,7 +14,7 @@ Branch/fork and add/edit a chart in the `charts/` directory.
 When you create a PR your change will be automatically linted and tested.
 PRs are not mergeable until lint + test passes.
 
-Releases are automatic made for any change which is merged to `main`.
+Releases are automatically made for any change which is merged to `main`.
 
 ### How CI works on PRs
 
