@@ -195,7 +195,7 @@ data:
       @type record_modifier
       <replace>
         key index_name
-        expression /^(?<prefix>container-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
+        expression /^(?<prefix>(?:container|router)-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
         replace \\k<prefix>_\\k<suffix>
       </replace>
       <replace>
