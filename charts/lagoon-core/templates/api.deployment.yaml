@@ -72,7 +72,7 @@ spec:
               name: {{ include "lagoon-core.api.fullname" . }}
               key: HARBOR_ADMIN_PASSWORD
         - name: HARBOR_API_VERSION
-          value: {{ .Values.harborAPIVersion | default "v2.0" | quote }}
+          value: {{ .Values.harborAPIVersion | quote }}
         - name: HARBOR_URL
           value: {{ required "A valid .Values.harborURL required!" .Values.harborURL | quote }}
         - name: JWTSECRET

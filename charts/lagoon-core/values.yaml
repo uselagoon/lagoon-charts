@@ -59,6 +59,9 @@ imagePullSecrets: []
 
 rabbitMQUsername: lagoon
 
+harborAPIVersion: v2.0
+# Set to an empty string to support Harbor v1.x.x
+
 # this default podSecurityContext is set for all services and can be overridden
 # on the service level
 podSecurityContext:
