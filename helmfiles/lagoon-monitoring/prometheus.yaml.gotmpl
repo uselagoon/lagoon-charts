@@ -47,6 +47,7 @@ alertmanager:
     enabled: true
     annotations:
       kubernetes.io/tls-acme: "true"
+    {{- if .Values.auth.enabled }}
       nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.auth.host }}/login?url=$scheme://$http_host$request_uri&vouch-failcount=$auth_resp_failcount&X-Vouch-Token=$auth_resp_jwt&error=$auth_resp_err"
       nginx.ingress.kubernetes.io/auth-url: https://{{ .Values.auth.host }}/validate
       nginx.ingress.kubernetes.io/auth-response-headers: X-Vouch-User
@@ -55,6 +56,7 @@ alertmanager:
         auth_request_set $auth_resp_jwt $upstream_http_x_vouch_jwt;
         auth_request_set $auth_resp_err $upstream_http_x_vouch_err;
         auth_request_set $auth_resp_failcount $upstream_http_x_vouch_failcount;
+    {{- end }}
     hosts:
       - {{ .Values.alertmanager.host }}
     path: /
@@ -87,20 +89,7 @@ grafana:
   grafana.ini:
     server:
       root_url: https://{{ .Values.grafana.host }}
-    auth.okta:
-      enabled: true
-      allow_sign_up: true
-      client_id: client_id
-      client_secret: client_secret
-      scopes: openid profile email groups
-      auth_url: https://login.amazee.com/oauth2/v1/authorize
-      token_url: https://login.amazee.com/oauth2/v1/token
-      api_url: https://login.amazee.com/oauth2/v1/userinfo
-      allowed_domains:
-      allowed_groups:
-      role_attribute_path: true == true && 'Admin' # this makes everybody an admin
-    auth:
-      oauth_auto_login: true
+{{- index .Values.grafana "grafana.ini" | toYaml | nindent 4 }}
 
   dashboardProviders:
     dashboardproviders.yaml:
@@ -221,6 +210,7 @@ prometheus:
     enabled: true
     annotations:
       kubernetes.io/tls-acme: "true"
+    {{- if .Values.auth.enabled }}
       nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.auth.host }}/login?url=$scheme://$http_host$request_uri&vouch-failcount=$auth_resp_failcount&X-Vouch-Token=$auth_resp_jwt&error=$auth_resp_err"
       nginx.ingress.kubernetes.io/auth-url: https://{{ .Values.auth.host }}/validate
       nginx.ingress.kubernetes.io/auth-response-headers: X-Vouch-User
@@ -229,6 +219,7 @@ prometheus:
         auth_request_set $auth_resp_jwt $upstream_http_x_vouch_jwt;
         auth_request_set $auth_resp_err $upstream_http_x_vouch_err;
         auth_request_set $auth_resp_failcount $upstream_http_x_vouch_failcount;
+      {{- end }}
     hosts:
       - {{ .Values.prometheus.host }}
     path: /
