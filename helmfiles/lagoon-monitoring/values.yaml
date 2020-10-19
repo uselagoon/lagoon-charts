@@ -1,0 +1,8 @@
+auth:
+  host: auth.monitoring.ch3.amazee.io
+alertmanager:
+  host: alertmanager.monitoring.ch3.amazee.io
+grafana:
+  host: grafana.monitoring.ch3.amazee.io
+prometheus:
+  host: prometheus.monitoring.ch3.amazee.io

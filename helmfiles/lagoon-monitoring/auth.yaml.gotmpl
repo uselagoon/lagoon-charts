@@ -1,0 +1,35 @@
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  paths: ["/"]
+  hosts:
+    - auth.monitoring.ch3.amazee.io
+  tls:
+    - secretName: auth.monitoring.ch3.amazee.io-tls
+      hosts:
+        - auth.monitoring.ch3.amazee.io.local
+
+config:
+  vouch:
+    allowAllUsers: true
+    whiteList: []
+    jwt:
+      secret: jwt_secret
+    webapp: false
+    testing: false
+    cookie:
+      domain: monitoring.ch3.amazee.io
+
+  oauth:
+    provider: oidc
+    client_id: client_id
+    client_secret: client_secret
+    auth_url: https://login.amazee.com/oauth2/v1/authorize
+    token_url: https://login.amazee.com/oauth2/v1/token
+    user_info_url: https://login.amazee.com/oauth2/v1/userinfo
+    scopes:
+      - openid
+      - email
+    callback_url: https://auth.monitoring.ch3.amazee.io/auth

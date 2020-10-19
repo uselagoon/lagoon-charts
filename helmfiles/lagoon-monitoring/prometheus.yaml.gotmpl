@@ -1,0 +1,238 @@
+## Create default rules for monitoring the cluster
+##
+
+commonLabels:
+  lagoon.sh/component: monitoring
+  monitoring.lagoon.sh/monitorMe: "true"
+
+defaultRules:
+  create: true
+  rules:
+    prometheus: true
+    general: true
+
+    alertmanager: false
+    etcd: false
+    k8s: false
+    kubeApiserver: false
+    kubeApiserverAvailability: false
+    kubeApiserverError: false
+    kubeApiserverSlos: false
+    kubelet: false
+    kubePrometheusGeneral: false
+    kubePrometheusNodeAlerting: false
+    kubePrometheusNodeRecording: false
+    kubernetesAbsent: false
+    kubernetesApps: false
+    kubernetesResources: false
+    kubernetesStorage: false
+    kubernetesSystem: false
+    kubeScheduler: false
+    kubeStateMetrics: false
+    network: false
+    node: false
+    prometheusOperator: false
+    time: false
+
+## Configuration for alertmanager
+## ref: https://prometheus.io/docs/alerting/alertmanager/
+##
+alertmanager:
+
+  ## Deploy alertmanager
+  ##
+  enabled: true
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.auth.host }}/login?url=$scheme://$http_host$request_uri&vouch-failcount=$auth_resp_failcount&X-Vouch-Token=$auth_resp_jwt&error=$auth_resp_err"
+      nginx.ingress.kubernetes.io/auth-url: https://{{ .Values.auth.host }}/validate
+      nginx.ingress.kubernetes.io/auth-response-headers: X-Vouch-User
+      nginx.ingress.kubernetes.io/auth-snippet: |
+        # these return values are used by the @error401 call
+        auth_request_set $auth_resp_jwt $upstream_http_x_vouch_jwt;
+        auth_request_set $auth_resp_err $upstream_http_x_vouch_err;
+        auth_request_set $auth_resp_failcount $upstream_http_x_vouch_failcount;
+    hosts:
+      - {{ .Values.alertmanager.host }}
+    path: /
+    tls:
+    - secretName: {{ .Values.alertmanager.host }}-tls
+      hosts:
+      - {{ .Values.alertmanager.host }}
+
+  alertmanagerSpec:
+    externalUrl: https://{{ .Values.alertmanager.host }}
+
+
+## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
+##
+grafana:
+  enabled: true
+  defaultDashboardsEnabled: false
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/tls-acme: "true"
+    hosts:
+      - {{ .Values.grafana.host }}
+    path: /
+    tls:
+    - secretName: {{ .Values.grafana.host }}-tls
+      hosts:
+      - {{ .Values.grafana.host }}
+
+  grafana.ini:
+    server:
+      root_url: https://{{ .Values.grafana.host }}
+    auth.okta:
+      enabled: true
+      allow_sign_up: true
+      client_id: client_id
+      client_secret: client_secret
+      scopes: openid profile email groups
+      auth_url: https://login.amazee.com/oauth2/v1/authorize
+      token_url: https://login.amazee.com/oauth2/v1/token
+      api_url: https://login.amazee.com/oauth2/v1/userinfo
+      allowed_domains:
+      allowed_groups:
+      role_attribute_path: true == true && 'Admin' # this makes everybody an admin
+    auth:
+      oauth_auto_login: true
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'grafana-com'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/grafana-com
+
+  dashboards:
+    grafana-com:
+      elasticsearch:
+        gnetId: 6483
+        revision: 2
+        datasource: Prometheus
+
+## Component scraping the kube api server
+##
+kubeApiServer:
+  enabled: false
+
+
+## Component scraping the kubelet and kubelet-hosted cAdvisor
+##
+kubelet:
+  enabled: false
+
+
+## Component scraping the kube controller manager
+##
+kubeControllerManager:
+  enabled: false
+
+
+## Component scraping coreDns. Use either this or kubeDns
+##
+coreDns:
+  enabled: false
+
+## Component scraping kubeDns. Use either this or coreDns
+##
+kubeDns:
+  enabled: false
+
+
+## Component scraping etcd
+##
+kubeEtcd:
+  enabled: false
+
+
+## Component scraping kube scheduler
+##
+kubeScheduler:
+  enabled: false
+
+## Component scraping kube proxy
+##
+kubeProxy:
+  enabled: false
+
+## Component scraping kube state metrics
+##
+kubeStateMetrics:
+  enabled: false
+
+## Deploy node exporter as a daemonset to all nodes
+##
+nodeExporter:
+  enabled: false
+
+## Manages Prometheus and Alertmanager components
+##
+prometheusOperator:
+  enabled: false
+
+  admissionWebhooks:
+    enabled: false
+
+## Deploy a Prometheus instance
+##
+prometheus:
+
+  enabled: true
+
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector:
+      matchLabels:
+        monitoring.lagoon.sh/monitorMe: "true"
+
+    podMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelector:
+      matchLabels:
+        monitoring.lagoon.sh/monitorMe: "true"
+
+    ruleSelectorNilUsesHelmValues: false
+    ruleSelector:
+      matchLabels:
+        monitoring.lagoon.sh/monitorMe: "true"
+
+    storageSpec:
+     volumeClaimTemplate:
+       spec:
+         accessModes: ["ReadWriteOnce"]
+         resources:
+           requests:
+             storage: 200Gi
+
+    externalUrl: "https://{{ .Values.prometheus.host }}"
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      nginx.ingress.kubernetes.io/auth-signin: "https://{{ .Values.auth.host }}/login?url=$scheme://$http_host$request_uri&vouch-failcount=$auth_resp_failcount&X-Vouch-Token=$auth_resp_jwt&error=$auth_resp_err"
+      nginx.ingress.kubernetes.io/auth-url: https://{{ .Values.auth.host }}/validate
+      nginx.ingress.kubernetes.io/auth-response-headers: X-Vouch-User
+      nginx.ingress.kubernetes.io/auth-snippet: |
+        # these return values are used by the @error401 call
+        auth_request_set $auth_resp_jwt $upstream_http_x_vouch_jwt;
+        auth_request_set $auth_resp_err $upstream_http_x_vouch_err;
+        auth_request_set $auth_resp_failcount $upstream_http_x_vouch_failcount;
+    hosts:
+      - {{ .Values.prometheus.host }}
+    path: /
+    tls:
+    - secretName: {{ .Values.prometheus.host }}-tls
+      hosts:
+      - {{ .Values.prometheus.host }}
