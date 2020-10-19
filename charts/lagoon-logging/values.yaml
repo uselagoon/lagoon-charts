@@ -238,7 +238,7 @@ clusterOutputBuffer:
   timekey_use_utc: true
   flush_thread_burst_interval: '0' # don't sleep if there is more data to flush
   flush_mode: immediate # flush immediate, the forward target is in the same cluster so this should be able to handle it
-  retry_type: periodic # no exponential_backoff as this could lead to fluentd wait for easily 2h until it retries
+  retry_max_interval: 30s # limit exponential backoff period
 
 # chart dependency on logging-operator
 logging-operator:
