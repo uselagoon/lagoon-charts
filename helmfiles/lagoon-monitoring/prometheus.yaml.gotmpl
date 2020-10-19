@@ -102,7 +102,7 @@ alertmanager:
     - name: slack_amazeeio_alertmanager_critical
       slack_configs:
       - api_url: {{ .Values.alertmanager.slack.apiUrl }}
-        channel: {{ .Values.alertmanager.slack.channel }}
+        channel: '{{ .Values.alertmanager.slack.channel }}'
         send_resolved: true
         username: {{ .Values.alertmanager.slack.username }}
         color: '{{ `{{ if eq .Status "firing" }}` }}danger{{ `{{ else }}` }}good{{ `{{ end }}` }}'
@@ -112,7 +112,7 @@ alertmanager:
     - name: slack_amazeeio_alertmanager_warning
       slack_configs:
       - api_url: {{ .Values.alertmanager.slack.apiUrl }}
-        channel: {{ .Values.alertmanager.slack.channel }}
+        channel: '{{ .Values.alertmanager.slack.channel }}'
         send_resolved: false
         username: {{ .Values.alertmanager.slack.username }}
         color: '{{ `{{ if eq .Status "firing" }}` }}warning{{ `{{ else }}` }}good{{ `{{ end }}` }}'
@@ -122,7 +122,7 @@ alertmanager:
     - name: slack_amazeeio_alertmanager_normal
       slack_configs:
       - api_url: {{ .Values.alertmanager.slack.apiUrl }}
-        channel: {{ .Values.alertmanager.slack.channel }}
+        channel: '{{ .Values.alertmanager.slack.channel }}'
         send_resolved: true
         username: {{ .Values.alertmanager.slack.username }}
         color: 'good'
