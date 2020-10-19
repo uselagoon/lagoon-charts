@@ -33,30 +33,30 @@ alertmanager:
     receivers:
     - name: slack_amazeeio_alertmanager_critical
       slack_configs:
-      - api_url: 'https://hooks.slack.com/services/'
-        channel: '#amazeeio-alertmanager'
+      - api_url: '{{ .Values.alertmanager.slack.apiUrl }}'
+        channel: '{{ .Values.alertmanager.slack.channel }}'
         send_resolved: true
-        username: amazeeio-ch3
+        username: '{{ .Values.alertmanager.slack.username }}'
         color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
         title: |-
           [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
         text: '{{ template "slack.amazeeio.text" . }}'
     - name: slack_amazeeio_alertmanager_warning
       slack_configs:
-      - api_url: 'https://hooks.slack.com/services/'
-        channel: '#amazeeio-alertmanager'
+      - api_url: '{{ .Values.alertmanager.slack.apiUrl }}'
+        channel: '{{ .Values.alertmanager.slack.channel }}'
         send_resolved: false
-        username: amazeeio-ch3
+        username: '{{ .Values.alertmanager.slack.username }}'
         color: '{{ if eq .Status "firing" }}warning{{ else }}good{{ end }}'
         title: |-
           [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
         text: '{{ template "slack.amazeeio.text" . }}'
     - name: slack_amazeeio_alertmanager_normal
       slack_configs:
-      - api_url: 'https://hooks.slack.com/services/'
-        channel: '#amazeeio-alertmanager'
+      - api_url: '{{ .Values.alertmanager.slack.apiUrl }}'
+        channel: '{{ .Values.alertmanager.slack.channel }}'
         send_resolved: true
-        username: amazeeio-ch3
+        username: '{{ .Values.alertmanager.slack.username }}'
         color: 'good'
         title: |-
           [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
@@ -64,7 +64,7 @@ alertmanager:
     - name: deadmanssnitch
       webhook_configs:
       - send_resolved: false
-        url: https://nosnch.in/xxxx
+        url: '{{ .Values.alertmanager.littlesnitch.url }}'
     templates:
       - '/etc/alertmanager/config/slack.tmpl'
   templateFiles:
