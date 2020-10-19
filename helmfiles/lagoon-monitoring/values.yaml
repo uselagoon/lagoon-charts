@@ -1,8 +1,26 @@
 auth:
-  host: auth.monitoring.ch3.amazee.io
+  enabled: false
+  host: auth.monitoring.example.com
+  config:
+    vouch:
+      domains: []
+      allowAllUsers: false
+      whiteList: []
+      jwt:
+        secret: super-secret-stuff
+      webapp: false
+      testing: false
+
+    oauth:
+      provider:
+      # https://console.developers.google.com/apis/credentials
+      client_id:
+      client_secret:
+      callback_urls: []
+      preferredDomain:
 alertmanager:
-  host: alertmanager.monitoring.ch3.amazee.io
+  host: alertmanager.monitoring.example.com
 grafana:
-  host: grafana.monitoring.ch3.amazee.io
+  host: grafana.monitoring.example.com
 prometheus:
-  host: prometheus.monitoring.ch3.amazee.io
+  host: prometheus.monitoring.example.com

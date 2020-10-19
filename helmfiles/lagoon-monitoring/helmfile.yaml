@@ -16,6 +16,7 @@ releases:
   namespace: lagoon-monitoring
   values:
     - auth.yaml.gotmpl
+  condition: auth.enabled
 
 
 repositories:
