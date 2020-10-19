@@ -1,3 +1,4 @@
+namespace: lagoon-monitoring
 auth:
   enabled: false
   host: auth.monitoring.example.com
@@ -13,7 +14,6 @@ auth:
 
     oauth:
       provider:
-      # https://console.developers.google.com/apis/credentials
       client_id:
       client_secret:
       callback_urls: []

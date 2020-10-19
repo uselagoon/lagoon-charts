@@ -7,13 +7,13 @@ environments:
 releases:
 - name: lagoon-monitoring
   chart: prometheus-community/kube-prometheus-stack
-  namespace: lagoon-monitoring
+  namespace: {{ .Values.namespace }}
   values:
     - prometheus.yaml.gotmpl
     - prometheus-alertmanager.yaml
 - name: lagoon-monitoring-auth
   chart: halkeye/vouch
-  namespace: lagoon-monitoring
+  namespace: {{ .Values.namespace }}
   values:
     - auth.yaml.gotmpl
   condition: auth.enabled
