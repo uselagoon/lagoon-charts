@@ -11,4 +11,5 @@ ingress:
       hosts:
         - {{ .Values.auth.host }}.local
 
-config: {{ toYaml .Values.auth.vouchConfig}}
+config:
+{{ toYaml .Values.auth.vouchConfig | indent 2}}
