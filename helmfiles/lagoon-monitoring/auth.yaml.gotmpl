@@ -14,5 +14,5 @@ ingress:
 
 {{- with .Values.auth.vouchConfig }}
 config:
-{{ - toYaml . | nindent 2 }}
+{{- toYaml . | nindent 2 }}
 {{- end }}
