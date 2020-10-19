@@ -184,6 +184,7 @@ grafana:
     server:
       root_url: https://{{ .Values.grafana.host }}
     auth.anonymous:
+      enabled: true
       org_role: Admin
       org_name: Main Org.
 
