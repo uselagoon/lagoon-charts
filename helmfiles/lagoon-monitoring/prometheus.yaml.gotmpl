@@ -183,7 +183,9 @@ grafana:
   grafana.ini:
     server:
       root_url: https://{{ .Values.grafana.host }}
-{{- index .Values.grafana "grafana.ini" | toYaml | nindent 4 }}
+    auth.anonymous:
+      org_role: Admin
+      org_name: Main Org.
 
   dashboardProviders:
     dashboardproviders.yaml:
