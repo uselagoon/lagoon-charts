@@ -68,6 +68,90 @@ alertmanager:
   alertmanagerSpec:
     externalUrl: https://{{ .Values.alertmanager.host }}
 
+  config:
+    route:
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+      group_by: ['cluster', 'alertname', 'service', 'namespace']
+      receiver: slack_amazeeio_alertmanager_normal
+      # The child route trees
+      routes:
+      - match:
+          alertname: Watchdog
+        repeat_interval: 5m
+        receiver: deadmanssnitch
+      - match:
+          severity: critical
+        receiver: slack_amazeeio_alertmanager_critical
+      - match:
+          severity: warning
+        receiver: slack_amazeeio_alertmanager_warning
+    # Inhibition rules allow to mute a set of alerts given that another alert is
+    # firing.
+    # We use this to mute any warning-level notifications if the same alert is
+    # already critical.
+    inhibit_rules:
+    - source_match:
+        severity: 'critical'
+      target_match:
+        severity: 'warning'
+      # Apply inhibition if the alertname is the same.
+      equal: ['alertname', 'cluster', 'service']
+    receivers:
+    - name: slack_amazeeio_alertmanager_critical
+      slack_configs:
+      - api_url: {{ .Values.alertmanager.slack.apiUrl }}
+        channel: {{ .Values.alertmanager.slack.channel }}
+        send_resolved: true
+        username: {{ .Values.alertmanager.slack.username }}
+        color: '{{ `{{ if eq .Status "firing" }}` }}danger{{ `{{ else }}` }}good{{ `{{ end }}` }}'
+        title: |-
+          [{{ `{{ .Status | toUpper }}` }}{{ `{{ if eq .Status "firing" }}` }}:{{ `{{ .Alerts.Firing | len }}` }}{{ `{{ end }}` }}] {{ `{{ .CommonLabels.alertname }}` }}
+        text: '{{ `{{ template "slack.amazeeio.text" . }}` }}'
+    - name: slack_amazeeio_alertmanager_warning
+      slack_configs:
+      - api_url: {{ .Values.alertmanager.slack.apiUrl }}
+        channel: {{ .Values.alertmanager.slack.channel }}
+        send_resolved: false
+        username: {{ .Values.alertmanager.slack.username }}
+        color: '{{ `{{ if eq .Status "firing" }}` }}warning{{ `{{ else }}` }}good{{ `{{ end }}` }}'
+        title: |-
+          [{{ `{{ .Status | toUpper }}` }}{{ `{{ if eq .Status "firing" }}` }}:{{ `{{ .Alerts.Firing | len }}` }}{{ `{{ end }}` }}] {{ `{{ .CommonLabels.alertname }}` }}
+        text: '{{ `{{ template "slack.amazeeio.text" . }}` }}'
+    - name: slack_amazeeio_alertmanager_normal
+      slack_configs:
+      - api_url: {{ .Values.alertmanager.slack.apiUrl }}
+        channel: {{ .Values.alertmanager.slack.channel }}
+        send_resolved: true
+        username: {{ .Values.alertmanager.slack.username }}
+        color: 'good'
+        title: |-
+          [{{ `{{ .Status | toUpper }}` }}{{ `{{ if eq .Status "firing" }}` }}:{{ `{{ .Alerts.Firing | len }}` }}{{ `{{ end }}` }}] {{ `{{ .CommonLabels.alertname }}` }}
+        text: '{{ `{{ template "slack.amazeeio.text" . }}` }}'
+    - name: deadmanssnitch
+      webhook_configs:
+      - send_resolved: false
+        url: {{ .Values.alertmanager.littlesnitch.url }}
+    templates:
+      - '/etc/alertmanager/config/slack.tmpl'
+  templateFiles:
+    slack.tmpl: |-
+        {{ `{{ define "cluster" }}` }}{{ `{{ .ExternalURL | reReplaceAll ".*alertmanager\\.(.*)" "$1" }}` }}{{ `{{ end }}` }}
+
+        {{ `{{ define "slack.amazeeio.text" }}` }}
+        {{ `{{- $root := . -}}` }}
+        {{ `{{ range .Alerts }}` }}
+          *Alert:* {{ `{{ .Annotations.summary }}` }} - `{{ `{{ .Labels.severity }}` }}`
+          *Cluster:*  {{ `{{ template "cluster" $root }}` }}
+          *Description:* {{ `{{ .Annotations.description }}` }}
+          *Graph:* <{{ `{{ .GeneratorURL }}` }}|:chart_with_upwards_trend:>
+          *Runbook:* <{{ `{{ .Annotations.runbook }}` }}|:spiral_note_pad:>
+          *Details:*
+            {{ `{{ range .Labels.SortedPairs }}` }} • *{{ `{{ .Name }}` }}:* `{{ `{{ .Value }}` }}`
+            {{ `{{ end }}` }}
+        {{ `{{ end }}` }}
+        {{ `{{ end }}` }}
 
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 ##
