@@ -10,7 +10,6 @@ releases:
   namespace: {{ .Values.namespace }}
   values:
     - prometheus.yaml.gotmpl
-    - prometheus-alertmanager.yaml
 - name: lagoon-monitoring-auth
   chart: halkeye/vouch
   namespace: {{ .Values.namespace }}
