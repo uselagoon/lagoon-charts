@@ -233,9 +233,18 @@ excludeNamespaces:
 # This may require tweaking to handle high volumes of logs.
 clusterOutputBuffer:
   flush_thread_count: 32
-  timekey: 1m
-  timekey_wait: 10s
+  # create chunks every 10 secs, therefore possible to flush every 10sec
+  timekey: 10s
+  # don't wait additional time for the timekey to be filled
+  timekey_wait: 0s
   timekey_use_utc: true
+  # don't sleep if there is more data to flush
+  flush_thread_burst_interval: '0'
+  # flush immediate, the forward target is in the same cluster so this should
+  # be able to handle it
+  flush_mode: immediate
+  # limit exponential backoff period
+  retry_max_interval: 30s
 
 # chart dependency on logging-operator
 logging-operator:
