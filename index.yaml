@@ -769,6 +769,27 @@ entries:
   lagoon-logging:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2020-10-20T01:29:22.453388592Z"
+    dependencies:
+    - name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.4.0
+    description: |
+      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    digest: d9ab5c3b8a392cb1d10e26a86b4fd39903d5ad04839d76eda3f82457b7c5f7a0
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.9.0/lagoon-logging-0.9.0.tgz
+    version: 0.9.0
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2020-10-07T18:26:23.469267757Z"
     dependencies:
     - name: logging-operator
@@ -999,6 +1020,23 @@ entries:
     - https://github.com/amazeeio/charts/releases/download/lagoon-logging-0.6.3/lagoon-logging-0.6.3.tgz
     version: 0.6.3
   lagoon-logs-concentrator:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2020-10-20T01:29:22.556312267Z"
+    description: |
+      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    digest: 4c60739de7e51c4358c980725a5d42a45a2dfdd9a93efa83167db9ef234bc58f
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.3.0/lagoon-logs-concentrator-0.3.0.tgz
+    version: 0.3.0
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2020-09-08T02:44:43.233656618Z"
