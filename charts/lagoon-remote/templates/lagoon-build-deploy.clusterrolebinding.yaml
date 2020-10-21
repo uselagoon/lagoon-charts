@@ -2,26 +2,15 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "lagoon-remote.lagoonBuildDeploy.fullname" . }}-manager
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: {{ include "lagoon-remote.lagoonBuildDeploy.fullname" . }}-manager
+  name: {{ include "lagoon-remote.lagoonBuildDeploy.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.lagoonBuildDeploy.labels" . | nindent 4 }}
 subjects:
 - kind: ServiceAccount
   name: {{ include "lagoon-remote.lagoonBuildDeploy.serviceAccountName" . }}
   namespace: {{ .Release.Namespace | quote }}
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: {{ include "lagoon-remote.lagoonBuildDeploy.fullname" . }}-proxy
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "lagoon-remote.lagoonBuildDeploy.fullname" . }}-proxy
-subjects:
-- kind: ServiceAccount
-  name: {{ include "lagoon-remote.lagoonBuildDeploy.serviceAccountName" . }}
-  namespace: {{ .Release.Namespace | quote }}
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
 {{- end }}
