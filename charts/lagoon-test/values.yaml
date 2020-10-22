@@ -106,7 +106,7 @@ localAPIDataWatcherPusher:
     repository: amazeeiolagoon/local-api-data-watcher-pusher
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "lagoon-core"
+    tag: "main"
 
 tests:
 
@@ -114,6 +114,6 @@ tests:
     repository: amazeeiolagoon/tests
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "lagoon-core"
+    tag: "main"
 
   suiteEnabled: true
