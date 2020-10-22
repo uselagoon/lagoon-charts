@@ -24,7 +24,7 @@ version: 0.11.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: 0.1.0
+appVersion: v1-9-1
 
 dependencies:
 - name: logging-operator
