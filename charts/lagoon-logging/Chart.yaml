@@ -29,4 +29,4 @@ appVersion: 0.1.0
 dependencies:
 - name: logging-operator
   repository: https://kubernetes-charts.banzaicloud.com
-  version: ~3.6.0
+  version: ~3.7.0
