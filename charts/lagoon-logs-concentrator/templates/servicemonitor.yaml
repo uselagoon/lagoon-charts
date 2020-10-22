@@ -1,0 +1,24 @@
+{{- if .Values.autoscaling.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+{{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+{{- end }}  generation: 3
+  name: {{ include "lagoon-logs-concentrator.fullname" . }}
+  labels:
+    {{- include "lagoon-logs-concentrator.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - honorLabels: true
+      path: /metrics
+      port: metrics
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-logs-concentrator.selectorLabels" . | nindent 6 }}
+{{- end }}
