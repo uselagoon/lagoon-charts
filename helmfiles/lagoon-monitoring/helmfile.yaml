@@ -8,6 +8,7 @@ releases:
 - name: lagoon-monitoring
   chart: prometheus-community/kube-prometheus-stack
   namespace: {{ .Values.namespace }}
+  version: 10.1.1
   values:
     - prometheus.yaml.gotmpl
 - name: lagoon-monitoring-auth
