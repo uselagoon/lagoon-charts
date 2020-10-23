@@ -12,12 +12,20 @@ spec:
         fsGroup: 0
     scaling:
       replicas: 3
-  {{- with .Values.fluentbitPrivileged }}
+    metrics:
+      serviceMonitor: true
+      serviceMonitorConfig:
+        additionalLabels:
+          monitoring.lagoon.sh/monitorMe: 'true'
   fluentbit:
+    metrics:
+      serviceMonitor: true
+      serviceMonitorConfig:
+        additionalLabels:
+          monitoring.lagoon.sh/monitorMe: 'true'
+  {{- with .Values.fluentbitPrivileged }}
     security:
       securityContext:
         privileged: {{ . }}
-  {{- else }}
-  fluentbit: {}
   {{- end }}
   controlNamespace: {{ .Release.Namespace | quote }}
