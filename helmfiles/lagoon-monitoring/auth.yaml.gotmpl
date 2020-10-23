@@ -1,7 +1,6 @@
 ingress:
   enabled: true
   annotations:
-    kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
   paths: ["/"]
   hosts:
@@ -9,7 +8,7 @@ ingress:
   tls:
     - secretName: {{ .Values.auth.host }}-tls
       hosts:
-        - {{ .Values.auth.host }}.local
+        - {{ .Values.auth.host }}
 
 config:
 {{- toYaml .Values.auth.vouchConfig | nindent 2 }}
