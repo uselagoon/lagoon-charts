@@ -309,6 +309,16 @@ data:
     </filter>
 
     #
+    # add cluster identifier
+    #
+    <filter lagoon.**>
+      @type record_modifier
+      <record>
+        cluster "#{ENV['CLUSTER_NAME']}"
+      </record>
+    </filter>
+
+    #
     # forward all to logs-concentrator
     #
     <match lagoon.**>
