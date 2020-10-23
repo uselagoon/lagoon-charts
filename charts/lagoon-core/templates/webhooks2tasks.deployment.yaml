@@ -44,7 +44,10 @@ spec:
         {{- end }}
         {{- with .Values.gitlabAPIToken }}
         - name: GITLAB_API_TOKEN
-          value: {{ . | quote }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}
+              key: GITLAB_API_TOKEN
         {{- end }}
         - name: JWTSECRET
           valueFrom:

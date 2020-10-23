@@ -30,7 +30,6 @@
 # These values may be set on install, otherwise the chart tries to guess
 # sensible defaults.
 
-# harborAPIVersion: "v2.0"
 # keycloakAPIURL: https://keycloak.example.com/auth
 # lagoonAPIURL: https://api.example.com/graphql
 # lagoonUIURL: https://ui.example.com/
@@ -39,7 +38,6 @@
 # These values are randomly generated on install if not otherwise defined.
 
 # apiDBPassword:
-# harborAdminPassword:
 # jwtSecret:
 # keycloakAdminPassword:
 # keycloakAPIClientSecret:
@@ -50,7 +48,7 @@
 # rabbitMQPassword:
 # redisPassword:
 
-# These values are the chart defaults.
+# These values are the chart defaults, but can be overridden.
 
 elasticsearchScheme: https
 elasticsearchHostPort: 9200
@@ -59,16 +57,16 @@ imagePullSecrets: []
 
 rabbitMQUsername: lagoon
 
-harborAPIVersion: v2.0
 # Set to an empty string to support Harbor v1.x.x
+harborAPIVersion: v2.0
 
 # this default podSecurityContext is set for all services and can be overridden
-# on the service level
+# on the service level.
 podSecurityContext:
   runAsUser: 100
 
 # this default image tag is set for all services and can be overridden
-# on the service level, if not set is uses chart appVersion
+# on the service level, if not set it falls back to chart appVersion.
 imageTag: ""
 
 # the following services are part of the lagoon-core chart
