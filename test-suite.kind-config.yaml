@@ -4,3 +4,6 @@ containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.172.18.0.2.nip.io:32443".tls]
     insecure_skip_verify = true
+
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."registry.172.18.0.2.nip.io:32080"]
+    endpoint = ["http://registry.172.18.0.2.nip.io:32080"]
