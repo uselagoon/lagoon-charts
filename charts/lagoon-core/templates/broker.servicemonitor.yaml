@@ -1,0 +1,17 @@
+{{- if .Values.broker.serviceMonitor.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.broker.fullname" . }}
+  labels:
+    {{- include "lagoon-core.broker.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - port: metrics
+  namespaceSelector:
+    matchNames:
+      - lagoon-core
+  selector:
+    matchLabels:
+{{- include "lagoon-core.broker.selectorLabels" . | nindent 6 }}
+{{- end }}
