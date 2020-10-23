@@ -135,6 +135,20 @@ data:
       </rule>
     </match>
 
+    # prometheus monitoring
+    <filter lagoon.**>
+      @type prometheus
+      <metric>
+        name fluentd_input_status_num_records_total
+        type counter
+        desc The total number of incoming records
+        <labels>
+          tag ${tag}
+          hostname ${hostname}
+        </labels>
+      </metric>
+    </filter>
+
     #
     # process container logs
     #

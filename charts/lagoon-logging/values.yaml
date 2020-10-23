@@ -58,6 +58,9 @@ logsDispatcher:
 
   affinity: {}
 
+  serviceMonitor:
+    enabled: true
+
 logsTeeRouter:
 
   enabled: false
