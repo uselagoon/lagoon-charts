@@ -39,6 +39,22 @@ data:
         client_cert_auth true
       </transport>
     </source>
+
+    # prometheus monitoring
+    <filter in_forward.**>
+      @type prometheus
+      <metric>
+        name fluentd_input_status_num_records_total
+        type counter
+        desc The total number of incoming records
+        <labels>
+          tag ${tag}
+          hostname ${hostname}
+        </labels>
+      </metric>
+    </filter>
+
+
     # send to elasticsearch
     <match in_forward.**>
       @type elasticsearch
