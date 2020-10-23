@@ -203,10 +203,27 @@ grafana:
 
   dashboards:
     grafana-com:
-      elasticsearch:
-        gnetId: 6483
+      prometheus-stats:
+        gnetId: 2
         revision: 2
         datasource: Prometheus
+      loggin-operator:
+        gnetId: 7752
+        revision: 4
+        datasource: Prometheus
+      alertmanager:
+        gnetId: 9578
+        revision: 4
+        datasource: Prometheus
+      grafana:
+        gnetId: 3590
+        revision: 3
+        datasource: Prometheus
+      nginx-ingress:
+        gnetId: 9614
+        revision: 1
+        datasource: Prometheus
+{{- toYaml .Values.grafana.dashboards | nindent 6 }}
 
 ## Component scraping the kube api server
 ##
