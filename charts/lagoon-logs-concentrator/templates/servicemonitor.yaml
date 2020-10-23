@@ -1,11 +1,7 @@
-{{- if .Values.autoscaling.enabled }}
+{{- if .Values.serviceMonitor.enabled }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-{{- with .Values.service.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
-{{- end }}  generation: 3
   name: {{ include "lagoon-logs-concentrator.fullname" . }}
   labels:
     {{- include "lagoon-logs-concentrator.labels" . | nindent 4 }}
