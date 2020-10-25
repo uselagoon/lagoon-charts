@@ -1,3 +1,7 @@
+# helmDefaults:
+#   args:
+#     - "--skip-crds"
+
 environments:
   default:
     values:
@@ -9,6 +13,7 @@ releases:
   chart: prometheus-community/kube-prometheus-stack
   namespace: {{ .Values.namespace }}
   version: 10.1.1
+  skip-crds: true
   values:
     - prometheus.yaml.gotmpl
 - name: lagoon-monitoring-auth
