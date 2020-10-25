@@ -1,7 +1,3 @@
-helmDefaults:
-  args:
-    - "--skip-crds"
-
 environments:
   default:
     values:
