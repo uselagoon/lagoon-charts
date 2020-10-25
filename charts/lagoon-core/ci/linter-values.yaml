@@ -78,6 +78,8 @@ api:
 
 broker:
   replicaCount: 1
+  serviceMonitor:
+    enabled: false
 
 authServer:
   replicaCount: 1

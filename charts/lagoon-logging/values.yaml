@@ -253,6 +253,10 @@ clusterOutputBuffer:
 logging-operator:
   enabled: true
   createCustomResource: false
+  serviceMonitor: true
+  serviceMonitorConfig:
+    additionalLabels:
+      monitoring.lagoon.sh/monitorMe: 'true'
 
 # lagoon logs collection disabled by default. see below for instructions on
 # enabling this.

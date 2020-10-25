@@ -13,17 +13,14 @@ spec:
     scaling:
       replicas: 3
     metrics:
-      serviceMonitor: true
+      serviceMonitor: {{ .Values.logging-operator.serviceMonitor }}
       serviceMonitorConfig:
-        additionalLabels:
-          monitoring.lagoon.sh/monitorMe: 'true'
+        {{- toYaml .Values.logging-operator.serviceMonitorConfig | nindent 8 }}
   fluentbit:
     metrics:
-      serviceMonitor: true
+      serviceMonitor: {{ .Values.logging-operator.serviceMonitor }}
       serviceMonitorConfig:
-        additionalLabels:
-          monitoring.lagoon.sh/monitorMe: 'true'
-  {{- with .Values.fluentbitPrivileged }}
+        {{- toYaml .Values.logging-operator.serviceMonitorConfig | nindent 8 }}
     security:
       securityContext:
         privileged: {{ . }}

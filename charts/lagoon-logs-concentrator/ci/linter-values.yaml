@@ -42,3 +42,5 @@ users:
   password: "securepass"
 # allow fluentd to start without connecting to ES
 verifyESVersionAtStartup: false
+serviceMonitor:
+  enabled: false

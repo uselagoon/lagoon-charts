@@ -45,3 +45,7 @@ tls:
     -----END EC PRIVATE KEY-----
 
 consolidateServiceIndices: true
+
+logging-operator:
+  serviceMonitor: false
+  serviceMonitorConfig: {}
