@@ -49,3 +49,7 @@ consolidateServiceIndices: true
 logging-operator:
   serviceMonitor: false
   serviceMonitorConfig: {}
+
+logsDispatcher:
+  serviceMonitor:
+    enabled: false
