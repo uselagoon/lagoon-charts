@@ -1,6 +1,6 @@
 {{- if .Values.broker.serviceMonitor.enabled -}}
 apiVersion: v1
-kind: Service
+kind: ServiceMonitor
 metadata:
   name: {{ include "lagoon-core.broker.fullname" . }}
   labels:
