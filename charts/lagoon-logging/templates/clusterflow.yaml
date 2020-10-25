@@ -23,5 +23,5 @@ spec:
   {{- end }}
   filters:
   - tag_normaliser: {}
-  outputRefs:
+  globalOutputRefs:
   - {{ include "lagoon-logging.fullname" . }}

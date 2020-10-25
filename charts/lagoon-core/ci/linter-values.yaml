@@ -4,6 +4,7 @@
 elasticsearchHost: opendistro-es-client-service.opendistro-es.svc.cluster.local
 elasticsearchScheme: http
 harborURL: http://harbor:1234
+harborAdminPassword: harbor123
 kibanaURL: http://opendistro-es-kibana-svc.opendistro-es.svc.cluster.local:443
 logsDBAdminPassword: admin
 registry: registry.example.com:5000
@@ -71,16 +72,18 @@ sshHostKeyED25519: |
 
 api:
   replicaCount: 1
+  # TODO: remove this once a 2.x release is the chart appVersion
   image:
-    tag: lagoon-core
+    tag: main
 
 broker:
   replicaCount: 1
 
 authServer:
   replicaCount: 1
+  # TODO: remove this once a 2.x release is the chart appVersion
   image:
-    tag: lagoon-core
+    tag: main
 
 webhooks2tasks:
   replicaCount: 1
