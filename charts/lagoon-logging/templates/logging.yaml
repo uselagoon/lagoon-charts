@@ -19,6 +19,7 @@ spec:
     metrics:
       serviceMonitor: {{ index .Values "logging-operator" "serviceMonitor" }}
       serviceMonitorConfig: {{ index .Values "logging-operator" "serviceMonitorConfig" | toYaml  | nindent 8 }}
+  {{- with .Values.fluentbitPrivileged }}
     security:
       securityContext:
         privileged: {{ . }}
