@@ -15,5 +15,9 @@ spec:
       targetPort: forward
       protocol: TCP
       name: forward
+    - port: 24231
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
   selector:
     {{- include "lagoon-logs-concentrator.selectorLabels" . | nindent 4 }}

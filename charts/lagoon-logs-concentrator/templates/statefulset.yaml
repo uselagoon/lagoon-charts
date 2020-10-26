@@ -54,6 +54,9 @@ spec:
         - name: forward
           containerPort: 24224
           protocol: TCP
+        - name: metrics
+          containerPort: 24231
+          protocol: TCP
         livenessProbe:
           tcpSocket:
             port: forward

@@ -42,6 +42,9 @@ service:
   # Annotations to add to the service
   annotations: {}
 
+serviceMonitor:
+  enabled: true
+
 ingress:
   enabled: false
   annotations: {}

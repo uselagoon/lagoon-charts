@@ -38,6 +38,9 @@ spec:
   - port: {{ .Values.broker.service.ports.http }}
     targetPort: http
     name: http
+  - port: {{ .Values.broker.service.ports.metrics }}
+    targetPort: metrics
+    name: metrics
   selector:
     {{- include "lagoon-core.broker.selectorLabels" . | nindent 4 }}
 ---

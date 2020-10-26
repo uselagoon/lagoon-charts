@@ -204,10 +204,14 @@ broker:
       epmd: 4369
       amqp: 5672
       http: 15672
+      metrics: 15692
     amqpExternal:
       enabled: false
       type: LoadBalancer
       port: 5672
+
+  serviceMonitor:
+    enabled: true
 
   podAnnotations: {}
 

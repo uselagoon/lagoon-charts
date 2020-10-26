@@ -1,0 +1,21 @@
+{{- if .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lagoon-logs-concentrator.fullname" . }}
+  labels:
+    {{- include "lagoon-logs-concentrator.labels" . | nindent 4 }}
+    monitoring.lagoon.sh/monitorMe: 'true'
+spec:
+  endpoints:
+    - honorLabels: true
+      path: /metrics
+      port: metrics
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-logs-concentrator.selectorLabels" . | nindent 6 }}
+{{- end }}
