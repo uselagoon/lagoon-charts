@@ -3,6 +3,23 @@ entries:
   lagoon-core:
   - apiVersion: v2
     appVersion: v1-9-1
+    created: "2020-10-26T13:39:07.690099652Z"
+    description: |
+      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    digest: afb7cecec1e820f93ffd52b01811477ba3d51d786a0cf608cb6614edd0e4b276
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-0.32.0/lagoon-core-0.32.0.tgz
+    version: 0.32.0
+  - apiVersion: v2
+    appVersion: v1-9-1
     created: "2020-10-23T00:57:38.944378843Z"
     description: |
       A Helm chart for Kubernetes which deploys Lagoon's core components.
@@ -803,6 +820,27 @@ entries:
   lagoon-logging:
   - apiVersion: v2
     appVersion: v1-9-1
+    created: "2020-10-26T13:39:07.978055154Z"
+    dependencies:
+    - name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.7.0
+    description: |
+      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    digest: 1e96a54c4b6a2d09e2f169046abf1a47eafdcb4321e587bcb93e20b282c60d7d
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.14.0/lagoon-logging-0.14.0.tgz
+    version: 0.14.0
+  - apiVersion: v2
+    appVersion: v1-9-1
     created: "2020-10-23T01:07:52.431656595Z"
     dependencies:
     - name: logging-operator
@@ -1138,6 +1176,23 @@ entries:
     - https://github.com/amazeeio/charts/releases/download/lagoon-logging-0.6.3/lagoon-logging-0.6.3.tgz
     version: 0.6.3
   lagoon-logs-concentrator:
+  - apiVersion: v2
+    appVersion: v1-9-1
+    created: "2020-10-26T13:39:08.252994265Z"
+    description: |
+      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    digest: 782c970225c4e0e38ed7ed347b26dbee9b8a5be8b78a3eeddcbc346824d7c43a
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.5.0/lagoon-logs-concentrator-0.5.0.tgz
+    version: 0.5.0
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-10-22T05:52:59.491721918Z"
