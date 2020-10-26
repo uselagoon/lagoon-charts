@@ -10,7 +10,7 @@ spec:
     - port: metrics
   namespaceSelector:
     matchNames:
-      - lagoon-core
+      - {{ .Release.Namespace }}
   selector:
     matchLabels:
 {{- include "lagoon-core.broker.selectorLabels" . | nindent 6 }}
