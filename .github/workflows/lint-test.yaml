@@ -84,7 +84,7 @@ jobs:
     - name: Add dependency chart repos
       if: steps.lint.outputs.changed == 'true'
       run: |
-        helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+        helm repo add harbor https://helm.goharbor.io
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
     - name: Install gojq

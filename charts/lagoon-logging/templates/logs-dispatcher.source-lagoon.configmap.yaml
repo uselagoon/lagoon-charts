@@ -20,7 +20,7 @@ data:
       exchange      lagoon-logs
       exchange_type direct
       routing_key   ""
-      queue         logs-dispatcher
+      queue         "lagoon-logs:logs-dispatcher"
       durable       true
     </source>
 {{- end }}
