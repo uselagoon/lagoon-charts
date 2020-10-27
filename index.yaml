@@ -1533,6 +1533,22 @@ entries:
   lagoon-test:
   - apiVersion: v2
     appVersion: v1-9-1
+    created: "2020-10-27T07:10:13.292220146Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: db3db1eb3f0262eb90c075638eb8730010bb32b840c3387b7e27e2ffbef97f16
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.3.1/lagoon-test-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
+    appVersion: v1-9-1
     created: "2020-10-22T08:20:09.800110821Z"
     description: A Helm chart for Kubernetes which runs the Lagoon test suite.
     digest: 11443d7a67fcfb81d7437fe8092002bf19a018a8e161ee3bdb477fbf8a8e58e9
