@@ -31,12 +31,16 @@ install-registry:
 		--namespace registry \
 		--wait \
 		--timeout 15m \
-		--set ingress.enabled=true \
-		--set "ingress.hosts={registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io}" \
-		--set "ingress.annotations.kubernetes\.io\/ingress\.class=nginx" \
-		--set "ingress.annotations.nginx\.ingress\.kubernetes\.io\/proxy-body-size=0" \
+		--set expose.tls.enabled=false \
+		--set "expose.ingress.annotations.kubernetes\.io\/ingress\.class=nginx" \
+		--set "expose.ingress.hosts.core=registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set "externalURL=http://registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set chartmuseum.enabled=false \
+		--set clair.enabled=false \
+		--set notary.enabled=false \
+		--set trivy.enabled=false \
 		registry \
-		stable/docker-registry
+		harbor/harbor
 
 .PHONY: install-lagoon-core
 install-lagoon-core:
@@ -57,6 +61,8 @@ install-lagoon-core:
 		--set "registry=registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32443" \
 		--set "lagoonAPIURL=http://localhost:7070/graphql" \
 		--set "keycloakAPIURL=http://localhost:8080/auth" \
+		--set "harborURL=http://registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set "harborAdminPassword=Harbor12345" \
 		--set storageCalculator.enabled=false \
 		--set sshPortal.enabled=false \
 		lagoon-core \
@@ -72,6 +78,6 @@ install-lagoon-remote:
 		--timeout 15m \
 		--values ./charts/lagoon-remote/ci/linter-values.yaml \
 		--set "rabbitMQPassword=$$(kubectl -n lagoon get secret lagoon-core-broker -o json | jq -r '.data.RABBITMQ_PASSWORD | @base64d')" \
-		--set "dockerHost.registry=registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32443" \
+		--set "dockerHost.registry=registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		lagoon-remote \
 		./charts/lagoon-remote

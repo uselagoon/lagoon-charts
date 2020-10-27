@@ -16,8 +16,9 @@ These tools must be installed:
 Add these helm repositories:
 
 ```
-helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+helm repo add harbor https://helm.goharbor.io
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
 ```
 
 Also make sure that your local DNS resolver doesn't filter private IPs, or point `/etc/resolv.conf` to `1.0.0.1` / `8.8.8.8`.
