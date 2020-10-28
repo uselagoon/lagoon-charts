@@ -69,7 +69,7 @@ install-lagoon-core:
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote:
+install-lagoon-remote: install-lagoon-core
 	helm upgrade \
 		--install \
 		--create-namespace \
