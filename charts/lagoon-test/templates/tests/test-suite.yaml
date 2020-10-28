@@ -10,61 +10,30 @@ metadata:
 spec:
   serviceAccountName: {{ include "lagoon-test.serviceAccountName" . }}
   containers:
-  - name: tests
+  - name: features-kubernetes
     image: "{{ .Values.tests.image.repository }}:{{ coalesce .Values.tests.image.tag .Values.imageTag .Chart.AppVersion }}"
     imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
-    env:
-    - name: API_HOST
-      value: {{ .Values.apiHost | quote }}
-    - name: API_PORT
-      value: {{ .Values.apiPort | quote }}
-    - name: API_PROTOCOL
-      value: {{ .Values.apiProtocol | quote }}
-    - name: CLUSTER_TYPE
-      value: {{ .Values.clusterType | quote }}
-    - name: DELETED_STATUS_CODE
-      value: {{ .Values.deletedStatusCode | quote }}
-    - name: GIT_AUTHORIZED_KEYS
-      valueFrom:
-        secretKeyRef:
-          name: {{ include "lagoon-test.fullname" . }}
-          key: GIT_AUTHORIZED_KEYS
-    - name: GIT_REPO_PREFIX
-      value: "git@{{ include "lagoon-test.localGit.fullname" . }}:/git/"
-    - name: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
-      value: {{ required "A valid .Values.keycloakAuthServerClientSecret required!" .Values.keycloakAuthServerClientSecret | quote }}
-    - name: KEYCLOAK_URL
-      value: {{ .Values.keycloakURL | quote }}
-    - name: ROUTE_SUFFIX_HTTP
-      value: {{ required "A valid .Values.routeSuffixHTTP required!" .Values.routeSuffixHTTP | quote }}
-    - name: ROUTE_SUFFIX_HTTP_PORT
-      value: {{ .Values.routeSuffixHTTPPort | quote }}
-    - name: ROUTE_SUFFIX_HTTPS
-      value: {{ required "A valid .Values.routeSuffixHTTPS required!" .Values.routeSuffixHTTPS | quote }}
-    - name: ROUTE_SUFFIX_HTTPS_PORT
-      value: {{ .Values.routeSuffixHTTPSPort | quote }}
-    - name: SSH_HOST
-      value: {{ .Values.sshHost | quote }}
-    - name: SSH_PORT
-      value: {{ .Values.sshPort | quote }}
-    - name: SSH_PRIVATE_KEY
-      valueFrom:
-        secretKeyRef:
-          name: {{ include "lagoon-test.fullname" . }}
-          key: SSH_PRIVATE_KEY
-    - name: WEBHOOK_HOST
-      value: {{ .Values.webhookHost | quote }}
-    - name: WEBHOOK_PORT
-      value: {{ .Values.webhookPort | quote }}
-    - name: WEBHOOK_PROTOCOL
-      value: {{ .Values.webhookProtocol | quote }}
-    - name: WEBHOOK_REPO_PREFIX
-      value: {{ .Values.webhookRepoPrefix | quote }}
+    envFrom:
+    - secretRef:
+        name: {{ include "lagoon-test.fullname" . }}
     command:
     - /entrypoint.sh
     args:
     - ansible-playbook
     - "--skip-tags='skip-on-kubernetes'"
     - "/ansible/tests/features-kubernetes.yaml"
+  - name: nginx
+    image: "{{ .Values.tests.image.repository }}:{{ coalesce .Values.tests.image.tag .Values.imageTag .Chart.AppVersion }}"
+    imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
+    envFrom:
+    - secretRef:
+        name: {{ include "lagoon-test.fullname" . }}
+    command:
+    - /entrypoint.sh
+    args:
+    - ansible-playbook
+    - "--skip-tags"
+    - "skip-on-kubernetes"
+    - "/ansible/tests/nginx.yaml"
   restartPolicy: Never
 {{- end }}
