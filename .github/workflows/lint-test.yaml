@@ -149,7 +149,7 @@ jobs:
     - name: Helm-install the test fixutres and fill lagoon-test/ci/linter-values.yaml
       if: steps.list-changed.outputs.changed == 'true'
       run: |
-        make fill-test-ci-values
+        make -j8 -O fill-test-ci-values
 
     - name: Run chart-testing (install) on lagoon-test
       if: steps.list-changed.outputs.changed == 'true'

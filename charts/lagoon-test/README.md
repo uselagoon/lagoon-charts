@@ -38,7 +38,7 @@ IMPORTANT NOTE: the next step installs several charts using `helm`, so make sure
 Install test fixtures and configure test CI values.
 
 ```
-make fill-test-ci-values
+make -j8 -O fill-test-ci-values
 helm upgrade \
   --install \
   --namespace lagoon \
