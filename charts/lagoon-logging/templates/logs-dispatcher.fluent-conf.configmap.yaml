@@ -230,7 +230,10 @@ data:
       @type record_modifier
       remove_keys _dummy_,type
       <record>
-        _dummy_ ${record['openshift_project'] = record['type']; record['kubernetes'] = {'namespace_name' => record['type'], 'pod_name' => record['host'], 'container_name' => 'unknown'}; record['docker'] = {'container_id' => "#{record['type']}_#{record['host']}"}; nil}
+        # modify the 'type' record before removal to convert underscores to
+        # hyphens as the former are illegal in k8s names. Lagoon does this same
+        # modification when creating the namespace.
+        _dummy_ ${record['openshift_project'] = record['type']&.gsub!('_', '-'); record['kubernetes'] = {'namespace_name' => record['type'], 'pod_name' => record['host'], 'container_name' => 'unknown'}; record['docker'] = {'container_id' => "#{record['type']}_#{record['host']}"}; nil}
       </record>
     </filter>
     # enrich with k8s metadata (will get the namespace labels)
