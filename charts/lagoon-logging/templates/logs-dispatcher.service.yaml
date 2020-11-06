@@ -21,7 +21,3 @@ spec:
     port: 5140
     protocol: UDP
     targetPort: application
-  - name: syslog-router
-    port: 5141
-    protocol: UDP
-    targetPort: syslog-router

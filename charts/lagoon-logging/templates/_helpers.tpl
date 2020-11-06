@@ -62,11 +62,29 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this
 {{- end }}
 
 {{/*
+Create a default fully qualified app name for openshift-haproxy-logs-collector.
+We truncate at 63 chars because some Kubernetes name fields are limited to this
+(by the DNS naming spec).
+*/}}
+{{- define "lagoon-logging.openshiftHaproxyLogsCollector.fullname" -}}
+{{- include "lagoon-logging.fullname" . }}-{{ .Values.openshiftHaproxyLogsCollector.name }}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "lagoon-logging.logsDispatcher.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "lagoon-logging.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-logging.logsDispatcher.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "lagoon-logging.openshiftHaproxyLogsCollector.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-logging.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
@@ -83,6 +101,18 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Common labels
+*/}}
+{{- define "lagoon-logging.openshiftHaproxyLogsCollector.labels" -}}
+helm.sh/chart: {{ include "lagoon-logging.chart" . }}
+{{ include "lagoon-logging.openshiftHaproxyLogsCollector.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "lagoon-logging.logsDispatcher.serviceAccountName" -}}
@@ -90,6 +120,17 @@ Create the name of the service account to use
 {{- default (include "lagoon-logging.logsDispatcher.fullname" .) .Values.logsDispatcher.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.logsDispatcher.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "lagoon-logging.openshiftHaproxyLogsCollector.serviceAccountName" -}}
+{{- if .Values.openshiftHaproxyLogsCollector.serviceAccount.create }}
+{{- default (include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" .) .Values.openshiftHaproxyLogsCollector.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.openshiftHaproxyLogsCollector.serviceAccount.name }}
 {{- end }}
 {{- end }}
 

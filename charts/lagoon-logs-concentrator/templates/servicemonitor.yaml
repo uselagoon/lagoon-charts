@@ -9,7 +9,7 @@ metadata:
 spec:
   endpoints:
     - honorLabels: true
-      path: /metrics
+      path: /aggregated_metrics
       port: metrics
       scheme: http
   namespaceSelector:

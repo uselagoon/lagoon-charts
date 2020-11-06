@@ -10,7 +10,6 @@ spec:
   match:
   - exclude:
       namespaces:
-      - {{ .Release.Namespace }}
       {{- with .Values.excludeNamespaces }}
         {{- toYaml . | nindent 6 }}
       {{- end }}

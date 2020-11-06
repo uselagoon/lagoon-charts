@@ -1,0 +1,95 @@
+{{- if .Values.openshiftHaproxyLogsCollector.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-conf
+  labels:
+    {{- include "lagoon-logging.openshiftHaproxyLogsCollector.labels" . | nindent 4 }}
+data:
+  fluent.conf: |
+    # vi: ft=fluentd
+    <system>
+      workers 16
+    </system>
+
+    # prometheus metrics
+    <source>
+      @type prometheus
+    </source>
+    <source>
+      @type prometheus_monitor
+    </source>
+    <source>
+      @type prometheus_output_monitor
+    </source>
+
+    # router logs emitted by the openshift routers
+    <source>
+      @type                syslog
+      @id                  in_router_openshift
+      # this hides warning messages where each unmatched line throws an warning line
+      @log_level           error
+      # NOTE: tag is a _prefix_ so final tag will be e.g.
+      # lagoon.test.router.openshift.local1.info
+      tag                  "lagoon.#{ENV['CLUSTER_NAME']}.router.openshift"
+      emit_unmatched_lines true
+      # syslog parameters
+      port         5141
+      severity_key severity
+      # max IPv4 UDP payload size
+      message_length_limit 65507
+      <parse>
+        @type       regexp
+        # parse HTTP logs based on the haproxy documentation
+        # As per the documentation here
+        # https://www.haproxy.com/documentation/hapee/latest/onepage/#8.2.3, except
+        # we split the frontend_name into its constituent parts as used by
+        # openshift.
+        expression           /^.{,15} (?<process_name>\w+)\[(?<pid>\d+)\]: (?<client_ip>\S+):(?<client_port>\d+) \[(?<request_date>\S+)\] (?<frontend_name>\S+) (?<backend_type>\S+):(?<docker_container_id>(?<kubernetes_namespace_name>\S+):\S+\/pod:(?<kubernetes_pod_name>[^:]+):(?<kubernetes_container_name>[^:]+)):\S+ (?<TR>[\d-]+)\/(?<Tw>[\d-]+)\/(?<Tc>[\d-]+)\/(?<Tr>[\d-]+)\/(?<Ta>[\d+-]+) (?<status_code>\d+) (?<bytes_read>[\d+]+) (?<captured_request_cookie>\S+) (?<captured_response_cookie>\S+) (?<termination_state>\S+) (?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+) (?<srv_queue>\d+)\/(?<backend_queue>\d+) (\{(?<request_host>.+)\|(?<request_user_agent>.+)?\} )?"(?<http_request>.+)"/
+        time_key             request_date
+        time_format          %d/%b/%Y:%T.%L
+        types                pid:integer,client_port:integer,TR:integer,Tw:integer,Tc:integer,Tr:integer,Ta:integer,bytes_read:integer,actconn:integer,feconn:integer,beconn:integer,srv_conn:integer,retries:integer,srv_queue:integer,backend_queue:integer
+      </parse>
+    </source>
+
+    #
+    # optional sources which can be enabled in the chart
+    #
+    @include source.d/*.conf
+
+    #
+    # unmatched openshift router logs
+    #
+    # drop the ones we aren't interested in
+    <filter lagoon.*.router.openshift.unmatched>
+      @type grep
+      <exclude>
+        key unmatched_line
+        pattern /"<BADREQ>"$| public_ssl be_no_sni\/<NOSRV> -1\/-1\/\+\d+ \+0 -- | public_ssl be_sni\/fe_sni \d+\/\d+\/\+\d+ \+0 -- |haproxy\[\d+\]: (Proxy .+ (started|stopped \(FE: \d+ conns, BE: \d+ conns\)).|Stopping .+ in \d+ ms.)$/
+      </exclude>
+    </filter>
+
+    # prometheus monitoring
+    <filter lagoon.**>
+      @type prometheus
+      <metric>
+        name fluentd_input_status_num_records_total
+        type counter
+        desc The total number of incoming records
+        <labels>
+          tag ${tag}
+          hostname ${hostname}
+        </labels>
+      </metric>
+    </filter>
+
+    #
+    # output to stdout, will be picked up by logging operator and forwarded to the logs-dispatcher
+    #
+    <match lagoon.**>
+      @type stdout
+      <format>
+        @type json
+      </format>
+    </match>
+{{- end }}
