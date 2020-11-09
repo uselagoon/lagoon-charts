@@ -10,32 +10,33 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        fetch-depth: "0"
 
-    - name: Fetch history
-      run: git fetch --prune --unshallow
+    - name: Set up chart-testing dependencies
+      uses: actions/setup-python@v2
+
+    - name: Set up chart-testing
+      uses: helm/chart-testing-action@v2.0.0
+
+    - name: Run chart-testing (list-changed)
+      id: list-changed
+      run: |
+        changed=$(ct list-changed --config ./default.ct.yaml)
+        if [[ "$changed" ]]; then
+          echo "::set-output name=changed::true"
+          echo "$changed"
+        fi
 
     - name: Run chart-testing (lint)
-      id: lint
-      uses: helm/chart-testing-action@v2.0.0
-      with:
-        command: lint
-        config: default.ct.yaml
+      run: ct lint --config ./default.ct.yaml
 
     - name: Create kind cluster
       uses: helm/kind-action@v1.0.0
-      if: steps.lint.outputs.changed == 'true'
+      if: steps.list-changed.outputs.changed == 'true'
 
     - name: Run chart-testing (install)
-      uses: helm/chart-testing-action@v2.0.0
-      with:
-        command: install
-        config: default.ct.yaml
-
-    - name: Show changed charts
-      uses: helm/chart-testing-action@v2.0.0
-      with:
-        command: list-changed
-        config: default.ct.yaml
+      run: ct install --config ./default.ct.yaml
 
   # runs for lagoon-core, lagoon-remote, lagoon-test
   test-suite:
@@ -43,65 +44,69 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-
-    - name: Fetch history
-      run: git fetch --prune --unshallow
-
-    - name: Run chart-testing (lint)
-      id: lint
-      uses: helm/chart-testing-action@v2.0.0
       with:
-        command: lint
-        config: test-suite-lint.ct.yaml
+        fetch-depth: "0"
+
+    - name: Set up chart-testing dependencies
+      uses: actions/setup-python@v2
+
+    - name: Set up chart-testing
+      uses: helm/chart-testing-action@v2.0.0
+
+    - name: Run chart-testing (list-changed)
+      id: list-changed
+      run: |
+        changed=$(ct list-changed --config ./test-suite-lint.ct.yaml)
+        if [[ "$changed" ]]; then
+          echo "::set-output name=changed::true"
+          echo "$changed"
+        fi
 
     - name: Create kind cluster
       uses: helm/kind-action@v1.0.0
-      if: steps.lint.outputs.changed == 'true'
+      if: steps.list-changed.outputs.changed == 'true'
       with:
         config: test-suite.kind-config.yaml
 
     - name: Install kubectl
-      if: steps.lint.outputs.changed == 'true'
+      if: steps.list-changed.outputs.changed == 'true'
       run: |
         curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
         chmod +x ./kubectl
         sudo cp ./kubectl /usr/local/bin/
 
     - name: Check node IP matches kind configuration
-      if: steps.lint.outputs.changed == 'true'
+      if: steps.list-changed.outputs.changed == 'true'
       run: |
         NODE_IP="$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')"
         echo Checking for NODE_IP "$NODE_IP"
         grep $NODE_IP test-suite.kind-config.yaml
 
     - name: Install Helm
-      if: steps.lint.outputs.changed == 'true'
+      if: steps.list-changed.outputs.changed == 'true'
       run: |
         curl -fsSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
         chmod 700 get_helm.sh
         ./get_helm.sh
 
     - name: Add dependency chart repos
-      if: steps.lint.outputs.changed == 'true'
+      if: steps.list-changed.outputs.changed == 'true'
       run: |
         helm repo add harbor https://helm.goharbor.io
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
     - name: Install gojq
-      if: steps.lint.outputs.changed == 'true'
+      if: steps.list-changed.outputs.changed == 'true'
       run: |
         curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.11.1/gojq_v0.11.1_linux_amd64.tar.gz
         tar -xf ./gojq_v0.11.1_linux_amd64.tar.gz -C /tmp
         sudo cp /tmp/gojq_v0.11.1_linux_amd64/gojq /usr/local/bin/jq
 
     - name: Helm-install the test fixutres and fill lagoon-test/ci/linter-values.yaml
-      if: steps.lint.outputs.changed == 'true'
+      if: steps.list-changed.outputs.changed == 'true'
       run: |
         make fill-test-ci-values
 
     - name: Run chart-testing (install) on lagoon-test
-      uses: helm/chart-testing-action@v2.0.0
-      if: steps.lint.outputs.changed == 'true'
-      with:
-        command: install
-        config: test-suite-run.ct.yaml
+      if: steps.list-changed.outputs.changed == 'true'
+      run: ct install --config ./test-suite-run.ct.yaml
