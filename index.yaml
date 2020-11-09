@@ -837,6 +837,27 @@ entries:
   lagoon-logging:
   - apiVersion: v2
     appVersion: v1-9-1
+    created: "2020-11-09T14:18:23.283507651Z"
+    dependencies:
+    - name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.7.0
+    description: |
+      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    digest: c104b7fb4aba33e5f76286cb843ae429ee7a494cb56abe67f1ba22554e013cc6
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.15.0/lagoon-logging-0.15.0.tgz
+    version: 0.15.0
+  - apiVersion: v2
+    appVersion: v1-9-1
     created: "2020-11-05T19:23:12.222877259Z"
     dependencies:
     - name: logging-operator
