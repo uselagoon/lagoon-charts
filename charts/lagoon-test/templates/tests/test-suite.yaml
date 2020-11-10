@@ -11,7 +11,7 @@ spec:
   serviceAccountName: {{ include "lagoon-test.serviceAccountName" . }}
   containers:
   - name: tests
-    image: "{{ .Values.tests.image.repository }}:{{ .Values.tests.image.tag | default .Chart.AppVersion }}"
+    image: "{{ .Values.tests.image.repository }}:{{ coalesce .Values.tests.image.tag .Values.imageTag .Chart.AppVersion }}"
     imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
     env:
     - name: API_HOST

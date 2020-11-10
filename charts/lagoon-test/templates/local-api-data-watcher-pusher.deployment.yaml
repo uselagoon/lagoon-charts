@@ -27,7 +27,7 @@ spec:
       - name: api-data-watcher-pusher
         securityContext:
           {{- toYaml .Values.localAPIDataWatcherPusher.securityContext | nindent 10 }}
-        image: "{{ .Values.localAPIDataWatcherPusher.image.repository }}:{{ .Values.localAPIDataWatcherPusher.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.localAPIDataWatcherPusher.image.repository }}:{{ coalesce .Values.localAPIDataWatcherPusher.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.localAPIDataWatcherPusher.image.pullPolicy }}
         env:
         - name: API_HOST

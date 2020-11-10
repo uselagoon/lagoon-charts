@@ -17,11 +17,11 @@ pendingMessageCron: "*/5 * * * *"
 
 # this default image tag is set for all services and can be overridden
 # on the service level, if not set it uses chart appVersion
-imageTag: ""
+imageTag: "main"
 
 dockerHost:
   image:
-    repository: amazeeiolagoon/docker-host
+    repository: testlagoon/docker-host
     pullPolicy: Always
     tag: ""
 

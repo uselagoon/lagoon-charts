@@ -74,10 +74,14 @@ imagePullSecrets: []
 serviceAccount:
   name: ""
 
+# this default image tag is set for all services and can be overridden
+# on the service level, if not set it falls back to chart appVersion.
+imageTag: "main"
+
 localGit:
 
   image:
-    repository: amazeeiolagoon/local-git
+    repository: testlagoon/local-git
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -103,7 +107,7 @@ localGit:
 localAPIDataWatcherPusher:
 
   image:
-    repository: amazeeiolagoon/local-api-data-watcher-pusher
+    repository: testlagoon/local-api-data-watcher-pusher
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -117,7 +121,7 @@ localAPIDataWatcherPusher:
 tests:
 
   image:
-    repository: amazeeiolagoon/tests
+    repository: testlagoon/tests
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""

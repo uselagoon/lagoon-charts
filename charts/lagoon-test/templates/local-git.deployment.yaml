@@ -27,7 +27,7 @@ spec:
       - name: git
         securityContext:
           {{- toYaml .Values.localGit.securityContext | nindent 10 }}
-        image: "{{ .Values.localGit.image.repository }}:{{ .Values.localGit.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.localGit.image.repository }}:{{ coalesce .Values.localGit.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.localGit.image.pullPolicy }}
         env:
         - name: GIT_AUTHORIZED_KEYS

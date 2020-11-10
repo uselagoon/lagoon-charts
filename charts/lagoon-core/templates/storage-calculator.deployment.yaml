@@ -29,7 +29,7 @@ spec:
       - name: storage-calculator
         securityContext:
           {{- toYaml .Values.storageCalculator.securityContext | nindent 10 }}
-        image: "{{ .Values.storageCalculator.image.repository }}:{{ .Values.storageCalculator.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.storageCalculator.image.repository }}:{{ coalesce .Values.storageCalculator.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.storageCalculator.image.pullPolicy }}
         env:
         - name: JWTSECRET

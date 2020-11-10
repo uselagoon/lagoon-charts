@@ -73,8 +73,6 @@ sshHostKeyED25519: |-
 api:
   replicaCount: 1
   # TODO: remove this once a 2.x release is the chart appVersion
-  image:
-    tag: main
 
 broker:
   replicaCount: 1
@@ -84,8 +82,6 @@ broker:
 authServer:
   replicaCount: 1
   # TODO: remove this once a 2.x release is the chart appVersion
-  image:
-    tag: main
 
 webhooks2tasks:
   replicaCount: 1
