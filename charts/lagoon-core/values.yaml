@@ -361,6 +361,7 @@ webhookHandler:
     # targetMemoryUtilizationPercentage: 80
 
 ui:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/ui
