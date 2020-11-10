@@ -52,12 +52,14 @@ install-lagoon-core:
 		--timeout 15m \
 		--values ./charts/lagoon-core/ci/linter-values.yaml \
 		--set autoIdler.enabled=false \
-		--set drushAlias.enabled=true \
 		--set logs2email.enabled=false \
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
 		--set logs2slack.enabled=false \
 		--set logsDBCurator.enabled=false \
+		--set webhooks2tasks.enabled=false \
+		--set webhookHandler.enabled=false \
+		--set ui.enabled=false \
 		--set "registry=registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32443" \
 		--set "lagoonAPIURL=http://localhost:7070/graphql" \
 		--set "keycloakAPIURL=http://localhost:8080/auth" \
