@@ -24,10 +24,12 @@ helm dependency build lagoon-logging
 
 **OpenShift only**
 
-You must set allow the fluentbit pods to run in privileged mode:
+You must set allow the fluentbit pods to run in privileged mode, and enable the haproxy logs collector:
 
 ```
 fluentbitPrivileged: true
+openshiftHaproxyLogsCollector:
+  enabled: true
 ```
 
 2. Test installation.
