@@ -1,0 +1,42 @@
+{{- if .Values.openshiftHaproxyLogsCollector.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
+  labels:
+    {{- include "lagoon-logging.openshiftHaproxyLogsCollector.labels" . | nindent 4 }}
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        HTTP_Server  On
+        HTTP_Port    2020
+        Parsers_File parsers.conf
+        storage.path /fluent-bit/buffer
+        Flush        2
+        Log_Level    debug
+
+    [INPUT]
+        Name              syslog
+        Mode              udp
+        Port              5141
+        Parser            haproxy
+        Tag               router_openshift
+        # max IPv4 UDP payload size
+        # this is also the max buffer size for udp as per
+        # https://docs.fluentbit.io/manual/pipeline/inputs/syslog#considerations
+        Buffer_Chunk_Size 65507
+
+    [OUTPUT]
+        Name  forward
+        Match router_openshift
+        Host  {{ include "lagoon-logging.logsDispatcher.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+        Port  24225
+  parsers.conf: |
+    [PARSER]
+        Name        haproxy
+        Format      regex
+        Regex       ^\<(?:[0-9]{1,5})\>.{,15} (?<process_name>\w+)\[(?<pid>\d+)\]: (?<client_ip>\S+):(?<client_port>\d+) \[(?<request_date>\S+)\] (?<frontend_name>\S+) (?<backend_type>\S+):(?<docker_container_id>(?<kubernetes_namespace_name>\S+):\S+\/pod:(?<kubernetes_pod_name>[^:]+):(?<kubernetes_container_name>[^:]+)):\S+ (?<TR>[\d-]+)\/(?<Tw>[\d-]+)\/(?<Tc>[\d-]+)\/(?<Tr>[\d-]+)\/(?<Ta>[\d+-]+) (?<status_code>\d+) (?<bytes_read>[\d+]+) (?<captured_request_cookie>\S+) (?<captured_response_cookie>\S+) (?<termination_state>\S+) (?<actconn>\d+)\/(?<feconn>\d+)\/(?<beconn>\d+)\/(?<srv_conn>\d+)\/(?<retries>\d+) (?<srv_queue>\d+)\/(?<backend_queue>\d+) (\{(?<request_host>.+)\|(?<request_user_agent>.+)?\} )?"(?<http_request>(?<http_request_method>\S+) (?<http_request_path>\S+)(?: (?<http_request_version>.+))?)"$
+        Time_Key    request_date
+        Time_Format %d/%b/%Y:%T.%L
+        Types       pid:integer client_port:integer TR:integer Tw:integer Tc:integer Tr:integer Ta:integer bytes_read:integer actconn:integer feconn:integer beconn:integer srv_conn:integer retries:integer srv_queue:integer backend_queue:integer
+{{- end }}

@@ -1,0 +1,21 @@
+{{- if .Values.openshiftHaproxyLogsCollector.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}
+  labels:
+    {{- include "lagoon-logging.openshiftHaproxyLogsCollector.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "lagoon-logging.openshiftHaproxyLogsCollector.selectorLabels" . | nindent 4 }}
+  ports:
+  - name: metrics
+    port: 2020
+    protocol: TCP
+    targetPort: metrics
+  - name: haproxy-logs
+    port: 5141
+    protocol: UDP
+    targetPort: haproxy-logs
+{{- end }}

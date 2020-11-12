@@ -61,6 +61,46 @@ logsDispatcher:
   serviceMonitor:
     enabled: true
 
+openshiftHaproxyLogsCollector:
+
+  enabled: false
+
+  name: openshift-haproxy-logs-collector
+
+  replicaCount: 3
+
+  image:
+    repository: fluent/fluent-bit
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart version.
+    tag: "1.6-debug"
+
+  podAnnotations: {}
+
+  podSecurityContext:
+    fsGroup: 0
+
+  securityContext: {}
+
+  resources: {}
+    # If you want to specify resources, uncomment the following lines, adjust
+    # them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  serviceMonitor:
+    enabled: true
+
 logsTeeRouter:
 
   enabled: false

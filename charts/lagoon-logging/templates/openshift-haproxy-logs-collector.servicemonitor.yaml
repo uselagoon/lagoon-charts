@@ -1,0 +1,21 @@
+{{- if and .Values.openshiftHaproxyLogsCollector.enabled .Values.openshiftHaproxyLogsCollector.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}
+  labels:
+    {{- include "lagoon-logging.openshiftHaproxyLogsCollector.labels" . | nindent 4 }}
+    monitoring.lagoon.sh/monitorMe: "true"
+spec:
+  endpoints:
+    - honorLabels: true
+      path: /api/v1/metrics/prometheus
+      port: metrics
+      scheme: http
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-logging.openshiftHaproxyLogsCollector.selectorLabels" . | nindent 6 }}
+{{- end }}
