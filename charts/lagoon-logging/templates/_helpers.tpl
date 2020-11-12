@@ -174,3 +174,33 @@ Create the name of the service account to use
 {{- default "default" .Values.logsTeeApplication.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create a default fully qualified app name for openshift-haproxy-logs-collector.
+We truncate at 63 chars because some Kubernetes name fields are limited to this
+(by the DNS naming spec).
+*/}}
+{{- define "lagoon-logging.openshiftHaproxyLogsCollector.fullname" -}}
+{{- include "lagoon-logging.fullname" . }}-{{ .Values.openshiftHaproxyLogsCollector.name }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "lagoon-logging.openshiftHaproxyLogsCollector.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-logging.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "lagoon-logging.openshiftHaproxyLogsCollector.labels" -}}
+helm.sh/chart: {{ include "lagoon-logging.chart" . }}
+{{ include "lagoon-logging.openshiftHaproxyLogsCollector.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}

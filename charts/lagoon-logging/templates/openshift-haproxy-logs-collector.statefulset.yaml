@@ -1,0 +1,90 @@
+{{- if .Values.openshiftHaproxyLogsCollector.enabled -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}
+  labels:
+    {{- include "lagoon-logging.openshiftHaproxyLogsCollector.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.openshiftHaproxyLogsCollector.replicaCount }}
+  serviceName: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-logging.openshiftHaproxyLogsCollector.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/fluent-bit-conf-configmap: {{ include (print $.Template.BasePath "/openshift-haproxy-logs-collector.fluent-bit-conf.configmap.yaml") . | sha256sum }}
+    {{- with .Values.openshiftHaproxyLogsCollector.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-logging.openshiftHaproxyLogsCollector.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "lagoon-logging.logsDispatcher.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.openshiftHaproxyLogsCollector.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluentd
+        securityContext:
+          {{- toYaml .Values.openshiftHaproxyLogsCollector.securityContext | nindent 10 }}
+        image: "{{ .Values.openshiftHaproxyLogsCollector.image.repository }}:{{ .Values.openshiftHaproxyLogsCollector.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.openshiftHaproxyLogsCollector.image.pullPolicy }}
+        ports:
+        - containerPort: 2020
+          protocol: TCP
+          name: metrics
+        - containerPort: 5141
+          protocol: UDP
+          name: haproxy-logs
+        readinessProbe:
+          httpGet:
+            path: /
+            port: metrics
+        livenessProbe:
+          httpGet:
+            path: /
+            port: metrics
+        volumeMounts:
+        - mountPath: /fluent-bit/etc/fluent-bit.conf
+          name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
+          subPath: fluent-bit.conf
+        - mountPath: /fluent-bit/etc/parsers.conf
+          name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
+          subPath: parsers.conf
+        - mountPath: /fluent-bit/buffer/
+          name: buffer
+        resources:
+          {{- toYaml .Values.openshiftHaproxyLogsCollector.resources | nindent 10 }}
+      {{- with .Values.openshiftHaproxyLogsCollector.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.openshiftHaproxyLogsCollector.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.openshiftHaproxyLogsCollector.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: fluent-bit.conf
+            path: fluent-bit.conf
+          - key: parsers.conf
+            path: parsers.conf
+          name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
+        name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
+  volumeClaimTemplates:
+  - metadata:
+      name: buffer
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 8Gi
+{{- end }}

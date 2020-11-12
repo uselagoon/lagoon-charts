@@ -52,15 +52,15 @@ spec:
         - containerPort: 24224
           protocol: TCP
           name: forward
+        - containerPort: 24225
+          protocol: TCP
+          name: haproxy-forward
         - containerPort: 24231
           protocol: TCP
           name: metrics
         - containerPort: 5140
           protocol: UDP
           name: application
-        - containerPort: 5141
-          protocol: UDP
-          name: syslog-router
         readinessProbe:
           tcpSocket:
             port: 24224
