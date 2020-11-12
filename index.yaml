@@ -837,6 +837,27 @@ entries:
   lagoon-logging:
   - apiVersion: v2
     appVersion: v1-9-1
+    created: "2020-11-12T19:54:40.087626152Z"
+    dependencies:
+    - name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.7.0
+    description: |
+      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    digest: d34581e5c8444026be89fc46c8c57d502ebcea2905bf398677430d2f0434fdeb
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.16.0/lagoon-logging-0.16.0.tgz
+    version: 0.16.0
+  - apiVersion: v2
+    appVersion: v1-9-1
     created: "2020-11-09T14:18:23.283507651Z"
     dependencies:
     - name: logging-operator
@@ -1277,6 +1298,23 @@ entries:
     - https://github.com/amazeeio/charts/releases/download/lagoon-logging-0.6.3/lagoon-logging-0.6.3.tgz
     version: 0.6.3
   lagoon-logs-concentrator:
+  - apiVersion: v2
+    appVersion: v1-9-1
+    created: "2020-11-12T19:54:40.203374149Z"
+    description: |
+      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    digest: 021ce403f096695d216ec7d75368b22c1551a3067925d72d04cef819459075d9
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.5.2/lagoon-logs-concentrator-0.5.2.tgz
+    version: 0.5.2
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-10-27T19:02:42.896629902Z"
