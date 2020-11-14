@@ -175,7 +175,7 @@ data:
       @type record_modifier
       <replace>
         key index_name
-        expression /^(?<prefix>(?:container|router)-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
+        expression /^(?<prefix>container-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
         replace \\k<prefix>_\\k<suffix>
       </replace>
       <replace>
@@ -270,7 +270,6 @@ data:
       skip_container_metadata true
       skip_master_url         true
     </filter>
-{{- end }}
 
     #
     # add the router index_name
@@ -281,6 +280,21 @@ data:
         index_name router-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
       </record>
     </filter>
+
+    {{- if .Values.consolidateServiceIndices }}
+    # some cluster services generate namespaces with a random suffix, so
+    # consolidate those in a single index for each service
+    <filter lagoon.*.router.openshift.**>
+      @type record_modifier
+      <replace>
+        key index_name
+        expression /^(?<prefix>router-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
+        replace \\k<prefix>_\\k<suffix>
+      </replace>
+    </filter>
+    {{- end }}
+
+{{- end }}
 
     #
     # add the lagoon index_name
