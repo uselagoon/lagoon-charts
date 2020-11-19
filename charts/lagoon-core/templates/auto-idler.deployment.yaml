@@ -55,7 +55,7 @@ spec:
         - name: LAGOON_ENVIRONMENT_TYPE
           value: production
         resources:
-          {{- toYaml .Values.autoIdler.resources | nindent 12 }}
+          {{- toYaml .Values.autoIdler.resources | nindent 10 }}
       {{- with .Values.autoIdler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

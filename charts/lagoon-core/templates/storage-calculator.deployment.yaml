@@ -43,7 +43,7 @@ spec:
           value: |-
             5 */12 * * * /lagoon/cronjob.sh /calculate-storage.sh
         resources:
-          {{- toYaml .Values.storageCalculator.resources | nindent 12 }}
+          {{- toYaml .Values.storageCalculator.resources | nindent 10 }}
       {{- with .Values.storageCalculator.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

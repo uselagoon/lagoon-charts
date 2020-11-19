@@ -60,7 +60,7 @@ spec:
         - name: REGISTRY
           value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
         resources:
-          {{- toYaml .Values.controllerhandler.resources | nindent 12 }}
+          {{- toYaml .Values.controllerhandler.resources | nindent 10 }}
       {{- with .Values.controllerhandler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

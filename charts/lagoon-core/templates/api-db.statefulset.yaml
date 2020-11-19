@@ -50,7 +50,7 @@ spec:
           tcpSocket:
             port: mariadb
         resources:
-          {{- toYaml .Values.apiDB.resources | nindent 12 }}
+          {{- toYaml .Values.apiDB.resources | nindent 10 }}
       volumes:
       - name: {{ include "lagoon-core.apiDB.fullname" . }}-data
         persistentVolumeClaim:

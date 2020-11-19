@@ -22,7 +22,7 @@ lagoonAPIURL: https://api.example.com/graphql
 keycloakAPIURL: https://keycloak.example.com/auth
 
 # used in ssh-portal
-sshHostKeyRSA: |
+sshHostKeyRSA: |-
   -----BEGIN OPENSSH PRIVATE KEY-----
   b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
   NhAAAAAwEAAQAAAYEA781JiRbdUmrAJm8Heze+jgODS7rF5+TxIWTB61R9G2sfppfDlIN5
@@ -61,7 +61,7 @@ sshHostKeyRSA: |
   9wLJL1/b+sos2/Smh9hPdIEy8ZdIa0UXxPAzI8RPcCEYumqhsy+9H1QVXPloxzxnU+poNY
   q+X3+iw1Dpj3vbAAAADHNjb3R0QHRoaW5reQECAwQFBg==
   -----END OPENSSH PRIVATE KEY-----
-sshHostKeyED25519: |
+sshHostKeyED25519: |-
   -----BEGIN OPENSSH PRIVATE KEY-----
   b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
   QyNTUxOQAAACCGR2030dqgzF7JRSAkQc1WYYtxcts+cAJowq0P0ogtiAAAAJBs3djPbN3Y

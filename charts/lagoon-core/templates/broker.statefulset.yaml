@@ -76,7 +76,7 @@ spec:
           tcpSocket:
             port: amqp
         resources:
-          {{- toYaml .Values.broker.resources | nindent 12 }}
+          {{- toYaml .Values.broker.resources | nindent 10 }}
       volumes:
       - name: {{ include "lagoon-core.broker.fullname" . }}-data
         persistentVolumeClaim:

@@ -46,7 +46,7 @@ spec:
           tcpSocket:
             port: redis
         resources:
-          {{- toYaml .Values.apiRedis.resources | nindent 12 }}
+          {{- toYaml .Values.apiRedis.resources | nindent 10 }}
       {{- with .Values.apiRedis.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

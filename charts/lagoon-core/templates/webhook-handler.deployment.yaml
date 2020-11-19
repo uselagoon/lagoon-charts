@@ -57,7 +57,7 @@ spec:
           tcpSocket:
             port: http-3000
         resources:
-          {{- toYaml .Values.webhookHandler.resources | nindent 12 }}
+          {{- toYaml .Values.webhookHandler.resources | nindent 10 }}
       {{- with .Values.webhookHandler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
