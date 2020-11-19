@@ -99,6 +99,10 @@ api:
 
   podAnnotations: {}
 
+  securityContext: {}
+
+  resources: {}
+
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -123,6 +127,10 @@ apiDB:
       --quick --add-locks --no-autocommit --single-transaction --all-databases"
     backup.appuio.ch/file-extension: .api-db.sql
 
+  securityContext: {}
+
+  resources: {}
+
   podSecurityContext:
     runAsUser: 100
     fsGroup: 0
@@ -135,6 +143,10 @@ apiRedis:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   service:
     type: ClusterIP
@@ -149,6 +161,10 @@ keycloak:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   service:
     type: ClusterIP
@@ -186,6 +202,10 @@ keycloakDB:
       --quick --add-locks --no-autocommit --single-transaction --all-databases"
     backup.appuio.ch/file-extension: .keycloak-db.sql
 
+  securityContext: {}
+
+  resources: {}
+
   podSecurityContext:
     runAsUser: 100
     fsGroup: 0
@@ -214,6 +234,10 @@ broker:
     enabled: true
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   serviceAccount:
     # Annotations to add to the service account
@@ -263,6 +287,10 @@ authServer:
 
   podAnnotations: {}
 
+  securityContext: {}
+
+  resources: {}
+
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -281,6 +309,10 @@ webhooks2tasks:
 
   podAnnotations: {}
 
+  securityContext: {}
+
+  resources: {}
+
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -298,6 +330,10 @@ webhookHandler:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   service:
     type: ClusterIP
@@ -334,6 +370,10 @@ ui:
 
   podAnnotations: {}
 
+  securityContext: {}
+
+  resources: {}
+
   service:
     type: ClusterIP
     port: 3000
@@ -368,6 +408,10 @@ backupHandler:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   service:
     type: ClusterIP
@@ -404,6 +448,10 @@ autoIdler:
 
   podAnnotations: {}
 
+  securityContext: {}
+
+  resources: {}
+
 storageCalculator:
   enabled: true
   image:
@@ -413,6 +461,10 @@ storageCalculator:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
 logs2slack:
   enabled: true
@@ -424,6 +476,10 @@ logs2slack:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   autoscaling:
     enabled: false
@@ -442,6 +498,10 @@ logs2microsoftteams:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   autoscaling:
     enabled: false
@@ -477,6 +537,10 @@ logs2email:
 
   podAnnotations: {}
 
+  securityContext: {}
+
+  resources: {}
+
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -494,6 +558,10 @@ drushAlias:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   service:
     type: ClusterIP
@@ -530,6 +598,10 @@ logsDBCurator:
 
   podAnnotations: {}
 
+  securityContext: {}
+
+  resources: {}
+
 ssh:
   replicaCount: 2
   image:
@@ -539,6 +611,10 @@ ssh:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   podSecurityContext:
     runAsUser: 1000
@@ -570,6 +646,10 @@ sshPortal:
 
   podAnnotations: {}
 
+  securityContext: {}
+
+  resources: {}
+
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -595,6 +675,10 @@ controllerhandler:
     tag: ""
 
   podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
 
   autoscaling:
     enabled: false
