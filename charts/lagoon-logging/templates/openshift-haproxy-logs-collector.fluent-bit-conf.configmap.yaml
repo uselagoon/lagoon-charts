@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
+  name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-conf
   labels:
     {{- include "lagoon-logging.openshiftHaproxyLogsCollector.labels" . | nindent 4 }}
 data:
@@ -13,7 +13,7 @@ data:
         Parsers_File parsers.conf
         storage.path /fluent-bit/buffer
         Flush        2
-        Log_Level    debug
+        Log_Level    warn
 
     [INPUT]
         Name              syslog

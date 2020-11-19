@@ -25,7 +25,7 @@ spec:
       securityContext:
         {{- toYaml .Values.openshiftHaproxyLogsCollector.podSecurityContext | nindent 8 }}
       containers:
-      - name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluentd
+      - name: fluentbit
         securityContext:
           {{- toYaml .Values.openshiftHaproxyLogsCollector.securityContext | nindent 10 }}
         image: "{{ .Values.openshiftHaproxyLogsCollector.image.repository }}:{{ .Values.openshiftHaproxyLogsCollector.image.tag | default .Chart.AppVersion }}"
@@ -47,10 +47,10 @@ spec:
             port: metrics
         volumeMounts:
         - mountPath: /fluent-bit/etc/fluent-bit.conf
-          name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
+          name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-conf
           subPath: fluent-bit.conf
         - mountPath: /fluent-bit/etc/parsers.conf
-          name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
+          name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-conf
           subPath: parsers.conf
         - mountPath: /fluent-bit/buffer/
           name: buffer
@@ -76,8 +76,8 @@ spec:
             path: fluent-bit.conf
           - key: parsers.conf
             path: parsers.conf
-          name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
-        name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-fluent-bit-conf
+          name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-conf
+        name: {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}-conf
   volumeClaimTemplates:
   - metadata:
       name: buffer
