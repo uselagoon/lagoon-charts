@@ -7,7 +7,7 @@ fullnameOverride: ""
 
 # this default image tag is set for all services and can be overridden
 # on the service level, if not set it falls back to chart appVersion.
-imageTag: "main"
+imageTag: ""
 
 logsDispatcher:
 
@@ -16,7 +16,7 @@ logsDispatcher:
   replicaCount: 3
 
   image:
-    repository: testlagoon/logs-dispatcher
+    repository: amazeeiolagoon/logs-dispatcher
     pullPolicy: Always
     # Overrides the image tag whose default is the chart version.
     tag: ""
@@ -114,7 +114,7 @@ logsTeeRouter:
   replicaCount: 3
 
   image:
-    repository: testlagoon/logs-tee
+    repository: amazeeiolagoon/logs-tee
     pullPolicy: Always
     # Overrides the image tag whose default is the chart version.
     tag: ""
@@ -177,7 +177,7 @@ logsTeeApplication:
   replicaCount: 3
 
   image:
-    repository: testlagoon/logs-tee
+    repository: amazeeiolagoon/logs-tee
     pullPolicy: Always
     # Overrides the image tag whose default is the chart version.
     tag: ""
