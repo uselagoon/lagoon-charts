@@ -2,7 +2,7 @@
 elasticsearchHost: "logs-db-service.elasticsearch.svc.cluster.local"
 elasticsearchAdminPassword: "securepass"
 tls:
-  caCert: |
+  caCert: |-
     -----BEGIN CERTIFICATE-----
     MIIBkDCCATegAwIBAgITeu31y1+poDceOchLRzHUSicSDzAKBggqhkjOPQQDAjAn
     MSUwIwYDVQQDExxsb2dzLWNhLmNsdXN0ZXIxLmV4YW1wbGUuY29tMB4XDTIwMDcy
@@ -14,7 +14,7 @@ tls:
     AiBOGe7ZBHOKWLTsIhomBEWOiQ1Pwld/+uVPfV993iL4LQIgUtYO5ZISk/5lFpOm
     zZ0GN6zjxYufkBzUIQEPbFUHR24=
     -----END CERTIFICATE-----
-  serverCert: |
+  serverCert: |-
     -----BEGIN CERTIFICATE-----
     MIICAzCCAaqgAwIBAgIUfxR4/eiZ9RC699d5ylAJ9nCWVQMwCgYIKoZIzj0EAwIw
     JzElMCMGA1UEAxMcbG9ncy1jYS5jbHVzdGVyMS5leGFtcGxlLmNvbTAeFw0yMDA3
@@ -28,7 +28,7 @@ tls:
     b20wCgYIKoZIzj0EAwIDRwAwRAIgU7n9RztcA1e+aJZsx/2UOKemXZjmDA8fblEp
     ZKFQxDgCIEYq2+7recj7BxLXeQpn5+sYe/qVTLgOFX9ExgGWI9UL
     -----END CERTIFICATE-----
-  serverKey: |
+  serverKey: |-
     -----BEGIN EC PRIVATE KEY-----
     MHcCAQEEIB0u+Pe5xwuUSsA6fs/OEVa8s+Gk3vstvE8UMPHohaWIoAoGCCqGSM49
     AwEHoUQDQgAEl79v9qQZYB5CepVu+BM7H/8kuNOCep1fcNKTwvRqjkWfu9E3Npw9
