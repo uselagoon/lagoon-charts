@@ -4,12 +4,12 @@
 
 # this default image tag is set for all services and can be overridden
 # on the service level, if not set it falls back to chart appVersion.
-imageTag: "main"
+imageTag: ""
 
 replicaCount: 1
 
 image:
-  repository: testlagoon/logs-concentrator
+  repository: amazeeiolagoon/logs-concentrator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart version.
   tag: ""
