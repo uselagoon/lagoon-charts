@@ -72,46 +72,98 @@ sshHostKeyED25519: |-
 
 api:
   replicaCount: 1
-  # TODO: remove this once a 2.x release is the chart appVersion
+  image:
+    repository: testlagoon/api
+
+apiDB:
+  image:
+    repository: testlagoon/api-db
+
+apiRedis:
+  image:
+    repository: testlagoon/api-redis
+
+keycloak:
+  image:
+    repository: testlagoon/keycloak
+
+keycloakDB:
+  image:
+    repository: testlagoon/keycloak-db
 
 broker:
   replicaCount: 1
   serviceMonitor:
     enabled: false
+  image:
+    repository: testlagoon/broker
 
 authServer:
   replicaCount: 1
-  # TODO: remove this once a 2.x release is the chart appVersion
+  image:
+    repository: testlagoon/auth-server
 
 webhooks2tasks:
   replicaCount: 1
+  image:
+    repository: testlagoon/webhooks2tasks
 
 webhookHandler:
   replicaCount: 1
+  image:
+    repository: testlagoon/webhook-handler
 
 ui:
   replicaCount: 1
+  image:
+    repository: testlagoon/ui
 
 backupHandler:
   replicaCount: 1
+  image:
+    repository: testlagoon/backup-handler
+
+autoIdler:
+  image:
+    repository: testlagoon/auto-idler
+
+storageCalculator:
+  image:
+    repository: testlagoon/storage-calculator
 
 logs2slack:
   replicaCount: 1
+  image:
+    repository: testlagoon/logs2slack
 
 logs2microsoftteams:
   replicaCount: 1
+  image:
+    repository: testlagoon/logs2microsoftteams
 
 logs2rocketchat:
   replicaCount: 1
+  image:
+    repository: testlagoon/logs2rocketchat
 
 logs2email:
   replicaCount: 1
+  image:
+    repository: testlagoon/logs2email
 
 drushAlias:
   replicaCount: 1
+  image:
+    repository: testlagoon/drush-alias
+
+logsDBCurator:
+  image:
+    repository: testlagoon/logs-db-curator
 
 ssh:
   replicaCount: 1
+  image:
+    repository: testlagoon/ssh
 
 sshPortal:
   enabled: true
@@ -120,3 +172,7 @@ sshPortal:
 
 controllerhandler:
   replicaCount: 1
+  image:
+    repository: testlagoon/controllerhandler
+
+imageTag: main
