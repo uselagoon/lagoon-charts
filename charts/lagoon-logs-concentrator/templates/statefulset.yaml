@@ -36,7 +36,7 @@ spec:
         image: busybox:musl
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
         command:
         - chown
         - '100:0'
@@ -47,7 +47,7 @@ spec:
       containers:
       - name: fluentd
         securityContext:
-          {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- toYaml .Values.securityContext | nindent 10 }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
@@ -79,7 +79,7 @@ spec:
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logs-concentrator.fullname" . }}-tls
         resources:
-          {{- toYaml .Values.resources | nindent 12 }}
+          {{- toYaml .Values.resources | nindent 10 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

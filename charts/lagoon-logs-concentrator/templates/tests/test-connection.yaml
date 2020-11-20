@@ -8,11 +8,11 @@ metadata:
     "helm.sh/hook": test-success
 spec:
   containers:
-    - name: nc
-      image: busybox
-      command: ['nc']
-      args:
-      - "-zvw5"
-      - "{{ include "lagoon-logs-concentrator.fullname" . }}"
-      - "{{ .Values.service.port }}"
+  - name: nc
+    image: busybox
+    command: ['nc']
+    args:
+    - "-zvw5"
+    - "{{ include "lagoon-logs-concentrator.fullname" . }}"
+    - "{{ .Values.service.port }}"
   restartPolicy: Never
