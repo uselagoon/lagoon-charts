@@ -29,6 +29,9 @@ jobs:
             --values $chart/ci/linter-values.yaml \
             --output-dir /tmp/charts/$chart
         done
+
+        # workaround until https://github.com/banzaicloud/logging-operator/pull/629 is released
+        rm -rf /tmp/charts/lagoon-logging/lagoon-logging/charts
     - name: Install YAMLlint
       run: sudo apt-get -y install yamllint
     - name: Lint the templates
