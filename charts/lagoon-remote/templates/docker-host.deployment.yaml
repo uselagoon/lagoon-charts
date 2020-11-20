@@ -63,7 +63,7 @@ spec:
             port: 2375
           timeoutSeconds: 1
         resources:
-          {{- toYaml .Values.dockerHost.resources | nindent 12 }}
+          {{- toYaml .Values.dockerHost.resources | nindent 10 }}
         volumeMounts:
         - mountPath: /var/lib/docker
           name: docker-lib
@@ -85,5 +85,5 @@ spec:
     {{- end }}
     {{- with .Values.dockerHost.tolerations }}
       tolerations:
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 6 }}
     {{- end }}
