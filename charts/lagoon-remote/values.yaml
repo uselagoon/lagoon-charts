@@ -74,7 +74,7 @@ lagoonBuildDeploy:
   enabled: false
   image:
     repository: amazeeio/lagoon-builddeploy
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "v0.1.4"
 
@@ -102,17 +102,18 @@ lagoonBuildDeploy:
 
   resources: {}
 
-# this is a sidecar in the same pod as the lagoonBuildDeploy container
-kubeRBACProxy:
-  image:
-    repository: gcr.io/kubebuilder/kube-rbac-proxy
-    pullPolicy: Always
-    tag: v0.4.1
+  # this is a sidecar in the same pod as the lagoonBuildDeploy container
+  kubeRBACProxy:
+    image:
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      pullPolicy: IfNotPresent
+      tag: v0.4.1
 
-  securityContext: {}
+    securityContext: {}
 
-  resources: {}
+    resources: {}
 
+# this account is used by the legacy Lagoon kubernetes build deploy system.
 kubernetesBuildDeploy:
   serviceAccount:
     # The name of the service account to use.
