@@ -3,7 +3,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.4
-  creationTimestamp: null
   name: lagoonbuilds.lagoon.amazee.io
 spec:
   group: lagoon.amazee.io
@@ -430,19 +429,12 @@ spec:
   - name: v1alpha1
     served: true
     storage: true
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.4
-  creationTimestamp: null
   name: lagoontasks.lagoon.amazee.io
 spec:
   group: lagoon.amazee.io
@@ -848,9 +840,3 @@ spec:
   - name: v1alpha1
     served: true
     storage: true
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
