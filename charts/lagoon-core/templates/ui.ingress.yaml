@@ -1,4 +1,4 @@
-{{- if .Values.ui.ingress.enabled -}}
+{{- if and .Values.ui.enabled .Values.ui.ingress.enabled -}}
 {{- $fullName := include "lagoon-core.ui.fullname" . -}}
 {{- $svcPort := .Values.ui.service.port -}}
 apiVersion: networking.k8s.io/v1beta1

@@ -12,7 +12,7 @@ routeSuffixHTTPPort: 32080
 routeSuffixHTTPSPort: 32443
 sshHost: lagoon-core-ssh
 sshPort: 2020
-sshPrivateKey: |
+sshPrivateKey: |-
   -----BEGIN RSA PRIVATE KEY-----
   MIIJKAIBAAKCAgEAxGZZrOV7Islo5p51Moabfd1YB8qbHvQZfJDZJmSU4jNxMf8G
   QH8KIM6ndi60xIiDlkh9R50Gs0fgnPaBwpjMjcUay5EvzBJdMmd/EPhg359+4f5Z
