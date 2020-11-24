@@ -4,3 +4,9 @@ rabbitMQHostname: lagoon-core-broker
 lagoonTargetName: ci-local-control-k8s
 lagoonBuildDeploy:
   enabled: true
+
+dockerHost:
+  image:
+    repository: testlagoon/docker-host
+
+imageTag: main

@@ -5,6 +5,10 @@
 nameOverride: ""
 fullnameOverride: ""
 
+# this default image tag is set for all services and can be overridden
+# on the service level, if not set it falls back to chart appVersion.
+imageTag: ""
+
 logsDispatcher:
 
   name: logs-dispatcher

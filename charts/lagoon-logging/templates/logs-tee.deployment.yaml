@@ -23,7 +23,7 @@ spec:
         - name: socat
           securityContext:
             {{- toYaml .Values.logsTeeRouter.securityContext | nindent 12 }}
-          image: "{{ .Values.logsTeeRouter.image.repository }}:{{ .Values.logsTeeRouter.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.logsTeeRouter.image.repository }}:{{ coalesce .Values.logsTeeRouter.image.tag .Values.imageTag .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.logsTeeRouter.image.pullPolicy }}
           args:
           # UDP port in
@@ -89,7 +89,7 @@ spec:
         - name: socat
           securityContext:
             {{- toYaml .Values.logsTeeApplication.securityContext | nindent 12 }}
-          image: "{{ .Values.logsTeeApplication.image.repository }}:{{ .Values.logsTeeApplication.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.logsTeeApplication.image.repository }}:{{ coalesce .Values.logsTeeApplication.image.tag .Values.imageTag .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.logsTeeApplication.image.pullPolicy }}
           args:
           # UDP port in

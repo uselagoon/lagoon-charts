@@ -46,7 +46,7 @@ spec:
       - name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-fluentd
         securityContext:
           {{- toYaml .Values.logsDispatcher.securityContext | nindent 10 }}
-        image: "{{ .Values.logsDispatcher.image.repository }}:{{ .Values.logsDispatcher.image.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.logsDispatcher.image.repository }}:{{ coalesce .Values.logsDispatcher.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logsDispatcher.image.pullPolicy }}
         ports:
         - containerPort: 24224

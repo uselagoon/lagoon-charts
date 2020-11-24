@@ -53,3 +53,15 @@ logging-operator:
 logsDispatcher:
   serviceMonitor:
     enabled: false
+  image:
+    repository: testlagoon/logs-dispatcher
+
+logsTeeRouter:
+  image:
+    repository: testlagoon/logs-tee
+
+logsTeeApplication:
+  image:
+    repository: testlagoon/logs-tee
+
+imageTag: main

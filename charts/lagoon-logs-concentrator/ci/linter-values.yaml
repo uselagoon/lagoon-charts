@@ -44,3 +44,8 @@ users:
 verifyESVersionAtStartup: false
 serviceMonitor:
   enabled: false
+
+image:
+  repository: testlagoon/logs-concentrator
+
+imageTag: main
