@@ -9,4 +9,4 @@ spec:
     servers:
       - host: {{ include "lagoon-logging.logsDispatcher.fullname" . }}
         port: 24224
-    buffer: {{ required "A valid .Values.clusterOutputBuffer required!" .Values.clusterOutputBuffer | toYaml | nindent 6 }}
+    buffer: {{- required "A valid .Values.clusterOutputBuffer required!" .Values.clusterOutputBuffer | toYaml | nindent 6 }}

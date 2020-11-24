@@ -50,7 +50,7 @@ spec:
           tcpSocket:
             port: mariadb
         resources:
-          {{- toYaml .Values.keycloakDB.resources | nindent 12 }}
+          {{- toYaml .Values.keycloakDB.resources | nindent 10 }}
       volumes:
       - name: {{ include "lagoon-core.keycloakDB.fullname" . }}-data
         persistentVolumeClaim:

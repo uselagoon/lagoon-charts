@@ -74,7 +74,7 @@ spec:
           tcpSocket:
             port: http-3000
         resources:
-          {{- toYaml .Values.backupHandler.resources | nindent 12 }}
+          {{- toYaml .Values.backupHandler.resources | nindent 10 }}
       {{- with .Values.backupHandler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

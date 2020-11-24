@@ -3,6 +3,50 @@ name: Lint and Test Charts
 on: pull_request
 
 jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install Helm
+      run: |
+        curl -fsSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+    - name: Add dependency chart repos
+      run: |
+        helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
+    - name: Generate helm templates
+      run: |
+        cd charts
+        # workaround for lagoon-test templated values
+        cp lagoon-test/ci/linter-values.yaml{.tpl,}
+
+        for chart in *; do
+          helm dependency build $chart
+          mkdir -p /tmp/charts/$chart
+          helm template $chart $chart \
+            --values $chart/ci/linter-values.yaml \
+            --output-dir /tmp/charts/$chart
+        done
+
+        # workaround until https://github.com/banzaicloud/logging-operator/pull/629 is released
+        rm -rf /tmp/charts/lagoon-logging/lagoon-logging/charts
+    - name: Install YAMLlint
+      run: sudo apt-get -y install yamllint
+    - name: Lint the templates
+      run: |
+        set -euo pipefail
+        cat > .yamllint <<EOF
+        extends: default
+        rules:
+          indentation:
+            indent-sequences: consistent
+          line-length:
+            level: warning
+        EOF
+        yamllint -f parsable /tmp/charts | awk -F: '{print; system("sed \"" $2 "q;d\" " $1)}'
+
   # runs for all charts other than lagoon-test, which is excluded in
   # default.ct.yaml
   lint-test:

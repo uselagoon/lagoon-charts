@@ -11,7 +11,7 @@ forward:
 clusterName: lintcluster
 
 tls:
-  caCert: |
+  caCert: |-
     -----BEGIN CERTIFICATE-----
     MIIBkjCCATigAwIBAgIUD+qSorvr6FZrB7TLCIu0uovVOJ8wCgYIKoZIzj0EAwIw
     JzElMCMGA1UEAxMcbG9ncy1jYS5jbHVzdGVyMS5leGFtcGxlLmNvbTAeFw0yMDA3
@@ -23,7 +23,7 @@ tls:
     RQIgWUyeYJH1/m8x2GBViwdNTIH2qZ0QW1GJc5lnjDnKQt0CIQCuyGnCuohaL9AP
     vrhH3LECw1VqWG11BkSN2aA+8a08Kw==
     -----END CERTIFICATE-----
-  clientCert: |
+  clientCert: |-
     -----BEGIN CERTIFICATE-----
     MIICADCCAaagAwIBAgIUAdgNH+8UkXruYvBCArE7Eov4hqYwCgYIKoZIzj0EAwIw
     JzElMCMGA1UEAxMcbG9ncy1jYS5jbHVzdGVyMS5leGFtcGxlLmNvbTAeFw0yMDA3
@@ -37,7 +37,7 @@ tls:
     BggqhkjOPQQDAgNIADBFAiEApEYiK67n5QDoJc0dF4FeGtIIwdYhnhXjdxHuZ6wp
     z0ECICQ1fmMbZLm4sQLyhl8p7gAiZEfg/fgnM55HJWAts0vT
     -----END CERTIFICATE-----
-  clientKey: |
+  clientKey: |-
     -----BEGIN EC PRIVATE KEY-----
     MHcCAQEEIFdJNZeSImjoHp9UXTpzOyITqaDt84tNzChiI1pk8oTzoAoGCCqGSM49
     AwEHoUQDQgAEdT4447PqsVy4B6D84tsNt5+qmKajEV5H/TI7h4r0QR907ZzWCQwp

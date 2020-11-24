@@ -78,7 +78,7 @@ spec:
         - name: REGISTRY
           value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
         resources:
-          {{- toYaml .Values.webhooks2tasks.resources | nindent 12 }}
+          {{- toYaml .Values.webhooks2tasks.resources | nindent 10 }}
       {{- with .Values.webhooks2tasks.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

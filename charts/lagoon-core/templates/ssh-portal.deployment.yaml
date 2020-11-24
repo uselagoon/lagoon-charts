@@ -73,7 +73,7 @@ spec:
           tcpSocket:
             port: ssh
         resources:
-          {{- toYaml .Values.ssh.resources | nindent 12 }}
+          {{- toYaml .Values.ssh.resources | nindent 10 }}
       {{- with .Values.ssh.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -26,7 +26,7 @@ spec:
       containers:
       - name: git
         securityContext:
-          {{- toYaml .Values.localGit.securityContext | nindent 12 }}
+          {{- toYaml .Values.localGit.securityContext | nindent 10 }}
         image: "{{ .Values.localGit.image.repository }}:{{ .Values.localGit.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.localGit.image.pullPolicy }}
         env:
@@ -46,7 +46,7 @@ spec:
           tcpSocket:
             port: ssh
         resources:
-          {{- toYaml .Values.localGit.resources | nindent 12 }}
+          {{- toYaml .Values.localGit.resources | nindent 10 }}
       {{- with .Values.localGit.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -23,6 +23,8 @@ spec:
         {{- toYaml .Values.lagoonBuildDeploy.podSecurityContext | nindent 8 }}
       containers:
       - name: kube-rbac-proxy
+        securityContext:
+          {{- toYaml .Values.kubeRBACProxy.securityContext | nindent 10 }}
         image: "{{ .Values.kubeRBACProxy.image.repository }}:{{ .Values.kubeRBACProxy.image.tag }}"
         imagePullPolicy: {{ .Values.kubeRBACProxy.image.pullPolicy }}
         args:
@@ -33,14 +35,18 @@ spec:
         ports:
         - containerPort: 8443
           name: https
+        resources:
+          {{- toYaml .Values.kubeRBACProxy.resources | nindent 10 }}
       - name: manager
+        securityContext:
+          {{- toYaml .Values.lagoonBuildDeploy.securityContext | nindent 10 }}
         image: "{{ .Values.lagoonBuildDeploy.image.repository }}:{{ .Values.lagoonBuildDeploy.image.tag | default .Chart.AppVersion}}"
         imagePullPolicy: {{ .Values.lagoonBuildDeploy.image.pullPolicy }}
         command:
         - /manager
         {{- with .Values.lagoonBuildDeploy.extraArgs }}
         args:
-          {{- toYaml . | nindent 10 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
         - name: LAGOON_TARGET_NAME
@@ -59,6 +65,8 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-remote.lagoonBuildDeploy.fullname" . }}
               key: RABBITMQ_USERNAME
+        resources:
+          {{- toYaml .Values.lagoonBuildDeploy.resources | nindent 10 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -63,7 +63,7 @@ spec:
             path: /
             port: http-3000
         resources:
-          {{- toYaml .Values.ui.resources | nindent 12 }}
+          {{- toYaml .Values.ui.resources | nindent 10 }}
       {{- with .Values.ui.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

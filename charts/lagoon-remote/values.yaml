@@ -45,8 +45,12 @@ dockerHost:
     # template
     name:
 
+  podSecurityContext: {}
+
   securityContext:
     privileged: true
+
+  resources: {}
 
   service:
     type: ClusterIP
@@ -92,12 +96,22 @@ lagoonBuildDeploy:
     # If not set, a name is generated using the fullname template.
     name:
 
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  resources: {}
+
 # this is a sidecar in the same pod as the lagoonBuildDeploy container
 kubeRBACProxy:
   image:
     repository: gcr.io/kubebuilder/kube-rbac-proxy
     pullPolicy: Always
     tag: v0.4.1
+
+  securityContext: {}
+
+  resources: {}
 
 kubernetesBuildDeploy:
   serviceAccount:

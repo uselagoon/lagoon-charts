@@ -57,7 +57,7 @@ spec:
           tcpSocket:
             port: http-3000
         resources:
-          {{- toYaml .Values.authServer.resources | nindent 12 }}
+          {{- toYaml .Values.authServer.resources | nindent 10 }}
       {{- with .Values.authServer.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

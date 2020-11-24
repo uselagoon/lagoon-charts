@@ -45,7 +45,7 @@ spec:
             path: /aliases.drushrc.php.stub
             port: http-8080
         resources:
-          {{- toYaml .Values.drushAlias.resources | nindent 12 }}
+          {{- toYaml .Values.drushAlias.resources | nindent 10 }}
       {{- with .Values.drushAlias.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

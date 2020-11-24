@@ -56,7 +56,7 @@ spec:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_PASSWORD
         resources:
-          {{- toYaml .Values.logs2microsoftteams.resources | nindent 12 }}
+          {{- toYaml .Values.logs2microsoftteams.resources | nindent 10 }}
       {{- with .Values.logs2microsoftteams.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

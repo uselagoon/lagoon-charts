@@ -62,7 +62,7 @@ spec:
           failureThreshold: 20
           periodSeconds: 20
         resources:
-          {{- toYaml .Values.keycloak.resources | nindent 12 }}
+          {{- toYaml .Values.keycloak.resources | nindent 10 }}
       {{- with .Values.keycloak.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
