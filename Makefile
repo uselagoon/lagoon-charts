@@ -55,6 +55,19 @@ install-nfs-server-provisioner:
 		nfs-server-provisioner \
 		stable/nfs-server-provisioner
 
+.PHONY: install-mariadb
+install-mariadb:
+	# root password is required on upgrade if the chart is already installed
+	helm upgrade \
+		--install \
+		--create-namespace \
+		--namespace mariadb \
+		--wait \
+		--timeout 15m \
+		$$(kubectl get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$(kubectl get secret --namespace mariadb mariadb -o json | jq -r '.data."mariadb-root-password" | @base64d')) \
+		mariadb \
+		bitnami/mariadb
+
 .PHONY: install-lagoon-core
 install-lagoon-core:
 	helm upgrade \
