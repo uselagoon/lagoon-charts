@@ -1,0 +1,247 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.4
+  name: hostmigrations.dioscuri.amazee.io
+spec:
+  group: dioscuri.amazee.io
+  names:
+    kind: HostMigration
+    listKind: HostMigrationList
+    plural: hostmigrations
+    singular: hostmigration
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: HostMigration is the Schema for the hostmigrations API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: HostMigrationSpec defines the desired state of HostMigration
+          properties:
+            destinationNamespace:
+              description: Migrate is an example field of RouteMigrate. Edit RouteMigrate_types.go
+                to remove/update
+              type: string
+            hosts:
+              description: HostMigrationHosts .
+              properties:
+                activeHosts:
+                  type: string
+                standbyHosts:
+                  type: string
+              required:
+              - activeHosts
+              - standbyHosts
+              type: object
+          type: object
+        status:
+          description: HostMigrationStatus defines the observed state of RouteMigrate
+          properties:
+            conditions:
+              description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                of cluster Important: Run "make" to regenerate code after modifying
+                this file'
+              items:
+                description: HostMigrationConditions defines the observed conditions
+                  of the migrations
+                properties:
+                  condition:
+                    type: string
+                  lastTransitionTime:
+                    type: string
+                  status:
+                    type: string
+                  type:
+                    type: string
+                required:
+                - condition
+                - lastTransitionTime
+                - status
+                - type
+                type: object
+              type: array
+          type: object
+      type: object
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.4
+  name: ingressmigrates.dioscuri.amazee.io
+spec:
+  group: dioscuri.amazee.io
+  names:
+    kind: IngressMigrate
+    listKind: IngressMigrateList
+    plural: ingressmigrates
+    singular: ingressmigrate
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: IngressMigrate is the Schema for the ingressmigrates API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: IngressMigrateSpec defines the desired state of IngressMigrate
+          properties:
+            destinationNamespace:
+              description: Migrate is an example field of Migrate. Edit Migrate_types.go
+                to remove/update
+              type: string
+            ingress:
+              description: MigrateIngress .
+              properties:
+                activeIngress:
+                  type: string
+                standbyIngress:
+                  type: string
+              required:
+              - activeIngress
+              - standbyIngress
+              type: object
+          type: object
+        status:
+          description: IngressMigrateStatus defines the observed state of IngressMigrate
+          properties:
+            conditions:
+              description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                of cluster Important: Run "make" to regenerate code after modifying
+                this file'
+              items:
+                description: IngressMigrateConditions defines the observed conditions
+                  of the migrations
+                properties:
+                  condition:
+                    type: string
+                  lastTransitionTime:
+                    type: string
+                  status:
+                    type: string
+                  type:
+                    type: string
+                required:
+                - condition
+                - lastTransitionTime
+                - status
+                - type
+                type: object
+              type: array
+          type: object
+      type: object
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.4
+  name: routemigrates.dioscuri.amazee.io
+spec:
+  group: dioscuri.amazee.io
+  names:
+    kind: RouteMigrate
+    listKind: RouteMigrateList
+    plural: routemigrates
+    singular: routemigrate
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: RouteMigrate is the Schema for the routemigrates API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: RouteMigrateSpec defines the desired state of RouteMigrate
+          properties:
+            destinationNamespace:
+              description: Migrate is an example field of RouteMigrate. Edit RouteMigrate_types.go
+                to remove/update
+              type: string
+            routes:
+              properties:
+                activeRoutes:
+                  type: string
+                standbyRoutes:
+                  type: string
+              required:
+              - activeRoutes
+              - standbyRoutes
+              type: object
+          type: object
+        status:
+          description: RouteMigrateStatus defines the observed state of RouteMigrate
+          properties:
+            conditions:
+              description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                of cluster Important: Run "make" to regenerate code after modifying
+                this file'
+              items:
+                description: RouteMigrateConditions defines the observed conditions
+                  of the migrations
+                properties:
+                  condition:
+                    type: string
+                  lastTransitionTime:
+                    type: string
+                  status:
+                    type: string
+                  type:
+                    type: string
+                required:
+                - condition
+                - lastTransitionTime
+                - status
+                - type
+                type: object
+              type: array
+          type: object
+      type: object
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true

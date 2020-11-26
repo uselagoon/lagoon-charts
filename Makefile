@@ -20,6 +20,7 @@ install-ingress:
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
+		--set controller.admissionWebhooks.enabled=false \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 

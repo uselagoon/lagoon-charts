@@ -1,0 +1,17 @@
+{{- if .Values.dioscuri.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-remote.dioscuri.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.dioscuri.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.dioscuri.service.type }}
+  ports:
+  - port: {{ .Values.dioscuri.service.port }}
+    targetPort: https
+    protocol: TCP
+    name: https
+  selector:
+    {{- include "lagoon-remote.dioscuri.selectorLabels" . | nindent 4 }}
+{{- end }}

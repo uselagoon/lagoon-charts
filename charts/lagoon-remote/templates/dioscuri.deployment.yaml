@@ -1,0 +1,65 @@
+{{- if .Values.dioscuri.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-remote.dioscuri.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.dioscuri.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-remote.dioscuri.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "lagoon-remote.dioscuri.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "lagoon-remote.dioscuri.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.dioscuri.podSecurityContext | nindent 8 }}
+      containers:
+      - name: kube-rbac-proxy
+        securityContext:
+          {{- toYaml .Values.dioscuri.kubeRBACProxy.securityContext | nindent 10 }}
+        image: "{{ .Values.dioscuri.kubeRBACProxy.image.repository }}:{{ .Values.dioscuri.kubeRBACProxy.image.tag }}"
+        imagePullPolicy: {{ .Values.dioscuri.kubeRBACProxy.image.pullPolicy }}
+        args:
+        - "--secure-listen-address=0.0.0.0:8443"
+        - "--upstream=http://127.0.0.1:8080/"
+        - "--logtostderr=true"
+        - "--v=10"
+        ports:
+        - containerPort: 8443
+          name: https
+        resources:
+          {{- toYaml .Values.dioscuri.kubeRBACProxy.resources | nindent 10 }}
+      - name: manager
+        securityContext:
+          {{- toYaml .Values.dioscuri.securityContext | nindent 10 }}
+        image: "{{ .Values.dioscuri.image.repository }}:{{ .Values.dioscuri.image.tag | default .Chart.AppVersion}}"
+        imagePullPolicy: {{ .Values.dioscuri.image.pullPolicy }}
+        command:
+        - /manager
+        {{- with .Values.dioscuri.extraArgs }}
+        args:
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.dioscuri.resources | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}

@@ -1,0 +1,214 @@
+{{- if .Values.dioscuri.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "lagoon-remote.dioscuri.fullname" . }}-manager
+  labels:
+    {{- include "lagoon-remote.dioscuri.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - '*'
+  resources:
+  - ingress/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - '*'
+  resources:
+  - ingresses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - '*'
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - '*'
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - '*'
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - cert-manager.io
+  resources:
+  - certificates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - dioscuri.amazee.io
+  resources:
+  - ingressmigrates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - dioscuri.amazee.io
+  resources:
+  - ingressmigrates/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - dioscuri.amazee.io
+  resources:
+  - routemigrates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - dioscuri.amazee.io
+  resources:
+  - routemigrates/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes/custom-host
+  verbs:
+  - create
+- apiGroups:
+  - dioscuri.amazee.io
+  resources:
+  - hostmigrations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - dioscuri.amazee.io
+  resources:
+  - hostmigrations/status
+  verbs:
+  - get
+  - patch
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "lagoon-remote.dioscuri.fullname" . }}-proxy
+  labels:
+    {{- include "lagoon-remote.dioscuri.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "lagoon-remote.dioscuri.fullname" . }}-routemigrates-role
+  labels:
+    # Add these permissions to the "admin" and "edit" default roles.
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+rules:
+- apiGroups: ["dioscuri.amazee.io"]
+  resources: ["routemigrates"]
+  verbs: ["*"]
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "lagoon-remote.dioscuri.fullname" . }}-ingressmigrates-role
+  labels:
+    # Add these permissions to the "admin" and "edit" default roles.
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+rules:
+- apiGroups: ["dioscuri.amazee.io"]
+  resources: ["ingressmigrates"]
+  verbs: ["*"]
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "lagoon-remote.dioscuri.fullname" . }}-hostmigrations-role
+  labels:
+    # Add these permissions to the "admin" and "edit" default roles.
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+rules:
+- apiGroups: ["dioscuri.amazee.io"]
+  resources: ["hostmigrations"]
+  verbs: ["*"]
+{{- end }}

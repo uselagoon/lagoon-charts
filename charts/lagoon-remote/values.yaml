@@ -74,7 +74,7 @@ lagoonBuildDeploy:
   enabled: false
   image:
     repository: amazeeio/lagoon-builddeploy
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "v0.1.4"
 
@@ -102,19 +102,62 @@ lagoonBuildDeploy:
 
   resources: {}
 
-# this is a sidecar in the same pod as the lagoonBuildDeploy container
-kubeRBACProxy:
-  image:
-    repository: gcr.io/kubebuilder/kube-rbac-proxy
-    pullPolicy: Always
-    tag: v0.4.1
+  # this is a sidecar in the same pod as the lagoonBuildDeploy container
+  kubeRBACProxy:
+    image:
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      pullPolicy: IfNotPresent
+      tag: v0.4.1
 
-  securityContext: {}
+    securityContext: {}
 
-  resources: {}
+    resources: {}
 
+# this account is used by the legacy Lagoon kubernetes build deploy system.
 kubernetesBuildDeploy:
   serviceAccount:
     # The name of the service account to use.
     # If not set, a name is generated using the fullname template.
     name:
+
+# dioscuri is the name of the operator which implements Lagoon active-standby.
+dioscuri:
+  enabled: true
+  image:
+    repository: amazeeio/dioscuri
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.1.6"
+
+  # If the controller is running in an openshift,
+  # then `--openshift=true` should be set.
+  extraArgs:
+  - "--metrics-addr=127.0.0.1:8080"
+  - "--enable-leader-election=true"
+  # - "--openshift=true"
+
+  service:
+    type: ClusterIP
+    port: 8443
+
+  serviceAccount:
+    # The name of the service account to use.
+    # If not set, a name is generated using the fullname template.
+    name:
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  # this sidecar runs in the same pod as dioscuri
+  kubeRBACProxy:
+    image:
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      pullPolicy: IfNotPresent
+      tag: v0.4.1
+
+    securityContext: {}
+
+    resources: {}

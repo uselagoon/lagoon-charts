@@ -24,9 +24,9 @@ spec:
       containers:
       - name: kube-rbac-proxy
         securityContext:
-          {{- toYaml .Values.kubeRBACProxy.securityContext | nindent 10 }}
-        image: "{{ .Values.kubeRBACProxy.image.repository }}:{{ .Values.kubeRBACProxy.image.tag }}"
-        imagePullPolicy: {{ .Values.kubeRBACProxy.image.pullPolicy }}
+          {{- toYaml .Values.lagoonBuildDeploy.kubeRBACProxy.securityContext | nindent 10 }}
+        image: "{{ .Values.lagoonBuildDeploy.kubeRBACProxy.image.repository }}:{{ .Values.lagoonBuildDeploy.kubeRBACProxy.image.tag }}"
+        imagePullPolicy: {{ .Values.lagoonBuildDeploy.kubeRBACProxy.image.pullPolicy }}
         args:
         - "--secure-listen-address=0.0.0.0:8443"
         - "--upstream=http://127.0.0.1:8080/"
@@ -36,7 +36,7 @@ spec:
         - containerPort: 8443
           name: https
         resources:
-          {{- toYaml .Values.kubeRBACProxy.resources | nindent 10 }}
+          {{- toYaml .Values.lagoonBuildDeploy.kubeRBACProxy.resources | nindent 10 }}
       - name: manager
         securityContext:
           {{- toYaml .Values.lagoonBuildDeploy.securityContext | nindent 10 }}
