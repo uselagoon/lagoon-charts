@@ -120,7 +120,7 @@ kubernetesBuildDeploy:
     # If not set, a name is generated using the fullname template.
     name:
 
-# dioscuri is the name of the operator which implements Lagoon active-standby.
+# dioscuri is the operator which implements Lagoon active-standby.
 dioscuri:
   enabled: true
   image:

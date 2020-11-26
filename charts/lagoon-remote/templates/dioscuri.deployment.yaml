@@ -50,15 +50,15 @@ spec:
         {{- end }}
         resources:
           {{- toYaml .Values.dioscuri.resources | nindent 10 }}
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.dioscuri.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values.dioscuri.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values.dioscuri.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
