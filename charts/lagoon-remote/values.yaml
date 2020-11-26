@@ -161,3 +161,89 @@ dioscuri:
     securityContext: {}
 
     resources: {}
+
+# dbaasOperator provisions DBaaS accounts for projects.
+dbaasOperator:
+  enabled: false
+  image:
+    repository: amazeeio/dbaas-operator
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.1.3"
+
+  extraArgs:
+  - "--metrics-addr=127.0.0.1:8080"
+  - "--enable-leader-election=true"
+
+  service:
+    type: ClusterIP
+    port: 8443
+
+  serviceAccount:
+    # The name of the service account to use.
+    # If not set, a name is generated using the fullname template.
+    name:
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  # this sidecar runs in the same pod as dioscuri
+  kubeRBACProxy:
+    image:
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      pullPolicy: IfNotPresent
+      tag: v0.4.1
+
+    securityContext: {}
+
+    resources: {}
+
+  # this is a list of providers that the dbaas operator uses to provision
+  # mariadb services for projects
+  mariadbProviders: {}
+    # production:
+    #   environment: production
+    #   hostname: 172.17.0.1.nip.io
+    #   readReplicaHostnames:
+    #   - 172.17.0.1.nip.io
+    #   password: password
+    #   port: '3306'
+    #   user: root
+
+    # development:
+    #   environment: development
+    #   hostname: 172.17.0.1.nip.io
+    #   readReplicaHostnames:
+    #   - 172.17.0.1.nip.io
+    #   password: password
+    #   port: '3306'
+    #   user: root
+
+    # development-azure:
+    #   environment: development
+    #   hostname: azure-hostname.172.17.0.1.nip.io
+    #   readReplicaHostnames:
+    #   - azure-hostname.172.17.0.1.nip.io
+    #   password: password
+    #   port: '3306'
+    #   user: root@azure-hostname
+    #   type: azure
+
+  # this is a list of providers that the dbaas operator uses to provision
+  # postgresql services for projects
+  postgresqlProviders: {}
+    # production:
+    #   environment: production
+    #   hostname: 172.17.0.1.nip.io
+    #   password: password
+    #   port: '3306'
+    #   user: root
+
+    # development:
+    #   environment: development
+    #   hostname: 172.17.0.1.nip.io
+    #   password: password
+    #   port: '3306'

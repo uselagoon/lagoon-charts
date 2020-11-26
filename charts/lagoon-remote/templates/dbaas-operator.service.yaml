@@ -1,0 +1,17 @@
+{{- if .Values.dbaasOperator.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-remote.dbaasOperator.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.dbaasOperator.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.dbaasOperator.service.type }}
+  ports:
+  - port: {{ .Values.dbaasOperator.service.port }}
+    targetPort: https
+    protocol: TCP
+    name: https
+  selector:
+    {{- include "lagoon-remote.dbaasOperator.selectorLabels" . | nindent 4 }}
+{{- end }}
