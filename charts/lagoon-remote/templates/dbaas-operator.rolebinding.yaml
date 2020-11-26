@@ -1,0 +1,16 @@
+{{- if .Values.dbaasOperator.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "lagoon-remote.dbaasOperator.fullname" . }}-leader-election
+  labels:
+    {{- include "lagoon-remote.dbaasOperator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "lagoon-remote.dbaasOperator.fullname" . }}-leader-election
+subjects:
+- kind: ServiceAccount
+  name: {{ include "lagoon-remote.dbaasOperator.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace | quote }}
+{{- end }}

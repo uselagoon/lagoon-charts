@@ -10,3 +10,6 @@ dockerHost:
     repository: testlagoon/docker-host
 
 imageTag: main
+
+dbaasOperator:
+  enabled: true
