@@ -178,6 +178,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: {{ include "lagoon-remote.dioscuri.fullname" . }}-routemigrates-role
   labels:
+    {{- include "lagoon-remote.dioscuri.labels" . | nindent 4 }}
     # Add these permissions to the "admin" and "edit" default roles.
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
@@ -191,6 +192,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: {{ include "lagoon-remote.dioscuri.fullname" . }}-ingressmigrates-role
   labels:
+    {{- include "lagoon-remote.dioscuri.labels" . | nindent 4 }}
     # Add these permissions to the "admin" and "edit" default roles.
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
@@ -204,6 +206,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: {{ include "lagoon-remote.dioscuri.fullname" . }}-hostmigrations-role
   labels:
+    {{- include "lagoon-remote.dioscuri.labels" . | nindent 4 }}
     # Add these permissions to the "admin" and "edit" default roles.
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
     rbac.authorization.k8s.io/aggregate-to-edit: "true"
