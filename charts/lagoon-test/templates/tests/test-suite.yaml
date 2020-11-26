@@ -36,5 +36,18 @@ spec:
     - "--skip-tags"
     - "skip-on-kubernetes"
     - "/ansible/tests/nginx.yaml"
+  - name: active-standby-kubernetes
+    image: "{{ .Values.tests.image.repository }}:{{ coalesce .Values.tests.image.tag .Values.imageTag .Chart.AppVersion }}"
+    imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
+    envFrom:
+    - secretRef:
+        name: {{ include "lagoon-test.fullname" . }}
+    command:
+    - /entrypoint.sh
+    args:
+    - ansible-playbook
+    - "--skip-tags"
+    - "skip-on-kubernetes"
+    - "/ansible/tests/active-standby-kubernetes.yaml"
   restartPolicy: Never
 {{- end }}
