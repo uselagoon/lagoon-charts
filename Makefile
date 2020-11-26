@@ -1,3 +1,5 @@
+SUITE = features-kubernetes
+
 .PHONY: fill-test-ci-values
 fill-test-ci-values: install-ingress install-registry install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
 	export ingressIP="$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
@@ -5,6 +7,7 @@ fill-test-ci-values: install-ingress install-registry install-lagoon-core instal
 		&& export routeSuffixHTTP="$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export routeSuffixHTTPS="$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export token="$$(kubectl -n lagoon get secret -o json | jq -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
+		&& export suite=$(SUITE) \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
 
