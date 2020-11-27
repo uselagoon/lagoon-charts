@@ -8,5 +8,7 @@ lagoonBuildDeploy:
 dockerHost:
   image:
     repository: testlagoon/docker-host
+  storage:
+    size: 50Gi
 
 imageTag: main

@@ -35,7 +35,7 @@ dockerHost:
 
   storage:
     create: true
-    size: 100Gi
+    size: 250Gi
 
   serviceAccount:
     # Specifies whether a service account should be created
