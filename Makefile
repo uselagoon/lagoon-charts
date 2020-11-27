@@ -78,6 +78,7 @@ install-lagoon-core:
 		--timeout 15m \
 		--values ./charts/lagoon-core/ci/linter-values.yaml \
 		--set autoIdler.enabled=false \
+		--set backupHandler.enabled=false \
 		--set logs2email.enabled=false \
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
