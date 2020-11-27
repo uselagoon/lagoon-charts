@@ -1,4 +1,4 @@
-{{- if .Values.backupHandler.ingress.enabled -}}
+{{- if and .Values.backupHandler.enabled .Values.backupHandler.ingress.enabled -}}
 {{- $fullName := include "lagoon-core.backupHandler.fullname" . -}}
 {{- $svcPort := .Values.backupHandler.service.port -}}
 apiVersion: networking.k8s.io/v1beta1

@@ -403,6 +403,7 @@ ui:
     # targetMemoryUtilizationPercentage: 80
 
 backupHandler:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/backup-handler
