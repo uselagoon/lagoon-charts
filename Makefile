@@ -97,7 +97,7 @@ install-lagoon-core:
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-core
+install-lagoon-remote: install-lagoon-core install-mariadb
 	helm upgrade \
 		--install \
 		--create-namespace \
@@ -107,5 +107,10 @@ install-lagoon-remote: install-lagoon-core
 		--values ./charts/lagoon-remote/ci/linter-values.yaml \
 		--set "rabbitMQPassword=$$(kubectl -n lagoon get secret lagoon-core-broker -o json | jq -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "dockerHost.registry=registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set "dbaasOperator.mariadbProviders.development.environment=development" \
+		--set "dbaasOperator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
+		--set "dbaasOperator.mariadbProviders.development.password=$$(kubectl get secret --namespace mariadb mariadb -o json | jq -r '.data."mariadb-root-password" | @base64d')" \
+		--set "dbaasOperator.mariadbProviders.development.port=3306" \
+		--set "dbaasOperator.mariadbProviders.development.user=root" \
 		lagoon-remote \
 		./charts/lagoon-remote
