@@ -135,6 +135,8 @@ apiDB:
     runAsUser: 100
     fsGroup: 0
 
+  storageSize: 128Gi
+
 apiRedis:
   image:
     repository: amazeeiolagoon/api-redis
