@@ -38,7 +38,8 @@ IMPORTANT NOTE: the next step installs several charts using `helm`, so make sure
 Install test fixtures and configure test CI values.
 
 ```
-make -j8 -O fill-test-ci-values
+# see .github/workflows/test-suite.yaml for a list of valid SUITEs
+make -j8 -O fill-test-ci-values SUITE=features-kubernetes
 helm upgrade \
   --install \
   --namespace lagoon \
@@ -60,4 +61,26 @@ Watch the test output in another terminal:
 
 ```
 kubectl -n lagoon logs -f lagoon-test-test-suite
+```
+
+## Tips & Tricks
+
+If you're working on lagoon and want to edit a service image for testing the easiest thing to do is make the changes, push it to a public repo, and override image values in the chart.
+
+For example:
+
+```
+# in the lagoon repo
+rm -f build/tests && make -j$(getconf _NPROCESSORS_ONLN) DOCKER_BUILD_PARAMS= build/tests && docker tag lagoon/tests smlx/tests && docker push smlx/tests
+# override lagoon-test image defaults
+helm upgrade \
+  --install \
+  --namespace lagoon \
+  --wait \
+  --timeout 15m \
+  --values ./charts/lagoon-test/ci/linter-values.yaml \
+  --set tests.image.repository=smlx/tests \
+  --set tests.image.tag=latest \
+  lagoon-test \
+  ./charts/lagoon-test
 ```
