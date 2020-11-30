@@ -1,10 +1,13 @@
+SUITE = features-kubernetes
+
 .PHONY: fill-test-ci-values
-fill-test-ci-values: install-ingress install-registry install-lagoon-core install-lagoon-remote
+fill-test-ci-values: install-ingress install-registry install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
 	export ingressIP="$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
 		&& export keycloakAuthServerClientSecret="$$(kubectl -n lagoon get secret lagoon-core-keycloak -o json | jq -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
 		&& export routeSuffixHTTP="$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export routeSuffixHTTPS="$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export token="$$(kubectl -n lagoon get secret -o json | jq -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
+		&& export suite=$(SUITE) \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
 
@@ -43,6 +46,31 @@ install-registry:
 		registry \
 		harbor/harbor
 
+.PHONY: install-nfs-server-provisioner
+install-nfs-server-provisioner:
+	helm upgrade \
+		--install \
+		--create-namespace \
+		--namespace nfs-server-provisioner \
+		--wait \
+		--timeout 15m \
+		--set storageClass.name=bulk \
+		nfs-server-provisioner \
+		stable/nfs-server-provisioner
+
+.PHONY: install-mariadb
+install-mariadb:
+	# root password is required on upgrade if the chart is already installed
+	helm upgrade \
+		--install \
+		--create-namespace \
+		--namespace mariadb \
+		--wait \
+		--timeout 15m \
+		$$(kubectl get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$(kubectl get secret --namespace mariadb mariadb -o json | jq -r '.data."mariadb-root-password" | @base64d')) \
+		mariadb \
+		bitnami/mariadb
+
 .PHONY: install-lagoon-core
 install-lagoon-core:
 	helm upgrade \
@@ -53,6 +81,7 @@ install-lagoon-core:
 		--timeout 15m \
 		--values ./charts/lagoon-core/ci/linter-values.yaml \
 		--set autoIdler.enabled=false \
+		--set backupHandler.enabled=false \
 		--set logs2email.enabled=false \
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
@@ -72,7 +101,7 @@ install-lagoon-core:
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-core
+install-lagoon-remote: install-lagoon-core install-mariadb
 	helm upgrade \
 		--install \
 		--create-namespace \
@@ -82,5 +111,10 @@ install-lagoon-remote: install-lagoon-core
 		--values ./charts/lagoon-remote/ci/linter-values.yaml \
 		--set "rabbitMQPassword=$$(kubectl -n lagoon get secret lagoon-core-broker -o json | jq -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "dockerHost.registry=registry.$$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set "dbaasOperator.mariadbProviders.development.environment=development" \
+		--set "dbaasOperator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
+		--set "dbaasOperator.mariadbProviders.development.password=$$(kubectl get secret --namespace mariadb mariadb -o json | jq -r '.data."mariadb-root-password" | @base64d')" \
+		--set "dbaasOperator.mariadbProviders.development.port=3306" \
+		--set "dbaasOperator.mariadbProviders.development.user=root" \
 		lagoon-remote \
 		./charts/lagoon-remote

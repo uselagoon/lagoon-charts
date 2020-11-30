@@ -135,6 +135,8 @@ apiDB:
     runAsUser: 100
     fsGroup: 0
 
+  storageSize: 128Gi
+
 apiRedis:
   image:
     repository: amazeeiolagoon/api-redis
@@ -401,6 +403,7 @@ ui:
     # targetMemoryUtilizationPercentage: 80
 
 backupHandler:
+  enabled: true
   replicaCount: 2
   image:
     repository: amazeeiolagoon/backup-handler

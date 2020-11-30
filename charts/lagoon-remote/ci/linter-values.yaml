@@ -12,3 +12,6 @@ dockerHost:
     size: 50Gi
 
 imageTag: main
+
+dbaasOperator:
+  enabled: true

@@ -127,3 +127,11 @@ tests:
     tag: ""
 
   suiteEnabled: true
+
+  # This value is required and must be set to one of the valid test suites:
+  # - features-kubernetes
+  # - active-standby-kubernetes
+  # - nginx
+  # - drupal
+  #
+  # suite: drupal
