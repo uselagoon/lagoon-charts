@@ -1,4 +1,7 @@
 SUITE = features-kubernetes
+# if IMAGE_TAG is not set, it will fall back to the version set in the CI
+# values file, then to the chart default.
+IMAGE_TAG =
 
 .PHONY: fill-test-ci-values
 fill-test-ci-values: install-ingress install-registry install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
@@ -97,6 +100,7 @@ install-lagoon-core:
 		--set "harborAdminPassword=Harbor12345" \
 		--set storageCalculator.enabled=false \
 		--set sshPortal.enabled=false \
+		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		lagoon-core \
 		./charts/lagoon-core
 
@@ -116,5 +120,6 @@ install-lagoon-remote: install-lagoon-core install-mariadb
 		--set "dbaasOperator.mariadbProviders.development.password=$$(kubectl get secret --namespace mariadb mariadb -o json | jq -r '.data."mariadb-root-password" | @base64d')" \
 		--set "dbaasOperator.mariadbProviders.development.port=3306" \
 		--set "dbaasOperator.mariadbProviders.development.user=root" \
+		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		lagoon-remote \
 		./charts/lagoon-remote
