@@ -2,6 +2,7 @@ TESTS = [features-kubernetes]
 # if IMAGE_TAG is not set, it will fall back to the version set in the CI
 # values file, then to the chart default.
 IMAGE_TAG =
+TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
 JQ = jq
@@ -24,7 +25,7 @@ install-ingress:
 		--create-namespace \
 		--namespace ingress-nginx \
 		--wait \
-		--timeout 15m \
+		--timeout $(TIMEOUT) \
 		--set controller.service.type=NodePort \
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
@@ -40,7 +41,7 @@ install-registry:
 		--create-namespace \
 		--namespace registry \
 		--wait \
-		--timeout 15m \
+		--timeout $(TIMEOUT) \
 		--set expose.tls.enabled=false \
 		--set "expose.ingress.annotations.kubernetes\.io\/ingress\.class=nginx" \
 		--set "expose.ingress.hosts.core=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
@@ -59,7 +60,7 @@ install-nfs-server-provisioner:
 		--create-namespace \
 		--namespace nfs-server-provisioner \
 		--wait \
-		--timeout 15m \
+		--timeout $(TIMEOUT) \
 		--set storageClass.name=bulk \
 		nfs-server-provisioner \
 		stable/nfs-server-provisioner
@@ -72,7 +73,7 @@ install-mariadb:
 		--create-namespace \
 		--namespace mariadb \
 		--wait \
-		--timeout 15m \
+		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
 		mariadb \
 		bitnami/mariadb
@@ -84,7 +85,7 @@ install-lagoon-core:
 		--create-namespace \
 		--namespace lagoon \
 		--wait \
-		--timeout 15m \
+		--timeout $(TIMEOUT) \
 		--values ./charts/lagoon-core/ci/linter-values.yaml \
 		--set autoIdler.enabled=false \
 		--set backupHandler.enabled=false \
@@ -114,7 +115,7 @@ install-lagoon-remote: install-lagoon-core install-mariadb
 		--create-namespace \
 		--namespace lagoon \
 		--wait \
-		--timeout 15m \
+		--timeout $(TIMEOUT) \
 		--values ./charts/lagoon-remote/ci/linter-values.yaml \
 		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
