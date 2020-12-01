@@ -2,6 +2,7 @@ SUITE = features-kubernetes
 # if IMAGE_TAG is not set, it will fall back to the version set in the CI
 # values file, then to the chart default.
 IMAGE_TAG =
+HELM = helm
 
 .PHONY: fill-test-ci-values
 fill-test-ci-values: install-ingress install-registry install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
@@ -16,7 +17,7 @@ fill-test-ci-values: install-ingress install-registry install-lagoon-core instal
 
 .PHONY: install-ingress
 install-ingress:
-	helm upgrade \
+	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace ingress-nginx \
@@ -32,7 +33,7 @@ install-ingress:
 
 .PHONY: install-registry
 install-registry:
-	helm upgrade \
+	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace registry \
@@ -51,7 +52,7 @@ install-registry:
 
 .PHONY: install-nfs-server-provisioner
 install-nfs-server-provisioner:
-	helm upgrade \
+	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace nfs-server-provisioner \
@@ -64,7 +65,7 @@ install-nfs-server-provisioner:
 .PHONY: install-mariadb
 install-mariadb:
 	# root password is required on upgrade if the chart is already installed
-	helm upgrade \
+	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace mariadb \
@@ -76,7 +77,7 @@ install-mariadb:
 
 .PHONY: install-lagoon-core
 install-lagoon-core:
-	helm upgrade \
+	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace lagoon \
@@ -106,7 +107,7 @@ install-lagoon-core:
 
 .PHONY: install-lagoon-remote
 install-lagoon-remote: install-lagoon-core install-mariadb
-	helm upgrade \
+	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace lagoon \
