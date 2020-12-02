@@ -20,8 +20,8 @@ jobs:
     - name: Generate helm templates
       run: |
         cd charts
-        # workaround for lagoon-test templated values
-        cp lagoon-test/ci/linter-values.yaml{.tpl,}
+        # hacky workaround for lagoon-test templated values
+        tests=[foo,bar] envsubst '$tests' < lagoon-test/ci/linter-values.yaml.tpl > lagoon-test/ci/linter-values.yaml
 
         for chart in *; do
           helm dependency build $chart
