@@ -128,10 +128,10 @@ tests:
 
   suiteEnabled: true
 
-  # This value is required and must be set to one of the valid test suites:
+  tests: []
+  # This value is required when suiteEnabled is true, and must be set to one or
+  # more of the valid test suites:
   # - features-kubernetes
   # - active-standby-kubernetes
   # - nginx
   # - drupal
-  #
-  # suite: drupal

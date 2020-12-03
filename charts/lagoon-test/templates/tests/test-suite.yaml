@@ -10,18 +10,20 @@ metadata:
 spec:
   serviceAccountName: {{ include "lagoon-test.serviceAccountName" . }}
   containers:
-  - name: {{ required ".Values.tests.suite is required!" .Values.tests.suite | quote }}
-    image: "{{ .Values.tests.image.repository }}:{{ coalesce .Values.tests.image.tag .Values.imageTag .Chart.AppVersion }}"
-    imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
+  {{- range (required ".Values.tests.tests is required!" .Values.tests.tests) }}
+  - name: {{ . | quote }}
+    image: "{{ $.Values.tests.image.repository }}:{{ coalesce $.Values.tests.image.tag $.Values.imageTag $.Chart.AppVersion }}"
+    imagePullPolicy: {{ $.Values.tests.image.pullPolicy }}
     envFrom:
     - secretRef:
-        name: {{ include "lagoon-test.fullname" . }}
+        name: {{ include "lagoon-test.fullname" $ }}
     command:
     - /entrypoint.sh
     args:
     - ansible-playbook
     - "--skip-tags"
     - "skip-on-kubernetes"
-    - "/ansible/tests/{{ .Values.tests.suite }}.yaml"
+    - "/ansible/tests/{{ . }}.yaml"
+  {{- end }}
   restartPolicy: Never
 {{- end }}

@@ -16,6 +16,6 @@ localAPIDataWatcherPusher:
 tests:
   image:
     repository: testlagoon/tests
-  suite: "${suite}"
+  tests: ${tests}
 
 imageTag: main
