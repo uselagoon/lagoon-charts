@@ -169,7 +169,7 @@ dbaasOperator:
     repository: amazeeio/dbaas-operator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1.2"
+    tag: "v0.1.3"
 
   extraArgs:
   - "--metrics-addr=127.0.0.1:8080"
