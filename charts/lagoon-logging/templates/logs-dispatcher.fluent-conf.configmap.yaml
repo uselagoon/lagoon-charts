@@ -176,12 +176,12 @@ data:
       <replace>
         key index_name
         expression /^(?<prefix>(?:container|router)-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
-        replace \\k<prefix>_\\k<suffix>
+        replace \k<prefix>_\k<suffix>
       </replace>
       <replace>
         key index_name
         expression /^(?<prefix>container-logs-.+-apb)-(?:prov|depr)-[^-]{5}_(?<suffix>.+)$/
-        replace \\k<prefix>_\\k<suffix>
+        replace \k<prefix>_\k<suffix>
       </replace>
     </filter>
     {{- end }}
