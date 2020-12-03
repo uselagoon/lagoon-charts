@@ -10,57 +10,20 @@ metadata:
 spec:
   serviceAccountName: {{ include "lagoon-test.serviceAccountName" . }}
   containers:
-  - name: features-kubernetes
-    image: "{{ .Values.tests.image.repository }}:{{ coalesce .Values.tests.image.tag .Values.imageTag .Chart.AppVersion }}"
-    imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
+  {{- range (required ".Values.tests.tests is required!" .Values.tests.tests) }}
+  - name: {{ . | quote }}
+    image: "{{ $.Values.tests.image.repository }}:{{ coalesce $.Values.tests.image.tag $.Values.imageTag $.Chart.AppVersion }}"
+    imagePullPolicy: {{ $.Values.tests.image.pullPolicy }}
     envFrom:
     - secretRef:
-        name: {{ include "lagoon-test.fullname" . }}
+        name: {{ include "lagoon-test.fullname" $ }}
     command:
     - /entrypoint.sh
     args:
     - ansible-playbook
     - "--skip-tags"
     - "skip-on-kubernetes"
-    - "/ansible/tests/features-kubernetes.yaml"
-  - name: nginx
-    image: "{{ .Values.tests.image.repository }}:{{ coalesce .Values.tests.image.tag .Values.imageTag .Chart.AppVersion }}"
-    imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
-    envFrom:
-    - secretRef:
-        name: {{ include "lagoon-test.fullname" . }}
-    command:
-    - /entrypoint.sh
-    args:
-    - ansible-playbook
-    - "--skip-tags"
-    - "skip-on-kubernetes"
-    - "/ansible/tests/nginx.yaml"
-  - name: active-standby-kubernetes
-    image: "{{ .Values.tests.image.repository }}:{{ coalesce .Values.tests.image.tag .Values.imageTag .Chart.AppVersion }}"
-    imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
-    envFrom:
-    - secretRef:
-        name: {{ include "lagoon-test.fullname" . }}
-    command:
-    - /entrypoint.sh
-    args:
-    - ansible-playbook
-    - "--skip-tags"
-    - "skip-on-kubernetes"
-    - "/ansible/tests/active-standby-kubernetes.yaml"
-  - name: drupal
-    image: "{{ .Values.tests.image.repository }}:{{ coalesce .Values.tests.image.tag .Values.imageTag .Chart.AppVersion }}"
-    imagePullPolicy: {{ .Values.tests.image.pullPolicy }}
-    envFrom:
-    - secretRef:
-        name: {{ include "lagoon-test.fullname" . }}
-    command:
-    - /entrypoint.sh
-    args:
-    - ansible-playbook
-    - "--skip-tags"
-    - "skip-on-kubernetes"
-    - "/ansible/tests/drupal.yaml"
+    - "/ansible/tests/{{ . }}.yaml"
+  {{- end }}
   restartPolicy: Never
 {{- end }}

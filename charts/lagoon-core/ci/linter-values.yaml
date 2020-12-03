@@ -78,6 +78,7 @@ api:
 apiDB:
   image:
     repository: testlagoon/api-db
+  storageSize: 16Gi
 
 apiRedis:
   image:
