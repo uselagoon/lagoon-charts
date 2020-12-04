@@ -106,4 +106,4 @@ jobs:
 
     - name: Run chart-testing (install) on lagoon-test
       if: steps.list-changed.outputs.changed == 'true'
-      run: ct install --config ./test-suite-run.ct.yaml
+      run: ct lint-and-install --config ./test-suite-run.ct.yaml
