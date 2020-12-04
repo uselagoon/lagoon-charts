@@ -18,4 +18,4 @@ tests:
     repository: testlagoon/tests
   tests: ${tests}
 
-imageTag: main
+imageTag: pr-2372

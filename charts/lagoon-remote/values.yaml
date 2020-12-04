@@ -13,8 +13,6 @@ logsDispatcherHost: |-
 # rabbitMQHostname:
 # lagoonTargetName:
 
-pendingMessageCron: "*/5 * * * *"
-
 # this default image tag is set for all services and can be overridden
 # on the service level, if not set it uses chart appVersion
 imageTag: ""
@@ -80,12 +78,15 @@ lagoonBuildDeploy:
 
   # If the controller is running in an openshift,
   # then the argument `--is-openshift=true` should be added
-  # By default the controller will use the image `uselagoon/kubectl-build-deploy-dind:latest`
-  # but this can be overridden using the `--override-builddeploy-image=<image>` argument
-  # or adding the environment variable `OVERRIDE_BUILD_DEPLOY_DIND_IMAGE` to the controller deployment
   extraArgs:
   - "--metrics-addr=127.0.0.1:8080"
   - "--enable-leader-election=true"
+
+  pendingMessageCron: "*/5 * * * *"
+
+  # The controller will use `uselagoon/kubectl-build-deploy-dind:latest` by
+  # default, but this can be overridden here.
+  overrideBuildDeployDindImage: ""
 
   service:
     type: ClusterIP
