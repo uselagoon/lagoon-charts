@@ -3,6 +3,23 @@ entries:
   lagoon-core:
   - apiVersion: v2
     appVersion: v1-9-1
+    created: "2020-12-04T14:52:14.444284911Z"
+    description: |
+      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    digest: 0a166698da2f736abda7efd94c2561aa1a6e779f64a28e988c04efa877d1347d
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-0.34.2/lagoon-core-0.34.2.tgz
+    version: 0.34.2
+  - apiVersion: v2
+    appVersion: v1-9-1
     created: "2020-11-30T13:24:41.640512756Z"
     description: |
       A Helm chart for Kubernetes which deploys Lagoon's core components.
@@ -1623,6 +1640,25 @@ entries:
   lagoon-remote:
   - apiVersion: v2
     appVersion: v1-9-1
+    created: "2020-12-04T14:52:14.569026388Z"
+    description: A Helm chart to run a lagoon-remote
+    digest: 1d4e1876bd214ad09e9df927d7ea051cc28e70211f9a8b0b572b6f0cbd9bf74a
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.10.0/lagoon-remote-0.10.0.tgz
+    version: 0.10.0
+  - apiVersion: v2
+    appVersion: v1-9-1
     created: "2020-11-30T13:24:41.940803904Z"
     description: A Helm chart to run a lagoon-remote
     digest: 27979a4d3e28d7262ba8cfe780abf46ea30e7624f361d97cc83f4ffb89fbd859
@@ -1949,6 +1985,22 @@ entries:
     - https://github.com/amazeeio/charts/releases/download/lagoon-ssh-0.1.0/lagoon-ssh-0.1.0.tgz
     version: 0.1.0
   lagoon-test:
+  - apiVersion: v2
+    appVersion: v1-9-1
+    created: "2020-12-04T14:52:14.709457738Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 3f16aaa734aa596bf9f7336858a7cadf916ac14301b1fc9e5d38fa39b1b0c2e8
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.8.1/lagoon-test-0.8.1.tgz
+    version: 0.8.1
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-12-03T01:43:37.561851404Z"
