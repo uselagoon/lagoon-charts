@@ -7,15 +7,15 @@ token: "${token}"
 
 localGit:
   image:
-    repository: testlagoon/local-git
+    repository: ${imageRegistry}/local-git
 
 localAPIDataWatcherPusher:
   image:
-    repository: testlagoon/local-api-data-watcher-pusher
+    repository: ${imageRegistry}/local-api-data-watcher-pusher
 
 tests:
   image:
-    repository: testlagoon/tests
+    repository: ${imageRegistry}/tests
   tests: ${tests}
 
-imageTag: pr-2372
+imageTag: ${imageTag}
