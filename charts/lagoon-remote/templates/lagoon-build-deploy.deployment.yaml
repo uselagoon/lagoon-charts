@@ -51,8 +51,12 @@ spec:
         env:
         - name: LAGOON_TARGET_NAME
           value: {{ required "A valid .Values.lagoonTargetName required!" .Values.lagoonTargetName | quote }}
+        {{- with .Values.lagoonBuildDeploy.overrideBuildDeployDindImage }}
+        - name: OVERRIDE_BUILD_DEPLOY_DIND_IMAGE
+          value: {{ . | quote }}
+        {{- end }}
         - name: PENDING_MESSAGE_CRON
-          value: {{ .Values.pendingMessageCron | quote }}
+          value: {{ .Values.lagoonBuildDeploy.pendingMessageCron | quote }}
         - name: RABBITMQ_HOSTNAME
           value: {{ required "A valid .Values.rabbitMQHostname required!" .Values.rabbitMQHostname | quote }}
         - name: RABBITMQ_PASSWORD
