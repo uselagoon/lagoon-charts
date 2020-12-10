@@ -86,6 +86,19 @@ install-mariadb:
 		mariadb \
 		bitnami/mariadb
 
+.PHONY: install-postgresql
+install-postgresql:
+	# root password is required on upgrade if the chart is already installed
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace postgresql \
+		--wait \
+		--timeout $(TIMEOUT) \
+		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set postgresqlPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
+		postgresql \
+		bitnami/postgresql
+
 .PHONY: install-lagoon-core
 install-lagoon-core:
 	$(HELM) upgrade \
@@ -128,7 +141,7 @@ install-lagoon-core:
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-core install-mariadb
+install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -144,6 +157,11 @@ install-lagoon-remote: install-lagoon-core install-mariadb
 		--set "dbaasOperator.mariadbProviders.development.password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
 		--set "dbaasOperator.mariadbProviders.development.port=3306" \
 		--set "dbaasOperator.mariadbProviders.development.user=root" \
+		--set "dbaasOperator.postgresqlProviders.development.environment=development" \
+		--set "dbaasOperator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
+		--set "dbaasOperator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
+		--set "dbaasOperator.postgresqlProviders.development.port=5432" \
+		--set "dbaasOperator.postgresqlProviders.development.user=postgres" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoonBuildDeploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		lagoon-remote \
