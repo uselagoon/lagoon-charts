@@ -1,9 +1,9 @@
-rabbitMQUsername: lagoon
-rabbitMQPassword: ci
-rabbitMQHostname: lagoon-core-broker
-lagoonTargetName: ci-local-control-k8s
-lagoonBuildDeploy:
+lagoon-build-deploy:
   enabled: true
+  rabbitMQUsername: lagoon
+  rabbitMQPassword: ci
+  rabbitMQHostname: lagoon-core-broker
+  lagoonTargetName: ci-local-control-k8s
 
 dockerHost:
   image:
