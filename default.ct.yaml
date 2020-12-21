@@ -6,6 +6,7 @@ chart-dirs:
 - charts
 chart-repos:
 - banzaicloud-stable=https://kubernetes-charts.banzaicloud.com
+- lagoon=https://uselagoon.github.io/lagoon-charts/
 excluded-charts:
 - lagoon-test
 helm-extra-args: --timeout 900s
