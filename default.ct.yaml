@@ -1,4 +1,5 @@
 # See https://github.com/helm/chart-testing#configuration
+# This configuration is used in the lint-test github workflow.
 remote: origin
 target-branch: main
 chart-dirs:

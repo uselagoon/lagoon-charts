@@ -1,6 +1,10 @@
 # See https://github.com/helm/chart-testing#configuration
+# This configuration is used in the test-suite github workflow.
+# Changes in any chart other than those excluded below will trigger a full test
+# suite run.
 target-branch: main
 excluded-charts:
 - lagoon-logging
 - lagoon-logs-concentrator
+- lagoon-build-deploy
 helm-extra-args: --timeout 10m

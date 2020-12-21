@@ -1,0 +1,71 @@
+# the following values are requried and have no sensible default
+
+lagoonTargetName: ""
+rabbitMQHostname: ""
+rabbitMQPassword: ""
+rabbitMQUsername: ""
+
+# the following values are defaults which may be overridden
+
+# If the controller is running in an openshift,
+# then the argument `--is-openshift=true` should be added
+extraArgs:
+- "--metrics-addr=127.0.0.1:8080"
+- "--enable-leader-election=true"
+
+pendingMessageCron: "*/5 * * * *"
+
+# The controller will use `uselagoon/kubectl-build-deploy-dind:latest` by
+# default, but this can be overridden here.
+overrideBuildDeployDindImage: ""
+
+image:
+  repository: amazeeio/lagoon-builddeploy
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+
+serviceAccount:
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8443
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# this is a sidecar in the same pod as the lagoonBuildDeploy container
+kubeRBACProxy:
+  image:
+    repository: gcr.io/kubebuilder/kube-rbac-proxy
+    pullPolicy: IfNotPresent
+    tag: v0.4.1
+
+  securityContext: {}
+
+  resources: {}

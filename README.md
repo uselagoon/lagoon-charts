@@ -37,3 +37,12 @@ Please ensure that any new chart:
 The CI runs in a [constrained environment](https://docs.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners#supported-runners-and-hardware-resources) which makes it a good place to test how your chart handles slow-starting pods.
 Ideally pods should never be killed due to failing probes during chart-install, even if they do eventually start and the chart installation succeeds.
 Documentation on probes for pod startup is [here](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes).
+
+## Development tips
+
+### Run chart-testing (lint) locally
+
+```
+$ docker run --rm --interactive --detach --network host --name ct "--volume=$(pwd):/workdir" "--workdir=/workdir" --volume=$(pwd)/default.ct.yaml:/etc/ct/ct.yaml quay.io/helmpack/chart-testing:latest cat
+$ docker exec ct ct lint
+```
