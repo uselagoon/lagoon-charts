@@ -1,0 +1,1 @@
+Lagoon Remote configured with target name "{{ .Values.lagoonTargetName }}", and RabbitMQ host "{{ .Values.rabbitMQHostname }}".

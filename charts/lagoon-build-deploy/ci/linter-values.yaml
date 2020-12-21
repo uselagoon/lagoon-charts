@@ -1,0 +1,4 @@
+rabbitMQUsername: lagoon
+rabbitMQPassword: ci
+rabbitMQHostname: ci-broker
+lagoonTargetName: ci-local-control-k8s
