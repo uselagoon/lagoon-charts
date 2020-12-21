@@ -142,6 +142,7 @@ install-lagoon-core:
 
 .PHONY: install-lagoon-remote
 install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
+	$(HELM) dependency update ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -150,7 +151,7 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
 		--timeout $(TIMEOUT) \
 		--values ./charts/lagoon-remote/ci/linter-values.yaml \
 		--set dockerHost.image.repository=$(IMAGE_REGISTRY)/docker-host \
-		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
+		--set "lagoon-build-deploy.rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set "dbaasOperator.mariadbProviders.development.environment=development" \
 		--set "dbaasOperator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
@@ -163,6 +164,6 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
 		--set "dbaasOperator.postgresqlProviders.development.port=5432" \
 		--set "dbaasOperator.postgresqlProviders.development.user=postgres" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoonBuildDeploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		lagoon-remote \
 		./charts/lagoon-remote
