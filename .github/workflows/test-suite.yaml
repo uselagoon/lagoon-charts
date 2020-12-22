@@ -114,3 +114,30 @@ jobs:
     - name: Run chart-testing (install) on lagoon-test
       if: steps.list-changed.outputs.changed == 'true'
       run: ct lint-and-install --config ./test-suite-run.ct.yaml
+
+    # the following steps gather various debug information on test failure
+
+    - name: Gather lagoon-remote logs
+      if: failure()
+      run: kubectl logs --namespace lagoon --prefix --all-containers --selector=app.kubernetes.io/name=lagoon-remote
+
+    - name: List pods of any remaining CI namespaces
+      if: failure()
+      run: |
+        for ns in $(kubectl get ns -o json | jq -r '.items[].metadata.name | select(match("^ci"))'); do
+          kubectl get pods -o json --namespace $ns
+        done
+
+    - name: Gather build logs of any remaining CI namespaces
+      if: failure()
+      run: |
+        for ns in $(kubectl get ns -o json | jq -r '.items[].metadata.name | select(match("^ci"))'); do
+          kubectl logs --prefix --all-containers --namespace $ns --selector=lagoon.sh/jobType
+        done
+
+    - name: Gather workload logs of any remaining CI namespaces
+      if: failure()
+      run: |
+        for ns in $(kubectl get ns -o json | jq -r '.items[].metadata.name | select(match("^ci"))'); do
+          kubectl logs --prefix --all-containers --namespace $ns --selector=lagoon.sh/version
+        done
