@@ -39,6 +39,7 @@ install-ingress:
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
 		--set controller.admissionWebhooks.enabled=false \
+		--version=3.15.2 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -58,6 +59,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
+		--version=1.5.2 \
 		registry \
 		harbor/harbor
 
@@ -70,6 +72,7 @@ install-nfs-server-provisioner:
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set storageClass.name=bulk \
+		--version=1.1.3 \
 		nfs-server-provisioner \
 		stable/nfs-server-provisioner
 
@@ -83,6 +86,7 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
+		--version=9.1.4 \
 		mariadb \
 		bitnami/mariadb
 
@@ -96,6 +100,7 @@ install-postgresql:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set postgresqlPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
+		--version=10.2.0 \
 		postgresql \
 		bitnami/postgresql
 
