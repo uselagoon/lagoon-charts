@@ -5,14 +5,6 @@ imagePullSecrets: []
 logsDispatcherHost: |-
   lagoon-logging-logs-dispatcher.lagoon-logging.svc.cluster.local
 
-# these values are used by the lagoon-build-deploy controller and do not have
-# sensible defaults
-
-# rabbitMQUsername:
-# rabbitMQPassword:
-# rabbitMQHostname:
-# lagoonTargetName:
-
 # this default image tag is set for all services and can be overridden
 # on the service level, if not set it uses chart appVersion
 imageTag: ""
@@ -68,51 +60,14 @@ dockerHost:
     effect: PreferNoSchedule
     operator: Exists
 
-lagoonBuildDeploy:
+lagoon-build-deploy:
   enabled: false
-  image:
-    repository: amazeeio/lagoon-builddeploy
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1.4"
-
-  # If the controller is running in an openshift,
-  # then the argument `--is-openshift=true` should be added
-  extraArgs:
-  - "--metrics-addr=127.0.0.1:8080"
-  - "--enable-leader-election=true"
-
-  pendingMessageCron: "*/5 * * * *"
-
-  # The controller will use `uselagoon/kubectl-build-deploy-dind:latest` by
-  # default, but this can be overridden here.
-  overrideBuildDeployDindImage: ""
-
-  service:
-    type: ClusterIP
-    port: 8443
-
-  serviceAccount:
-    # The name of the service account to use.
-    # If not set, a name is generated using the fullname template.
-    name:
-
-  podSecurityContext: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  # this is a sidecar in the same pod as the lagoonBuildDeploy container
-  kubeRBACProxy:
-    image:
-      repository: gcr.io/kubebuilder/kube-rbac-proxy
-      pullPolicy: IfNotPresent
-      tag: v0.4.1
-
-    securityContext: {}
-
-    resources: {}
+  # these values are used by the lagoon-build-deploy controller and do not have
+  # sensible defaults.
+  # rabbitMQUsername:
+  # rabbitMQPassword:
+  # rabbitMQHostname:
+  # lagoonTargetName:
 
 # this account is used by the legacy Lagoon kubernetes build deploy system.
 kubernetesBuildDeploy:
@@ -128,7 +83,7 @@ dioscuri:
     repository: amazeeio/dioscuri
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1.6"
+    tag: "v0.1.8"
 
   # If the controller is running in an openshift,
   # then `--openshift=true` should be set.

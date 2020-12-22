@@ -123,43 +123,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Create the name of the service account to use for lagoonBuildDeploy.
-*/}}
-{{- define "lagoon-remote.lagoonBuildDeploy.serviceAccountName" -}}
-{{- default (include "lagoon-remote.lagoonBuildDeploy.fullname" .) .Values.lagoonBuildDeploy.serviceAccount.name }}
-{{- end }}
-
-{{/*
-Create a default fully qualified app name for lagoonBuildDeploy.
-*/}}
-{{- define "lagoon-remote.lagoonBuildDeploy.fullname" -}}
-{{- include "lagoon-remote.fullname" . }}-lagoon-build-deploy
-{{- end }}
-
-{{/*
-Common labels lagoonBuildDeploy.
-*/}}
-{{- define "lagoon-remote.lagoonBuildDeploy.labels" -}}
-helm.sh/chart: {{ include "lagoon-remote.chart" . }}
-{{ include "lagoon-remote.lagoonBuildDeploy.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels lagoonBuildDeploy.
-*/}}
-{{- define "lagoon-remote.lagoonBuildDeploy.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-remote.lagoonBuildDeploy.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-
-
-{{/*
 Create the name of the service account to use for dioscuri.
 */}}
 {{- define "lagoon-remote.dioscuri.serviceAccountName" -}}
