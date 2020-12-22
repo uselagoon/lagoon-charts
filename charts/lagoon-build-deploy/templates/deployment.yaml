@@ -69,7 +69,7 @@ spec:
               name: {{ include "lagoon-build-deploy.fullname" . }}
               key: RABBITMQ_USERNAME
         - name: NAMESPACE_PREFIX
-              value: {{ .Values.namespacePrefix | quote }}
+          value: {{ .Values.namespacePrefix | quote }}
         - name: CONTROLLER_NAMESPACE
           valueFrom:
             fieldRef:
