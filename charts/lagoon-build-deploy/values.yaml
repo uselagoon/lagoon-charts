@@ -19,6 +19,9 @@ pendingMessageCron: "*/5 * * * *"
 # default, but this can be overridden here.
 overrideBuildDeployDindImage: ""
 
+# override .Chart.Name
+nameOverride: ""
+
 image:
   repository: amazeeio/lagoon-builddeploy
   pullPolicy: IfNotPresent
@@ -45,13 +48,6 @@ service:
   port: 8443
 
 resources: {}
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 

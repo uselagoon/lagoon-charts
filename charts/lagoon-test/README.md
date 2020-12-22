@@ -30,6 +30,9 @@ IMPORTANT NOTE: after creating the `kind` cluster, check the node IP - it might 
 Create a `kind` cluster and add an ingress controller and registry.
 
 ```
+docker network create kind || true
+export KIND_NODE_IP=$(docker run --rm --network kind alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p')
+envsubst '$KIND_NODE_IP' < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml
 kind create cluster --config=test-suite.kind-config.yaml
 ```
 
@@ -38,8 +41,9 @@ IMPORTANT NOTE: the next step installs several charts using `helm`, so make sure
 Install test fixtures and configure test CI values.
 
 ```
-# see .github/workflows/test-suite.yaml for a list of valid SUITEs
-make -j8 -O fill-test-ci-values SUITE=features-kubernetes
+# TESTS are a comma-separated list.
+# see .github/workflows/test-suite.yaml for valid TESTS.
+make -j8 -O fill-test-ci-values TESTS=[features-kubernetes]
 helm upgrade \
   --install \
   --namespace lagoon \

@@ -10,6 +10,8 @@ spec:
       {{- include "lagoon-build-deploy.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
       labels:
         {{- include "lagoon-build-deploy.selectorLabels" . | nindent 8 }}
     spec:
