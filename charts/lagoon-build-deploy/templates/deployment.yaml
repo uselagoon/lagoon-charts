@@ -70,6 +70,12 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-build-deploy.fullname" . }}
               key: RABBITMQ_USERNAME
+        - name: NAMESPACE_PREFIX
+          value: {{ .Values.namespacePrefix | quote }}
+        - name: CONTROLLER_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       {{- with .Values.nodeSelector }}
