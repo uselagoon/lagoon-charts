@@ -16,10 +16,10 @@ logsDispatcher:
   replicaCount: 3
 
   image:
-    repository: testlagoon/logs-dispatcher
+    repository: uselagoon/logs-dispatcher
     pullPolicy: Always
     # Overrides the image tag whose default is the chart version.
-    tag: main
+    tag: ""
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -114,10 +114,10 @@ logsTeeRouter:
   replicaCount: 3
 
   image:
-    repository: testlagoon/logs-tee
+    repository: uselagoon/logs-tee
     pullPolicy: Always
     # Overrides the image tag whose default is the chart version.
-    tag: main
+    tag: ""
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -177,10 +177,10 @@ logsTeeApplication:
   replicaCount: 3
 
   image:
-    repository: testlagoon/logs-tee
+    repository: uselagoon/logs-tee
     pullPolicy: Always
     # Overrides the image tag whose default is the chart version.
-    tag: main
+    tag: ""
 
   serviceAccount:
     # Specifies whether a service account should be created

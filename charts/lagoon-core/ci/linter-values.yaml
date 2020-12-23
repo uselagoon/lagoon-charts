@@ -159,8 +159,8 @@ drushAlias:
 
 logsDBCurator:
   image:
-    repository: testlagoon/logs-db-curator
-    tag: main
+    repository: uselagoon/logs-db-curator
+    tag: ""
 
 ssh:
   replicaCount: 1

@@ -46,7 +46,7 @@ serviceMonitor:
   enabled: false
 
 image:
-  repository: testlagoon/logs-concentrator
-  tag: main
+  repository: uselagoon/logs-concentrator
+  tag: ""
 
 imageTag: ""

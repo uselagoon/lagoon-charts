@@ -54,17 +54,17 @@ logsDispatcher:
   serviceMonitor:
     enabled: false
   image:
-    repository: testlagoon/logs-dispatcher
-    tag: main
+    repository: uselagoon/logs-dispatcher
+    tag: ""
 
 logsTeeRouter:
   image:
-    repository: testlagoon/logs-tee
-    tag: main
+    repository: uselagoon/logs-tee
+    tag: ""
 
 logsTeeApplication:
   image:
-    repository: testlagoon/logs-tee
-    tag: main
+    repository: uselagoon/logs-tee
+    tag: ""
 
 imageTag: ""

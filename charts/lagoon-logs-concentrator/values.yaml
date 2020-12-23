@@ -9,10 +9,10 @@ imageTag: ""
 replicaCount: 1
 
 image:
-  repository: testlagoon/logs-concentrator
+  repository: uselagoon/logs-concentrator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart version.
-  tag: main
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
