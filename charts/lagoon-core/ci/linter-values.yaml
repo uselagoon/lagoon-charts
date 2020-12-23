@@ -73,98 +73,98 @@ sshHostKeyED25519: |-
 api:
   replicaCount: 1
   image:
-    repository: testlagoon/api
+    repository: uselagoon/api
 
 apiDB:
   image:
-    repository: testlagoon/api-db
+    repository: uselagoon/api-db
   storageSize: 16Gi
 
 apiRedis:
   image:
-    repository: testlagoon/api-redis
+    repository: uselagoon/api-redis
 
 keycloak:
   image:
-    repository: testlagoon/keycloak
+    repository: uselagoon/keycloak
 
 keycloakDB:
   image:
-    repository: testlagoon/keycloak-db
+    repository: uselagoon/keycloak-db
 
 broker:
   replicaCount: 1
   serviceMonitor:
     enabled: false
   image:
-    repository: testlagoon/broker
+    repository: uselagoon/broker
 
 authServer:
   replicaCount: 1
   image:
-    repository: testlagoon/auth-server
+    repository: uselagoon/auth-server
 
 webhooks2tasks:
   replicaCount: 1
   image:
-    repository: testlagoon/webhooks2tasks
+    repository: uselagoon/webhooks2tasks
 
 webhookHandler:
   replicaCount: 1
   image:
-    repository: testlagoon/webhook-handler
+    repository: uselagoon/webhook-handler
 
 ui:
   replicaCount: 1
   image:
-    repository: testlagoon/ui
+    repository: uselagoon/ui
 
 backupHandler:
   replicaCount: 1
   image:
-    repository: testlagoon/backup-handler
+    repository: uselagoon/backup-handler
 
 autoIdler:
   image:
-    repository: testlagoon/auto-idler
+    repository: uselagoon/auto-idler
 
 storageCalculator:
   image:
-    repository: testlagoon/storage-calculator
+    repository: uselagoon/storage-calculator
 
 logs2slack:
   replicaCount: 1
   image:
-    repository: testlagoon/logs2slack
+    repository: uselagoon/logs2slack
 
 logs2microsoftteams:
   replicaCount: 1
   image:
-    repository: testlagoon/logs2microsoftteams
+    repository: uselagoon/logs2microsoftteams
 
 logs2rocketchat:
   replicaCount: 1
   image:
-    repository: testlagoon/logs2rocketchat
+    repository: uselagoon/logs2rocketchat
 
 logs2email:
   replicaCount: 1
   image:
-    repository: testlagoon/logs2email
+    repository: uselagoon/logs2email
 
 drushAlias:
   replicaCount: 1
   image:
-    repository: testlagoon/drush-alias
+    repository: uselagoon/drush-alias
 
 logsDBCurator:
   image:
-    repository: testlagoon/logs-db-curator
+    repository: uselagoon/logs-db-curator
 
 ssh:
   replicaCount: 1
   image:
-    repository: testlagoon/ssh
+    repository: uselagoon/ssh
 
 sshPortal:
   enabled: true
@@ -174,6 +174,6 @@ sshPortal:
 controllerhandler:
   replicaCount: 1
   image:
-    repository: testlagoon/controllerhandler
+    repository: uselagoon/controllerhandler
 
-imageTag: main
+imageTag: ""

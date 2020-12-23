@@ -81,7 +81,7 @@ imageTag: ""
 localGit:
 
   image:
-    repository: amazeeiolagoon/local-git
+    repository: uselagoon/local-git
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -107,7 +107,7 @@ localGit:
 localAPIDataWatcherPusher:
 
   image:
-    repository: amazeeiolagoon/local-api-data-watcher-pusher
+    repository: uselagoon/local-api-data-watcher-pusher
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -121,7 +121,7 @@ localAPIDataWatcherPusher:
 tests:
 
   image:
-    repository: amazeeiolagoon/tests
+    repository: uselagoon/tests
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
