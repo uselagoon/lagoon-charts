@@ -114,6 +114,7 @@ jobs:
     - name: Run chart-testing (install) on lagoon-test
       if: steps.list-changed.outputs.changed == 'true'
       run: ct lint-and-install --config ./test-suite-run.ct.yaml
+      continue-on-error: true
 
     # the following steps gather various debug information on test failure
 
