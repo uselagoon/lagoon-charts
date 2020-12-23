@@ -105,7 +105,7 @@ jobs:
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: steps.list-changed.outputs.changed == 'true'
-      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
+      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_TAG=pr-2423 IMAGE_REGISTRY=testlagoon
 
     - name: Free up some disk space
       if: steps.list-changed.outputs.changed == 'true'
