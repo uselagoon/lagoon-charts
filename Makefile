@@ -1,14 +1,14 @@
 TESTS = [features-kubernetes]
 # if IMAGE_TAG is not set, it will fall back to the version set in the CI
 # values file, then to the chart default.
-IMAGE_TAG =
+IMAGE_TAG = pr-2416
 # if IMAGE_REGISTRY is not set, it will fall back to the version set in the
 # chart values files. This only affects lagoon-core, lagoon-remote, and the
 # fill-test-ci-values target.
 IMAGE_REGISTRY = testlagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # lagoon API default and, in the future, the controller default.
-OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
+OVERRIDE_BUILD_DEPLOY_DIND_IMAGE = testlagoon/kubectl-build-deploy-dind:pr-2416
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
@@ -104,6 +104,20 @@ install-postgresql:
 		postgresql \
 		bitnami/postgresql
 
+.PHONY: install-mongodb
+install-mongodb:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace mongodb \
+		--wait \
+		--timeout $(TIMEOUT) \
+		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
+		--set tls.enabled=true \
+		--version=10.3.2 \
+		mongodb \
+		bitnami/mongodb
+
 .PHONY: install-lagoon-core
 install-lagoon-core:
 	$(HELM) upgrade \
@@ -146,7 +160,7 @@ install-lagoon-core:
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
+install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb
 	$(HELM) dependency update ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
@@ -168,7 +182,12 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
 		--set "dbaasOperator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
 		--set "dbaasOperator.postgresqlProviders.development.port=5432" \
 		--set "dbaasOperator.postgresqlProviders.development.user=postgres" \
+		--set "dbaasOperator.mongodbProviders.development.environment=development" \
+		--set "dbaasOperator.mongodbProviders.development.hostname=mongodb.mongodb.svc.cluster.local" \
+		--set "dbaasOperator.mongodbProviders.development.password=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')" \
+		--set "dbaasOperator.mongodbProviders.development.port=27017" \
+		--set "dbaasOperator.mongodbProviders.development.user=root" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		lagoon-remote \
 		./charts/lagoon-remote

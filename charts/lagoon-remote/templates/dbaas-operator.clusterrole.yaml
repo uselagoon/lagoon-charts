@@ -98,6 +98,46 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - mongodb.amazee.io
+  resources:
+  - mongodbconsumers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - mongodb.amazee.io
+  resources:
+  - mongodbconsumers/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - mongodb.amazee.io
+  resources:
+  - mongodbproviders
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - mongodb.amazee.io
+  resources:
+  - mongodbproviders/status
+  verbs:
+  - get
+  - patch
+  - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -173,5 +213,33 @@ metadata:
 rules:
 - apiGroups: ["postgres.amazee.io"]
   resources: ["postgresqlproviders"]
+  verbs: ["*"]
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "lagoon-remote.dbaasOperator.fullname" . }}-mongodbconsumer-role
+  labels:
+    {{- include "lagoon-remote.dbaasOperator.labels" . | nindent 4 }}
+    # Add these permissions to the "admin" and "edit" default roles.
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+rules:
+- apiGroups: ["mongodb.amazee.io"]
+  resources: ["mongodbconsumers"]
+  verbs: ["*"]
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "lagoon-remote.dbaasOperator.fullname" . }}-mongodbprovider-role
+  labels:
+    {{- include "lagoon-remote.dbaasOperator.labels" . | nindent 4 }}
+    # Add these permissions to the "admin" and "edit" default roles.
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+rules:
+- apiGroups: ["mongodb.amazee.io"]
+  resources: ["mongodbproviders"]
   verbs: ["*"]
 {{- end }}

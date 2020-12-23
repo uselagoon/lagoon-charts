@@ -125,7 +125,7 @@ dbaasOperator:
     repository: amazeeio/dbaas-operator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1.3"
+    tag: "v0.1.6"
 
   extraArgs:
   - "--metrics-addr=127.0.0.1:8080"
@@ -203,3 +203,28 @@ dbaasOperator:
     #   hostname: 172.17.0.1.nip.io
     #   password: password
     #   port: '3306'
+
+  # this is a list of providers that the dbaas operator uses to provision
+  # mongodb services for projects
+  mongodbProviders: {}
+    # production:
+    #   environment: production
+    #   hostname: mongodb.172.17.0.1.nip.io
+    #   password: password
+    #   port: '27017'
+    #   user: root
+    #   auth:
+    #     mechanism: SCRAM-SHA-1
+    #     source: admin
+    #     tls: true 
+
+    # development:
+    #   environment: development
+    #   hostname: mongodb.172.17.0.1.nip.io
+    #   password: password
+    #   port: '27017'
+    #   user: root
+    #   auth:
+    #     mechanism: SCRAM-SHA-1
+    #     source: admin
+    #     tls: true 
