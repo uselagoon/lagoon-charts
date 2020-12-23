@@ -4,6 +4,9 @@ lagoonTargetName: ""
 rabbitMQHostname: ""
 rabbitMQPassword: ""
 rabbitMQUsername: ""
+taskSSHHost: ""
+taskSSHPort: ""
+taskAPIHost: ""
 
 # if using controller namespace prefixing, define that prefix here
 # limited to 8 characters (will be truncated by controller if it exceeds this)
