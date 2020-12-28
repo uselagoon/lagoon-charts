@@ -5,9 +5,9 @@ IMAGE_TAG =
 # if IMAGE_REGISTRY is not set, it will fall back to the version set in the
 # chart values files. This only affects lagoon-core, lagoon-remote, and the
 # fill-test-ci-values target.
-IMAGE_REGISTRY = testlagoon
+IMAGE_REGISTRY = uselagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
-# lagoon API default and, in the future, the controller default.
+# controller default (uselagoon/kubectl-build-deploy-dind:latest).
 OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
 TIMEOUT = 30m
 HELM = helm
@@ -21,7 +21,7 @@ fill-test-ci-values: install-ingress install-registry install-lagoon-core instal
 		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export routeSuffixHTTPS="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export token="$$($(KUBECTL) -n lagoon get secret -o json | $(JQ) -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
-		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='pr-2372') \
+		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
@@ -170,5 +170,45 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
 		--set "dbaasOperator.postgresqlProviders.development.user=postgres" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		lagoon-remote \
 		./charts/lagoon-remote
+
+.PHONY: create-kind-cluster
+create-kind-cluster:
+	docker network inspect kind >/dev/null || docker network create kind \
+		&& export KIND_NODE_IP=$$(docker run --network kind --rm alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p') \
+		&& envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml \
+		&& kind create cluster --config=test-suite.kind-config.yaml
+
+.PHONY: install-test-cluster
+install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql
+
+.PHONY: install-lagoon
+install-lagoon:  install-lagoon-core install-lagoon-remote
+
+## install-tests here uses the same logic as the fill-ci-values above,
+## but doesn't re-run all the cluster and lagoon building steps
+.PHONY: install-tests
+install-tests:
+	export ingressIP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
+		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
+		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		&& export routeSuffixHTTPS="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		&& export token="$$($(KUBECTL) -n lagoon get secret -o json | $(JQ) -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
+		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
+		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
+		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
+		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
+		&& $(HELM) upgrade \
+			--install \
+			--namespace lagoon \
+			--wait \
+			--timeout 30m \
+			--values ./charts/lagoon-test/ci/linter-values.yaml \
+			lagoon-test \
+			./charts/lagoon-test
+
+.PHONY: run-tests
+run-tests:
+	$(HELM) test --namespace lagoon --timeout 30m lagoon-test

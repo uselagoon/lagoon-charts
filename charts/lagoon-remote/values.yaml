@@ -11,7 +11,7 @@ imageTag: ""
 
 dockerHost:
   image:
-    repository: amazeeiolagoon/docker-host
+    repository: uselagoon/docker-host
     pullPolicy: Always
     tag: ""
 

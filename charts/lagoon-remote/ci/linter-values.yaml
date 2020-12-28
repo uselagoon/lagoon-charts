@@ -7,11 +7,11 @@ lagoon-build-deploy:
 
 dockerHost:
   image:
-    repository: testlagoon/docker-host
+    repository: uselagoon/docker-host
   storage:
     size: 50Gi
 
-imageTag: main
+imageTag: ""
 
 dbaasOperator:
   enabled: true
