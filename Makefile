@@ -9,6 +9,9 @@ IMAGE_REGISTRY = uselagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/kubectl-build-deploy-dind:latest).
 OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
+# Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
+# the lagoon-build-deploy chart appVersion.
+OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
@@ -171,6 +174,7 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set lagoon-build-deploy.image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		lagoon-remote \
 		./charts/lagoon-remote
 
