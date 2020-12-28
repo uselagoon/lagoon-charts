@@ -15,6 +15,7 @@ jobs:
         - drupal-php72
         - drupal-php73
         - drupal-php74
+        - api
     steps:
     - name: Checkout
       uses: actions/checkout@v2
