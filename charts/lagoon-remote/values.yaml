@@ -68,6 +68,9 @@ lagoon-build-deploy:
   # rabbitMQPassword:
   # rabbitMQHostname:
   # lagoonTargetName:
+  # taskSSHHost: ""
+  # taskSSHPort: ""
+  # taskAPIHost: ""
 
 # this account is used by the legacy Lagoon kubernetes build deploy system.
 kubernetesBuildDeploy:
