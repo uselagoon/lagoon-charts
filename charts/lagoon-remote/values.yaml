@@ -86,7 +86,7 @@ dioscuri:
     repository: amazeeio/dioscuri
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1.8"
+    tag: "v0.1.9"
 
   # If the controller is running in an openshift,
   # then `--openshift=true` should be set.
