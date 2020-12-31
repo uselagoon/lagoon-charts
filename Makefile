@@ -143,8 +143,8 @@ install-lagoon-core:
 		--set sshPortal.enabled=false \
 		--set storageCalculator.enabled=false \
 		--set ui.enabled=false \
-		--set webhookHandler.enabled=false \
-		--set webhooks2tasks.enabled=false \
+		--set webhookHandler.enabled=true \
+		--set webhooks2tasks.enabled=true \
 		lagoon-core \
 		./charts/lagoon-core
 
