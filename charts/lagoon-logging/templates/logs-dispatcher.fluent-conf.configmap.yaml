@@ -76,6 +76,12 @@ data:
         tag     "process.app_nginx_ingress"
       </rule>
       <rule>
+        key     $['kubernetes']['labels']['app.kubernetes.io/name']
+        pattern ^ingress-nginx$
+        tag     "process.app_nginx_ingress"
+      </rule>
+      # Last rule: catchall
+      <rule>
         invert  true
         key     $.kubernetes.labels.app
         pattern ^nginx-ingress$
@@ -91,6 +97,12 @@ data:
         pattern ^syn-nginx-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
       </rule>
+      <rule>
+        key     $.kubernetes.namespace_name
+        pattern ^ingress-nginx$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
+      </rule>
+      # Last rule: catchall
       <rule>
         invert  true
         key     $.kubernetes.namespace_name
