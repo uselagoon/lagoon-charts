@@ -4,6 +4,7 @@ keycloakAuthServerClientSecret: "${keycloakAuthServerClientSecret}"
 routeSuffixHTTP: "${routeSuffixHTTP}"
 routeSuffixHTTPS: "${routeSuffixHTTPS}"
 token: "${token}"
+webhookHost: "${webhookHandler}"
 
 localGit:
   image:
