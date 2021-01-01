@@ -5,6 +5,7 @@ routeSuffixHTTP: "${routeSuffixHTTP}"
 routeSuffixHTTPS: "${routeSuffixHTTPS}"
 token: "${token}"
 webhookHost: "${webhookHandler}"
+webhookRepoPrefix: "${webhookRepoPrefix}"
 
 localGit:
   image:

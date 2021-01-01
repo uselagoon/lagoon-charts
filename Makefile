@@ -204,6 +204,7 @@ install-tests:
 		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& export webhookHandler="lagoon-core-webhook-handler" \
+		&& export webhookRepoPrefix="ssh://git@lagoon-test-local-git:22/git/" \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
 		&& $(HELM) upgrade \
