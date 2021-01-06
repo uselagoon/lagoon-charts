@@ -23,6 +23,8 @@ spec:
     - ansible-playbook
     - "--skip-tags"
     - "skip-on-kubernetes"
+    - "--extra-vars"
+    - "@/ansible/tests/vars/test_vars.yaml"
     - "/ansible/tests/{{ . }}.yaml"
   {{- end }}
   restartPolicy: Never
