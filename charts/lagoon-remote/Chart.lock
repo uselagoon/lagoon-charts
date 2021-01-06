@@ -5,5 +5,8 @@ dependencies:
 - name: dioscuri
   repository: https://amazeeio.github.io/charts/
   version: 0.2.1
-digest: sha256:6ccfcd58217ac0ae7ae510b5f97e81415f266605b975c2cdefc124a0aa85f399
-generated: "2021-01-06T15:00:36.433985178+08:00"
+- name: dbaas-operator
+  repository: https://amazeeio.github.io/charts/
+  version: 0.2.0
+digest: sha256:a0ced4db276fc8863fd7ff13c9ee329d3c99a3d67f195109093a2b4c8f185f3b
+generated: "2021-01-06T23:18:24.850263509+08:00"
