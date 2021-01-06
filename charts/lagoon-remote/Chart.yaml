@@ -29,3 +29,7 @@ dependencies:
   version: 0.3.1
   repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-build-deploy.enabled
+- name: dioscuri
+  version: 0.2.1
+  repository: https://amazeeio.github.io/charts/
+  condition: dioscuri.enabled
