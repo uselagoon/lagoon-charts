@@ -16,6 +16,9 @@ jobs:
         - drupal-php73
         - drupal-php74
         - api
+        - github
+        - gitlab
+        - bitbucket
     steps:
     - name: Checkout
       uses: actions/checkout@v2
