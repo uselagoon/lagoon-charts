@@ -178,6 +178,10 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
 		lagoon-remote \
 		./charts/lagoon-remote
 
+#
+# The following targets facilitate local development only and aren't used in CI.
+#
+
 .PHONY: create-kind-cluster
 create-kind-cluster:
 	docker network inspect kind >/dev/null || docker network create kind \
