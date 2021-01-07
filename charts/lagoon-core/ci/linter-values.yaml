@@ -107,8 +107,7 @@ authServer:
 webhooks2tasks:
   replicaCount: 1
   image:
-    repository: testlagoon/webhooks2tasks
-    tag: pr-2437
+    repository: uselagoon/webhooks2tasks
 
 webhookHandler:
   replicaCount: 1

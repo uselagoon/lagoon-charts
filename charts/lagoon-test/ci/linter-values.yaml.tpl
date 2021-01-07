@@ -19,5 +19,6 @@ tests:
   image:
     repository: testlagoon/tests
     tag: pr-2437
+  tests: ${tests}
 
 imageTag: ${imageTag}
