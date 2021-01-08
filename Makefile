@@ -163,16 +163,16 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
 		--set dockerHost.image.repository=$(IMAGE_REGISTRY)/docker-host \
 		--set "lagoon-build-deploy.rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
-		--set "dbaasOperator.mariadbProviders.development.environment=development" \
-		--set "dbaasOperator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
-		--set "dbaasOperator.mariadbProviders.development.password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
-		--set "dbaasOperator.mariadbProviders.development.port=3306" \
-		--set "dbaasOperator.mariadbProviders.development.user=root" \
-		--set "dbaasOperator.postgresqlProviders.development.environment=development" \
-		--set "dbaasOperator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
-		--set "dbaasOperator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
-		--set "dbaasOperator.postgresqlProviders.development.port=5432" \
-		--set "dbaasOperator.postgresqlProviders.development.user=postgres" \
+		--set "dbaas-operator.mariadbProviders.development.environment=development" \
+		--set "dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
+		--set "dbaas-operator.mariadbProviders.development.password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
+		--set "dbaas-operator.mariadbProviders.development.port=3306" \
+		--set "dbaas-operator.mariadbProviders.development.user=root" \
+		--set "dbaas-operator.postgresqlProviders.development.environment=development" \
+		--set "dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
+		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
+		--set "dbaas-operator.postgresqlProviders.development.port=5432" \
+		--set "dbaas-operator.postgresqlProviders.development.user=postgres" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
