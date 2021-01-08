@@ -12,7 +12,6 @@ jobs:
         - features-kubernetes
         - nginx
         # - active-standby-kubernetes
-        - drupal-php72
         - drupal-php73
         - drupal-php74
         - api
