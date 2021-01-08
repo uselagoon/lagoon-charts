@@ -4,6 +4,8 @@ keycloakAuthServerClientSecret: "${keycloakAuthServerClientSecret}"
 routeSuffixHTTP: "${routeSuffixHTTP}"
 routeSuffixHTTPS: "${routeSuffixHTTPS}"
 token: "${token}"
+webhookHost: "${webhookHandler}"
+webhookRepoPrefix: "${webhookRepoPrefix}"
 
 localGit:
   image:
@@ -15,8 +17,7 @@ localAPIDataWatcherPusher:
 
 tests:
   image:
-    repository: testlagoon/tests
-    tag: test-timeout-bumps
+    repository: ${imageRegistry}/tests
   tests: ${tests}
 
 imageTag: ${imageTag}

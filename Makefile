@@ -25,6 +25,7 @@ fill-test-ci-values: install-ingress install-registry install-lagoon-core instal
 		&& export routeSuffixHTTPS="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export token="$$($(KUBECTL) -n lagoon get secret -o json | $(JQ) -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
 		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
+		&& export webhookHandler="lagoon-core-webhook-handler" \
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
@@ -143,8 +144,8 @@ install-lagoon-core:
 		--set sshPortal.enabled=false \
 		--set storageCalculator.enabled=false \
 		--set ui.enabled=false \
-		--set webhookHandler.enabled=false \
-		--set webhooks2tasks.enabled=false \
+		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
+		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		lagoon-core \
 		./charts/lagoon-core
 
@@ -206,6 +207,8 @@ install-tests:
 		&& export token="$$($(KUBECTL) -n lagoon get secret -o json | $(JQ) -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
 		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
+		&& export webhookHandler="lagoon-core-webhook-handler" \
+		&& export webhookRepoPrefix="ssh://git@lagoon-test-local-git.lagoon.svc.cluster.local:22/git/" \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
 		&& $(HELM) upgrade \
