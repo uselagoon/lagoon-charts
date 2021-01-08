@@ -1,0 +1,28 @@
+{{- if .Values.constraints.create -}}
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPAllowedUsers
+metadata:
+  name: {{ include "lagoon-gatekeeper.fullname" . }}-psp-pods-allowed-user-ranges
+  labels:
+    {{- include "lagoon-gatekeeper.labels" . | nindent 4 }}
+spec:
+  match:
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+    namespaceSelector:
+      matchExpressions:
+      - key: lagoon.sh/project
+        operator: Exists
+  parameters:
+    runAsUser:
+      rule: MustRunAs
+      ranges:
+      - min: 10000
+        max: 60000
+    fsGroup:
+      rule: MustRunAs
+      ranges:
+      - min: 10000
+        max: 60000
+{{- end }}
