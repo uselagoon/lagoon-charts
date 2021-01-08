@@ -13,5 +13,5 @@ dockerHost:
 
 imageTag: ""
 
-dbaasOperator:
+dbaas-operator:
   enabled: true
