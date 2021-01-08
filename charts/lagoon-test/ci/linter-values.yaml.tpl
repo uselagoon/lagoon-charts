@@ -15,8 +15,7 @@ localAPIDataWatcherPusher:
 
 tests:
   image:
-    repository: testlagoon/tests
-    tag: test-timeout-bumps
+    repository: ${imageRegistry}/tests
   tests: ${tests}
 
 imageTag: ${imageTag}
