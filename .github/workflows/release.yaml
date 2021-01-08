@@ -30,6 +30,7 @@ jobs:
       run: |
         helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
         helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
+        helm repo add amazeeio https://amazeeio.github.io/charts/
 
     - name: Run chart-releaser
       uses: helm/chart-releaser-action@v1.1.0
