@@ -17,8 +17,7 @@ localAPIDataWatcherPusher:
 
 tests:
   image:
-    repository: testlagoon/tests
-    tag: pr-2437
+    repository: ${imageRegistry}/tests
   tests: ${tests}
 
 imageTag: ${imageTag}

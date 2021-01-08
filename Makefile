@@ -145,8 +145,7 @@ install-lagoon-core:
 		--set storageCalculator.enabled=false \
 		--set ui.enabled=false \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
-		--set webhooks2tasks.image.repository=testlagoon/webhooks2tasks \
-		--set webhooks2tasks.image.tag=pr-2437 \
+		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		lagoon-core \
 		./charts/lagoon-core
 
