@@ -53,18 +53,3 @@ logging-operator:
 logsDispatcher:
   serviceMonitor:
     enabled: false
-  image:
-    repository: uselagoon/logs-dispatcher
-    tag: ""
-
-logsTeeRouter:
-  image:
-    repository: uselagoon/logs-tee
-    tag: ""
-
-logsTeeApplication:
-  image:
-    repository: uselagoon/logs-tee
-    tag: ""
-
-imageTag: ""
