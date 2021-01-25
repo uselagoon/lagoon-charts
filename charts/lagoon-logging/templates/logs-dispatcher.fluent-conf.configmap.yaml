@@ -148,11 +148,13 @@ data:
       @type record_modifier
       remove_keys docker
     </filter>
-    # add the index name
+    # * add the index name
+    # * ensure the log field is in there, even if empty, to avoid errors in the following parser
     <filter lagoon.*.container>
       @type record_modifier
       <record>
         index_name container-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
+        log ${record['log'] || ""}
       </record>
     </filter>
     # post-process to try to eke some more structure out of the logs.
@@ -173,12 +175,6 @@ data:
           format none
         </pattern>
       </parse>
-    </filter>
-    # some container logs have a duplicate message field for some reason, so
-    # remove that.
-    <filter lagoon.*.container>
-      @type record_modifier
-      remove_keys message
     </filter>
     {{- if .Values.consolidateServiceIndices }}
     # some cluster services generate namespaces with a random suffix, so
