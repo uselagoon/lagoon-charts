@@ -18,8 +18,8 @@ logsDispatcher:
   image:
     repository: uselagoon/logs-dispatcher
     pullPolicy: Always
-    # Overrides the image tag whose default is the chart version.
-    tag: ""
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v1-13-3"
 
   serviceAccount:
     # Specifies whether a service account should be created
