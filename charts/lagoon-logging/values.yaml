@@ -387,6 +387,27 @@ enableDefaultForwarding: true
 #       ...
 #     </store>
 
+# Optional extra fluentd configuration.
+#
+# This adds a <label @EXTRACONF></label> section to the fluentd configuration
+# containing the given configuration, and copies logs to that label after all
+# the Lagoon-specific munging. It uses the pattern described here:
+# https://docs.fluentd.org/configuration/routing-examples#re-route-event-to-other-label
+#
+# extraConf: |-
+#   <match lagoon.*.router.**>
+#     @type sumologic
+#     ...
+#   </match>
+#   <match lagoon.*.container>
+#     @type sumologic
+#     ...
+#   </match>
+#   <match lagoon.*.application>
+#     @type sumologic
+#     ...
+#   </match>
+
 # Openshift only!
 #
 # fluentbitPrivileged: true

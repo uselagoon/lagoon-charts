@@ -372,5 +372,17 @@ data:
         </buffer>
       </store>
       {{- end }}
+      {{- if .Values.extraConf }}
+      <store>
+        @type relabel
+        @label @EXTRACONF
+      </store>
+      {{- end }}
       @include store.d/*.conf
     </match>
+    {{- with .Values.extraConf }}
+
+    <label @EXTRACONF>
+      {{- . | nindent 6 }}
+    </label>
+    {{- end }}
