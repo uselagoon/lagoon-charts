@@ -1085,6 +1085,27 @@ entries:
     urls:
     - https://github.com/amazeeio/charts/releases/download/lagoon-core-0.1.0/lagoon-core-0.1.0.tgz
     version: 0.1.0
+  lagoon-gatekeeper:
+  - apiVersion: v2
+    appVersion: 750ff6d
+    created: "2021-02-02T13:57:33.316591324Z"
+    dependencies:
+    - name: gatekeeper
+      repository: https://open-policy-agent.github.io/gatekeeper/charts
+      version: ~3.2.2
+    description: A Helm chart for Kubernetes that installs the gatekeeper admission controller and policy for Lagoon.
+    digest: d6aaa466c985735221778ad69c811644f35344896b99b2df2dd173e3ee0976af
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-gatekeeper
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-gatekeeper-0.1.0/lagoon-gatekeeper-0.1.0.tgz
+    version: 0.1.0
   lagoon-logging:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.5
