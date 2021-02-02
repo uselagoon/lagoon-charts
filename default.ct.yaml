@@ -8,6 +8,7 @@ chart-repos:
 - banzaicloud-stable=https://kubernetes-charts.banzaicloud.com
 - lagoon=https://uselagoon.github.io/lagoon-charts/
 - amazeeio=https://amazeeio.github.io/charts/
+- gatekeeper=https://open-policy-agent.github.io/gatekeeper/charts
 excluded-charts:
 - lagoon-test
 helm-extra-args: --timeout 900s

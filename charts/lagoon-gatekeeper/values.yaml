@@ -1,0 +1,14 @@
+# Default values for lagoon-gatekeeper.
+
+constraints:
+  # set false to avoid creating any constraints
+  # this must be false on initial install to allow the controller to create the
+  # CRDs before setting to true to create CRs.
+  create: false
+
+# subchart options
+gatekeeper:
+  # avoid hitting the k8s api for auditing
+  auditFromCache: true
+  # audit only - don't stop pods scheduling
+  disableValidatingWebhook: true

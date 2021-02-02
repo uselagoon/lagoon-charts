@@ -1,0 +1,16 @@
+apiVersion: config.gatekeeper.sh/v1alpha1
+kind: Config
+metadata:
+  name: {{ include "lagoon-gatekeeper.fullname" . }}-config
+  labels:
+    {{- include "lagoon-gatekeeper.labels" . | nindent 4 }}
+  namespace: "gatekeeper-system"
+spec:
+  sync:
+    syncOnly:
+    - group: ""
+      version: "v1"
+      kind: "Namespace"
+    - group: ""
+      version: "v1"
+      kind: "Pod"
