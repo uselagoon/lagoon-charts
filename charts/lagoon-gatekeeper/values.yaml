@@ -1,10 +1,16 @@
 # Default values for lagoon-gatekeeper.
 
-constraints:
-  # set false to avoid creating any constraints
-  # this must be false on initial install to allow the controller to create the
-  # CRDs before setting to true to create CRs.
-  create: false
+# The gatekeeper controller dynamically creates CRDs. We install our custom
+# resources to configure gatekeeper in a chart post-install hook, which waits
+# until the controller creates the CRDs. This kubectl image is used by this
+# hook.
+kubectl:
+  image:
+    repository: bitnami/kubectl
+    tag: latest
+
+podSecurityContext: {}
+securityContext: {}
 
 # subchart options
 gatekeeper:
