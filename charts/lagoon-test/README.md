@@ -18,22 +18,17 @@ Add these helm repositories:
 ```
 helm repo add harbor https://helm.goharbor.io
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo add stable https://charts.helm.sh/stable
 ```
 
 Also make sure that your local DNS resolver doesn't filter private IPs, or point `/etc/resolv.conf` to `1.0.0.1` / `8.8.8.8`.
 
 ## Usage
 
-IMPORTANT NOTE: after creating the `kind` cluster, check the node IP - it might be different to `172.18.0.2` in which case edit the kind config file to match and recreate the cluster.
-
-Create a `kind` cluster and add an ingress controller and registry.
+Create a `kind` cluster.
 
 ```
-docker network create kind || true
-export KIND_NODE_IP=$(docker run --rm --network kind alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p')
-envsubst '$KIND_NODE_IP' < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml
-kind create cluster --config=test-suite.kind-config.yaml
+make create-kind-cluster
 ```
 
 IMPORTANT NOTE: the next step installs several charts using `helm`, so make sure you are in the context of the `kind` cluster installed in the previous step!
@@ -57,8 +52,7 @@ helm upgrade \
 Lagoon tests can then be run like so:
 
 ```
-kubens lagoon
-helm test --timeout 30m lagoon-test
+make run-tests
 ```
 
 Watch the test output in another terminal:
