@@ -19,6 +19,13 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+Append a suffix to the fully qualified app name without hitting length limits of 63 (62 plus hyphen).
+*/}}
+{{- define "lagoon-gatekeeper.fullname.suffix" -}}
+{{ include "lagoon-gatekeeper.fullname" . | trunc (sub 62 (len .suffix) | int) }}-{{ .suffix }}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "lagoon-gatekeeper.chart" -}}

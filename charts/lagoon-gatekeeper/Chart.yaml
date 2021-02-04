@@ -12,7 +12,7 @@ maintainers:
 
 type: application
 
-version: 0.3.0
+version: 0.3.1
 
 # appVersion reflects the gatekeeper-library version
 appVersion: 2e5e92f
