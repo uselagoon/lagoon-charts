@@ -1,7 +1,7 @@
 apiVersion: constraints.gatekeeper.sh/v1beta1
 kind: K8sPSPAllowedUsers
 metadata:
-  name: {{ include "lagoon-gatekeeper.fullname" . }}-psp-pods-allowed-user-ranges
+  name: {{ include "lagoon-gatekeeper.fullname.suffix" (merge (dict "suffix" "psp-pods-allowed-user-ranges") .) }}
   labels:
     {{- include "lagoon-gatekeeper.labels" . | nindent 4 }}
   annotations:
