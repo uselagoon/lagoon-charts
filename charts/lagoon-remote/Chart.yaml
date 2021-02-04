@@ -37,3 +37,7 @@ dependencies:
   version: ~0.2.0
   repository: https://amazeeio.github.io/charts/
   condition: dbaas-operator.enabled
+- name: lagoon-gatekeeper
+  version: ~0.3.1
+  repository: https://uselagoon.github.io/lagoon-charts/
+  condition: lagoon-gatekeeper.enabled
