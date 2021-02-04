@@ -89,6 +89,12 @@ dioscuri:
 # dbaas-operator provisions database-as-a-service accounts for projects.
 # Example provider configuration can be found in the dbaas-operator values.yaml
 # https://github.com/amazeeio/charts/blob/main/charts/dbaas-operator/values.yaml
-# This subchart is enabled by default as this is a core Lagoon feature.
+# This subchart is disabled by default for legacy reasons. It will be enabled
+# by default in future as this is a core Lagoon feature.
 dbaas-operator:
+  enabled: false
+
+# lagoon-gatekeeper is a subchart which enforces security policy for Lagoon
+# workloads. It is currently experimental so it is disabled by default.
+lagoon-gatekeeper:
   enabled: false
