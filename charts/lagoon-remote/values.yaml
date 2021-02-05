@@ -19,7 +19,7 @@ dockerHost:
 
   registry: registry.lagoon.svc:5000
 
-  repositoryToUpdate: lagoon
+  repositoryToUpdate: amazeeio|lagoon
 
   replicaCount: 1
 
