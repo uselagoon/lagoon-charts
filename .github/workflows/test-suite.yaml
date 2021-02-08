@@ -13,6 +13,7 @@ jobs:
         - nginx
         # - active-standby-kubernetes
         - drupal-php73
+        - node-mongodb
         - drupal-php74
         - api
         - github

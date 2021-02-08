@@ -2,15 +2,15 @@ TESTS = [features-kubernetes]
 # IMAGE_TAG controls the tag used for container images in the lagoon-core,
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
-IMAGE_TAG =
+IMAGE_TAG = pr-2416
 # IMAGE_REGISTRY controls the registry used for container images in the
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
 # only affects lagoon-core, lagoon-remote, and the fill-test-ci-values target.
-IMAGE_REGISTRY = uselagoon
+IMAGE_REGISTRY = testlagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/kubectl-build-deploy-dind:latest).
-OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
+OVERRIDE_BUILD_DEPLOY_DIND_IMAGE = testlagoon/kubectl-build-deploy-dind:pr-2416
 # Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
 # the lagoon-build-deploy chart appVersion.
 OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
@@ -188,11 +188,14 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql in
 		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
 		--set "dbaas-operator.postgresqlProviders.development.port=5432" \
 		--set "dbaas-operator.postgresqlProviders.development.user=postgres" \
-		--set "dbaasOperator.mongodbProviders.development.environment=development" \
-		--set "dbaasOperator.mongodbProviders.development.hostname=mongodb.mongodb.svc.cluster.local" \
-		--set "dbaasOperator.mongodbProviders.development.password=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')" \
-		--set "dbaasOperator.mongodbProviders.development.port=27017" \
-		--set "dbaasOperator.mongodbProviders.development.user=root" \
+		--set "dbaas-operator.mongodbProviders.development.environment=development" \
+		--set "dbaas-operator.mongodbProviders.development.hostname=mongodb.mongodb.svc.cluster.local" \
+		--set "dbaas-operator.mongodbProviders.development.password=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')" \
+		--set "dbaas-operator.mongodbProviders.development.port=27017" \
+		--set "dbaas-operator.mongodbProviders.development.user=root" \
+		--set "dbaas-operator.mongodbProviders.development.auth.mechanism=SCRAM-SHA-1" \
+		--set "dbaas-operator.mongodbProviders.development.auth.source=admin" \
+		--set "dbaas-operator.mongodbProviders.development.auth.tls=true" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
@@ -212,7 +215,7 @@ create-kind-cluster:
 		&& kind create cluster --config=test-suite.kind-config.yaml
 
 .PHONY: install-test-cluster
-install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql
+install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb
 
 .PHONY: install-lagoon
 install-lagoon:  install-lagoon-core install-lagoon-remote
