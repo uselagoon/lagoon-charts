@@ -12,9 +12,12 @@ jobs:
         - features-kubernetes
         - nginx
         # - active-standby-kubernetes
-        - drupal-php72
         - drupal-php73
         - drupal-php74
+        - api
+        - github
+        - gitlab
+        - bitbucket
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -79,6 +82,7 @@ jobs:
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
         helm repo add stable https://charts.helm.sh/stable
         helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
 
     - name: Install gojq
       if: steps.list-changed.outputs.changed == 'true'
@@ -117,27 +121,37 @@ jobs:
 
     # the following steps gather various debug information on test failure
 
-    - name: Gather lagoon-remote logs
+    - name: Inspect lagoon-remote pods
       if: failure()
-      run: kubectl logs --namespace lagoon --prefix --all-containers --selector=app.kubernetes.io/name=lagoon-remote
+      run: |
+        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/name=lagoon-remote
+        kubectl logs --tail=80 --namespace=lagoon --prefix --timestamps --all-containers --selector=app.kubernetes.io/name=lagoon-remote
 
-    - name: List pods of any remaining CI namespaces
+    - name: Inspect lagoon-core pods
+      if: failure()
+      run: |
+        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/name=lagoon-core
+        kubectl logs --tail=80 --namespace=lagoon --prefix --timestamps --all-containers --selector=app.kubernetes.io/name=lagoon-core
+
+    - name: Inspect any remaining CI namespaces
       if: failure()
       run: |
         for ns in $(kubectl get ns -o json | jq -r '.items[].metadata.name | select(match("^ci"))'); do
-          kubectl get pods -o json --namespace $ns
+          kubectl get events --sort-by=metadata.creationTimestamp --namespace=$ns
+          kubectl get pods --output=wide --namespace=$ns
+          kubectl describe pods --namespace=$ns
         done
 
     - name: Gather build logs of any remaining CI namespaces
       if: failure()
       run: |
         for ns in $(kubectl get ns -o json | jq -r '.items[].metadata.name | select(match("^ci"))'); do
-          kubectl logs --prefix --all-containers --namespace $ns --selector=lagoon.sh/jobType
+          kubectl logs --tail=80 --namespace=$ns --prefix --timestamps --all-containers --selector=lagoon.sh/jobType
         done
 
     - name: Gather workload logs of any remaining CI namespaces
       if: failure()
       run: |
         for ns in $(kubectl get ns -o json | jq -r '.items[].metadata.name | select(match("^ci"))'); do
-          kubectl logs --prefix --all-containers --namespace $ns --selector=lagoon.sh/version
+          kubectl logs --tail=80 --namespace=$ns --prefix --timestamps --all-containers --selector=lagoon.sh/version
         done

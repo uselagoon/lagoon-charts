@@ -16,9 +16,9 @@ logsDispatcher:
   replicaCount: 3
 
   image:
-    repository: amazeeiolagoon/logs-dispatcher
+    repository: uselagoon/logs-dispatcher
     pullPolicy: Always
-    # Overrides the image tag whose default is the chart version.
+    # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
   serviceAccount:
@@ -114,7 +114,7 @@ logsTeeRouter:
   replicaCount: 3
 
   image:
-    repository: amazeeiolagoon/logs-tee
+    repository: uselagoon/logs-tee
     pullPolicy: Always
     # Overrides the image tag whose default is the chart version.
     tag: ""
@@ -177,7 +177,7 @@ logsTeeApplication:
   replicaCount: 3
 
   image:
-    repository: amazeeiolagoon/logs-tee
+    repository: uselagoon/logs-tee
     pullPolicy: Always
     # Overrides the image tag whose default is the chart version.
     tag: ""
@@ -386,6 +386,27 @@ enableDefaultForwarding: true
 #       @type cloudwatch_logs
 #       ...
 #     </store>
+
+# Optional extra fluentd configuration.
+#
+# This adds a <label @EXTRACONF></label> section to the fluentd configuration
+# containing the given configuration, and copies logs to that label after all
+# the Lagoon-specific munging. It uses the pattern described here:
+# https://docs.fluentd.org/configuration/routing-examples#re-route-event-to-other-label
+#
+# extraConf: |-
+#   <match lagoon.*.router.**>
+#     @type sumologic
+#     ...
+#   </match>
+#   <match lagoon.*.container>
+#     @type sumologic
+#     ...
+#   </match>
+#   <match lagoon.*.application>
+#     @type sumologic
+#     ...
+#   </match>
 
 # Openshift only!
 #

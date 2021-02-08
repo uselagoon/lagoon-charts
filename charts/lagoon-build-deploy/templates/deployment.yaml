@@ -52,8 +52,20 @@ spec:
         env:
         - name: LAGOON_TARGET_NAME
           value: {{ required "A valid .Values.lagoonTargetName required!" .Values.lagoonTargetName | quote }}
-        {{- with .Values.overrideBuildDeployDindImage }}
+        {{- with .Values.overrideBuildDeployImage }}
         - name: OVERRIDE_BUILD_DEPLOY_DIND_IMAGE
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.taskSSHHost }}
+        - name: TASK_SSH_HOST
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.taskSSHPort }}
+        - name: TASK_SSH_PORT
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.taskAPIHost }}
+        - name: TASK_API_HOST
           value: {{ . | quote }}
         {{- end }}
         - name: PENDING_MESSAGE_CRON

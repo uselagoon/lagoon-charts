@@ -11,7 +11,7 @@ imageTag: ""
 
 dockerHost:
   image:
-    repository: amazeeiolagoon/docker-host
+    repository: uselagoon/docker-host
     pullPolicy: Always
     tag: ""
 
@@ -19,7 +19,7 @@ dockerHost:
 
   registry: registry.lagoon.svc:5000
 
-  repositoryToUpdate: lagoon
+  repositoryToUpdate: amazeeio|lagoon
 
   replicaCount: 1
 
@@ -60,6 +60,15 @@ dockerHost:
     effect: PreferNoSchedule
     operator: Exists
 
+# this account is used by the legacy Lagoon kubernetes build deploy system.
+kubernetesBuildDeploy:
+  serviceAccount:
+    # The name of the service account to use.
+    # If not set, a name is generated using the fullname template.
+    name:
+
+# This subchart is disabled by default until this build-deploy type is in
+# widespread use.
 lagoon-build-deploy:
   enabled: false
   # these values are used by the lagoon-build-deploy controller and do not have
@@ -68,58 +77,21 @@ lagoon-build-deploy:
   # rabbitMQPassword:
   # rabbitMQHostname:
   # lagoonTargetName:
-
-# this account is used by the legacy Lagoon kubernetes build deploy system.
-kubernetesBuildDeploy:
-  serviceAccount:
-    # The name of the service account to use.
-    # If not set, a name is generated using the fullname template.
-    name:
+  # taskSSHHost: ""
+  # taskSSHPort: ""
+  # taskAPIHost: ""
 
 # dioscuri is the operator which implements Lagoon active-standby.
+# This subchart is enabled by default as this is a core Lagoon feature.
 dioscuri:
   enabled: true
-  image:
-    repository: amazeeio/dioscuri
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1.8"
 
-  # If the controller is running in an openshift,
-  # then `--openshift=true` should be set.
-  extraArgs:
-  - "--metrics-addr=127.0.0.1:8080"
-  - "--enable-leader-election=true"
-  # - "--openshift=true"
-
-  service:
-    type: ClusterIP
-    port: 8443
-
-  serviceAccount:
-    # The name of the service account to use.
-    # If not set, a name is generated using the fullname template.
-    name:
-
-  podSecurityContext: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  # this sidecar runs in the same pod as dioscuri
-  kubeRBACProxy:
-    image:
-      repository: gcr.io/kubebuilder/kube-rbac-proxy
-      pullPolicy: IfNotPresent
-      tag: v0.4.1
-
-    securityContext: {}
-
-    resources: {}
-
-# dbaasOperator provisions DBaaS accounts for projects.
-dbaasOperator:
+# dbaas-operator provisions database-as-a-service accounts for projects.
+# Example provider configuration can be found in the dbaas-operator values.yaml
+# https://github.com/amazeeio/charts/blob/main/charts/dbaas-operator/values.yaml
+# This subchart is disabled by default for legacy reasons. It will be enabled
+# by default in future as this is a core Lagoon feature.
+dbaas-operator:
   enabled: false
   image:
     repository: amazeeio/dbaas-operator
@@ -228,3 +200,8 @@ dbaasOperator:
     #     mechanism: SCRAM-SHA-1
     #     source: admin
     #     tls: true 
+
+# lagoon-gatekeeper is a subchart which enforces security policy for Lagoon
+# workloads. It is currently experimental so it is disabled by default.
+lagoon-gatekeeper:
+  enabled: false

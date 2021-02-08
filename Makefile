@@ -1,14 +1,19 @@
 TESTS = [features-kubernetes]
-# if IMAGE_TAG is not set, it will fall back to the version set in the CI
-# values file, then to the chart default.
-IMAGE_TAG = pr-2416
-# if IMAGE_REGISTRY is not set, it will fall back to the version set in the
-# chart values files. This only affects lagoon-core, lagoon-remote, and the
-# fill-test-ci-values target.
-IMAGE_REGISTRY = testlagoon
+# IMAGE_TAG controls the tag used for container images in the lagoon-core,
+# lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
+# back to the version set in the CI values file, then to the chart default.
+IMAGE_TAG =
+# IMAGE_REGISTRY controls the registry used for container images in the
+# lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
+# set, it will fall back to the version set in the chart values files. This
+# only affects lagoon-core, lagoon-remote, and the fill-test-ci-values target.
+IMAGE_REGISTRY = uselagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
-# lagoon API default and, in the future, the controller default.
-OVERRIDE_BUILD_DEPLOY_DIND_IMAGE = testlagoon/kubectl-build-deploy-dind:pr-2416
+# controller default (uselagoon/kubectl-build-deploy-dind:latest).
+OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
+# Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
+# the lagoon-build-deploy chart appVersion.
+OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
@@ -21,7 +26,8 @@ fill-test-ci-values: install-ingress install-registry install-lagoon-core instal
 		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export routeSuffixHTTPS="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export token="$$($(KUBECTL) -n lagoon get secret -o json | $(JQ) -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
-		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='pr-2372') \
+		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
+		&& export webhookHandler="lagoon-core-webhook-handler" \
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
@@ -154,8 +160,8 @@ install-lagoon-core:
 		--set sshPortal.enabled=false \
 		--set storageCalculator.enabled=false \
 		--set ui.enabled=false \
-		--set webhookHandler.enabled=false \
-		--set webhooks2tasks.enabled=false \
+		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
+		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		lagoon-core \
 		./charts/lagoon-core
 
@@ -172,22 +178,69 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql in
 		--set dockerHost.image.repository=$(IMAGE_REGISTRY)/docker-host \
 		--set "lagoon-build-deploy.rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
-		--set "dbaasOperator.mariadbProviders.development.environment=development" \
-		--set "dbaasOperator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
-		--set "dbaasOperator.mariadbProviders.development.password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
-		--set "dbaasOperator.mariadbProviders.development.port=3306" \
-		--set "dbaasOperator.mariadbProviders.development.user=root" \
-		--set "dbaasOperator.postgresqlProviders.development.environment=development" \
-		--set "dbaasOperator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
-		--set "dbaasOperator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
-		--set "dbaasOperator.postgresqlProviders.development.port=5432" \
-		--set "dbaasOperator.postgresqlProviders.development.user=postgres" \
+		--set "dbaas-operator.mariadbProviders.development.environment=development" \
+		--set "dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
+		--set "dbaas-operator.mariadbProviders.development.password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
+		--set "dbaas-operator.mariadbProviders.development.port=3306" \
+		--set "dbaas-operator.mariadbProviders.development.user=root" \
+		--set "dbaas-operator.postgresqlProviders.development.environment=development" \
+		--set "dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
+		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
+		--set "dbaas-operator.postgresqlProviders.development.port=5432" \
+		--set "dbaas-operator.postgresqlProviders.development.user=postgres" \
 		--set "dbaasOperator.mongodbProviders.development.environment=development" \
 		--set "dbaasOperator.mongodbProviders.development.hostname=mongodb.mongodb.svc.cluster.local" \
 		--set "dbaasOperator.mongodbProviders.development.password=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')" \
 		--set "dbaasOperator.mongodbProviders.development.port=27017" \
 		--set "dbaasOperator.mongodbProviders.development.user=root" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set lagoon-build-deploy.image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		lagoon-remote \
 		./charts/lagoon-remote
+
+#
+# The following targets facilitate local development only and aren't used in CI.
+#
+
+.PHONY: create-kind-cluster
+create-kind-cluster:
+	docker network inspect kind >/dev/null || docker network create kind \
+		&& export KIND_NODE_IP=$$(docker run --network kind --rm alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p') \
+		&& envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml \
+		&& kind create cluster --config=test-suite.kind-config.yaml
+
+.PHONY: install-test-cluster
+install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql
+
+.PHONY: install-lagoon
+install-lagoon:  install-lagoon-core install-lagoon-remote
+
+## install-tests here uses the same logic as the fill-ci-values above,
+## but doesn't re-run all the cluster and lagoon building steps
+.PHONY: install-tests
+install-tests:
+	export ingressIP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
+		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
+		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		&& export routeSuffixHTTPS="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		&& export token="$$($(KUBECTL) -n lagoon get secret -o json | $(JQ) -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
+		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
+		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
+		&& export webhookHandler="lagoon-core-webhook-handler" \
+		&& export webhookRepoPrefix="ssh://git@lagoon-test-local-git.lagoon.svc.cluster.local:22/git/" \
+		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
+		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
+		&& $(HELM) upgrade \
+			--install \
+			--namespace lagoon \
+			--wait \
+			--timeout 30m \
+			--values ./charts/lagoon-test/ci/linter-values.yaml \
+			lagoon-test \
+			./charts/lagoon-test
+
+.PHONY: run-tests
+run-tests:
+	$(HELM) test --namespace lagoon --timeout 30m lagoon-test

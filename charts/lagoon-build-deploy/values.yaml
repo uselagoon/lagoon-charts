@@ -4,6 +4,9 @@ lagoonTargetName: ""
 rabbitMQHostname: ""
 rabbitMQPassword: ""
 rabbitMQUsername: ""
+taskSSHHost: ""
+taskSSHPort: ""
+taskAPIHost: ""
 
 # if using controller namespace prefixing, define that prefix here
 # limited to 8 characters (will be truncated by controller if it exceeds this)
@@ -21,7 +24,7 @@ pendingMessageCron: "*/5 * * * *"
 
 # The controller will use `uselagoon/kubectl-build-deploy-dind:latest` by
 # default, but this can be overridden here.
-overrideBuildDeployDindImage: ""
+overrideBuildDeployImage: ""
 
 # override .Chart.Name
 nameOverride: ""

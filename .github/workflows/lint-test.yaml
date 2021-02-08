@@ -17,6 +17,9 @@ jobs:
     - name: Add dependency chart repos
       run: |
         helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
+        helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
+        helm repo add amazeeio https://amazeeio.github.io/charts/
+        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
     - name: Generate helm templates
       run: |
         cd charts
@@ -31,8 +34,11 @@ jobs:
             --output-dir /tmp/charts/$chart
         done
 
-        # workaround until https://github.com/banzaicloud/logging-operator/pull/629 is released
-        rm -rf /tmp/charts/lagoon-logging/lagoon-logging/charts
+        # workaround until gatekeeper templates are fixed:
+        # * https://github.com/open-policy-agent/gatekeeper/pull/1114
+        # * https://github.com/open-policy-agent/gatekeeper/pull/1115
+        rm -rf /tmp/charts/lagoon-gatekeeper/lagoon-gatekeeper/charts/gatekeeper
+        rm -rf /tmp/charts/lagoon-remote/lagoon-remote/charts/lagoon-gatekeeper/charts/gatekeeper
     - name: Install YAMLlint
       run: sudo apt-get -y install yamllint
     - name: Lint the templates
@@ -43,8 +49,7 @@ jobs:
         rules:
           indentation:
             indent-sequences: consistent
-          line-length:
-            level: warning
+          line-length: disable
         EOF
         yamllint -f parsable /tmp/charts | awk -F: '{print; system("sed \"" $2 "q;d\" " $1)}'
 
