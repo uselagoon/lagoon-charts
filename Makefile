@@ -119,7 +119,7 @@ install-mongodb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
-		--set tls.enabled=true \
+		--set tls.enabled=false \
 		--version=10.3.2 \
 		mongodb \
 		bitnami/mongodb
@@ -195,7 +195,7 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql in
 		--set "dbaas-operator.mongodbProviders.development.user=root" \
 		--set "dbaas-operator.mongodbProviders.development.auth.mechanism=SCRAM-SHA-1" \
 		--set "dbaas-operator.mongodbProviders.development.auth.source=admin" \
-		--set "dbaas-operator.mongodbProviders.development.auth.tls=true" \
+		--set "dbaas-operator.mongodbProviders.development.auth.tls=false" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
