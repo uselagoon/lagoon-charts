@@ -110,6 +110,20 @@ install-postgresql:
 		postgresql \
 		bitnami/postgresql
 
+.PHONY: install-mongodb
+install-mongodb:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace mongodb \
+		--wait \
+		--timeout $(TIMEOUT) \
+		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
+		--set tls.enabled=false \
+		--version=10.3.2 \
+		mongodb \
+		bitnami/mongodb
+
 .PHONY: install-lagoon-core
 install-lagoon-core:
 	$(HELM) upgrade \
@@ -152,7 +166,7 @@ install-lagoon-core:
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
+install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb
 	$(HELM) dependency update ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
@@ -174,6 +188,14 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql
 		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
 		--set "dbaas-operator.postgresqlProviders.development.port=5432" \
 		--set "dbaas-operator.postgresqlProviders.development.user=postgres" \
+		--set "dbaas-operator.mongodbProviders.development.environment=development" \
+		--set "dbaas-operator.mongodbProviders.development.hostname=mongodb.mongodb.svc.cluster.local" \
+		--set "dbaas-operator.mongodbProviders.development.password=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')" \
+		--set "dbaas-operator.mongodbProviders.development.port=27017" \
+		--set "dbaas-operator.mongodbProviders.development.user=root" \
+		--set "dbaas-operator.mongodbProviders.development.auth.mechanism=SCRAM-SHA-1" \
+		--set "dbaas-operator.mongodbProviders.development.auth.source=admin" \
+		--set "dbaas-operator.mongodbProviders.development.auth.tls=false" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
@@ -193,7 +215,7 @@ create-kind-cluster:
 		&& kind create cluster --config=test-suite.kind-config.yaml
 
 .PHONY: install-test-cluster
-install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql
+install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb
 
 .PHONY: install-lagoon
 install-lagoon:  install-lagoon-core install-lagoon-remote
