@@ -1,15 +1,15 @@
 dependencies:
 - name: lagoon-build-deploy
   repository: https://uselagoon.github.io/lagoon-charts/
-  version: 0.3.1
+  version: 0.3.2
 - name: dioscuri
   repository: https://amazeeio.github.io/charts/
   version: 0.2.1
 - name: dbaas-operator
   repository: https://amazeeio.github.io/charts/
-  version: 0.2.0
+  version: 0.2.1
 - name: lagoon-gatekeeper
   repository: https://uselagoon.github.io/lagoon-charts/
   version: 0.3.1
-digest: sha256:b34d635a83e3b0d73860bf2b3c0372f6e9e2691914bfd4c492abb0b31104e0ba
-generated: "2021-02-04T21:29:52.496988861+08:00"
+digest: sha256:fe6961f5acc995bcb69e165b1e95513c02faa8a6f36e2a8de12d565e102b3081
+generated: "2021-02-11T14:19:56.421210239+08:00"
