@@ -14,6 +14,9 @@ OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
 # Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
 # the lagoon-build-deploy chart appVersion.
 OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
+# Overrides the image repository for amazeeio/lagoon-builddeploy whose default
+# is the amazeeio/lagoon-builddeploy.
+OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY =
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
@@ -200,6 +203,7 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql in
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set lagoon-build-deploy.image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set lagoon-build-deploy.image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
 		lagoon-remote \
 		./charts/lagoon-remote
 
