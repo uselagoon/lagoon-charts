@@ -9,7 +9,8 @@ In summary, given a version number MAJOR.MINOR.PATCH, increment the:
 - MINOR version when you add functionality in a backwards compatible manner, and
 - PATCH version when you make backwards compatible bug fixes.
 -->
-
+<!--
 Explain the **details** for making this change. What existing problem does the pull request solve?
 
 Put `Closes: #XXXX` in your comment to auto-close the issue that your PR fixes (if such).
+-->
