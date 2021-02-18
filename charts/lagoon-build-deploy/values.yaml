@@ -14,6 +14,11 @@ namespacePrefix: ""
 
 # the following values are defaults which may be overridden
 
+# rootlessBuildPods tells the build-deploy controller to create build pods
+# which do not run as root. See https://github.com/amazeeio/lagoon/pull/2481
+# for details.
+rootlessBuildPods: false
+
 # If the controller is running in an openshift,
 # then the argument `--is-openshift=true` should be added
 extraArgs:
