@@ -13,12 +13,12 @@ IMAGE_REGISTRY = uselagoon
 OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
 # Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
 # the lagoon-build-deploy chart appVersion.
-OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
+OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG = rootless
 # Overrides the image repository for amazeeio/lagoon-builddeploy whose default
 # is the amazeeio/lagoon-builddeploy.
-OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY =
+OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY = smlx/lagoon-builddeploy
 # If set, sets the lagoon-build-deploy chart .Value.rootless=true.
-BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS =
+BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS = true
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
