@@ -84,7 +84,7 @@ jobs:
     - name: Create kind cluster
       uses: helm/kind-action@v1.1.0
       if: |
-        (steps.list-changed.outputs.changed == 'true') || 
+        (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
 
     - name: Run chart-testing (install)
