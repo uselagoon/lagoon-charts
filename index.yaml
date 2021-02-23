@@ -4,7 +4,8 @@ entries:
   - apiVersion: v2
     appVersion: v0.1.7
     created: "2021-02-18T06:41:30.466122572Z"
-    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers (https://github.com/amazeeio/lagoon-kbd).
+    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
+      (https://github.com/amazeeio/lagoon-kbd).
     digest: 3fddc60a7cf5c86032af634db5ef5285f757a1f886531ffc17a10cd824fa2119
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -23,7 +24,8 @@ entries:
   - apiVersion: v2
     appVersion: v0.1.7
     created: "2021-02-11T06:18:17.784079202Z"
-    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers (https://github.com/amazeeio/lagoon-kbd).
+    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
+      (https://github.com/amazeeio/lagoon-kbd).
     digest: acd652cfd9f1bc66790ed209cf625a7ceac17a7d773a5cbb791f01651c958cd6
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -42,7 +44,8 @@ entries:
   - apiVersion: v2
     appVersion: v0.1.6
     created: "2020-12-29T16:15:28.458303991Z"
-    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers (https://github.com/amazeeio/lagoon-kbd).
+    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
+      (https://github.com/amazeeio/lagoon-kbd).
     digest: 1991c6d9031a9c0d051d298daccc7403ea8d9d3f32510fd0aa973eb9c0cefd6b
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -61,7 +64,8 @@ entries:
   - apiVersion: v2
     appVersion: v0.1.6
     created: "2020-12-28T20:15:34.269758443Z"
-    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers (https://github.com/amazeeio/lagoon-kbd).
+    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
+      (https://github.com/amazeeio/lagoon-kbd).
     digest: d176077ca673c02dfa34e4b5976275e890e752f370e35603c3b0680fb9e4a7db
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -80,7 +84,8 @@ entries:
   - apiVersion: v2
     appVersion: v0.1.5
     created: "2020-12-28T12:50:20.45673139Z"
-    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers (https://github.com/amazeeio/lagoon-kbd).
+    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
+      (https://github.com/amazeeio/lagoon-kbd).
     digest: 27729f332acceb89f881fdd534c62c9da21f295f075f4a49cd2e94ef5669958a
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -99,7 +104,8 @@ entries:
   - apiVersion: v2
     appVersion: v0.1.5
     created: "2020-12-23T02:18:39.180320851Z"
-    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers (https://github.com/amazeeio/lagoon-kbd).
+    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
+      (https://github.com/amazeeio/lagoon-kbd).
     digest: 805fb098f6aca42208bc41049815b7f402661e12419b8996c5c3ea77bd06bd81
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -118,7 +124,8 @@ entries:
   - apiVersion: v2
     appVersion: v0.1.4
     created: "2020-12-22T06:19:31.713540479Z"
-    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers (https://github.com/amazeeio/lagoon-kbd).
+    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
+      (https://github.com/amazeeio/lagoon-kbd).
     digest: 0cef8ae3dfc89bcafa4c9c249453edf9c85eba721adcc7f848db01dce903ebbe
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -137,7 +144,8 @@ entries:
   - apiVersion: v2
     appVersion: v0.1.4
     created: "2020-12-21T13:45:58.34836486Z"
-    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers (https://github.com/amazeeio/lagoon-kbd).
+    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
+      (https://github.com/amazeeio/lagoon-kbd).
     digest: 3e9d3a48618784fc017a71e842be2112940dd90eb0c46266c6de80a7d909aead
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -156,9 +164,24 @@ entries:
   lagoon-core:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.6
+    created: "2021-02-23T08:48:32.655508576Z"
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 03fc53954c206e02f01916da047e1a35f2e5a85ad6249bdc05950ad19e705063
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-0.38.0/lagoon-core-0.38.0.tgz
+    version: 0.38.0
+  - apiVersion: v2
+    appVersion: v2.0.0-alpha.6
     created: "2021-02-15T02:58:59.164077758Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 56259dae71e7330a0cec1df078fb4dabfe728b765463251d196c5218788693f2
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -174,8 +197,7 @@ entries:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.5
     created: "2021-01-08T13:43:07.554472834Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 38d03447f90742f76984290ec330de8c17e7e5c2814054490f988ea7ba1190d4
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -191,8 +213,7 @@ entries:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.4
     created: "2020-12-29T12:21:30.865571752Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 3fc5b21fe6c9c753139ffb20d63dc53f8eba18fda04fe00e441fd03fd86c1739
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -208,8 +229,7 @@ entries:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.3
     created: "2020-12-28T12:50:20.576088575Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 981ca1edfadc188c13621f7a987062247820ff47dbe77a3825e3258931a9088f
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -225,8 +245,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-12-04T14:52:14.444284911Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 0a166698da2f736abda7efd94c2561aa1a6e779f64a28e988c04efa877d1347d
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -242,8 +261,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-11-30T13:24:41.640512756Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 857a1aaed3062ffbbd827abcb03034560ec9e28ed6dada305532c984a78a614d
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -259,8 +277,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-11-24T05:24:47.867013353Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 901a813dc5fadc42a980baf6ea65a0b59fa7c343a53a2c7c24a55ef057eb64d9
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -276,8 +293,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-11-24T02:32:11.288895685Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: bcff1944b426e35e82018157ab4e723fef85fe9883c59368585a06da08f71575
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -293,8 +309,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-11-24T01:47:31.822646131Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 6e707cc16b3aada6f2d93276037229139c6a440fa8efac938425783baba7ce44
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -310,8 +325,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-10-27T02:54:37.273213798Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: faa7a3f4a8ecabcf863f348051e255ab523152f46b95757820c0f3d1cfcae436
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -327,8 +341,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-10-26T13:39:07.690099652Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: afb7cecec1e820f93ffd52b01811477ba3d51d786a0cf608cb6614edd0e4b276
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -344,8 +357,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-10-23T00:57:38.944378843Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: eb474e5efc60e9390589885c834850ff188d48df2ef03915fd92d4e605cb8e64
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -361,8 +373,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-10-22T06:20:11.806724872Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 33c4283ace5a0d36ccba8767488f7dba4691c3568f455a49a25c5fdde0b13ba4
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -378,8 +389,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-10-19T14:38:53.868208968Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 20039f4992c2153f3280e6db675777db4e0c48f34e3bc89a331d1765703c62ed
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -395,8 +405,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-10-02T08:01:39.329103911Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: e12242fa1abe98e9433a3846ee21939256af3652bb8de4e924e60ed6c57e00e6
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -412,8 +421,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-10-02T02:32:24.139398566Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: bc326f6712d1d591100a5d7f085017019418e1e2b5a040426b590eb4637af349
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -429,8 +437,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-09-29T08:06:38.766776698Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: ab8b8c0b0a2826a5305eeb172dcc1d01e107574ae8cacc0530c751edac406865
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -446,8 +453,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-09-25T21:45:28.627636221Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 11f8fb2e3a6fed3f2a8b9c33deb69cb824ed6d212e2ccaacb98af62e0ca18612
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -463,8 +469,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-09-25T20:26:36.708769552Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 524d30c9de446f90661242fd3286a206538ebeb4c20c9127af46520fc617e014
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -480,8 +485,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-09-25T20:24:04.66973146Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: fe41db94a0f16eccdd74b3aadd9c93f0c939dd3272acb90e1f1851246400cc27
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -497,8 +501,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-09-25T19:50:24.671383092Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 64ebfc282c0b6c5e987c9b78c61f907fb9e6fbfda0567ce23bf0fab49a390e1f
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -514,8 +517,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-09-23T15:08:55.968975005Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: da780193e36a8eaa16bc2405a3cf280848a3febc4afba424cbb60d44e4bda379
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -531,8 +533,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-09-18T08:44:34.38748027Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: be360024724380a9110f71cec61f8e759ede975f8381c82a7498e683618d5200
     home: https://github.com/uselagoon/lagoon-charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -548,8 +549,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-0
     created: "2020-09-14T14:15:33.867115851Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 0cd21ee0d9db9ad39cf93fce7458087c7a31932c873b19cc7fd0fa794bb8de40
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -570,8 +570,7 @@ entries:
       name: harbor
       repository: https://helm.goharbor.io
       version: ~1.4.2
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: edcd80daed0814d55d5bf8a722015074b822817f51b9f410c3c8c0451bb0bade
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -592,8 +591,7 @@ entries:
       name: harbor
       repository: https://helm.goharbor.io
       version: ~1.4.2
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 30ac060586c03a2ac8b2bc3b7bb9b6ef3349dd7f590a1b766def3756932f5dfe
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -614,8 +612,7 @@ entries:
       name: harbor
       repository: https://helm.goharbor.io
       version: ~1.4.2
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: a9786d6fe9eedd6edb490eb4e872f711f09bf60dc036203cb314b11beafe5859
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -636,8 +633,7 @@ entries:
       name: harbor
       repository: https://helm.goharbor.io
       version: ~1.4.2
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 258df231a1cb937078b7ea636f45b4ea8d35df7ced088496a4b102d0c790fbf1
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -658,8 +654,7 @@ entries:
       name: harbor
       repository: https://helm.goharbor.io
       version: ~1.4.2
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 7c7c071e5701440a380d33144247e72b1b6957a7002ca8ce45899cd40bec75cf
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -675,8 +670,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-09-09T06:41:55.65799052Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 6ff2c049d829c08e8a7e8318feae0a69eaa0e66870ac0e7cc8b227dd477b80e9
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -692,8 +686,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-09-08T07:34:34.631857252Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 9b9c263ffdcec53ef5911072f559e6cb210dd54869c81a1e60c1f2cbe82c4eaf
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -709,8 +702,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-09-08T07:15:35.671649068Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: db758090c2031ee402bfba88a53fb5d55c2fcf81e562c3d97bc5b286a31df415
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -726,8 +718,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-09-08T03:30:21.821887328Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 57aecb480e9599fc689e668504480c5a2d629b3f7b33bdbf0b144bba0c4f8a25
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -743,8 +734,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-09-08T02:44:42.939837876Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 990eb280a0b114126338b64d425d09328219b31832fbc6f3893c6b8276f62ddf
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -760,8 +750,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-09-08T01:40:16.188027398Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 763521884fd56918d06e2331e77df7c21e5dd5af7cf8e5c24394ce4fd555d67f
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -777,8 +766,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-09-07T14:36:05.54481754Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 4e960b65cdfc182d2ce30f5a5c2903b0094228700f98ef5ad79ef643013782c2
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -794,8 +782,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-08-28T03:03:42.953594368Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 5b46d8b840bfeec05493e701ec5bd9c4a1c9303a71daa6be5368fee60ed2947a
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -811,8 +798,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-08-27T03:39:47.092523067Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 5d6562e61214ce68c71055f82a60f7cc889a1aa7f6cb696aab8e53b5bbe2b295
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -828,8 +814,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-08-27T02:13:03.153258706Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 85fe66904bf2be79d181bf26a82bb8317e23be5fa0b31223a5559d5547421bfd
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -845,8 +830,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-08-26T08:16:06.769420357Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 40dd7f5dde412fd733fe03527b64589c870097cbb5997a3a56f1b4d67cf55d85
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -868,8 +852,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: ffcb350f4946595cafb48f17c12e0ce0b0336c8a99df5af794de12398f9be30b
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -891,8 +874,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 394aa70f8b2434f03e262b3d42a2411f1621580b8e5536adf4897cc59ccbccdd
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -914,8 +896,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: f327b3934929d81162078d0416f8c2f66bbcd2f3566cb50a13fb0de40efac327
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -937,8 +918,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 6e3275eaf0af3b02b75c4da49366f7d6fb1133659e42fd36f1e1d37f49d6b6f2
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -960,8 +940,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 07fbff2be727e72c2dde89ed45390dbd5ad61062f88f22ad7eba54ff9650a975
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -983,8 +962,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 5914a39962acf86df71a94324ce52ac6c2f14f47f5ff23029ae461ae6b3b3124
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1006,8 +984,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 8ce81cc4df8a9ac4e7b2a93086ffe445b24bf116817838355a7cce4c25e1ecdf
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1029,8 +1006,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: e011a77f98918ad04dbf1c7f9caa802e9a391cbf0b764e0dfbd0a8542bbd538e
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1052,8 +1028,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: df80d61389b844a3d3b13994200d837496f85727e44604786564c94fa0929c59
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1075,8 +1050,7 @@ entries:
       name: lagoon-ssh
       repository: https://amazeeio.github.io/charts/
       version: ~0.2.0
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 4a14da89523eb8ebc26507cda1241e725f6094602d2d953c4688e7c5641a6048
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1092,8 +1066,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-08-19T06:56:07.153363799Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 700da3dc2ac5b586906b07adec42153a8623da23f3fbfa59e517df9a491a95e1
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1109,8 +1082,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-08-17T11:22:23.530979822Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 52f46601f13927ec64ef1598b7eb4cf2edf6bc467b0d2546c3c0026153ebf5a8
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1126,8 +1098,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-08-06T07:10:19.999469644Z"
-    description: |
-      A Helm chart for Kubernetes which deploys Lagoon's core components.
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 6d1aa82082e11c62e347a08e3e58adbb693dcf708d545b4a2b2a0365ae8b30b7
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1148,7 +1119,8 @@ entries:
     - name: gatekeeper
       repository: https://open-policy-agent.github.io/gatekeeper/charts
       version: ~3.3.0
-    description: A Helm chart for Kubernetes that installs the gatekeeper admission controller and policy for Lagoon.
+    description: A Helm chart for Kubernetes that installs the gatekeeper admission
+      controller and policy for Lagoon.
     digest: 03c6ec6364311893c99bbab2c86b9543abde9121683acd4cd084e34eeeae05fd
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1168,7 +1140,8 @@ entries:
     - name: gatekeeper
       repository: https://open-policy-agent.github.io/gatekeeper/charts
       version: ~3.3.0
-    description: A Helm chart for Kubernetes that installs the gatekeeper admission controller and policy for Lagoon.
+    description: A Helm chart for Kubernetes that installs the gatekeeper admission
+      controller and policy for Lagoon.
     digest: bd9780460895af8615405cc61fef06334ace718dce1b7ddd8ed77791b92b56c3
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1188,7 +1161,8 @@ entries:
     - name: gatekeeper
       repository: https://open-policy-agent.github.io/gatekeeper/charts
       version: ~3.2.2
-    description: A Helm chart for Kubernetes that installs the gatekeeper admission controller and policy for Lagoon.
+    description: A Helm chart for Kubernetes that installs the gatekeeper admission
+      controller and policy for Lagoon.
     digest: faf4cc42789c524ed35f95a3b71fc31f88469d9a57b7d886280461e13681faa7
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1208,7 +1182,8 @@ entries:
     - name: gatekeeper
       repository: https://open-policy-agent.github.io/gatekeeper/charts
       version: ~3.2.2
-    description: A Helm chart for Kubernetes that installs the gatekeeper admission controller and policy for Lagoon.
+    description: A Helm chart for Kubernetes that installs the gatekeeper admission
+      controller and policy for Lagoon.
     digest: d6aaa466c985735221778ad69c811644f35344896b99b2df2dd173e3ee0976af
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1229,8 +1204,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.9.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 4719c98df4daa98274f3adfcafdd80801aee2176cc2f85d1ae72b6d2bd436aff
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1250,8 +1225,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.9.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: bfb826729669edc577b2a4c96502d2e0208b344d5c8cb2141202cd56a8390dff
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1271,8 +1246,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.9.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 48c46bf624466d60706e2992223fc8c3f2555858f9eaa7607793bcc6a76ac681
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1292,8 +1267,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.9.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 5e180313414eb77ce9d499be74f4724f6e070fbe793cc8d6d2aa2b1cbdfabfa7
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1313,8 +1288,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: bcdf49f9a23fc0986f7c7836b2cdfc1861c3ca5d6649670597caf89eac6ae389
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1334,8 +1309,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 1715f0491432dcac413bb0e02a4f8230e924d71dee9f3f3eedb5c3e746386733
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1355,8 +1330,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 8d6cfcc6c7b6e9259152b0f30d533b7d72cfc9c9a9fb9a1e69c62c1ffe77cd2e
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1376,8 +1351,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: d2fa621c8e6b98bb6d8b80219e486613388defbd395dc482704d24d663b87271
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1397,8 +1372,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 08d3ec98c62e13a0b184b00a02a2405b8356e7691c888c723d3e46cfd8136982
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1418,8 +1393,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 044cbeaaaa0e09f51ab1fbb110260454c2edae5427d1f6823d4bd3a16261f094
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1439,8 +1414,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 33ff4a03124cd42c8a7b62572742de5988938c20a05d2d8f7edbf272dd8a38b0
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1460,8 +1435,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 291756972c0d69e5359ef77bb00f5bd5b508583f7a46fb3b14a8b83c2111bd8f
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1481,8 +1456,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: d34581e5c8444026be89fc46c8c57d502ebcea2905bf398677430d2f0434fdeb
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1502,8 +1477,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: c104b7fb4aba33e5f76286cb843ae429ee7a494cb56abe67f1ba22554e013cc6
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1523,8 +1498,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 61a0cdc7166402892fae55cfe3df9ea3e4fdf432dcbedae0cbc90773ffed7f7e
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1544,8 +1519,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 9bdf6d956a22989912c7ec4314bac0ce0adbb30569a591f76d1c76c0a4c6f766
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1565,8 +1540,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 4aa218ce87a31c2aef21fedd0b3b67338dc68071990cb9e70a6d770380d47376
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1586,8 +1561,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 1e96a54c4b6a2d09e2f169046abf1a47eafdcb4321e587bcb93e20b282c60d7d
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1607,8 +1582,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 334a69ee826e24ca388952c8e3b2cc803be5487e944d5bda55a1c7bb8b681c14
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1628,8 +1603,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 36f4beb0388e0f416141d81868b6aa02f714042748a186b0382b793d86f834d9
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1649,8 +1624,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.7.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: c314cb7e56a5fd371b200fce2f1d162d8156cc9b396a1c1fb48e52df003e9d66
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1670,8 +1645,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.6.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 490b6c7f466ea2529754972ef821f8eb0ef04cb5e2d26d3f2b4aeb4207baa483
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1691,8 +1666,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: d9ab5c3b8a392cb1d10e26a86b4fd39903d5ad04839d76eda3f82457b7c5f7a0
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1712,8 +1687,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 30d2cf87f61b37ac1da0e3697a28bb0428e319b38e730ae515745eb0ebf35711
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1733,8 +1708,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 1c6cedbf776e91592728a83a01cad8e94c28159cb1c081f40b8c2c0c9428d720
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1754,8 +1729,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: f48a5f07d01c64aedcc10beee30962d9b7c14c231586fc3b85a7c3c5f7b3333f
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1775,8 +1750,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 3f4faf5a0cbe710d61d565314c724d9cafb719a6152f0068e4767fcbf7ecce53
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1796,8 +1771,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 1139812d92e5c38427d9173a92945f9229c7fddaae0e93cf38e5954653f92c3a
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -1817,8 +1792,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: a74a6fd5f62d8033d78e40c974b9df0e51214f039a599a6a8b0b921a513f13bd
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/lagoon/bea89afee1ae4c9f0bd8df50824ed10cd3ea4776/services/ui/src/static/images/favicons/favicon-32x32.png
@@ -1838,8 +1813,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 158154ff0609d1b7950709a16e6e6ce0c83613ae35fa001716c585d1483c6af3
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/lagoon/bea89afee1ae4c9f0bd8df50824ed10cd3ea4776/services/ui/src/static/images/favicons/favicon-32x32.png
@@ -1859,8 +1834,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 3d6b2a78ef92534c17eed4124d0f1d73aa117f84c1b49bc043ee62bc40ff2ca4
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/lagoon/bea89afee1ae4c9f0bd8df50824ed10cd3ea4776/services/ui/src/static/images/favicons/favicon-32x32.png
@@ -1880,8 +1855,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 7786c09dcf144f32436c3ecd5cf468ecfda1ef8771e2d7c480af0f0ad027011d
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/lagoon/bea89afee1ae4c9f0bd8df50824ed10cd3ea4776/services/ui/src/static/images/favicons/favicon-32x32.png
@@ -1901,8 +1876,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
     digest: 8b938c35babcdef26449cda503fbc0e2d0fd8be39f3ddcb0d4fe11d9f9c8b189
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/lagoon/bea89afee1ae4c9f0bd8df50824ed10cd3ea4776/services/ui/src/static/images/favicons/favicon-32x32.png
@@ -1922,8 +1897,8 @@ entries:
     - name: logging-operator
       repository: https://kubernetes-charts.banzaicloud.com
       version: ~3.4.0
-    description: |
-      A Helm chart for Kubernetes which installs the lagoon container and router logs collection system.
+    description: 'A Helm chart for Kubernetes which installs the lagoon container
+      and router logs collection system. '
     digest: 26bd94a7232eafc17ff28c6a113d75fa55e894fdb212f72e3305a6db620c601e
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/lagoon/bea89afee1ae4c9f0bd8df50824ed10cd3ea4776/services/ui/src/static/images/favicons/favicon-32x32.png
@@ -1940,8 +1915,8 @@ entries:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.6
     created: "2021-02-15T02:58:59.374914752Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: fcf75fcb78d7a2f358dd6daf64d304163f562317aa8892e71a09446df1ab2283
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1957,8 +1932,8 @@ entries:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.5
     created: "2021-01-25T12:16:32.198101709Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: 853520e6890aad9c4f7986b1c9c519760e8111102820028b363870b07d4b1ced
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1974,8 +1949,8 @@ entries:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.5
     created: "2021-01-08T13:43:07.785010463Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: d3af781189ef30997bd77544731a0449b827093a105cf562bd9ca495129fe697
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -1991,8 +1966,8 @@ entries:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.4
     created: "2020-12-29T12:21:31.060046016Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: dec8189aff838ddbd5f18fa5031d971ab9aa2b7e4b85af9ea69c2ba84f4e3f64
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2008,8 +1983,8 @@ entries:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.3
     created: "2020-12-28T12:50:20.884192612Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: 9185eb7319b585857b1e27911b78704ba797514dca04a31606de22a00f99dded
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2025,8 +2000,8 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-11-24T02:32:11.599044612Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: f04ba094c759d5bd53780869d738cc1f035a8ddf23c3b75a6292269787159d00
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2042,8 +2017,8 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-11-24T01:47:32.065147967Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: 62eb37d7f5513936fa47cb7625061a01f9701d5547ddc08718595f1f2c0bfbf5
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2059,8 +2034,8 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-11-12T19:54:40.203374149Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: 021ce403f096695d216ec7d75368b22c1551a3067925d72d04cef819459075d9
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2076,8 +2051,8 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-10-27T19:02:42.896629902Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: 06269ffe962425e51566e7419519fce65dc901c780154a259b24d0ebc54fddb5
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2093,8 +2068,8 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-10-26T13:39:08.252994265Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: 782c970225c4e0e38ed7ed347b26dbee9b8a5be8b78a3eeddcbc346824d7c43a
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2110,8 +2085,8 @@ entries:
   - apiVersion: v2
     appVersion: v1-9-1
     created: "2020-10-22T05:52:59.491721918Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: 52e06791d3c8f9f48984a739af3506015fda0f11275075b1fd5b0d4fbe5e07a1
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2127,8 +2102,8 @@ entries:
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2020-10-20T01:29:22.556312267Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: 4c60739de7e51c4358c980725a5d42a45a2dfdd9a93efa83167db9ef234bc58f
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2144,8 +2119,8 @@ entries:
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2020-09-08T02:44:43.233656618Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: ddc3e997f834615352f680ae04c4ef92c4ebae5b5d6edaad329755ecf39cc13f
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2161,8 +2136,8 @@ entries:
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2020-07-31T02:43:57.274267512Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: 656cfd8aa1a70ddd9bfb3920a8dd0cdbbf5c88b6012fd571bf382322e5491f57
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -2178,8 +2153,8 @@ entries:
   - apiVersion: v2
     appVersion: 1.16.0
     created: "2020-07-22T08:24:12.983795274Z"
-    description: |
-      A Helm chart for Kubernetes which installs the Lagoon logs-concentrator service.
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
     digest: d00c35a86fc0fae9d159fd048b4e21988e3d9f3b03a0f44fb5f615dda711c4b4
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/lagoon/bea89afee1ae4c9f0bd8df50824ed10cd3ea4776/services/ui/src/static/images/favicons/favicon-32x32.png
@@ -2893,8 +2868,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-09-08T02:44:43.474127795Z"
-    description: |
-      A Helm chart for Kubernetes which installs the lagoon ssh service.
+    description: 'A Helm chart for Kubernetes which installs the lagoon ssh service. '
     digest: dffccdc51ec4d3e60676fb9e90ad08262e16cad4c36a3e2998de78d159ffaf0e
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
@@ -2913,8 +2887,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-08-20T05:48:36.372217387Z"
-    description: |
-      A Helm chart for Kubernetes which installs the lagoon ssh service.
+    description: 'A Helm chart for Kubernetes which installs the lagoon ssh service. '
     digest: d8c3e2ded20fd22ade359b479d8d5a96617fa8d9d60aebee901d1edf41350aed
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -2933,8 +2906,7 @@ entries:
   - apiVersion: v2
     appVersion: v1-8-2
     created: "2020-08-19T07:52:25.177816795Z"
-    description: |
-      A Helm chart for Kubernetes which installs the lagoon ssh service.
+    description: 'A Helm chart for Kubernetes which installs the lagoon ssh service. '
     digest: 2fe6d2aac5c9a4452e76b05886de486cc5ac29046f9fd582633b7beedbb0c772
     home: https://github.com/amazeeio/charts
     icon: https://raw.githubusercontent.com/amazeeio/charts/master/amazeeio_icon.png
@@ -3239,4 +3211,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2020-07-16T08:28:34.288224716Z"
+generated: "2021-02-23T08:48:32.656486378Z"
