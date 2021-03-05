@@ -79,8 +79,8 @@ lagoons:
 6. Check you can log in:
 ```
 $ lagoon whoami
-ID                                  	EMAIL	FIRSTNAME	LASTNAME	SSHKEYS 
-f57455c1-0d6b-491a-9117-89a9763dc940	-    	-        	-       	1	
+ID                                  	EMAIL	FIRSTNAME	LASTNAME	SSHKEYS
+f57455c1-0d6b-491a-9117-89a9763dc940	-    	-        	-       	1
 ```
 
 At this point `lagoon-core` is installed.
