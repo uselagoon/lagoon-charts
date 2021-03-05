@@ -676,3 +676,9 @@ controllerhandler:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+# The following configuration options are only used in Lagoon local development.
+# These are insecure, DO NOT set these options in production.
+#
+# insecureHostMount:
+#   apiSrc: true

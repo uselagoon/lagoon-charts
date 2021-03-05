@@ -149,6 +149,11 @@ spec:
           periodSeconds: 10
         resources:
           {{- toYaml .Values.api.resources | nindent 10 }}
+      {{- if .Values.insecureHostMount.apiSrc }}
+        volumeMounts:
+        - name: api-src
+          mountPath: /app/services/api/src
+      {{- end }}
       {{- with .Values.api.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -179,4 +184,11 @@ spec:
       {{- with .Values.api.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.insecureHostMount.apiSrc }}
+      volumes:
+      - name: api-src
+        hostPath:
+          path: /lagoon/services/api/src
+          type: Directory
       {{- end }}
