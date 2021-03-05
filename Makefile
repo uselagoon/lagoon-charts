@@ -19,6 +19,9 @@ OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
 OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY =
 # If set, sets the lagoon-build-deploy chart .Value.rootless=true.
 BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS =
+# If set mounts local host directories into the running pods inside the kind
+# cluster. This facilitates local development by e.g. hot-reloading files.
+INSECURE_HOST_MOUNT_API_SRC =
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
@@ -140,6 +143,7 @@ install-lagoon-core:
 		--values ./charts/lagoon-core/ci/linter-values.yaml \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overwriteKubectlBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(INSECURE_HOST_MOUNT_API_SRC) = true ] && echo '--set insecureHostMount.apiSrc=true') \
 		--set "harborAdminPassword=Harbor12345" \
 		--set "harborURL=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set "keycloakAPIURL=http://localhost:8080/auth" \
