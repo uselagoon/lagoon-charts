@@ -79,8 +79,8 @@ lagoons:
 6. Check you can log in:
 ```
 $ lagoon whoami
-ID                                  	EMAIL	FIRSTNAME	LASTNAME	SSHKEYS 
-f57455c1-0d6b-491a-9117-89a9763dc940	-    	-        	-       	1	
+ID                                  	EMAIL	FIRSTNAME	LASTNAME	SSHKEYS
+f57455c1-0d6b-491a-9117-89a9763dc940	-    	-        	-       	1
 ```
 
 At this point `lagoon-core` is installed.
@@ -155,3 +155,15 @@ ssh:
 
 * The `broker` has a serviceaccount bound to a role to allow service discovery for HA clustering.
 * The `ssh-portal` (disabled by default, eventually will be moved to `lagoon-remote`, see [amazeeio/lagoon#2179](https://github.com/amazeeio/lagoon/pull/2179)) has a serviceaccount bound to a clusterrole to allow exec into pods.
+
+
+## Lagoon Files
+
+Lagoon needs to upload files in some specific cases (like when a developer requests an dump of a database, the dump will be store in the Lagoon Files system).
+Lagoon uses S3 compatible storage for it, it can be configured via these helm values:
+
+
+- `s3FilesHost` - S3 Host name, like `https://s3.amazonaws.com` or `https://storage.googleapis.com`
+- `s3FilesBucket` - Name of the S3 Bucket
+- `s3FilesAccessKeyID` - AccessKey for the S3 Bucket
+- `s3FilesSecretAccessKey` - AccessKey Secret for the S3 Bucket

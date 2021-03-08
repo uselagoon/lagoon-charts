@@ -12,7 +12,7 @@
 # s3FilesAccessKeyID:
 # s3FilesBucket:
 # s3FilesHost:
-# s3SecretAccessKey:
+# s3FilesSecretAccessKey:
 
 # These values are optional.
 
