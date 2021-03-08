@@ -95,6 +95,8 @@ jobs:
         helm repo add stable https://charts.helm.sh/stable
         helm repo add bitnami https://charts.bitnami.com/bitnami
         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+        helm repo add amazeeio https://amazeeio.github.io/charts/
+        helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
 
     - name: Install gojq
       if: |

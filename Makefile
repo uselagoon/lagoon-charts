@@ -172,7 +172,7 @@ install-lagoon-core:
 
 .PHONY: install-lagoon-remote
 install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb
-	$(HELM) dependency update ./charts/lagoon-remote/
+	$(HELM) dependency build ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
