@@ -58,6 +58,11 @@ spec:
             port: http-3000
         resources:
           {{- toYaml .Values.authServer.resources | nindent 10 }}
+      {{- if .Values.insecureHostMount.services }}
+        volumeMounts:
+        - name: auth-server-src
+          mountPath: /app/services/auth-server/src
+      {{- end }}
       {{- with .Values.authServer.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -88,4 +93,11 @@ spec:
       {{- with .Values.authServer.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.insecureHostMount.services }}
+      volumes:
+      - name: auth-server-src
+        hostPath:
+          path: /lagoon/services/auth-server/src
+          type: Directory
       {{- end }}

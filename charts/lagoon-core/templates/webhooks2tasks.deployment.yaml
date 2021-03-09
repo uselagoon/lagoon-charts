@@ -83,6 +83,13 @@ spec:
           value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
         resources:
           {{- toYaml .Values.webhooks2tasks.resources | nindent 10 }}
+      {{- if .Values.insecureHostMount.services }}
+        volumeMounts:
+        - name: webhooks2tasks-src
+          mountPath: /app/services/webhooks2tasks/src
+        - name: node-packages
+          mountPath: /app/node-packages
+      {{- end }}
       {{- with .Values.webhooks2tasks.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -94,5 +101,16 @@ spec:
       {{- with .Values.webhooks2tasks.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.insecureHostMount.services }}
+      volumes:
+      - name: webhooks2tasks-src
+        hostPath:
+          path: /lagoon/services/webhooks2tasks/src
+          type: Directory
+      - name: node-packages
+        hostPath:
+          path: /lagoon/node-packages
+          type: Directory
       {{- end }}
 {{- end }}

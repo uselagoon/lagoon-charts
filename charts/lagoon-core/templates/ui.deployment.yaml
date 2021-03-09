@@ -65,6 +65,17 @@ spec:
             port: http-3000
         resources:
           {{- toYaml .Values.ui.resources | nindent 10 }}
+      {{- if .Values.insecureHostMount.services }}
+        volumeMounts:
+        - name: ui-src
+          mountPath: /app/services/ui/src
+        - name: ui-env-defaults
+          mountPath: /app/services/ui/.env.defaults
+        - name: ui-env-schema
+          mountPath: /app/services/ui/.env.schema
+        - name: ui-package-json
+          mountPath: /app/services/ui/package.json
+      {{- end }}
       {{- with .Values.ui.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -76,5 +87,24 @@ spec:
       {{- with .Values.ui.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.insecureHostMount.services }}
+      volumes:
+      - name: ui-src
+        hostPath:
+          path: /lagoon/services/ui/src
+          type: Directory
+      - name: ui-env-defaults
+        hostPath:
+          path: /lagoon/services/ui/.env.defaults
+          type: File
+      - name: ui-env-schema
+        hostPath:
+          path: /lagoon/services/ui/.env.schema
+          type: File
+      - name: ui-package-json
+        hostPath:
+          path: /lagoon/services/ui/package.json
+          type: File
       {{- end }}
 {{- end }}

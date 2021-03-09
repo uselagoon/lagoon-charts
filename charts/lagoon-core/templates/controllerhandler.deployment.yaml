@@ -61,6 +61,13 @@ spec:
           value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
         resources:
           {{- toYaml .Values.controllerhandler.resources | nindent 10 }}
+      {{- if .Values.insecureHostMount.services }}
+        volumeMounts:
+        - name: controllerhandler-src
+          mountPath: /app/services/controllerhandler/src
+        - name: node-packages
+          mountPath: /app/node-packages
+      {{- end }}
       {{- with .Values.controllerhandler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -72,5 +79,16 @@ spec:
       {{- with .Values.controllerhandler.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.insecureHostMount.services }}
+      volumes:
+      - name: controllerhandler-src
+        hostPath:
+          path: /lagoon/services/controllerhandler/src
+          type: Directory
+      - name: node-packages
+        hostPath:
+          path: /lagoon/node-packages
+          type: Directory
       {{- end }}
 {{- end }}

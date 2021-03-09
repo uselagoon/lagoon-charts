@@ -58,6 +58,13 @@ spec:
             port: http-3000
         resources:
           {{- toYaml .Values.webhookHandler.resources | nindent 10 }}
+      {{- if .Values.insecureHostMount.services }}
+        volumeMounts:
+        - name: webhook-handler-src
+          mountPath: /app/services/webhook-handler/src
+        - name: node-packages
+          mountPath: /app/node-packages
+      {{- end }}
       {{- with .Values.webhookHandler.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -69,5 +76,16 @@ spec:
       {{- with .Values.webhookHandler.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.insecureHostMount.services }}
+      volumes:
+      - name: webhook-handler-src
+        hostPath:
+          path: /lagoon/services/webhook-handler/src
+          type: Directory
+      - name: node-packages
+        hostPath:
+          path: /lagoon/node-packages
+          type: Directory
       {{- end }}
 {{- end }}

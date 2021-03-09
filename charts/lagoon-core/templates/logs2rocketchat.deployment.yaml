@@ -57,6 +57,13 @@ spec:
               key: RABBITMQ_PASSWORD
         resources:
           {{- toYaml .Values.logs2rocketchat.resources | nindent 10 }}
+      {{- if .Values.insecureHostMount.services }}
+        volumeMounts:
+        - name: logs2rocketchat-src
+          mountPath: /app/services/logs2rocketchat/src
+        - name: node-packages
+          mountPath: /app/node-packages
+      {{- end }}
       {{- with .Values.logs2rocketchat.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -87,5 +94,16 @@ spec:
       {{- with .Values.logs2rocketchat.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.insecureHostMount.services }}
+      volumes:
+      - name: logs2rocketchat-src
+        hostPath:
+          path: /lagoon/services/logs2rocketchat/src
+          type: Directory
+      - name: node-packages
+        hostPath:
+          path: /lagoon/node-packages
+          type: Directory
       {{- end }}
 {{- end }}

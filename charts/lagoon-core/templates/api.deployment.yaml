@@ -149,10 +149,12 @@ spec:
           periodSeconds: 10
         resources:
           {{- toYaml .Values.api.resources | nindent 10 }}
-      {{- if .Values.insecureHostMount.apiSrc }}
+      {{- if .Values.insecureHostMount.services }}
         volumeMounts:
         - name: api-src
           mountPath: /app/services/api/src
+        - name: node-packages
+          mountPath: /app/node-packages
       {{- end }}
       {{- with .Values.api.nodeSelector }}
       nodeSelector:
@@ -185,10 +187,14 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.insecureHostMount.apiSrc }}
+      {{- if .Values.insecureHostMount.services }}
       volumes:
       - name: api-src
         hostPath:
           path: /lagoon/services/api/src
+          type: Directory
+      - name: node-packages
+        hostPath:
+          path: /lagoon/node-packages
           type: Directory
       {{- end }}
