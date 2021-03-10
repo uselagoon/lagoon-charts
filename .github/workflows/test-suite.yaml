@@ -54,6 +54,7 @@ jobs:
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       with:
+        version: v0.10.0
         config: test-suite.kind-config.yaml
 
     - name: Install kubectl
