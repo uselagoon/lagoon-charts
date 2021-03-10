@@ -10,14 +10,6 @@ jobs:
       matrix:
         test:
         - features-kubernetes
-        - nginx
-        # - active-standby-kubernetes
-        - drupal-php73
-        - drupal-php74
-        - api
-        - github
-        - gitlab
-        - bitbucket
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -114,15 +106,15 @@ jobs:
     #
     # Continue after getting a shell via: `touch continue`
     #
-    # - name: Install kubens and kubectl alias
-    #   run: |
-    #     cd /tmp
-    #     curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.1/kubens_v0.9.1_linux_x86_64.tar.gz
-    #     tar -xf ./kubens_v0.9.1_linux_x86_64.tar.gz
-    #     sudo cp /tmp/kubens /usr/local/bin/kubens
-    #     sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
-    # - name: Setup tmate session
-    #   uses: mxschmitt/action-tmate@v3
+    - name: Install kubens and kubectl alias
+      run: |
+        cd /tmp
+        curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.1/kubens_v0.9.1_linux_x86_64.tar.gz
+        tar -xf ./kubens_v0.9.1_linux_x86_64.tar.gz
+        sudo cp /tmp/kubens /usr/local/bin/kubens
+        sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: |
