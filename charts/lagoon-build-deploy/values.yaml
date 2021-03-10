@@ -12,6 +12,15 @@ taskAPIHost: ""
 # limited to 8 characters (will be truncated by controller if it exceeds this)
 namespacePrefix: ""
 
+# The following values are optional. They tell the build-deploy controller to
+# set an environment variable on the build pods which enforces the state of the
+# feature flag. Valid values are `enabled` or `disabled`.
+
+# lagoonFeatureFlagForceRootlessWorkload: enabled
+# lagoonFeatureFlagDefaultRootlessWorkload: enabled
+# lagoonFeatureFlagForceIsolationNetworkPolicy: disabled
+# lagoonFeatureFlagDefaultIsolationNetworkPolicy: disabled
+
 # the following values are defaults which may be overridden
 
 # rootlessBuildPods tells the build-deploy controller to create build pods

@@ -52,6 +52,18 @@ spec:
         - "--build-pod-run-as-group=0"
         - "--build-pod-fs-group=10001"
         {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceRootlessWorkload }}
+        - "--lagoon-feature-flag-force-rootless-workload={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultRootlessWorkload }}
+        - "--lagoon-feature-flag-default-rootless-workload={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceIsolationNetworkPolicy }}
+        - "--lagoon-feature-flag-force-isolation-network-policy={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultIsolationNetworkPolicy }}
+        - "--lagoon-feature-flag-default-isolation-network-policy={{ . }}"
+        {{- end }}
         {{- with .Values.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
