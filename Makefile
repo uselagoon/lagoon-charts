@@ -19,6 +19,10 @@ OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
 OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY =
 # If set, sets the lagoon-build-deploy chart .Value.rootless=true.
 BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS =
+# Control the feature flags on the lagoon-build-deploy chart. Valid values: `enabled` or `disabled`.
+LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD =
+LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY =
+
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
@@ -211,6 +215,8 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql in
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set lagoon-build-deploy.image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set lagoon-build-deploy.image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
 		$$([ $(BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set lagoon-build-deploy.rootlessBuildPods=true') \
+		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoon-build-deploy.lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
+		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoon-build-deploy.lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
 		lagoon-remote \
 		./charts/lagoon-remote
 
