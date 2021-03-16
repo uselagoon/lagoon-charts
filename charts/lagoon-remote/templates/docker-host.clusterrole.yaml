@@ -1,0 +1,17 @@
+{{- if and .Values.dockerHost.serviceAccount.create .Values.global.openshift -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "lagoon-remote.dockerHost.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.dockerHost.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - security.openshift.io
+  resourceNames:
+  - privileged
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+{{- end }}
