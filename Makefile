@@ -64,7 +64,7 @@ install-registry: install-ingress install-calico
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
-		--namespace registry \
+		--namespace harbor \
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set expose.tls.enabled=false \
@@ -74,9 +74,9 @@ install-registry: install-ingress install-calico
 		--set chartmuseum.enabled=false \
 		--set clair.enabled=false \
 		--set notary.enabled=false \
-		--set trivy.enabled=false \
+		--set trivy.enabled=true \
 		--version=1.5.2 \
-		registry \
+		harbor \
 		harbor/harbor
 
 .PHONY: install-nfs-server-provisioner
