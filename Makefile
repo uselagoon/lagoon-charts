@@ -147,6 +147,7 @@ install-lagoon-core: install-calico
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overwriteKubectlBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		--set "harborAdminPassword=Harbor12345" \
 		--set "harborURL=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set "lagoonWebhookURL=http://webhook.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set "keycloakAPIURL=http://localhost:8080/auth" \
 		--set "lagoonAPIURL=http://localhost:7070/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32443" \
@@ -171,6 +172,9 @@ install-lagoon-core: install-calico
 		--set storageCalculator.enabled=false \
 		--set ui.enabled=false \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
+		--set webhookHandler.ingress.enabled=true \
+		--set "webhookHandler.ingress.hosts[0].host=webhook.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set "webhookHandler.ingress.hosts[0].paths[0]=/" \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		lagoon-core \
 		./charts/lagoon-core
@@ -245,6 +249,7 @@ install-tests:
 		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& export webhookHandler="lagoon-core-webhook-handler" \
+		&& export lagoonWebhookURL="http://webhook.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		&& export webhookRepoPrefix="ssh://git@lagoon-test-local-git.lagoon.svc.cluster.local:22/git/" \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
