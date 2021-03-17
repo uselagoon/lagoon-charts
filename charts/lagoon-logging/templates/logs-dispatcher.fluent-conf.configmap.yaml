@@ -197,7 +197,8 @@ data:
     #
     # process application logs
     #
-    # restructure so the kubernetes_metadata plugin can find the keys it needs
+    # Restructure so the kubernetes_metadata plugin can find the keys it needs.
+    # Also add some dummy data required by the kubernetes_metadata plugin.
     <filter lagoon.*.application>
       @type record_modifier
       remove_keys _dummy_,type
@@ -222,11 +223,13 @@ data:
         index_name application-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
       </record>
     </filter>
-    # strip the kubernetes data as it's duplicated in container/router logs and
-    # not really relevant for application logs
+    # strip the dummy information so that it doesn't appear in logs
     <filter lagoon.*.application>
       @type record_modifier
-      remove_keys docker,kubernetes
+      remove_keys _dummy_,docker
+      <record>
+        _dummy_ ${record['kubernetes'].delete('pod_name'); record['kubernetes'].delete('container_name'); record['kubernetes'].delete('pod_id'); nil}
+      </record>
     </filter>
 
     #
