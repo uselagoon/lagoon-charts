@@ -31,8 +31,6 @@ rootlessBuildPods: false
 # If the controller is running in an openshift,
 # then the argument `--is-openshift=true` should be added
 extraArgs:
-- "--metrics-addr=127.0.0.1:8080"
-- "--enable-leader-election=true"
 
 pendingMessageCron: "*/5 * * * *"
 
