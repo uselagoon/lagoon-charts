@@ -82,6 +82,10 @@ affinity: {}
 # this is set to false in CI so that the concentrator will start without ES
 # being installed
 verifyESVersionAtStartup: true
+# Verification of the certificate presented by the elasticsearch endpoint can
+# be disabled by setting this option to false, which can be useful for CI and
+# manual testing. Do not disable this in production.
+elasticsearchTLSVerify: true
 
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
