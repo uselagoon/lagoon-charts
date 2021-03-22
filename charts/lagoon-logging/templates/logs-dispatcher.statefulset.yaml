@@ -65,10 +65,14 @@ spec:
           tcpSocket:
             port: 24224
           initialDelaySeconds: 20
+          periodSeconds: 20
+          timeoutSeconds: 2
         livenessProbe:
           tcpSocket:
             port: 24224
           initialDelaySeconds: 120
+          periodSeconds: 60
+          timeoutSeconds: 2
         volumeMounts:
         - mountPath: /fluentd/etc/fluent.conf
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-fluent-conf
