@@ -309,6 +309,7 @@ lagoonLogs:
 
 forward:
   verifyConnectionAtStartup: true
+  tlsVerifyHostname: true
 
 # Some cluster services use ephemeral namespaces that cause many indices to be
 # created in elasticsearch. Setting this to true will cause these service logs
