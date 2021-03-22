@@ -12,16 +12,12 @@ spec:
         fsGroup: 0
     scaling:
       replicas: 3
-    metrics:
-      serviceMonitor: {{ index .Values "logging-operator" "serviceMonitor" }}
-      serviceMonitorConfig: {{- index .Values "logging-operator" "serviceMonitorConfig" | toYaml  | nindent 8 }}
+  {{- if .Values.fluentbitPrivileged }}
   fluentbit:
-    metrics:
-      serviceMonitor: {{ index .Values "logging-operator" "serviceMonitor" }}
-      serviceMonitorConfig: {{- index .Values "logging-operator" "serviceMonitorConfig" | toYaml  | nindent 8 }}
-  {{- with .Values.fluentbitPrivileged }}
     security:
       securityContext:
-        privileged: {{ . }}
+        privileged: true
+  {{- else }}
+  fluentbit: {}
   {{- end }}
   controlNamespace: {{ .Release.Namespace | quote }}
