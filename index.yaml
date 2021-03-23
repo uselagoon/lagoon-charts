@@ -2092,6 +2092,23 @@ entries:
   lagoon-logs-concentrator:
   - apiVersion: v2
     appVersion: v2.0.0-alpha.7
+    created: "2021-03-23T07:48:12.343115278Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: f9ee9fe64060117517c4dae7a46d0a718cc2e6b7a857c15128b38019acce6f9f
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.11.0/lagoon-logs-concentrator-0.11.0.tgz
+    version: 0.11.0
+  - apiVersion: v2
+    appVersion: v2.0.0-alpha.7
     created: "2021-02-26T12:50:38.260099285Z"
     description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
       service. '
@@ -3494,4 +3511,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2021-03-23T07:14:02.269240918Z"
+generated: "2021-03-23T07:48:12.349012018Z"
