@@ -47,8 +47,9 @@ tls:
 consolidateServiceIndices: true
 
 logging-operator:
-  serviceMonitor: false
-  serviceMonitorConfig: {}
+  monitoring:
+    serviceMonitor:
+      enabled: false
 
 logsDispatcher:
   serviceMonitor:
