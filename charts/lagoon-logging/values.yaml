@@ -320,6 +320,9 @@ consolidateServiceIndices: false
 # sent to a third-party service and not to a central elasticsearch.
 enableDefaultForwarding: true
 
+# Set how many fluentd pods should be running
+fluentdReplicaCount: 3
+
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
 # in the README for the lagoon-logs-concentrator chart.
