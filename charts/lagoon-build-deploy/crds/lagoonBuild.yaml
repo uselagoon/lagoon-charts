@@ -59,10 +59,14 @@ spec:
                   type: string
                 environment:
                   type: string
+                environmentId:
+                  type: integer
                 environmentType:
                   type: string
                 gitUrl:
                   type: string
+                id:
+                  type: integer
                 key:
                   format: byte
                   type: string
@@ -203,6 +207,8 @@ spec:
                       type: string
                     environment:
                       type: string
+                    environmentId:
+                      type: integer
                     jobName:
                       type: string
                     jobStatus:
@@ -217,6 +223,8 @@ spec:
                       type: array
                     project:
                       type: string
+                    projectId:
+                      type: integer
                     projectName:
                       type: string
                     remoteId:
@@ -282,6 +290,8 @@ spec:
                       type: string
                     environment:
                       type: string
+                    environmentId:
+                      type: integer
                     jobName:
                       type: string
                     jobStatus:
@@ -296,6 +306,8 @@ spec:
                       type: array
                     project:
                       type: string
+                    projectId:
+                      type: integer
                     projectName:
                       type: string
                     remoteId:
@@ -363,6 +375,8 @@ spec:
                       type: string
                     environment:
                       type: string
+                    environmentId:
+                      type: integer
                     jobName:
                       type: string
                     jobStatus:
@@ -377,6 +391,8 @@ spec:
                       type: array
                     project:
                       type: string
+                    projectId:
+                      type: integer
                     projectName:
                       type: string
                     remoteId:
@@ -614,6 +630,8 @@ spec:
                       type: string
                     environment:
                       type: string
+                    environmentId:
+                      type: integer
                     jobName:
                       type: string
                     jobStatus:
@@ -628,6 +646,8 @@ spec:
                       type: array
                     project:
                       type: string
+                    projectId:
+                      type: integer
                     projectName:
                       type: string
                     remoteId:
@@ -693,6 +713,8 @@ spec:
                       type: string
                     environment:
                       type: string
+                    environmentId:
+                      type: integer
                     jobName:
                       type: string
                     jobStatus:
@@ -707,6 +729,8 @@ spec:
                       type: array
                     project:
                       type: string
+                    projectId:
+                      type: integer
                     projectName:
                       type: string
                     remoteId:
@@ -774,6 +798,8 @@ spec:
                       type: string
                     environment:
                       type: string
+                    environmentId:
+                      type: integer
                     jobName:
                       type: string
                     jobStatus:
@@ -788,6 +814,8 @@ spec:
                       type: array
                     project:
                       type: string
+                    projectId:
+                      type: integer
                     projectName:
                       type: string
                     remoteId:
