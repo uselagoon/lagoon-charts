@@ -44,7 +44,7 @@ tls:
     FejDrD4asORcLF9xN2tsM5fGoBuHy9KpUw==
     -----END EC PRIVATE KEY-----
 
-fluentdreplicaCount: 1
+fluentdReplicaCount: 1
 consolidateServiceIndices: true
 
 logging-operator:
