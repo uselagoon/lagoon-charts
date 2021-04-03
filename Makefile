@@ -138,6 +138,7 @@ install-mongodb: install-calico
 install-lagoon-core: install-calico
 	$(HELM) upgrade \
 		--install \
+		--debug \
 		--create-namespace \
 		--namespace lagoon \
 		--wait \
@@ -154,7 +155,8 @@ install-lagoon-core: install-calico
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
 		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
-		--set autoIdler.enabled=false \
+		--set autoIdler.enabled=true \
+		--set autoIdler.image.repository=$(IMAGE_REGISTRY)/auto-idler \
 		--set backupHandler.enabled=false \
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
 		--set controllerhandler.image.repository=$(IMAGE_REGISTRY)/controllerhandler \
