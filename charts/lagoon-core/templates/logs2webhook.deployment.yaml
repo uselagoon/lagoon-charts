@@ -1,40 +1,40 @@
-{{- if .Values.logs2slack.enabled -}}
+{{- if .Values.logs2webhook.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "lagoon-core.logs2slack.fullname" . }}
+  name: {{ include "lagoon-core.logs2webhook.fullname" . }}
   labels:
-    {{- include "lagoon-core.logs2slack.labels" . | nindent 4 }}
+    {{- include "lagoon-core.logs2webhook.labels" . | nindent 4 }}
 spec:
-{{- if not .Values.logs2slack.autoscaling.enabled }}
-  replicas: {{ .Values.logs2slack.replicaCount }}
+{{- if not .Values.logs2webhook.autoscaling.enabled }}
+  replicas: {{ .Values.logs2webhook.replicaCount }}
 {{- end }}
   selector:
     matchLabels:
-      {{- include "lagoon-core.logs2slack.selectorLabels" . | nindent 6 }}
+      {{- include "lagoon-core.logs2webhook.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
-    {{- with .Values.logs2slack.podAnnotations }}
+    {{- with .Values.logs2webhook.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{- include "lagoon-core.logs2slack.selectorLabels" . | nindent 8 }}
+        {{- include "lagoon-core.logs2webhook.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml (coalesce .Values.logs2slack.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+        {{- toYaml (coalesce .Values.logs2webhook.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
-      - name: logs2slack
+      - name: logs2webhook
         securityContext:
-          {{- toYaml .Values.logs2slack.securityContext | nindent 10 }}
-        image: "{{ .Values.logs2slack.image.repository }}:{{ coalesce .Values.logs2slack.image.tag .Values.imageTag .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.logs2slack.image.pullPolicy }}
+          {{- toYaml .Values.logs2webhook.securityContext | nindent 10 }}
+        image: "{{ .Values.logs2webhook.image.repository }}:{{ coalesce .Values.logs2webhook.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.logs2webhook.image.pullPolicy }}
         env:
         - name: API_HOST
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
@@ -56,8 +56,8 @@ spec:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_PASSWORD
         resources:
-          {{- toYaml .Values.logs2slack.resources | nindent 10 }}
-      {{- with .Values.logs2slack.nodeSelector }}
+          {{- toYaml .Values.logs2webhook.resources | nindent 10 }}
+      {{- with .Values.logs2webhook.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -75,16 +75,16 @@ spec:
                 - key: app.kubernetes.io/component
                   operator: In
                   values:
-                  - {{ include "lagoon-core.logs2slack.fullname" . }}
+                  - {{ include "lagoon-core.logs2webhook.fullname" . }}
                 - key: app.kubernetes.io/instance
                   operator: In
                   values:
                   - {{ .Release.Name }}
               topologyKey: kubernetes.io/hostname
-      {{- with .Values.logs2slack.affinity }}
+      {{- with .Values.logs2webhook.affinity }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.logs2slack.tolerations }}
+      {{- with .Values.logs2webhook.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
