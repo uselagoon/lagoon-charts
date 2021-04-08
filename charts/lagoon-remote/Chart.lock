@@ -4,7 +4,7 @@ dependencies:
   version: 0.3.2
 - name: dioscuri
   repository: https://amazeeio.github.io/charts/
-  version: 0.3.1
+  version: 0.3.2
 - name: dbaas-operator
   repository: https://amazeeio.github.io/charts/
   version: 0.2.1
