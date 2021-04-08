@@ -34,7 +34,7 @@ dependencies:
   repository: https://amazeeio.github.io/charts/
   condition: dioscuri.enabled
 - name: dbaas-operator
-  version: ~0.2.0
+  version: ~0.2.1
   repository: https://amazeeio.github.io/charts/
   condition: dbaas-operator.enabled
 - name: lagoon-gatekeeper
