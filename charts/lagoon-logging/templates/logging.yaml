@@ -11,7 +11,7 @@ spec:
         runAsUser: 100
         fsGroup: 0
     scaling:
-      replicas: 3
+      replicas: {{ .Values.fluentdReplicaCount }}
   {{- if .Values.fluentbitPrivileged }}
   fluentbit:
     security:
