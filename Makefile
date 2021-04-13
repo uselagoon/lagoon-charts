@@ -120,7 +120,7 @@ install-postgresql: install-calico
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set postgresqlPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
-		--version=10.2.0 \
+		--version=10.4.8 \
 		postgresql \
 		bitnami/postgresql
 
