@@ -79,7 +79,7 @@ install-registry: install-ingress install-calico
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.5.2 \
+		--version=1.5.5 \
 		registry \
 		harbor/harbor
 
