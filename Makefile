@@ -134,7 +134,7 @@ install-mongodb: install-calico
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
 		--set tls.enabled=false \
-		--version=10.3.2 \
+		--version=10.16.4 \
 		mongodb \
 		bitnami/mongodb
 
