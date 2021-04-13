@@ -106,7 +106,7 @@ install-mariadb: install-calico
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=9.1.4 \
+		--version=9.3.13 \
 		mariadb \
 		bitnami/mariadb
 
