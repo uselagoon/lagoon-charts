@@ -59,7 +59,7 @@ install-ingress: install-calico
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
 		--set controller.admissionWebhooks.enabled=false \
-		--version=3.15.2 \
+		--version=3.31.0 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
