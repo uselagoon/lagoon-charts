@@ -11,4 +11,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.dockerHost.storage.size | quote }}
-{{- end -}}
+  {{- with .Values.dockerHost.storage.className }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+{{- end }}
