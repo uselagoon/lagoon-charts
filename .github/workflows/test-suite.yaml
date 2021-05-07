@@ -12,7 +12,7 @@ jobs:
         - features-kubernetes
         - nginx
         # - active-standby-kubernetes
-        - drupal-php73
+        # - drupal-php73 -- disable to make tests smaller
         - drupal-php74
         - api
         - github
