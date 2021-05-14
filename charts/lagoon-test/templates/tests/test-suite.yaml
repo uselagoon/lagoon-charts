@@ -14,6 +14,12 @@ spec:
   - name: {{ . | quote }}
     image: "{{ $.Values.tests.image.repository }}:{{ coalesce $.Values.tests.image.tag $.Values.imageTag $.Chart.AppVersion }}"
     imagePullPolicy: {{ $.Values.tests.image.pullPolicy }}
+    env:
+    - name: JWTSECRET
+      valueFrom:
+        secretKeyRef:
+          name: {{ $.Values.jwtSecretSecret | quote }}
+          key: JWTSECRET
     envFrom:
     - secretRef:
         name: {{ include "lagoon-test.fullname" $ }}
