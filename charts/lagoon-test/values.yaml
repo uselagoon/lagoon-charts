@@ -64,6 +64,7 @@ sshPrivateKey: |-
   L6J5iAoqoDKICzjcgF5x3mj9YFWZrC3aRxRrN5RoEgeVdcXeK56UJqXHjmKN++m3
   c8OPEIBZiD8UJuhSNSOLiBFrGz6toy6rpHavqqknGhVWotXsAs1h8LNkBe8=
   -----END RSA PRIVATE KEY-----
+lagoonWebhookURL: http://lagoon-core-webhook-handler.lagoon.svc.cluster.local:3000
 webhookHost: webhook-handler
 webhookPort: 3000
 webhookProtocol: http

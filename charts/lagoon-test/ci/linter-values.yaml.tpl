@@ -5,6 +5,7 @@ routeSuffixHTTP: "${routeSuffixHTTP}"
 routeSuffixHTTPS: "${routeSuffixHTTPS}"
 token: "${token}"
 webhookHost: "${webhookHandler}"
+lagoonWebhookURL: "${lagoonWebhookURL}"
 webhookRepoPrefix: "${webhookRepoPrefix}"
 
 localGit:
