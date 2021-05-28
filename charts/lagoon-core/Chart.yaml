@@ -5,9 +5,9 @@ description: >
 home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
-- name: smlx
-  email: scott.leggett@amazee.io
-  url: https://amazee.io
+  - name: smlx
+    email: scott.leggett@amazee.io
+    url: https://amazee.io
 
 # Application charts are a collection of templates that can be packaged into
 # versioned archives to be deployed.
@@ -17,7 +17,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.41.0
+version: 0.41.1
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
