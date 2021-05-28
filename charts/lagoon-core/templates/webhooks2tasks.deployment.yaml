@@ -46,7 +46,7 @@ spec:
         - name: GITLAB_API_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.api.fullname" . }}
+              name: {{ include "lagoon-core.api.fullname" $ }}
               key: GITLAB_API_TOKEN
         {{- end }}
         - name: JWTSECRET
