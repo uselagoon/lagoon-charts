@@ -59,7 +59,7 @@ install-ingress: install-calico
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
 		--set controller.admissionWebhooks.enabled=false \
-		--version=3.15.2 \
+		--version=3.31.0 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -79,7 +79,7 @@ install-registry: install-ingress install-calico
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.5.2 \
+		--version=1.5.5 \
 		registry \
 		harbor/harbor
 
@@ -106,7 +106,7 @@ install-mariadb: install-calico
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=9.1.4 \
+		--version=9.3.13 \
 		mariadb \
 		bitnami/mariadb
 
@@ -120,7 +120,7 @@ install-postgresql: install-calico
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set postgresqlPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
-		--version=10.2.0 \
+		--version=10.4.8 \
 		postgresql \
 		bitnami/postgresql
 
@@ -134,7 +134,7 @@ install-mongodb: install-calico
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
 		--set tls.enabled=false \
-		--version=10.3.2 \
+		--version=10.16.4 \
 		mongodb \
 		bitnami/mongodb
 
@@ -153,7 +153,7 @@ install-lagoon-core: install-calico
 		--set "harborURL=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set "keycloakAPIURL=http://localhost:8080/auth" \
 		--set "lagoonAPIURL=http://localhost:7070/graphql" \
-		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32443" \
+		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
