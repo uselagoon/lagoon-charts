@@ -57,7 +57,7 @@ spec:
             # this container uses wget to inject test fixtures into the lagoon api.
             # once wget stops running, it's good to go.
             - "for i in $(seq 4); do pgrep wget && exit 1 || sleep 1; done"
-          initialDelaySeconds: 128
+          initialDelaySeconds: 32
           timeoutSeconds: 8
         resources:
           {{- toYaml .Values.localAPIDataWatcherPusher.resources | nindent 10 }}
