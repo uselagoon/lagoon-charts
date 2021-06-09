@@ -2,6 +2,26 @@ apiVersion: v1
 entries:
   lagoon-build-deploy:
   - apiVersion: v2
+    appVersion: v0.1.12
+    created: "2021-06-09T03:32:57.163299176Z"
+    description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
+      (https://github.com/amazeeio/lagoon-kbd).
+    digest: 4b28575229993adae3af7aafb7b72e033992dba6dc6b9546e7e5b92f758e0e1a
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.7.1/lagoon-build-deploy-0.7.1.tgz
+    version: 0.7.1
+  - apiVersion: v2
     appVersion: v0.1.10
     created: "2021-06-02T19:47:41.656164258Z"
     description: A Helm chart for Kubernetes which installs Lagoon build deploy controllers
@@ -3945,4 +3965,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2021-06-07T21:25:50.579514649Z"
+generated: "2021-06-09T03:32:57.164593094Z"
