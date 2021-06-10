@@ -342,9 +342,7 @@ data:
         tls_cert_path /fluentd/tls/ca.crt
         tls_client_cert_path /fluentd/tls/client.crt
         tls_client_private_key_path /fluentd/tls/client.key
-        {{- with .Values.forward.tlsVerifyHostname }}
-        tls_verify_hostname {{ . }}
-        {{- end }}
+        tls_verify_hostname {{ .Values.forward.tlsVerifyHostname }}
         # endpoint
         keepalive true # makes sure the connection is not recreated every second
         keepalive_timeout 10m # reconnect after 10mins in order to handle DNS changes, etc.
