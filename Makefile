@@ -159,7 +159,7 @@ install-lagoon-core: install-calico
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
 		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
-		--set autoIdler.image.repository=$(IMAGE_REGISTRY)/auto-idler \
+		--set autoIdler.enabled=false \
 		--set backupHandler.enabled=false \
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
 		--set controllerhandler.image.repository=$(IMAGE_REGISTRY)/controllerhandler \
