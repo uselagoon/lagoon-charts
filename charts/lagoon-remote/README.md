@@ -18,6 +18,14 @@ This is outside the scope of this README.
 helm upgrade --install --create-namespace --namespace lagoon lagoon-remote ./charts/lagoon-remote
 ```
 
+### OpenShift
+
+the included docker-host needs `priviledged` permissions:
+
+```
+oc -n lagoon adm policy add-scc-to-user privileged  -z lagoon-remote-docker-host
+```
+
 ## Uninstall
 
 ```
