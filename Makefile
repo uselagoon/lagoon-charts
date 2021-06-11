@@ -159,7 +159,6 @@ install-lagoon-core: install-calico
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
 		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
-		--set autoIdler.enabled=true \
 		--set autoIdler.image.repository=$(IMAGE_REGISTRY)/auto-idler \
 		--set backupHandler.enabled=false \
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
@@ -171,7 +170,6 @@ install-lagoon-core: install-calico
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
 		--set logs2slack.enabled=false \
-		--set logs2webhook.enabled=true \
 		--set logs2webhook.image.repository=$(IMAGE_REGISTRY)/logs2webhook \
 		--set logsDBCurator.enabled=false \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
