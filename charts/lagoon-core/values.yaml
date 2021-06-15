@@ -487,10 +487,10 @@ logs2webhook:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/logs2webhook
+    repository: testlagoon/logs2webhook
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: pr-2593
 
   podAnnotations: {}
 
