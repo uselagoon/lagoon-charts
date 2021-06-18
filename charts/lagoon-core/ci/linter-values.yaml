@@ -139,6 +139,8 @@ logs2slack:
 
 logs2webhook:
   replicaCount: 1
+  image:
+    repository: uselagoon/logs2webhook
 
 logs2microsoftteams:
   replicaCount: 1

@@ -142,7 +142,6 @@ install-mongodb: install-calico
 install-lagoon-core: install-calico
 	$(HELM) upgrade \
 		--install \
-		--debug \
 		--create-namespace \
 		--namespace lagoon \
 		--wait \
