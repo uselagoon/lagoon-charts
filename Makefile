@@ -1,4 +1,4 @@
-TESTS = [features-kubernetes]
+TESTS = [features-api]
 # IMAGE_TAG controls the tag used for container images in the lagoon-core,
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
@@ -169,6 +169,7 @@ install-lagoon-core: install-calico
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
 		--set logs2slack.enabled=false \
+		--set logs2webhook.enabled=false \
 		--set logsDBCurator.enabled=false \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
 		--set sshPortal.enabled=false \

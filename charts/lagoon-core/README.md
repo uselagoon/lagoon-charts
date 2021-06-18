@@ -21,6 +21,8 @@ logs2rocketchat:
   enabled: false
 logs2slack:
   enabled: false
+logs2webhook:
+  enabled: false
 logsDBCurator:
   enabled: false
 storageCalculator:
