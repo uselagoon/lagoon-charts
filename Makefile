@@ -142,6 +142,7 @@ install-mongodb: install-calico
 install-lagoon-core: install-calico
 	$(HELM) upgrade \
 		--install \
+		--debug \
 		--create-namespace \
 		--namespace lagoon \
 		--wait \
@@ -169,6 +170,7 @@ install-lagoon-core: install-calico
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
 		--set logs2slack.enabled=false \
+		--set logs2webhook.enabled=false \
 		--set logsDBCurator.enabled=false \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
 		--set sshPortal.enabled=false \

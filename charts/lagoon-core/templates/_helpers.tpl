@@ -476,6 +476,36 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
+Create a default fully qualified app name for logs2webhook.
+*/}}
+{{- define "lagoon-core.logs2webhook.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-logs2webhook
+{{- end }}
+
+{{/*
+Common labels logs2webhook.
+*/}}
+{{- define "lagoon-core.logs2webhook.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.logs2webhook.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels logs2webhook.
+*/}}
+{{- define "lagoon-core.logs2webhook.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.logs2webhook.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
 Create a default fully qualified app name for logs2microsoftteams.
 */}}
 {{- define "lagoon-core.logs2microsoftteams.fullname" -}}
