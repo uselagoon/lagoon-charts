@@ -47,7 +47,7 @@ install-calico:
 		&& $(KUBECTL) apply -f ./ci/calico/custom-resources.yaml
 
 .PHONY: install-ingress
-install-ingress: install-calico
+install-ingress:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -64,7 +64,7 @@ install-ingress: install-calico
 		ingress-nginx/ingress-nginx
 
 .PHONY: install-registry
-install-registry: install-ingress install-calico
+install-registry: install-ingress
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -84,7 +84,7 @@ install-registry: install-ingress install-calico
 		harbor/harbor
 
 .PHONY: install-nfs-server-provisioner
-install-nfs-server-provisioner: install-calico
+install-nfs-server-provisioner:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -97,7 +97,7 @@ install-nfs-server-provisioner: install-calico
 		stable/nfs-server-provisioner
 
 .PHONY: install-mariadb
-install-mariadb: install-calico
+install-mariadb:
 	# root password is required on upgrade if the chart is already installed
 	$(HELM) upgrade \
 		--install \
@@ -111,7 +111,7 @@ install-mariadb: install-calico
 		bitnami/mariadb
 
 .PHONY: install-postgresql
-install-postgresql: install-calico
+install-postgresql:
 	# root password is required on upgrade if the chart is already installed
 	$(HELM) upgrade \
 		--install \
@@ -125,7 +125,7 @@ install-postgresql: install-calico
 		bitnami/postgresql
 
 .PHONY: install-mongodb
-install-mongodb: install-calico
+install-mongodb:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -139,7 +139,7 @@ install-mongodb: install-calico
 		bitnami/mongodb
 
 .PHONY: install-lagoon-core
-install-lagoon-core: install-calico
+install-lagoon-core:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -181,7 +181,7 @@ install-lagoon-core: install-calico
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb install-calico
+install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb
 	$(HELM) dependency build ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
@@ -230,9 +230,7 @@ create-kind-cluster:
 	docker network inspect kind >/dev/null || docker network create kind \
 		&& export KIND_NODE_IP=$$(docker run --network kind --rm alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p') \
 		&& envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml \
-		&& kind create cluster --wait=60s --config=test-suite.kind-config.yaml \
-		&& kubectl apply -f ./ci/calico/tigera-operator.yaml \
-		&& kubectl apply -f ./ci/calico/custom-resources.yaml
+		&& kind create cluster --wait=60s --config=test-suite.kind-config.yaml
 
 .PHONY: install-test-cluster
 install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb
