@@ -22,6 +22,9 @@ BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS =
 # Control the feature flags on the lagoon-build-deploy chart. Valid values: `enabled` or `disabled`.
 LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD =
 LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY =
+# Set to `true` to use the Calico CNI plugin instead of the default kindnet. This
+# is useful for testing network policies.
+USE_CALICO_CNI =
 
 TIMEOUT = 30m
 HELM = helm
@@ -41,13 +44,8 @@ fill-test-ci-values: install-ingress install-registry install-lagoon-core instal
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
 
-.PHONY: install-calico
-install-calico:
-	$(KUBECTL) apply -f ./ci/calico/tigera-operator.yaml \
-		&& $(KUBECTL) apply -f ./ci/calico/custom-resources.yaml
-
 .PHONY: install-ingress
-install-ingress: install-calico
+install-ingress:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -64,7 +62,7 @@ install-ingress: install-calico
 		ingress-nginx/ingress-nginx
 
 .PHONY: install-registry
-install-registry: install-ingress install-calico
+install-registry: install-ingress
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -84,7 +82,7 @@ install-registry: install-ingress install-calico
 		harbor/harbor
 
 .PHONY: install-nfs-server-provisioner
-install-nfs-server-provisioner: install-calico
+install-nfs-server-provisioner:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -97,7 +95,7 @@ install-nfs-server-provisioner: install-calico
 		stable/nfs-server-provisioner
 
 .PHONY: install-mariadb
-install-mariadb: install-calico
+install-mariadb:
 	# root password is required on upgrade if the chart is already installed
 	$(HELM) upgrade \
 		--install \
@@ -111,7 +109,7 @@ install-mariadb: install-calico
 		bitnami/mariadb
 
 .PHONY: install-postgresql
-install-postgresql: install-calico
+install-postgresql:
 	# root password is required on upgrade if the chart is already installed
 	$(HELM) upgrade \
 		--install \
@@ -125,7 +123,7 @@ install-postgresql: install-calico
 		bitnami/postgresql
 
 .PHONY: install-mongodb
-install-mongodb: install-calico
+install-mongodb:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -139,7 +137,7 @@ install-mongodb: install-calico
 		bitnami/mongodb
 
 .PHONY: install-lagoon-core
-install-lagoon-core: install-calico
+install-lagoon-core:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -181,7 +179,7 @@ install-lagoon-core: install-calico
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb install-calico
+install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb
 	$(HELM) dependency build ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
@@ -230,9 +228,29 @@ create-kind-cluster:
 	docker network inspect kind >/dev/null || docker network create kind \
 		&& export KIND_NODE_IP=$$(docker run --network kind --rm alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p') \
 		&& envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml \
-		&& kind create cluster --wait=60s --config=test-suite.kind-config.yaml \
+		&& envsubst < test-suite.kind-config.calico.yaml.tpl > test-suite.kind-config.calico.yaml
+ifeq ($(USE_CALICO_CNI),true)
+	kind create cluster --wait=60s --config=test-suite.kind-config.calico.yaml \
 		&& kubectl apply -f ./ci/calico/tigera-operator.yaml \
 		&& kubectl apply -f ./ci/calico/custom-resources.yaml
+
+.PHONY: install-calico
+install-calico:
+	$(KUBECTL) apply -f ./ci/calico/tigera-operator.yaml \
+		&& $(KUBECTL) apply -f ./ci/calico/custom-resources.yaml
+
+# add dependencies to ensure calico gets installed in the correct order
+install-ingress: install-calico
+install-registry: install-calico
+install-nfs-server-provisioner: install-calico
+install-mariadb: install-calico
+install-postgresql: install-calico
+install-mongodb: install-calico
+install-lagoon-core: install-calico
+install-lagoon-remote: install-calico
+else
+	kind create cluster --wait=60s --config=test-suite.kind-config.yaml
+endif
 
 .PHONY: install-test-cluster
 install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb
