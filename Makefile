@@ -25,6 +25,9 @@ LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY =
 # Set to `true` to use the Calico CNI plugin instead of the default kindnet. This
 # is useful for testing network policies.
 USE_CALICO_CNI =
+# Set to `true` to assume that `make install-registry` has been run manually.
+# This avoids running install-registry twice in uselagoon/lagoon CI.
+SKIP_INSTALL_REGISTRY =
 
 TIMEOUT = 30m
 HELM = helm
@@ -32,7 +35,7 @@ KUBECTL = kubectl
 JQ = jq
 
 .PHONY: fill-test-ci-values
-fill-test-ci-values: install-ingress install-registry install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
+fill-test-ci-values: install-ingress install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
 	export ingressIP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
 		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
 		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
@@ -43,6 +46,10 @@ fill-test-ci-values: install-ingress install-registry install-lagoon-core instal
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
+
+ifneq ($(SKIP_INSTALL_REGISTRY),true)
+fill-test-ci-values: install-registry
+endif
 
 .PHONY: install-ingress
 install-ingress:
