@@ -17,4 +17,4 @@ dbaas-operator:
   enabled: true
 
 lagoon-gatekeeper:
-  enabled: true
+  enabled: false
