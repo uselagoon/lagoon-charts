@@ -1,7 +1,7 @@
 dependencies:
 - name: lagoon-build-deploy
   repository: https://uselagoon.github.io/lagoon-charts/
-  version: 0.6.0
+  version: 0.7.1
 - name: dioscuri
   repository: https://amazeeio.github.io/charts/
   version: 0.3.2
@@ -11,5 +11,5 @@ dependencies:
 - name: lagoon-gatekeeper
   repository: https://uselagoon.github.io/lagoon-charts/
   version: 0.3.1
-digest: sha256:b9d57cc56c9f972a08db00e0d5a72ebc37bc79c630a43402a246bdcc35b39950
-generated: "2021-04-13T14:43:08.370675+10:00"
+digest: sha256:ff62543a96947f5140881214fa23c0c21f4a7b14ebe032be8e279efd6a6095c7
+generated: "2021-06-09T09:56:07.568325-04:00"

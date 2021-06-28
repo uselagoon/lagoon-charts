@@ -1,4 +1,4 @@
-TESTS = [features-kubernetes]
+TESTS = [api]
 # IMAGE_TAG controls the tag used for container images in the lagoon-core,
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
@@ -22,6 +22,12 @@ BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS =
 # Control the feature flags on the lagoon-build-deploy chart. Valid values: `enabled` or `disabled`.
 LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD =
 LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY =
+# Set to `true` to use the Calico CNI plugin instead of the default kindnet. This
+# is useful for testing network policies.
+USE_CALICO_CNI =
+# Set to `true` to assume that `make install-registry` has been run manually.
+# This avoids running install-registry twice in uselagoon/lagoon CI.
+SKIP_INSTALL_REGISTRY =
 
 TIMEOUT = 30m
 HELM = helm
@@ -29,7 +35,7 @@ KUBECTL = kubectl
 JQ = jq
 
 .PHONY: fill-test-ci-values
-fill-test-ci-values: install-ingress install-registry install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
+fill-test-ci-values: install-ingress install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
 	export ingressIP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
 		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
 		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
@@ -41,13 +47,12 @@ fill-test-ci-values: install-ingress install-registry install-lagoon-core instal
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
 
-.PHONY: install-calico
-install-calico:
-	$(KUBECTL) apply -f ./ci/calico/tigera-operator.yaml \
-		&& $(KUBECTL) apply -f ./ci/calico/custom-resources.yaml
+ifneq ($(SKIP_INSTALL_REGISTRY),true)
+fill-test-ci-values: install-registry
+endif
 
 .PHONY: install-ingress
-install-ingress: install-calico
+install-ingress:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -64,7 +69,7 @@ install-ingress: install-calico
 		ingress-nginx/ingress-nginx
 
 .PHONY: install-registry
-install-registry: install-ingress install-calico
+install-registry: install-ingress
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -84,7 +89,7 @@ install-registry: install-ingress install-calico
 		harbor/harbor
 
 .PHONY: install-nfs-server-provisioner
-install-nfs-server-provisioner: install-calico
+install-nfs-server-provisioner:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -97,7 +102,7 @@ install-nfs-server-provisioner: install-calico
 		stable/nfs-server-provisioner
 
 .PHONY: install-mariadb
-install-mariadb: install-calico
+install-mariadb:
 	# root password is required on upgrade if the chart is already installed
 	$(HELM) upgrade \
 		--install \
@@ -111,7 +116,7 @@ install-mariadb: install-calico
 		bitnami/mariadb
 
 .PHONY: install-postgresql
-install-postgresql: install-calico
+install-postgresql:
 	# root password is required on upgrade if the chart is already installed
 	$(HELM) upgrade \
 		--install \
@@ -125,7 +130,7 @@ install-postgresql: install-calico
 		bitnami/postgresql
 
 .PHONY: install-mongodb
-install-mongodb: install-calico
+install-mongodb:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -139,7 +144,7 @@ install-mongodb: install-calico
 		bitnami/mongodb
 
 .PHONY: install-lagoon-core
-install-lagoon-core: install-calico
+install-lagoon-core:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -169,18 +174,19 @@ install-lagoon-core: install-calico
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
 		--set logs2slack.enabled=false \
+		--set logs2webhook.enabled=false \
 		--set logsDBCurator.enabled=false \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
 		--set sshPortal.enabled=false \
 		--set storageCalculator.enabled=false \
-		--set ui.enabled=false \
+		--set ui.image.repository=$(IMAGE_REGISTRY)/ui \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		lagoon-core \
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb install-calico
+install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb
 	$(HELM) dependency build ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
@@ -229,9 +235,29 @@ create-kind-cluster:
 	docker network inspect kind >/dev/null || docker network create kind \
 		&& export KIND_NODE_IP=$$(docker run --network kind --rm alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p') \
 		&& envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml \
-		&& kind create cluster --wait=60s --config=test-suite.kind-config.yaml \
+		&& envsubst < test-suite.kind-config.calico.yaml.tpl > test-suite.kind-config.calico.yaml
+ifeq ($(USE_CALICO_CNI),true)
+	kind create cluster --wait=60s --config=test-suite.kind-config.calico.yaml \
 		&& kubectl apply -f ./ci/calico/tigera-operator.yaml \
 		&& kubectl apply -f ./ci/calico/custom-resources.yaml
+
+.PHONY: install-calico
+install-calico:
+	$(KUBECTL) apply -f ./ci/calico/tigera-operator.yaml \
+		&& $(KUBECTL) apply -f ./ci/calico/custom-resources.yaml
+
+# add dependencies to ensure calico gets installed in the correct order
+install-ingress: install-calico
+install-registry: install-calico
+install-nfs-server-provisioner: install-calico
+install-mariadb: install-calico
+install-postgresql: install-calico
+install-mongodb: install-calico
+install-lagoon-core: install-calico
+install-lagoon-remote: install-calico
+else
+	kind create cluster --wait=60s --config=test-suite.kind-config.yaml
+endif
 
 .PHONY: install-test-cluster
 install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb
@@ -262,6 +288,33 @@ install-tests:
 			--values ./charts/lagoon-test/ci/linter-values.yaml \
 			lagoon-test \
 			./charts/lagoon-test
+
+.PHONY: get-admin-creds
+get-admin-creds:
+	echo "\nGraphQL admin token: \n$$(docker run \
+		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-jwtsecret -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
+		-e JWTAUDIENCE=api.dev \
+		-e JWTUSER=localadmin \
+		uselagoon/tests \
+		python3 /ansible/tasks/api/admin_token.py)" \
+	&& echo "Keycloak admin password: " \
+	&& $(KUBECTL) get secret -n lagoon lagoon-core-keycloak -o jsonpath="{.data.KEYCLOAK_ADMIN_PASSWORD}" | base64 --decode \
+	&& echo "\nKeycloak password for lagoonadmin user: " \
+	&& $(KUBECTL) get secret -n lagoon lagoon-core-keycloak -o jsonpath="{.data.KEYCLOAK_LAGOON_ADMIN_PASSWORD}" | base64 --decode \
+	&& echo "\n"
+
+.PHONY: pf-keycloak pf-api pf-ssh pf-ui
+pf-keycloak:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-keycloak 8080 2>/dev/null &
+pf-api:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-api 7070:80 2>/dev/null &
+pf-ssh:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-ssh 2020 2>/dev/null &
+pf-ui:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-ui 6060:3000 2>/dev/null &
+
+.PHONY: port-forwards
+port-forwards: pf-keycloak pf-api pf-ssh pf-ui
 
 .PHONY: run-tests
 run-tests:

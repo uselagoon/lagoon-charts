@@ -9,15 +9,22 @@ jobs:
     strategy:
       matrix:
         test:
-        - features-kubernetes
-        - nginx
-        # - active-standby-kubernetes
-        # - drupal-php73 -- disable to make tests smaller
-        - drupal-php74
         - api
-        - github
-        - gitlab
-        - bitbucket
+        - features-kubernetes
+        - features-kubernetes-2
+        - active-standby-kubernetes
+        ## Re-enable any of these below tests in your branch for specific testing
+        ## - drupal-php74
+        ## - drupal-postgres
+        ## - node-mongodb
+        ## - nginx
+        ## - node
+        ## - python
+        ## - elasticsearch
+        ## - github
+        ## - gitlab
+        ## - bitbucket
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2.3.4
