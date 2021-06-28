@@ -282,6 +282,31 @@ install-tests:
 			lagoon-test \
 			./charts/lagoon-test
 
+.PHONY: get-admin-creds
+get-admin-creds:
+	echo "\nGraphQL admin token: \n$$(docker run \
+		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-jwtsecret -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
+		-e JWTAUDIENCE=api.dev \
+		-e JWTUSER=localadmin \
+		uselagoon/tests \
+		python3 /ansible/tasks/api/admin_token.py)" \
+	&& echo "Keycloak admin password: " \
+	&& $(KUBECTL) get secret -n lagoon lagoon-core-keycloak -o jsonpath="{.data.KEYCLOAK_ADMIN_PASSWORD}" | base64 --decode \
+	&& echo "\nKeycloak password for lagoonadmin user: " \
+	&& $(KUBECTL) get secret -n lagoon lagoon-core-keycloak -o jsonpath="{.data.KEYCLOAK_LAGOON_ADMIN_PASSWORD}" | base64 --decode \
+	&& echo "\n"
+
+pf-keycloak:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-keycloak 8080 2>/dev/null &
+pf-api:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-api 7070:80 2>/dev/null &
+pf-ssh:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-ssh 2020 2>/dev/null &
+pf-ui:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-ui 6060:3000 2>/dev/null &
+
+.PHONY: port-forwards
+port-forwards: pf-keycloak pf-api pf-ssh pf-ui
 .PHONY: run-tests
 run-tests:
 	$(HELM) test --namespace lagoon --timeout 30m lagoon-test
