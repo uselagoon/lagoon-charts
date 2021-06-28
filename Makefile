@@ -303,6 +303,7 @@ get-admin-creds:
 	&& $(KUBECTL) get secret -n lagoon lagoon-core-keycloak -o jsonpath="{.data.KEYCLOAK_LAGOON_ADMIN_PASSWORD}" | base64 --decode \
 	&& echo "\n"
 
+.PHONY: pf-keycloak pf-api pf-ssh pf-ui
 pf-keycloak:
 	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-keycloak 8080 2>/dev/null &
 pf-api:
