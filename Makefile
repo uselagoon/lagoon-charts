@@ -1,4 +1,4 @@
-TESTS = [features-api]
+TESTS = [api]
 # IMAGE_TAG controls the tag used for container images in the lagoon-core,
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
