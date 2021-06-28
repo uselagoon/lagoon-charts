@@ -179,7 +179,7 @@ install-lagoon-core:
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
 		--set sshPortal.enabled=false \
 		--set storageCalculator.enabled=false \
-		--set ui.enabled=false \
+		--set ui.image.repository=$(IMAGE_REGISTRY)/ui \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		lagoon-core \
