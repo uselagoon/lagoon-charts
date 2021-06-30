@@ -42,6 +42,10 @@ spec:
         - name: CRONJOBS
           value: |-
             5 */12 * * * /lagoon/cronjob.sh /calculate-storage.sh
+      {{- range $key, $val := .Values.storageCalculator.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         resources:
           {{- toYaml .Values.storageCalculator.resources | nindent 10 }}
       {{- with .Values.storageCalculator.nodeSelector }}

@@ -62,6 +62,10 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.sshPortal.fullname" . }}
               key: HOSTKEY_ED25519
+      {{- range $key, $val := .Values.sshPortal.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         ports:
         - name: ssh
           containerPort: 2222

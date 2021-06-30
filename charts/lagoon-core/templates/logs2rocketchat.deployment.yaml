@@ -55,6 +55,10 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_PASSWORD
+      {{- range $key, $val := .Values.logs2rocketchat.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         resources:
           {{- toYaml .Values.logs2rocketchat.resources | nindent 10 }}
       {{- with .Values.logs2rocketchat.nodeSelector }}
