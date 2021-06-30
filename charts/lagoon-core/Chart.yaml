@@ -5,9 +5,9 @@ description: >
 home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
-  - name: smlx
-    email: scott.leggett@amazee.io
-    url: https://amazee.io
+- name: smlx
+  email: scott.leggett@amazee.io
+  url: https://amazee.io
 
 # Application charts are a collection of templates that can be packaged into
 # versioned archives to be deployed.
