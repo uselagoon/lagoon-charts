@@ -32,8 +32,8 @@
 
 # keycloakAPIURL: https://keycloak.example.com/auth
 # lagoonAPIURL: https://api.example.com/graphql
-# lagoonUIURL: https://ui.example.com/
-# lagoonWebhookURL: https://webhook-handler.example.com/
+# lagoonUIURL: https://ui.example.com
+# lagoonWebhookURL: https://webhook-handler.example.com
 
 # These values are randomly generated on install if not otherwise defined.
 
