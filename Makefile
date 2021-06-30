@@ -26,8 +26,13 @@ LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY =
 # is useful for testing network policies.
 USE_CALICO_CNI =
 # Set to `true` to assume that `make install-registry` has been run manually.
-# This avoids running install-registry twice in uselagoon/lagoon CI.
+# This avoids running install-registry twice in uselagoon/lagoon CI when
+# invoking fill-test-ci-values.
 SKIP_INSTALL_REGISTRY =
+# Set to `true` to assume that all dependencies have already been installed.
+# This allows updating the fill-test-ci-values template only, without
+# installing any chart dependencies.
+SKIP_ALL_DEPS =
 
 TIMEOUT = 30m
 HELM = helm
@@ -35,7 +40,7 @@ KUBECTL = kubectl
 JQ = jq
 
 .PHONY: fill-test-ci-values
-fill-test-ci-values: install-ingress install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
+fill-test-ci-values:
 	export ingressIP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
 		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
 		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
@@ -47,8 +52,11 @@ fill-test-ci-values: install-ingress install-lagoon-core install-lagoon-remote i
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
 
+ifneq ($(SKIP_ALL_DEPS),true)
 ifneq ($(SKIP_INSTALL_REGISTRY),true)
 fill-test-ci-values: install-registry
+endif
+fill-test-ci-values: install-ingress install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
 endif
 
 .PHONY: install-ingress
@@ -264,30 +272,6 @@ install-test-cluster: install-ingress install-registry install-nfs-server-provis
 
 .PHONY: install-lagoon
 install-lagoon:  install-lagoon-core install-lagoon-remote
-
-## install-tests here uses the same logic as the fill-ci-values above,
-## but doesn't re-run all the cluster and lagoon building steps
-.PHONY: install-tests
-install-tests:
-	export ingressIP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
-		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
-		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
-		&& export routeSuffixHTTPS="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
-		&& export token="$$($(KUBECTL) -n lagoon get secret -o json | $(JQ) -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
-		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
-		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
-		&& export webhookHandler="lagoon-core-webhook-handler" \
-		&& export webhookRepoPrefix="ssh://git@lagoon-test-local-git.lagoon.svc.cluster.local:22/git/" \
-		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
-		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
-		&& $(HELM) upgrade \
-			--install \
-			--namespace lagoon \
-			--wait \
-			--timeout 30m \
-			--values ./charts/lagoon-test/ci/linter-values.yaml \
-			lagoon-test \
-			./charts/lagoon-test
 
 .PHONY: get-admin-creds
 get-admin-creds:

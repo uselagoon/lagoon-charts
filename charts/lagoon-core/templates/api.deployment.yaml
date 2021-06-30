@@ -119,13 +119,13 @@ spec:
           {{- if .Values.lagoonUIURL }}
           value: {{ .Values.lagoonUIURL | quote }}
           {{- else }}
-          value: https://{{ index .Values.ui.ingress.hosts 0 "host" }}/
+          value: https://{{ index .Values.ui.ingress.hosts 0 "host" }}
           {{- end }}
         - name: WEBHOOK_URL
           {{- if .Values.lagoonWebhookURL }}
           value: {{ .Values.lagoonWebhookURL | quote }}
           {{- else }}
-          value: https://{{ index .Values.webhookHandler.ingress.hosts 0 "host" }}/
+          value: https://{{ index .Values.webhookHandler.ingress.hosts 0 "host" }}
           {{- end }}
         envFrom:
         - secretRef:
