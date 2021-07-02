@@ -53,6 +53,10 @@ spec:
         # for historical reasons this variable must be set
         - name: LAGOON_ENVIRONMENT_TYPE
           value: production
+      {{- range $key, $val := .Values.logsDBCurator.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         resources:
           {{- toYaml .Values.logsDBCurator.resources | nindent 10 }}
       {{- with .Values.logsDBCurator.nodeSelector }}

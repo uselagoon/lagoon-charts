@@ -57,6 +57,10 @@ spec:
           value: {{ .Release.Namespace | quote }}
         - name: SERVICE_NAME
           value: {{ include "lagoon-core.broker.fullname" . }}
+      {{- range $key, $val := .Values.broker.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         ports:
         - name: epmd
           containerPort: 4396

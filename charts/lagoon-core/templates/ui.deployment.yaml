@@ -52,6 +52,10 @@ spec:
           {{- end }}
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}
+      {{- range $key, $val := .Values.ui.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         ports:
         - name: http-3000
           containerPort: 3000

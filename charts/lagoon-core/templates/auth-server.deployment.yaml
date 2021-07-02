@@ -47,6 +47,10 @@ spec:
               key: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
         - name: KEYCLOAK_URL
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
+      {{- range $key, $val := .Values.authServer.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         ports:
         - name: http-3000
           containerPort: 3000

@@ -51,6 +51,10 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.fullname" . }}-jwtsecret
               key: JWTSECRET
+      {{- range $key, $val := .Values.ssh.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         ports:
         - name: ssh
           containerPort: 2020

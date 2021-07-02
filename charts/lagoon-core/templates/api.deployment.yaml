@@ -127,6 +127,10 @@ spec:
           {{- else }}
           value: https://{{ index .Values.webhookHandler.ingress.hosts 0 "host" }}
           {{- end }}
+      {{- range $key, $val := .Values.api.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         envFrom:
         - secretRef:
             name: {{ include "lagoon-core.api.fullname" . }}
