@@ -1,0 +1,105 @@
+{{- if .Values.actionsHandler.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.actionsHandler.fullname" . }}
+  labels:
+    {{- include "lagoon-core.actionsHandler.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.actionsHandler.autoscaling.enabled }}
+  replicas: {{ .Values.actionsHandler.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.actionsHandler.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    {{- with .Values.actionsHandler.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.actionsHandler.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml (coalesce .Values.actionsHandler.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      containers:
+      - name: actions-handler
+        securityContext:
+          {{- toYaml .Values.actionsHandler.securityContext | nindent 10 }}
+        image: "{{ .Values.actionsHandler.image.repository }}:{{ coalesce .Values.actionsHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.actionsHandler.image.pullPolicy }}
+        command:
+        - "sh"
+        - "-c"
+        - |
+          while ! nc -zvw5 $RABBITMQ_ADDRESS $RABBITMQ_PORT; do sleep 2; done
+          exec /app/actions-handler
+        env:
+        - name: RABBITMQ_ADDRESS
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              key: JWTSECRET
+        - name: JWT_AUDIENCE
+          value: api.dev
+        - name: GRAPHQL_ENDPOINT
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
+        - name: HTTP_LISTEN_PORT
+          value: "3000"
+      {{- range $key, $val := .Values.actionsHandler.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
+        resources:
+          {{- toYaml .Values.actionsHandler.resources | nindent 10 }}
+      {{- with .Values.actionsHandler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.name" . }}
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.actionsHandler.fullname" . }}
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- with .Values.actionsHandler.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.actionsHandler.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

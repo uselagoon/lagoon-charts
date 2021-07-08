@@ -167,6 +167,8 @@ install-lagoon-core:
 		--set "keycloakAPIURL=http://localhost:8080/auth" \
 		--set "lagoonAPIURL=http://localhost:7070/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set actionsHandler.enabled=true \
+		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
