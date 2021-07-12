@@ -50,8 +50,6 @@
 
 # These values are the chart defaults, but can be overridden.
 
-k8up: false
-
 elasticsearchScheme: https
 elasticsearchHostPort: 9200
 

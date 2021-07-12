@@ -13,10 +13,8 @@ spec:
     metadata:
       annotations:
         checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
-        {{- if .Values.k8up }}
         k8up.syn.tools/backupcommand: /bin/sh -c "mysqldump --max-allowed-packet=500M --events --routines --quick --add-locks --no-autocommit --single-transaction --all-databases"
         k8up.syn.tools/file-extension: .api-db.sql
-        {{- end }}
     {{- with .Values.apiDB.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
