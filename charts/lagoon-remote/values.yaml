@@ -10,6 +10,11 @@ imagePullSecrets: []
 logsDispatcherHost: |-
   lagoon-logging-logs-dispatcher.lagoon-logging.svc.cluster.local
 
+# If this value is set, it will create an `mxout` ExternalName service in the
+# deployed namespace pointing at the given host. This service can then be used
+# by workloads running in-cluster to connect to a platform-provided mailserver.
+mxoutHost: ""
+
 # this default image tag is set for all services and can be overridden
 # on the service level, if not set it uses chart appVersion
 imageTag: ""
