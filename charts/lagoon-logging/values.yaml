@@ -65,6 +65,10 @@ logsDispatcher:
   serviceMonitor:
     enabled: true
 
+  buffer:
+    size: 16Gi
+    storageClassName: ""
+
 openshiftHaproxyLogsCollector:
 
   enabled: false
