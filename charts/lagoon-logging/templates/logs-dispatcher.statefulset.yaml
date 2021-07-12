@@ -142,6 +142,9 @@ spec:
     spec:
       accessModes:
       - ReadWriteOnce
+      {{- with .Values.logsDispatcher.buffer.storageClassName }}
+      storageClassName: {{ . }}
+      {{- end }}
       resources:
         requests:
-          storage: 16Gi
+          storage: {{ .Values.logsDispatcher.buffer.size }}
