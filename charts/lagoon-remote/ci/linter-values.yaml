@@ -21,3 +21,5 @@ dbaas-operator:
 
 lagoon-gatekeeper:
   enabled: false
+
+mxoutHost: mxout1.example.com
