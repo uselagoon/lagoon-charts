@@ -12,12 +12,18 @@ spec:
         fsGroup: 0
     scaling:
       replicas: {{ .Values.fluentdReplicaCount }}
-  {{- if .Values.fluentbitPrivileged }}
+{{- if or .Values.fluentbitPrivileged .Values.fluentbitTolerations }}
   fluentbit:
+  {{- if .Values.fluentbitPrivileged }}
     security:
       securityContext:
         privileged: true
-  {{- else }}
-  fluentbit: {}
   {{- end }}
+  {{- with .Values.fluentbitTolerations }}
+    tolerations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- else }}
+  fluentbit: {}
+{{- end }}
   controlNamespace: {{ .Release.Namespace | quote }}

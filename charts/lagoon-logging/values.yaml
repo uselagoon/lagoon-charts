@@ -327,6 +327,13 @@ enableDefaultForwarding: true
 # Set how many fluentd pods should be running
 fluentdReplicaCount: 3
 
+# Add tolerations to the fluentbit daemonset so that it runs on e.g.
+# load-balancer nodes.
+fluentbitTolerations:
+- effect: NoSchedule
+  key: lagoon.sh/lb
+  operator: Exists
+
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
 # in the README for the lagoon-logs-concentrator chart.
