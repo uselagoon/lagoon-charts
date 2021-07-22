@@ -55,9 +55,9 @@ spec:
           value: {{ . | quote }}
         {{- end }}
         - name: ELASTICSEARCH_HOST
-          value: {{ required "A valid .Values.elasticsearchHost required!" .Values.elasticsearchHost | quote }}
+          value: {{ required "A valid .Values.elasticsearchURL required!" .Values.elasticsearchURL | quote }}
         - name: ELASTICSEARCH_URL
-          value: {{ .Values.elasticsearchScheme }}://{{ .Values.elasticsearchHost }}:{{ .Values.elasticsearchHostPort }}
+          value: {{ required "A valid .Values.elasticsearchURL required!" .Values.elasticsearchURL | quote }}
         {{- with .Values.gitlabAPIURL }}
         - name: GITLAB_API_HOST
           value: {{ . | quote }}
