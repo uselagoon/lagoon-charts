@@ -39,6 +39,9 @@ jobs:
         # * https://github.com/open-policy-agent/gatekeeper/pull/1115
         rm -rf /tmp/charts/lagoon-gatekeeper/lagoon-gatekeeper/charts/gatekeeper
         rm -rf /tmp/charts/lagoon-remote/lagoon-remote/charts/lagoon-gatekeeper/charts/gatekeeper
+        # workaround until logging-operator templates are fixed:
+        # https://github.com/banzaicloud/logging-operator/pull/792
+        rm -rf /tmp/charts/lagoon-logging/lagoon-logging/charts/logging-operator
     - name: Install YAMLlint
       run: sudo apt-get -y install yamllint
     - name: Lint the templates
