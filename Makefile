@@ -182,7 +182,6 @@ install-lagoon-core:
 		--set logs2rocketchat.enabled=false \
 		--set logs2slack.enabled=false \
 		--set logs2webhook.enabled=false \
-		--set logsDBCurator.enabled=false \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
 		--set sshPortal.enabled=false \
 		--set storageCalculator.enabled=false \
