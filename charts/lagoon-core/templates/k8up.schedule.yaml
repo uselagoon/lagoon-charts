@@ -1,0 +1,22 @@
+apiVersion: backup.appuio.ch/v1alpha1
+kind: Schedule
+metadata:
+  name: 'lagoon-core-schedule'
+spec:
+  backend:
+    repoPasswordSecretRef:
+      key: repo-pw
+      name: baas-repo-pw
+    s3:
+      bucket: '{{ .Values.k8upBackupBucketName }}'
+  backup:
+    schedule: '15 * * * *'
+  check:
+    schedule: '45 3 * * *'
+  prune:
+    retention:
+      keepHourly: 36
+      keepDaily: 30
+      keepWeekly: 12
+      keepMonthly: 12
+    schedule: '26 4 * * 0'
