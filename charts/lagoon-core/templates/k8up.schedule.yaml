@@ -1,3 +1,4 @@
+{{ if .Capabilities.APIVersions.Has "backup.appuio.ch/v1alpha1/Schedule" }}
 apiVersion: backup.appuio.ch/v1alpha1
 kind: Schedule
 metadata:
@@ -20,3 +21,4 @@ spec:
       keepWeekly: 12
       keepMonthly: 12
     schedule: '26 4 * * 0'
+{{ end }}
