@@ -3,6 +3,7 @@
 # elasticsearchHost:
 # harborAdminPassword:
 # harborURL:
+# k8upBackupBucketName:
 # kibanaURL:
 # registry:
 # sshHostKeyED25519:
