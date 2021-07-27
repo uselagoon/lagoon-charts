@@ -163,11 +163,6 @@ drushAlias:
   image:
     repository: uselagoon/drush-alias
 
-logsDBCurator:
-  image:
-    repository: uselagoon/logs-db-curator
-    tag: ""
-
 ssh:
   replicaCount: 1
   image:

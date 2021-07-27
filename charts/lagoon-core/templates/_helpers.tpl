@@ -623,38 +623,6 @@ app.kubernetes.io/component: {{ include "lagoon-core.drushAlias.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-
-
-{{/*
-Create a default fully qualified app name for logs-db-curator.
-*/}}
-{{- define "lagoon-core.logsDBCurator.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-logs-db-curator
-{{- end }}
-
-{{/*
-Common labels logs-db-curator.
-*/}}
-{{- define "lagoon-core.logsDBCurator.labels" -}}
-helm.sh/chart: {{ include "lagoon-core.chart" . }}
-{{ include "lagoon-core.logsDBCurator.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels logs-db-curator.
-*/}}
-{{- define "lagoon-core.logsDBCurator.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-core.logsDBCurator.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-
-
 {{/*
 Create a default fully qualified app name for ssh.
 */}}
