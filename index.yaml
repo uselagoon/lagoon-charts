@@ -324,6 +324,22 @@ entries:
   lagoon-core:
   - apiVersion: v2
     appVersion: v2.0.0-rc.8
+    created: "2021-07-27T01:52:03.932734315Z"
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 6c07e51234a5f5a923cee40ff0bac377e3ea182de00b795e0e3344361a2b9340
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-0.51.0/lagoon-core-0.51.0.tgz
+    version: 0.51.0
+  - apiVersion: v2
+    appVersion: v2.0.0-rc.8
     created: "2021-07-21T10:25:16.810485087Z"
     description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
     digest: 0954d7218af821779df55192c50e1aab858d4faa6eb0fc4ba59144a52f386835
@@ -5090,4 +5106,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2021-07-22T08:38:02.325489265Z"
+generated: "2021-07-27T01:52:03.934495737Z"
