@@ -4,8 +4,7 @@
 elasticsearchHost: opendistro-es-client-service.opendistro-es.svc.cluster.local
 elasticsearchScheme: http
 harborURL: http://harbor:1234
-harborAdminPassword: harbor123
-k8upBackupBucketName: thisisatestbucket
+harborAdminPassword: harbor12
 kibanaURL: http://opendistro-es-kibana-svc.opendistro-es.svc.cluster.local:443
 logsDBAdminPassword: admin
 registry: registry.example.com:5000
