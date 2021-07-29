@@ -9,7 +9,16 @@ spec:
       key: repo-pw
       name: "{{ include "lagoon-core.fullname" . }}-baas-repo-pw"
     s3:
+      {{ if .Values.k8upBackupBucketName }}
       bucket: '{{ .Values.k8upBackupBucketName }}'
+      {{ else if (lookup backup.appuio.ch/v1alpha1 Schedule "" (include "lagoon-core.fullname" .) )}}
+      bucket: {{ (lookup backup.appuio.ch/v1alpha1 Schedule "" (include "lagoon-core.fullname" .).spec.backend.s3.bucket }}
+      {{ else }}
+      bucket: {{ include "lagoon-core.fullname" . }}-{{ randAlphaNum 8 }}
+      {{ end }}
+      {{ if .Values.k8upS3Endpoint }}
+      endpoint: {{ include .Values.k8upS3Endpoint}}
+      {{ end }}
   backup:
     schedule: '15 * * * *'
   check:
