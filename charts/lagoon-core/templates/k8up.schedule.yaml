@@ -7,7 +7,7 @@ spec:
   backend:
     repoPasswordSecretRef:
       key: repo-pw
-      name: baas-repo-pw
+      name: "{{ include "lagoon-core.fullname" . }}-baas-repo-pw"
     s3:
       bucket: '{{ .Values.k8upBackupBucketName }}'
   backup:
