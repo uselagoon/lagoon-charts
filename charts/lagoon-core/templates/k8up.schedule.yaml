@@ -2,7 +2,7 @@
 apiVersion: backup.appuio.ch/v1alpha1
 kind: Schedule
 metadata:
-  name: 'lagoon-core-schedule'
+  name: {{ include "lagoon-core.fullname" . }}
 spec:
   backend:
     repoPasswordSecretRef:
