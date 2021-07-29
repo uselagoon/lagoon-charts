@@ -9,6 +9,9 @@ data:
     # vi: ft=fluentd
     <system>
       workers 2
+      # comment out this line to see warnings
+      # it is set to error because fluentd is quite chatty
+      log_level error
     </system>
 
     # prometheus metrics
