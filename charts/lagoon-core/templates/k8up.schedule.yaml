@@ -12,7 +12,7 @@ spec:
       {{ if .Values.k8upBackupBucketName }}
       bucket: '{{ .Values.k8upBackupBucketName }}'
       {{ else if (lookup backup.appuio.ch/v1alpha1 Schedule "" (include "lagoon-core.fullname" .) )}}
-      bucket: {{ (lookup backup.appuio.ch/v1alpha1 Schedule "" (include "lagoon-core.fullname" .).spec.backend.s3.bucket }}
+      bucket: {{ (lookup backup.appuio.ch/v1alpha1 Schedule "" (include "lagoon-core.fullname" .) ).spec.backend.s3.bucket }}
       {{ else }}
       bucket: {{ include "lagoon-core.fullname" . }}-{{ randAlphaNum 8 }}
       {{ end }}
