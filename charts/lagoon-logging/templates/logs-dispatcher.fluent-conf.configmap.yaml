@@ -146,19 +146,14 @@ data:
       @type record_modifier
       remove_keys docker
     </filter>
-    # ensure the log field is in there, even if empty, to avoid errors in the
-    # following parser
     <filter lagoon.*.container>
-      @type record_modifier
-      <record>
-        log ${record['log'] || ""}
-      </record>
+      @type stdout
     </filter>
     # post-process to try to eke some more structure out of the logs.
     # the last "format none" block is a catch-all for unmatched messages.
     <filter lagoon.*.container>
       @type parser
-      key_name log
+      key_name message
       reserve_data true
       <parse>
         @type multi_format
@@ -212,8 +207,6 @@ data:
     # keys in the top-level log object.
     <filter lagoon.*.router.nginx>
       @type parser
-      # don't log to stderr when sending logs to @ERROR
-      @log_level error
       key_name message
       reserve_time true
       reserve_data true
