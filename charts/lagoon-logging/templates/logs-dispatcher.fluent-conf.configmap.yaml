@@ -9,6 +9,9 @@ data:
     # vi: ft=fluentd
     <system>
       workers 2
+      # comment out this line to see warnings
+      # it is set to error because fluentd is quite chatty
+      log_level error
     </system>
 
     # prometheus metrics
@@ -145,9 +148,6 @@ data:
     <filter lagoon.*.container>
       @type record_modifier
       remove_keys docker
-    </filter>
-    <filter lagoon.*.container>
-      @type stdout
     </filter>
     # post-process to try to eke some more structure out of the logs.
     # the last "format none" block is a catch-all for unmatched messages.
