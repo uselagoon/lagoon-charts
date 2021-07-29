@@ -33,7 +33,7 @@ spec:
         {{- toYaml .Values.logsDispatcher.podSecurityContext | nindent 8 }}
       initContainers:
       - image: busybox:musl
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: chown-buffer
         command:
         - chown
