@@ -17,7 +17,7 @@ spec:
       bucket: {{ include "lagoon-core.fullname" . }}-{{ randAlphaNum 8 }}
       {{ end }}
       {{ if .Values.k8upS3Endpoint }}
-      endpoint: {{ include .Values.k8upS3Endpoint}}
+      endpoint: {{ .Values.k8upS3Endpoint }}
       {{ end }}
   backup:
     schedule: '15 * * * *'
