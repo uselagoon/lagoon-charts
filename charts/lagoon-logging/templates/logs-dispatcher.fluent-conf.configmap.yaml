@@ -212,41 +212,68 @@ data:
       reserve_data true
       remove_key_name_field true
       <parse>
-        @type json
+        @type multi_format
+        <pattern>
+          format json
+        </pattern>
+        <pattern>
+          format none
+        </pattern>
       </parse>
     </filter>
-    # if the message field is _not_ json, it will be a log message from the
-    # controller itself. In that case just route it straight to @OUTPUT.
-    <label @ERROR>
+    # match the nginx router logs here and relabel them based on whether they
+    # were successfully parsed as json above or not
+    <match lagoon.*.router.nginx>
+      @type rewrite_tag_filter
+      <rule>
+        # if the host key doesn't exist then this was not parsed as JSON, so we
+        # just send to @OUTPUT directly because it is an actual nginx
+        # controller log. These logs will appear in index_name
+        # router-logs-ingress-nginx_.*
+        invert true
+        key host
+        pattern /.+/
+        tag ${tag}
+        label @OUTPUT
+      </rule>
+      <rule>
+        # host key exists, so this is a HTTP request log
+        key host
+        pattern /.+/
+        tag ${tag}
+        label @NGINX_ROUTER_OUTPUT
+      </rule>
+    </match>
+    <label @NGINX_ROUTER_OUTPUT>
+      # Strip the nginx-ingress namespace info and add enough dummy information
+      # so that kubernetes_metadata plugin can get the namespace labels.
+      <filter lagoon.*.router.nginx>
+        @type record_modifier
+        remove_keys _dummy_
+        <record>
+          _dummy_ ${record['kubernetes'] = {'namespace_name' => record['namespace'], 'pod_name' => 'nopod', 'container_name' => 'nocontainer'}; record['docker'] = {'container_id' => "#{record['namespace']}_#{record['ingress_name']}"}; nil}
+        </record>
+      </filter>
+      # enrich with k8s metadata (will get the namespace labels)
+      <filter lagoon.*.router.nginx>
+        @type kubernetes_metadata
+        @log_level warn
+        skip_container_metadata true
+        skip_master_url         true
+      </filter>
+      # strip the dummy information so that it doesn't appear in logs
+      <filter lagoon.*.router.nginx>
+        @type record_modifier
+        remove_keys _dummy_,docker
+        <record>
+          _dummy_ ${record['kubernetes'].delete('pod_name'); record['kubernetes'].delete('container_name'); record['kubernetes'].delete('pod_id'); nil}
+        </record>
+      </filter>
       <match lagoon.*.router.nginx>
         @type relabel
         @label @OUTPUT
       </match>
     </label>
-    # Strip the nginx-ingress namespace info and add enough dummy information
-    # so that kubernetes_metadata plugin can get the namespace labels.
-    <filter lagoon.*.router.nginx>
-      @type record_modifier
-      remove_keys _dummy_
-      <record>
-        _dummy_ ${record['kubernetes'] = {'namespace_name' => record['namespace'], 'pod_name' => 'nopod', 'container_name' => 'nocontainer'}; record['docker'] = {'container_id' => "#{record['namespace']}_#{record['ingress_name']}"}; nil}
-      </record>
-    </filter>
-    # enrich with k8s metadata (will get the namespace labels)
-    <filter lagoon.*.router.nginx>
-      @type kubernetes_metadata
-      @log_level warn
-      skip_container_metadata true
-      skip_master_url         true
-    </filter>
-    # strip the dummy information so that it doesn't appear in logs
-    <filter lagoon.*.router.nginx>
-      @type record_modifier
-      remove_keys _dummy_,docker
-      <record>
-        _dummy_ ${record['kubernetes'].delete('pod_name'); record['kubernetes'].delete('container_name'); record['kubernetes'].delete('pod_id'); nil}
-      </record>
-    </filter>
 
 {{- if .Values.openshiftHaproxyLogsCollector.enabled }}
     #
