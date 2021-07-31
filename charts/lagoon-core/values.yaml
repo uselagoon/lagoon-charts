@@ -47,6 +47,7 @@
 # logsDBAdminPassword:
 # rabbitMQPassword:
 # redisPassword:
+# k8upBackupBucketName:
 
 # These values are the chart defaults, but can be overridden.
 
@@ -56,6 +57,8 @@ elasticsearchHostPort: 9200
 imagePullSecrets: []
 
 rabbitMQUsername: lagoon
+
+k8upS3Endpoint: ""
 
 # Set to an empty string to support Harbor v1.x.x
 harborAPIVersion: v2.0
