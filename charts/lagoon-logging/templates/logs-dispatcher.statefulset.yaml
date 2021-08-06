@@ -33,7 +33,7 @@ spec:
         {{- toYaml .Values.logsDispatcher.podSecurityContext | nindent 8 }}
       initContainers:
       - image: busybox:musl
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         name: chown-buffer
         command:
         - chown
@@ -91,6 +91,11 @@ spec:
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
         {{- end }}
+        env:
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         envFrom:
         - secretRef:
             name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
@@ -142,6 +147,9 @@ spec:
     spec:
       accessModes:
       - ReadWriteOnce
+      {{- with .Values.logsDispatcher.buffer.storageClassName }}
+      storageClassName: {{ . }}
+      {{- end }}
       resources:
         requests:
-          storage: 16Gi
+          storage: {{ .Values.logsDispatcher.buffer.size }}

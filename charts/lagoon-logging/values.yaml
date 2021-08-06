@@ -17,7 +17,7 @@ logsDispatcher:
 
   image:
     repository: uselagoon/logs-dispatcher
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
@@ -65,6 +65,10 @@ logsDispatcher:
   serviceMonitor:
     enabled: true
 
+  buffer:
+    size: 16Gi
+    storageClassName: ""
+
 openshiftHaproxyLogsCollector:
 
   enabled: false
@@ -75,7 +79,7 @@ openshiftHaproxyLogsCollector:
 
   image:
     repository: fluent/fluent-bit
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart version.
     tag: "1.6-debug"
 
@@ -115,7 +119,7 @@ logsTeeRouter:
 
   image:
     repository: uselagoon/logs-tee
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart version.
     tag: ""
 
@@ -178,7 +182,7 @@ logsTeeApplication:
 
   image:
     repository: uselagoon/logs-tee
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart version.
     tag: ""
 
@@ -322,6 +326,13 @@ enableDefaultForwarding: true
 
 # Set how many fluentd pods should be running
 fluentdReplicaCount: 3
+
+# Add tolerations to the fluentbit daemonset so that it runs on e.g.
+# load-balancer nodes.
+fluentbitTolerations:
+- effect: NoSchedule
+  key: lagoon.sh/lb
+  operator: Exists
 
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described

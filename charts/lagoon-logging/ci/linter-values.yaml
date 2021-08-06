@@ -56,3 +56,6 @@ logsDispatcher:
   serviceMonitor:
     enabled: false
   replicaCount: 1
+  buffer:
+    storageClassName: standard
+    size: 4Gi

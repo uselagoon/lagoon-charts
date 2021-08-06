@@ -9,6 +9,9 @@ data:
     # vi: ft=fluentd
     <system>
       workers 2
+      # comment out this line to see warnings
+      # it is set to error because fluentd is quite chatty
+      log_level error
     </system>
 
     # prometheus metrics
@@ -28,7 +31,6 @@ data:
       @id    in_container
       tag    process.container
     </source>
-
     # application logs emitted by the lagoon_logs drupal module
     <source>
       @type  udp
@@ -41,7 +43,6 @@ data:
         @type json
       </parse>
     </source>
-
 {{- if .Values.openshiftHaproxyLogsCollector.enabled }}
     # router logs emitted by the openshift routers
     <source>
@@ -148,20 +149,11 @@ data:
       @type record_modifier
       remove_keys docker
     </filter>
-    # * add the index name
-    # * ensure the log field is in there, even if empty, to avoid errors in the following parser
-    <filter lagoon.*.container>
-      @type record_modifier
-      <record>
-        index_name container-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
-        log ${record['log'] || ""}
-      </record>
-    </filter>
     # post-process to try to eke some more structure out of the logs.
     # the last "format none" block is a catch-all for unmatched messages.
     <filter lagoon.*.container>
       @type parser
-      key_name log
+      key_name message
       reserve_data true
       <parse>
         @type multi_format
@@ -176,23 +168,6 @@ data:
         </pattern>
       </parse>
     </filter>
-    {{- if .Values.consolidateServiceIndices }}
-    # some cluster services generate namespaces with a random suffix, so
-    # consolidate those in a single index for each service
-    <filter lagoon.*.container>
-      @type record_modifier
-      <replace>
-        key index_name
-        expression /^(?<prefix>container-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
-        replace \k<prefix>_\k<suffix>
-      </replace>
-      <replace>
-        key index_name
-        expression /^(?<prefix>container-logs-.+-apb)-(?:prov|depr)-[^-]{5}_(?<suffix>.+)$/
-        replace \k<prefix>_\k<suffix>
-      </replace>
-    </filter>
-    {{- end }}
 
     #
     # process application logs
@@ -216,13 +191,6 @@ data:
       skip_container_metadata true
       skip_master_url         true
     </filter>
-    # add the index_name
-    <filter lagoon.*.application>
-      @type record_modifier
-      <record>
-        index_name application-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
-      </record>
-    </filter>
     # strip the dummy information so that it doesn't appear in logs
     <filter lagoon.*.application>
       @type record_modifier
@@ -235,31 +203,77 @@ data:
     #
     # process nginx_router logs
     #
-    # Strip the nginx-ingress namespace info and add enough dummy information
-    # so that kubernetes_metadata plugin can get the namespace labels.
-    # Also strip the duplicated log field.
+    # The message field may be json-encoded router logs, so parse that and put the
+    # keys in the top-level log object.
     <filter lagoon.*.router.nginx>
-      @type record_modifier
-      remove_keys _dummy_,log
-      <record>
-        _dummy_ ${record['kubernetes'] = {'namespace_name' => record['namespace'], 'pod_name' => 'nopod', 'container_name' => 'nocontainer'}; record['docker'] = {'container_id' => "#{record['namespace']}_#{record['ingress_name']}"}; nil}
-      </record>
+      @type parser
+      key_name message
+      reserve_time true
+      reserve_data true
+      remove_key_name_field true
+      <parse>
+        @type multi_format
+        <pattern>
+          format json
+        </pattern>
+        <pattern>
+          format none
+        </pattern>
+      </parse>
     </filter>
-    # enrich with k8s metadata (will get the namespace labels)
-    <filter lagoon.*.router.nginx>
-      @type kubernetes_metadata
-      @log_level warn
-      skip_container_metadata true
-      skip_master_url         true
-    </filter>
-    # strip the dummy information so that it doesn't appear in logs
-    <filter lagoon.*.router.nginx>
-      @type record_modifier
-      remove_keys _dummy_,docker
-      <record>
-        _dummy_ ${record['kubernetes'].delete('pod_name'); record['kubernetes'].delete('container_name'); record['kubernetes'].delete('pod_id'); nil}
-      </record>
-    </filter>
+    # match the nginx router logs here and relabel them based on whether they
+    # were successfully parsed as json above or not
+    <match lagoon.*.router.nginx>
+      @type rewrite_tag_filter
+      <rule>
+        # if the host key doesn't exist then this was not parsed as JSON, so we
+        # just send to @OUTPUT directly because it is an actual nginx
+        # controller log. These logs will appear in index_name
+        # router-logs-ingress-nginx_.*
+        invert true
+        key host
+        pattern /.+/
+        tag ${tag}
+        label @OUTPUT
+      </rule>
+      <rule>
+        # host key exists, so this is a HTTP request log
+        key host
+        pattern /.+/
+        tag ${tag}
+        label @NGINX_ROUTER_OUTPUT
+      </rule>
+    </match>
+    <label @NGINX_ROUTER_OUTPUT>
+      # Strip the nginx-ingress namespace info and add enough dummy information
+      # so that kubernetes_metadata plugin can get the namespace labels.
+      <filter lagoon.*.router.nginx>
+        @type record_modifier
+        remove_keys _dummy_
+        <record>
+          _dummy_ ${record['kubernetes'] = {'namespace_name' => record['namespace'], 'pod_name' => 'nopod', 'container_name' => 'nocontainer'}; record['docker'] = {'container_id' => "#{record['namespace']}_#{record['ingress_name']}"}; nil}
+        </record>
+      </filter>
+      # enrich with k8s metadata (will get the namespace labels)
+      <filter lagoon.*.router.nginx>
+        @type kubernetes_metadata
+        @log_level warn
+        skip_container_metadata true
+        skip_master_url         true
+      </filter>
+      # strip the dummy information so that it doesn't appear in logs
+      <filter lagoon.*.router.nginx>
+        @type record_modifier
+        remove_keys _dummy_,docker
+        <record>
+          _dummy_ ${record['kubernetes'].delete('pod_name'); record['kubernetes'].delete('container_name'); record['kubernetes'].delete('pod_id'); nil}
+        </record>
+      </filter>
+      <match lagoon.*.router.nginx>
+        @type relabel
+        @label @OUTPUT
+      </match>
+    </label>
 
 {{- if .Values.openshiftHaproxyLogsCollector.enabled }}
     #
@@ -283,104 +297,142 @@ data:
     </filter>
 
 {{- end }}
-    #
-    # add the router index_name
-    #
-    <filter lagoon.*.router.**>
-      @type record_modifier
-      <record>
-        index_name router-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
-      </record>
-    </filter>
-    {{- if .Values.consolidateServiceIndices }}
-    # some cluster services generate namespaces with a random suffix, so
-    # consolidate those in a single index for each service
-    <filter lagoon.*.router.openshift.**>
-      @type record_modifier
-      <replace>
-        key index_name
-        expression /^(?<prefix>router-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
-        replace \k<prefix>_\k<suffix>
-      </replace>
-    </filter>
-    {{- end }}
 
-    #
-    # add the lagoon index_name
-    # the source for this tag is included when lagoonLogs.enabled is true
-    #
-    <filter lagoon.*.lagoon>
-      @type record_modifier
-      <record>
-        index_name lagoon-logs-${record['project']}-_-all_environments-_-${Time.at(time).strftime("%Y.%m")}
-      </record>
-    </filter>
-
-    #
-    # add cluster identifier
-    #
-    <filter lagoon.**>
-      @type record_modifier
-      <record>
-        cluster "#{ENV['CLUSTER_NAME']}"
-      </record>
-    </filter>
-
-    #
-    # forward all to logs-concentrator
-    #
     <match lagoon.**>
-      @type copy
-      {{- if .Values.enableDefaultForwarding }}
-      <store>
-        @type forward
-        @id out_forward
-        # error out early
-        verify_connection_at_startup {{ .Values.forward.verifyConnectionAtStartup }}
-        # tls
-        transport tls
-        tls_cert_path /fluentd/tls/ca.crt
-        tls_client_cert_path /fluentd/tls/client.crt
-        tls_client_private_key_path /fluentd/tls/client.key
-        tls_verify_hostname {{ .Values.forward.tlsVerifyHostname }}
-        # endpoint
-        keepalive true # makes sure the connection is not recreated every second
-        keepalive_timeout 10m # reconnect after 10mins in order to handle DNS changes, etc.
-        <server>
-          port "#{ENV['LOGS_FORWARD_HOST_PORT']}"
-          host "#{ENV['LOGS_FORWARD_HOST']}"
-          name "#{ENV['LOGS_FORWARD_HOSTNAME']}"
-          username "#{ENV['LOGS_FORWARD_USERNAME']}"
-          password "#{ENV['LOGS_FORWARD_PASSWORD']}"
-        </server>
-        # authentication
-        <security>
-          self_hostname "#{ENV['LOGS_FORWARD_SELF_HOSTNAME']}"
-          shared_key "#{ENV['LOGS_FORWARD_SHARED_KEY']}"
-        </security>
-        # buffer chunks by tag
-        <buffer tag>
-          @type file
-          path /fluentd/buffer/forward
-          # buffer params (per worker)
-          total_limit_size 8GB
-          # flush params
-          flush_thread_count 8 # 8 threads that flush, makes sure we have enough flushers for all the different buffers
-          flush_interval 2s # flush every 2 seconds
-          flush_thread_burst_interval 0 # don't sleep if there is more data to flush
-          retry_max_interval 30s # limit exponential backoff period
-          overflow_action drop_oldest_chunk
-        </buffer>
-      </store>
-      {{- end }}
-      {{- if .Values.extraConf }}
-      <store>
-        @type relabel
-        @label @EXTRACONF
-      </store>
-      {{- end }}
-      @include store.d/*.conf
+      @type relabel
+      @label @OUTPUT
     </match>
+
+    <label @OUTPUT>
+      #
+      # add cluster identifier
+      #
+      <filter lagoon.**>
+        @type record_modifier
+        <record>
+          cluster "#{ENV['CLUSTER_NAME']}"
+        </record>
+      </filter>
+      #
+      # add the container logs index_name
+      #
+      <filter lagoon.*.container>
+        @type record_modifier
+        <record>
+          index_name container-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
+          log ${record['log'] || ""}
+        </record>
+      </filter>
+      #
+      # add the application logs index_name
+      #
+      <filter lagoon.*.application>
+        @type record_modifier
+        <record>
+          index_name application-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
+        </record>
+      </filter>
+      #
+      # add the router logs index_name
+      #
+      <filter lagoon.*.router.**>
+        @type record_modifier
+        <record>
+          index_name router-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
+        </record>
+      </filter>
+      {{- if .Values.consolidateServiceIndices }}
+      # some cluster services generate namespaces with a random suffix, so
+      # consolidate those in a single index for each service
+      <filter lagoon.*.router.openshift.**>
+        @type record_modifier
+        <replace>
+          key index_name
+          expression /^(?<prefix>router-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
+          replace \k<prefix>_\k<suffix>
+        </replace>
+      </filter>
+      <filter lagoon.*.container>
+        @type record_modifier
+        <replace>
+          key index_name
+          expression /^(?<prefix>container-logs-e2e)-[^-]{10}-[^-]{26}_(?<suffix>.+)$/
+          replace \k<prefix>_\k<suffix>
+        </replace>
+        <replace>
+          key index_name
+          expression /^(?<prefix>container-logs-.+-apb)-(?:prov|depr)-[^-]{5}_(?<suffix>.+)$/
+          replace \k<prefix>_\k<suffix>
+        </replace>
+      </filter>
+      {{- end }}
+      #
+      # add the lagoon logs index_name
+      # the source for this tag is included when lagoonLogs.enabled is true
+      #
+      <filter lagoon.*.lagoon>
+        @type record_modifier
+        <record>
+          index_name lagoon-logs-${record['project']}-_-all_environments-_-${Time.at(time).strftime("%Y.%m")}
+        </record>
+      </filter>
+
+      #
+      # forward all to logs-concentrator
+      #
+      <match lagoon.**>
+        @type copy
+        {{- if .Values.enableDefaultForwarding }}
+        <store>
+          @type forward
+          @id out_forward
+          # error out early
+          verify_connection_at_startup {{ .Values.forward.verifyConnectionAtStartup }}
+          # tls
+          transport tls
+          tls_cert_path /fluentd/tls/ca.crt
+          tls_client_cert_path /fluentd/tls/client.crt
+          tls_client_private_key_path /fluentd/tls/client.key
+          tls_verify_hostname {{ .Values.forward.tlsVerifyHostname }}
+          # endpoint
+          keepalive true # makes sure the connection is not recreated every second
+          keepalive_timeout 10m # reconnect after 10mins in order to handle DNS changes, etc.
+          <server>
+            port "#{ENV['LOGS_FORWARD_HOST_PORT']}"
+            host "#{ENV['LOGS_FORWARD_HOST']}"
+            name "#{ENV['LOGS_FORWARD_HOSTNAME']}"
+            username "#{ENV['LOGS_FORWARD_USERNAME']}"
+            password "#{ENV['LOGS_FORWARD_PASSWORD']}"
+          </server>
+          # authentication
+          <security>
+            self_hostname "#{ENV['LOGS_FORWARD_SELF_HOSTNAME']}"
+            shared_key "#{ENV['LOGS_FORWARD_SHARED_KEY']}"
+          </security>
+          # buffer chunks by tag
+          <buffer tag>
+            @type file
+            path /fluentd/buffer/forward
+            # buffer params (per worker)
+            total_limit_size 8GB
+            # flush params
+            flush_thread_count 8 # 8 threads that flush, makes sure we have enough flushers for all the different buffers
+            flush_interval 2s # flush every 2 seconds
+            flush_thread_burst_interval 0 # don't sleep if there is more data to flush
+            retry_max_interval 30s # limit exponential backoff period
+            overflow_action drop_oldest_chunk
+          </buffer>
+        </store>
+        {{- end }}
+        {{- if .Values.extraConf }}
+        <store>
+          @type relabel
+          @label @EXTRACONF
+        </store>
+        {{- end }}
+        @include store.d/*.conf
+      </match>
+    </label>
     {{- with .Values.extraConf }}
 
     <label @EXTRACONF>
