@@ -204,7 +204,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--timeout $(TIMEOUT) \
 		--values ./charts/lagoon-remote/ci/linter-values.yaml \
 		--set dockerHost.image.repository=$(IMAGE_REGISTRY)/docker-host \
-		--set "lagoon-build-deploy.enabled="false" \
+		--set "lagoon-build-deploy.enabled=false" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set "dbaas-operator.mariadbProviders.development.environment=development" \
 		--set "dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
