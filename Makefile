@@ -74,6 +74,7 @@ install-ingress:
 		--version=3.31.0 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
+	sleep 30
 
 .PHONY: install-registry
 install-registry: install-ingress
