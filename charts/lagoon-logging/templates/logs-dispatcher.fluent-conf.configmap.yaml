@@ -364,6 +364,11 @@ data:
           expression /^(?<prefix>container-logs-.+-apb)-(?:prov|depr)-[^-]{5}_(?<suffix>.+)$/
           replace \k<prefix>_\k<suffix>
         </replace>
+        <replace>
+          key index_name
+          expression /^(?<prefix>container-logs-openshift-build-test)-[0-9]+-[^-]{5}$/
+          replace \k<prefix>
+        </replace>
       </filter>
       {{- end }}
       #
