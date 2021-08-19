@@ -100,4 +100,7 @@ data:
 {{- if not .Values.verifyESVersionAtStartup }}
       verify_es_version_at_startup false
 {{- end }}
+{{- if .Values.elasticsearchCACert }}
+      ca_file /fluentd/es-tls/ca.crt
+{{- end }}
     </match>
