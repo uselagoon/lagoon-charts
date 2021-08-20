@@ -78,6 +78,10 @@ spec:
           name: {{ include "lagoon-logs-concentrator.fullname" . }}-buffer
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logs-concentrator.fullname" . }}-tls
+        {{- if .Values.elasticsearchCACert }}
+        - mountPath: /fluentd/es-tls/
+          name: {{ include "lagoon-logs-concentrator.fullname" . }}-es-tls
+        {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
       {{- with .Values.nodeSelector }}
@@ -108,6 +112,12 @@ spec:
           defaultMode: 420
           secretName: {{ include "lagoon-logs-concentrator.fullname" . }}-users
         name: {{ include "lagoon-logs-concentrator.fullname" . }}-users
+      {{- if .Values.elasticsearchCACert }}
+      - secret:
+          defaultMode: 420
+          secretName: {{ include "lagoon-logs-concentrator.fullname" . }}-es-tls
+        name: {{ include "lagoon-logs-concentrator.fullname" . }}-es-tls
+      {{- end }}
   volumeClaimTemplates:
   - metadata:
       name: {{ include "lagoon-logs-concentrator.fullname" . }}-buffer

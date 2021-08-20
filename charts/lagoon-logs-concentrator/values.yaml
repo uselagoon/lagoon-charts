@@ -116,9 +116,14 @@ elasticsearchTLSVerify: true
 
 # The values below are optional.
 
-# elasticsearchHostPort: "443" # default 9200
-# elasticsearchScheme: https   # default http
+# elasticsearchHostPort: "443"  # default 9200
+# elasticsearchScheme: https    # default http
 # service:
-#   type: LoadBalancer         # default ClusterIP. Set to LoadBalancer to
-#                              # expose the logs-concentrator service
-#                              # publicly.
+#   type: LoadBalancer          # default ClusterIP. Set to LoadBalancer to
+#                               # expose the logs-concentrator service
+#                               # publicly.
+#
+# elasticsearchCACert: |        # if elasticsearch is presenting a certificate
+#   -----BEGIN CERTIFICATE----- # signed by a private CA, then define the CA
+#   ...                         # root certificate here.
+#   -----END CERTIFICATE-----
