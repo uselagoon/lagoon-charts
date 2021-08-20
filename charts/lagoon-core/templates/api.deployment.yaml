@@ -54,8 +54,6 @@ spec:
         - name: BITBUCKET_API_TOKEN
           value: {{ . | quote }}
         {{- end }}
-        - name: ELASTICSEARCH_HOST
-          value: {{ required "A valid .Values.elasticsearchURL required!" .Values.elasticsearchURL | quote }}
         - name: ELASTICSEARCH_URL
           value: {{ required "A valid .Values.elasticsearchURL required!" .Values.elasticsearchURL | quote }}
         {{- with .Values.gitlabAPIURL }}
