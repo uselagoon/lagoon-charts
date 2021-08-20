@@ -47,11 +47,14 @@
 # logsDBAdminPassword:
 # rabbitMQPassword:
 # redisPassword:
+# k8upBackupBucketName:
 
 # These values are the chart defaults, but can be overridden.
 imagePullSecrets: []
 
 rabbitMQUsername: lagoon
+
+k8upS3Endpoint: ""
 
 # Set to an empty string to support Harbor v1.x.x
 harborAPIVersion: v2.0
@@ -654,23 +657,6 @@ drushAlias:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
-
-logsDBCurator:
-  enabled: true
-  image:
-    repository: uselagoon/logs-db-curator
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  additionalEnvs:
-  #   FOO: Bar
 
 ssh:
   replicaCount: 2

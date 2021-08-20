@@ -1,0 +1,33 @@
+{{ if .Capabilities.APIVersions.Has "backup.appuio.ch/v1alpha1/Schedule" }}
+apiVersion: backup.appuio.ch/v1alpha1
+kind: Schedule
+metadata:
+  name: {{ include "lagoon-core.fullname" . }}
+spec:
+  backend:
+    repoPasswordSecretRef:
+      key: repo-pw
+      name: "{{ include "lagoon-core.fullname" . }}-baas-repo-pw"
+    s3:
+      {{ if .Values.k8upBackupBucketName }}
+      bucket: '{{ .Values.k8upBackupBucketName }}'
+      {{ else if (lookup "backup.appuio.ch/v1alpha1" "Schedule" "" (include "lagoon-core.fullname" .) )}}
+      bucket: {{ (lookup "backup.appuio.ch/v1alpha1" "Schedule" "" (include "lagoon-core.fullname" .) ).spec.backend.s3.bucket }}
+      {{ else }}
+      bucket: {{ include "lagoon-core.fullname" . }}-{{ randAlphaNum 8 }}
+      {{ end }}
+      {{ if .Values.k8upS3Endpoint }}
+      endpoint: {{ .Values.k8upS3Endpoint }}
+      {{ end }}
+  backup:
+    schedule: '15 * * * *'
+  check:
+    schedule: '45 3 * * *'
+  prune:
+    retention:
+      keepHourly: 36
+      keepDaily: 30
+      keepWeekly: 12
+      keepMonthly: 12
+    schedule: '26 4 * * 0'
+{{ end }}
