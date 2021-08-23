@@ -31,3 +31,4 @@ dependencies:
 - name: logging-operator
   repository: https://kubernetes-charts.banzaicloud.com
   version: ~3.13.0
+  condition: logging-operator.enabled
