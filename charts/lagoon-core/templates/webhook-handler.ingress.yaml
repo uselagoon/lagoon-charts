@@ -1,7 +1,7 @@
 {{- if and .Values.webhookHandler.enabled .Values.webhookHandler.ingress.enabled -}}
 {{- $fullName := include "lagoon-core.webhookHandler.fullname" . -}}
 {{- $svcPort := .Values.webhookHandler.service.port -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -29,9 +29,12 @@ spec:
       paths:
       {{- range .paths }}
       - path: {{ . }}
+        pathType: Exact
         backend:
-          serviceName: {{ $fullName }}
-          servicePort: {{ $svcPort }}
+          service:
+            name: {{ $fullName }}
+            port:
+              number: {{ $svcPort }}
       {{- end }}
   {{- end }}
 {{- end }}
