@@ -34,7 +34,7 @@ spec:
         imagePullPolicy: {{ .Values.autoIdler.image.pullPolicy }}
         env:
         - name: ELASTICSEARCH_URL
-          value: {{ .Values.elasticsearchScheme }}://{{ .Values.elasticsearchHost }}
+          value: {{ .Values.elasticsearchURL }}
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
