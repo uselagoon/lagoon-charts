@@ -9,6 +9,7 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
+kubeVersion: ">= 1.19.0-0"
 
 # Application charts are a collection of templates that can be packaged into
 # versioned archives to be deployed.
