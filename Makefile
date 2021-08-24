@@ -234,7 +234,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 #
 
 .PHONY: install-lagoon-build-deploy
-install-lagoon-build-deploy:
+install-lagoon-build-deploy: install-lagoon-core
 	$(HELM) dependency build ./charts/lagoon-build-deploy/
 	$(HELM) upgrade \
 		--install \
