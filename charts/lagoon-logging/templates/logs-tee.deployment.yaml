@@ -29,7 +29,7 @@ spec:
           # UDP port in
           - {{ .Values.logsTeeRouter.listenPort | quote }}
           # UDP endpoints out
-          - {{ include "lagoon-logging.logsDispatcher.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5141
+          - {{ include "lagoon-logging.openshiftHaproxyLogsCollector.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5141
           {{- with .Values.logsTeeRouter.endpoints }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
