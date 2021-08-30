@@ -9,6 +9,8 @@ data:
     # vi: ft=fluentd
     <system>
       workers 4
+      # set to error because fluentd is quite chatty about to liveness probes
+      log_level error
     </system>
     # prometheus metrics
     <source>
@@ -24,8 +26,6 @@ data:
       @type          forward
       @id            in_forward
       add_tag_prefix in_forward
-      # avoid verbose OpenSSL warnings in fluentd logs due to liveness probes
-      # @log_level      error
       <security>
         self_hostname logs-concentrator
         user_auth true
@@ -54,11 +54,12 @@ data:
       </metric>
     </filter>
 
-
     # send to elasticsearch
     <match in_forward.**>
       @type elasticsearch
       @id out_elasticsearch
+      # be more verbose about elasticsearch problems
+      @log_level info
       # ingestion
       target_index_key index_name
       include_timestamp true
