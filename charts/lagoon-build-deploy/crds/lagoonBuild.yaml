@@ -171,7 +171,7 @@ spec:
                   status:
                     type: string
                   type:
-                    description: JobConditionType const for the status type
+                    description: BuildStatusType const for the status type
                     type: string
                 required:
                 - lastTransitionTime
@@ -594,7 +594,7 @@ spec:
                   status:
                     type: string
                   type:
-                    description: JobConditionType const for the status type
+                    description: BuildStatusType const for the status type
                     type: string
                 required:
                 - lastTransitionTime
