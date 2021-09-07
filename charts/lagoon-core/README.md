@@ -104,7 +104,7 @@ Important notes:
 * Because the SSH service is non-http it requires a `LoadBalancer` Service type.
 
 ```yaml
-elasticsearchHost: logs.example.com
+elasticsearchURL: http://logs.example.com
 
 api:
   ingress:

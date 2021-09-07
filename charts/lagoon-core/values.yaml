@@ -1,7 +1,7 @@
 # These values must be set on install, as they don't have sensible defaults.
 
-# elasticsearchHost:
 # harborAdminPassword:
+# elasticsearchURL:
 # harborURL:
 # kibanaURL:
 # registry:
@@ -50,10 +50,6 @@
 # k8upBackupBucketName:
 
 # These values are the chart defaults, but can be overridden.
-
-elasticsearchScheme: https
-elasticsearchHostPort: 9200
-
 imagePullSecrets: []
 
 rabbitMQUsername: lagoon

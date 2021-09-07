@@ -10,6 +10,6 @@ maintainers:
 
 type: application
 
-version: 0.21.0
+version: 0.22.0
 
-appVersion: v2.0.0-rc.8
+appVersion: v2.0.0-rc.9
