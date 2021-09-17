@@ -93,6 +93,7 @@ elasticsearchTLSVerify: true
 # Sample data shown below.
 
 # elasticsearchHost: "logs-db-service.elasticsearch.svc.cluster.local"
+# elasticsearchAdminUser: "admin"
 # elasticsearchAdminPassword: "securepass"
 # tls:
 #   caCert: |
