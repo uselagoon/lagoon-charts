@@ -1,0 +1,17 @@
+{{- if .Values.cdnLogsCollector.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}
+  labels:
+    {{- include "lagoon-logging.cdnLogsCollector.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.cdnLogsCollector.serviceType }}
+  selector:
+    {{- include "lagoon-logging.cdnLogsCollector.selectorLabels" . | nindent 4 }}
+  ports:
+  - name: syslog
+    port: 5140
+    protocol: TCP
+    targetPort: syslog
+{{- end }}
