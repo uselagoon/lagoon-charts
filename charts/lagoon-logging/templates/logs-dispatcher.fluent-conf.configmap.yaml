@@ -52,6 +52,15 @@ data:
       tag   "lagoon.#{ENV['CLUSTER_NAME']}.router.openshift"
     </source>
 {{- end }}
+{{- if .Values.cdnLogsCollector.enabled }}
+    # cdn logs collected via cdn-logs-collector
+    <source>
+      @type  forward
+      @id    in_cdn
+      port   24226
+      tag   "lagoon.#{ENV['CLUSTER_NAME']}.cdn"
+    </source>
+{{- end }}
 
     #
     # optional sources which can be enabled in the chart
@@ -349,6 +358,17 @@ data:
           index_name router-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
         </record>
       </filter>
+      {{- if .Values.cdnLogsCollector.enabled }}
+      #
+      # add the cdn logs index_name
+      #
+      <filter lagoon.*.cdn>
+        @type record_modifier
+        <record>
+          index_name cdn-logs-_-${ENV['CLUSTER_NAME']}-_-${Time.at(time).strftime("%Y.%m")}
+        </record>
+      </filter>
+      {{- end }}
       {{- if .Values.consolidateServiceIndices }}
       # some cluster services generate namespaces with a random suffix, so
       # consolidate those in a single index for each service
