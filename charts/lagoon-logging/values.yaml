@@ -235,6 +235,50 @@ logsTeeApplication:
 
   affinity: {}
 
+cdnLogsCollector:
+
+  enabled: false
+
+  name: cdn-logs-collector
+
+  replicaCount: 3
+
+  image:
+    repository: uselagoon/logs-dispatcher
+    pullPolicy: IfNotPresent
+    tag: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  serviceMonitor:
+    enabled: true
+
+  buffer:
+    size: 8Gi
+    storageClassName: ""
+
+  serviceType: LoadBalancer
+
+  # TLS configuration is required
+  # These should be server certificates, and the CDN should be configured to
+  # present client certificates with the same trust root.
+  tls:
+    caCert: ""
+    serverCert: ""
+    serverKey: ""
+
 # Don't collect logs from these namespaces.
 # Comment out this field to collect from all namespaces.
 excludeNamespaces:

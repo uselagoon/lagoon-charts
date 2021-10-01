@@ -121,6 +121,16 @@ NOTE: If the `logging-operator` chart upgrade doesn't work, just uninstall the h
 helm upgrade --debug --namespace lagoon-logging --reuse-values lagoon-logging lagoon-logging
 ```
 
+## Generating certificates
+
+Some components of this chart use server or client TLS authentication.
+These can be generated using the instructions in the `lagoon-logs-concentrator` chart README.
+
+The convention for SAN and CN naming is along the lines of:
+
+* `logs-dispatcher.cluster1.example.com` for the lagoon-logging "client" and `logs-concentrator.cluster2.example.com` for the `lagoon-logs-concentrator` "server".
+* `cdn.cluster1.example.com` for the CDN "client" and `cdn-logs-collector.cluster1.example.com` for the `cdn-logs-collector` "server".
+
 ## Log export
 
 The `logs-dispatcher` includes support for sending logs to external sinks such as [cloudwatch](https://github.com/fluent-plugins-nursery/fluent-plugin-cloudwatch-logs) or [S3](https://docs.fluentd.org/output/s3).
