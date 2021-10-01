@@ -153,7 +153,11 @@ data:
     # the last "format none" block is a catch-all for unmatched messages.
     <filter lagoon.*.container>
       @type parser
+{{- if eq .Values.containerRuntime "docker" }}
+      key_name log
+{{- else }}
       key_name message
+{{- end }}
       reserve_data true
       <parse>
         @type multi_format
@@ -207,7 +211,11 @@ data:
     # keys in the top-level log object.
     <filter lagoon.*.router.nginx>
       @type parser
+{{- if eq .Values.containerRuntime "docker" }}
+      key_name log
+{{- else }}
       key_name message
+{{- end }}
       reserve_time true
       reserve_data true
       remove_key_name_field true

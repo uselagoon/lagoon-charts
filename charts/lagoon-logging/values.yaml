@@ -334,6 +334,15 @@ fluentbitTolerations:
   key: lagoon.sh/lb
   operator: Exists
 
+# This chart assumes the container runtime is containerd, which puts the log
+# message in the `message` field of the log record.
+#
+# If the container runtime is docker, then the log message is in the `log`
+# field instead. Set value to `docker` to enable docker compatible log parsing.
+# Currently the only valid values are `docker` or an empty string (the
+# default).
+containerRuntime: ""
+
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
 # in the README for the lagoon-logs-concentrator chart.
