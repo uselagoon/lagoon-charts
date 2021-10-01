@@ -41,10 +41,14 @@ spec:
               description: Build contains the type of build, and the image to use
                 for the builder.
               properties:
+                bulkId:
+                  type: string
                 ci:
                   type: string
                 image:
                   type: string
+                priority:
+                  type: integer
                 type:
                   type: string
               required:
@@ -159,15 +163,15 @@ spec:
                 of cluster Important: Run "make" to regenerate code after modifying
                 this file'
               items:
-                description: LagoonConditions defines the observed conditions of the
-                  pods.
+                description: LagoonBuildConditions defines the observed conditions
+                  of build pods.
                 properties:
                   lastTransitionTime:
                     type: string
                   status:
                     type: string
                   type:
-                    description: JobConditionType const for the status type
+                    description: BuildStatusType const for the status type
                     type: string
                 required:
                 - lastTransitionTime

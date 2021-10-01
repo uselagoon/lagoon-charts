@@ -134,15 +134,15 @@ spec:
                 of cluster Important: Run "make" to regenerate code after modifying
                 this file'
               items:
-                description: LagoonConditions defines the observed conditions of the
-                  pods.
+                description: LagoonTaskConditions defines the observed conditions
+                  of task pods.
                 properties:
                   lastTransitionTime:
                     type: string
                   status:
                     type: string
                   type:
-                    description: JobConditionType const for the status type
+                    description: TaskStatusType const for the status type
                     type: string
                 required:
                 - lastTransitionTime
