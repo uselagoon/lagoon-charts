@@ -72,7 +72,8 @@ sshHostKeyED25519: |-
 api:
   replicaCount: 1
   image:
-    repository: uselagoon/api
+    repository: testlagoon/api
+    tag: pr-2859
 
 apiDB:
   image:
