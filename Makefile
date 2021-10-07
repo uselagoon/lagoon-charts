@@ -7,7 +7,7 @@ IMAGE_TAG =
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
 # only affects lagoon-core, lagoon-remote, and the fill-test-ci-values target.
-IMAGE_REGISTRY =
+IMAGE_REGISTRY = uselagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/kubectl-build-deploy-dind:latest).
 OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
@@ -166,7 +166,8 @@ install-lagoon-core:
 		--set "keycloakAPIURL=http://localhost:8080/auth" \
 		--set "lagoonAPIURL=http://localhost:7070/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
-		--set api.image.repository=$(IMAGE_REGISTRY)/api \
+		--set api.image.repository=testlagoon/api \
+		--set api.image.tag=pr-2859 \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
 		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
