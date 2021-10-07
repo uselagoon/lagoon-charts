@@ -67,11 +67,11 @@ spec:
           value: {{ required "A valid .Values.harborURL required!" .Values.harborURL }}/api/repositories/
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}
-        - name: PROJECTSECRET
+        - name: PROJECTSEED
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-projectsecret
-              key: PROJECTSECRET
+              name: {{ include "lagoon-core.fullname" . }}-projectseed
+              key: PROJECTSEED
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
         - name: RABBITMQ_PASSWORD
