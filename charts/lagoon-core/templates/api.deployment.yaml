@@ -89,6 +89,11 @@ spec:
         - name: OVERWRITE_KUBECTL_BUILD_DEPLOY_DIND_IMAGE
           value: {{ . | quote }}
         {{- end }}
+        - name: PROJECTSECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-projectsecret
+              key: PROJECTSECRET
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
         - name: RABBITMQ_PASSWORD
