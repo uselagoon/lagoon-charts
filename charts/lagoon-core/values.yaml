@@ -80,7 +80,7 @@ imageTag: ""
 api:
   replicaCount: 2
   image:
-    repository: uselagoon/api
+    repository: testlagoon/api
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
