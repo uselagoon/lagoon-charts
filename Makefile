@@ -203,7 +203,7 @@ install-lagoon-core: install-minio
 		--set ui.image.repository=$(IMAGE_REGISTRY)/ui \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
-		--set s3FilesAccessKeyId=lagoonFilesAccessKey \
+		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
 		--set s3FilesSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesBucket=lagoon-files \
 		--set s3FilesHost=http://minio.minio.svc:9000 \
