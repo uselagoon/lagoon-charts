@@ -191,6 +191,7 @@ install-lagoon-core: install-minio
 		--set drushAlias.image.repository=$(IMAGE_REGISTRY)/drush-alias \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
+		--set logs2s3.image.repository=$(IMAGE_REGISTRY)/logs2s3 \
 		--set logs2email.enabled=false \
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
