@@ -150,8 +150,22 @@ install-mongodb:
 		mongodb \
 		bitnami/mongodb
 
+.PHONY: install-minio
+install-minio:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace minio \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set accessKey=lagoonFilesAccessKey,secretKey=lagoonFilesSecretKey \
+		--set buckets[0].name=lagoon-files,buckets[0].policy=none,buckets[0].purge=false \
+		--version=8.0.10 \
+		minio \
+		minio/minio
+
 .PHONY: install-lagoon-core
-install-lagoon-core:
+install-lagoon-core: install-minio
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -188,6 +202,10 @@ install-lagoon-core:
 		--set ui.image.repository=$(IMAGE_REGISTRY)/ui \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
+		--set s3FilesAccessKeyId=lagoonFilesAccessKey \
+		--set s3FilesSecretAccessKey=lagoonFilesSecretKey \
+		--set s3FilesBucket=lagoon-files \
+		--set s3FilesHost=minio.minio.svc \
 		lagoon-core \
 		./charts/lagoon-core
 
