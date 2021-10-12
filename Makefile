@@ -205,7 +205,7 @@ install-lagoon-core: install-minio
 		--set s3FilesAccessKeyId=lagoonFilesAccessKey \
 		--set s3FilesSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesBucket=lagoon-files \
-		--set s3FilesHost=minio.minio.svc \
+		--set s3FilesHost=http://minio.minio.svc:9000 \
 		lagoon-core \
 		./charts/lagoon-core
 
