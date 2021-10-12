@@ -615,6 +615,31 @@ logs2email:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+logs2s3:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: uselagoon/logs2s3
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
 drushAlias:
   enabled: true
   replicaCount: 2
