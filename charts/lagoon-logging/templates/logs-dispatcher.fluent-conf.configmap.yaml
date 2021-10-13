@@ -447,7 +447,7 @@ data:
             @type file
             path /fluentd/buffer/forward
             # buffer params (per worker)
-            total_limit_size 8GB
+            total_limit_size 7500MB
             # flush params
             flush_thread_count 8 # 8 threads that flush, makes sure we have enough flushers for all the different buffers
             flush_interval 2s # flush every 2 seconds
