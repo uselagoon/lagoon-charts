@@ -275,7 +275,7 @@ install-lagoon:  install-lagoon-core install-lagoon-remote
 .PHONY: get-admin-creds
 get-admin-creds:
 	echo "\nGraphQL admin token: \n$$(docker run \
-		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-jwtsecret -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
+		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-secrets -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
 		-e JWTAUDIENCE=api.dev \
 		-e JWTUSER=localadmin \
 		uselagoon/tests \

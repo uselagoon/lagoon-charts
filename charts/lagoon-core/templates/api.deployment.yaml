@@ -67,7 +67,7 @@ spec:
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
         - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
@@ -92,7 +92,7 @@ spec:
         - name: PROJECTSEED
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-projectseed
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: PROJECTSEED
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}

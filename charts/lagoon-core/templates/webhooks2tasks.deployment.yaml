@@ -52,7 +52,7 @@ spec:
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
         {{- with .Values.overwriteKubectlBuildDeployDindImage }}
         - name: OVERWRITE_KUBECTL_BUILD_DEPLOY_DIND_IMAGE
@@ -70,7 +70,7 @@ spec:
         - name: PROJECTSEED
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-projectseed
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: PROJECTSEED
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
