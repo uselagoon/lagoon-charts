@@ -2,12 +2,12 @@ TESTS = [api]
 # IMAGE_TAG controls the tag used for container images in the lagoon-core,
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
-IMAGE_TAG =
+IMAGE_TAG = pr-2862
 # IMAGE_REGISTRY controls the registry used for container images in the
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
 # only affects lagoon-core, lagoon-remote, and the fill-test-ci-values target.
-IMAGE_REGISTRY = uselagoon
+IMAGE_REGISTRY = testlagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/kubectl-build-deploy-dind:latest).
 OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
@@ -158,11 +158,11 @@ install-minio:
 		--namespace minio \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set accessKey=lagoonFilesAccessKey,secretKey=lagoonFilesSecretKey \
-		--set buckets[0].name=lagoon-files,buckets[0].policy=none,buckets[0].purge=false \
-		--version=8.0.10 \
+		--set accessKey.password=lagoonFilesAccessKey,secretKey.password=lagoonFilesSecretKey \
+		--set defaultBuckets=lagoon-files \
+		--version=8.1.9 \
 		minio \
-		minio/minio
+		bitnami/minio
 
 .PHONY: install-lagoon-core
 install-lagoon-core: install-minio
@@ -285,7 +285,7 @@ else
 endif
 
 .PHONY: install-test-cluster
-install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb
+install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb install-minio
 
 .PHONY: install-lagoon
 install-lagoon:  install-lagoon-core install-lagoon-remote
