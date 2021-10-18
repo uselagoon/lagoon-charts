@@ -41,7 +41,7 @@ spec:
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}

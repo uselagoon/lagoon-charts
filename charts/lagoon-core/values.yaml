@@ -49,6 +49,11 @@
 # redisPassword:
 # k8upBackupBucketName:
 
+# This value is set to match jwtSecret on existing installs if not defined.
+# It should only ever be set here for backwards compatibility.
+
+# projectSeed:
+
 # These values are the chart defaults, but can be overridden.
 imagePullSecrets: []
 

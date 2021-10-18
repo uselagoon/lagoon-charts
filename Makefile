@@ -180,7 +180,8 @@ install-lagoon-core: install-minio
 		--set "keycloakAPIURL=http://localhost:8080/auth" \
 		--set "lagoonAPIURL=http://localhost:7070/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
-		--set api.image.repository=$(IMAGE_REGISTRY)/api \
+		--set api.image.repository=testlagoon/api \
+		--set api.image.tag=pr-2859 \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
 		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
@@ -293,7 +294,7 @@ install-lagoon:  install-lagoon-core install-lagoon-remote
 .PHONY: get-admin-creds
 get-admin-creds:
 	echo "\nGraphQL admin token: \n$$(docker run \
-		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-jwtsecret -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
+		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-secrets -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
 		-e JWTAUDIENCE=api.dev \
 		-e JWTUSER=localadmin \
 		uselagoon/tests \
