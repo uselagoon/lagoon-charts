@@ -7,7 +7,7 @@ IMAGE_TAG =
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
 # only affects lagoon-core, lagoon-remote, and the fill-test-ci-values target.
-IMAGE_REGISTRY =
+IMAGE_REGISTRY = testlagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/kubectl-build-deploy-dind:latest).
 OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
