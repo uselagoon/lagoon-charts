@@ -75,7 +75,7 @@ imageTag: ""
 api:
   replicaCount: 2
   image:
-    repository: uselagoon/api
+    repository: testlagoon/api
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -116,7 +116,7 @@ api:
 
 apiDB:
   image:
-    repository: uselagoon/api-db
+    repository: testlagoon/api-db
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -142,7 +142,7 @@ apiDB:
 
 apiRedis:
   image:
-    repository: uselagoon/api-redis
+    repository: testlagoon/api-redis
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -163,7 +163,7 @@ apiRedis:
 keycloak:
   replicaCount: 1
   image:
-    repository: uselagoon/keycloak
+    repository: testlagoon/keycloak
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -198,7 +198,7 @@ keycloak:
 keycloakDB:
   replicaCount: 1
   image:
-    repository: uselagoon/keycloak-db
+    repository: testlagoon/keycloak-db
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -220,7 +220,7 @@ keycloakDB:
 broker:
   replicaCount: 3
   image:
-    repository: uselagoon/broker
+    repository: testlagoon/broker
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -282,7 +282,7 @@ broker:
 authServer:
   replicaCount: 2
   image:
-    repository: uselagoon/auth-server
+    repository: testlagoon/auth-server
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -311,7 +311,7 @@ webhooks2tasks:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/webhooks2tasks
+    repository: testlagoon/webhooks2tasks
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -336,7 +336,7 @@ webhookHandler:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/webhook-handler
+    repository: testlagoon/webhook-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -379,7 +379,7 @@ ui:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/ui
+    repository: testlagoon/ui
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -422,7 +422,7 @@ backupHandler:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/backup-handler
+    repository: testlagoon/backup-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -464,7 +464,7 @@ backupHandler:
 autoIdler:
   enabled: true
   image:
-    repository: uselagoon/auto-idler
+    repository: testlagoon/auto-idler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -481,7 +481,7 @@ autoIdler:
 storageCalculator:
   enabled: true
   image:
-    repository: uselagoon/storage-calculator
+    repository: testlagoon/storage-calculator
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -499,7 +499,7 @@ logs2slack:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/logs2slack
+    repository: testlagoon/logs2slack
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -525,7 +525,7 @@ logs2webhook:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/logs2webhook
+    repository: testlagoon/logs2webhook
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -550,7 +550,7 @@ logs2microsoftteams:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/logs2microsoftteams
+    repository: testlagoon/logs2microsoftteams
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -575,7 +575,7 @@ logs2rocketchat:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/logs2rocketchat
+    repository: testlagoon/logs2rocketchat
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -594,7 +594,7 @@ logs2email:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/logs2email
+    repository: testlagoon/logs2email
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -619,7 +619,7 @@ logs2s3:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/logs2s3
+    repository: testlagoon/logs2s3
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -644,7 +644,7 @@ drushAlias:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/drush-alias
+    repository: testlagoon/drush-alias
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -686,7 +686,7 @@ drushAlias:
 ssh:
   replicaCount: 2
   image:
-    repository: uselagoon/ssh
+    repository: testlagoon/ssh
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -752,7 +752,7 @@ controllerhandler:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/controllerhandler
+    repository: testlagoon/controllerhandler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
