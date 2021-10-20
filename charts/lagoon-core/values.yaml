@@ -720,7 +720,7 @@ sshPortal:
   enabled: false
   replicaCount: 2
   image:
-    repository: uselagoon/ssh-portal
+    repository: testlagoon/ssh-portal
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: "pr-2179"
