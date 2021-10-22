@@ -39,7 +39,7 @@ spec:
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
         - name: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
           valueFrom:

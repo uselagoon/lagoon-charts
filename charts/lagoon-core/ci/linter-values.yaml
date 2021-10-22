@@ -156,6 +156,11 @@ logs2email:
   image:
     repository: uselagoon/logs2email
 
+logs2s3:
+  replicaCount: 1
+  image:
+    repository: uselagoon/logs2s3
+
 drushAlias:
   replicaCount: 1
   image:

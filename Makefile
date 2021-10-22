@@ -150,8 +150,22 @@ install-mongodb:
 		mongodb \
 		bitnami/mongodb
 
+.PHONY: install-minio
+install-minio:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace minio \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set accessKey.password=lagoonFilesAccessKey,secretKey.password=lagoonFilesSecretKey \
+		--set defaultBuckets=lagoon-files \
+		--version=8.1.9 \
+		minio \
+		bitnami/minio
+
 .PHONY: install-lagoon-core
-install-lagoon-core:
+install-lagoon-core: install-minio
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -177,6 +191,7 @@ install-lagoon-core:
 		--set drushAlias.image.repository=$(IMAGE_REGISTRY)/drush-alias \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
+		--set logs2s3.image.repository=$(IMAGE_REGISTRY)/logs2s3 \
 		--set logs2email.enabled=false \
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
@@ -188,6 +203,10 @@ install-lagoon-core:
 		--set ui.image.repository=$(IMAGE_REGISTRY)/ui \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
+		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
+		--set s3FilesSecretAccessKey=lagoonFilesSecretKey \
+		--set s3FilesBucket=lagoon-files \
+		--set s3FilesHost=http://minio.minio.svc:9000 \
 		lagoon-core \
 		./charts/lagoon-core
 
@@ -266,7 +285,7 @@ else
 endif
 
 .PHONY: install-test-cluster
-install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb
+install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb install-minio
 
 .PHONY: install-lagoon
 install-lagoon:  install-lagoon-core install-lagoon-remote
@@ -274,7 +293,7 @@ install-lagoon:  install-lagoon-core install-lagoon-remote
 .PHONY: get-admin-creds
 get-admin-creds:
 	echo "\nGraphQL admin token: \n$$(docker run \
-		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-jwtsecret -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
+		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-secrets -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
 		-e JWTAUDIENCE=api.dev \
 		-e JWTUSER=localadmin \
 		uselagoon/tests \

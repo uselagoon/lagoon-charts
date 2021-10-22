@@ -49,6 +49,11 @@
 # redisPassword:
 # k8upBackupBucketName:
 
+# This value is set to match jwtSecret on existing installs if not defined.
+# It should only ever be set here for backwards compatibility.
+
+# projectSeed:
+
 # These values are the chart defaults, but can be overridden.
 imagePullSecrets: []
 
@@ -595,6 +600,31 @@ logs2email:
   replicaCount: 2
   image:
     repository: uselagoon/logs2email
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+logs2s3:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: uselagoon/logs2s3
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
