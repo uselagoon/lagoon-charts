@@ -211,7 +211,7 @@ install-lagoon-core: install-minio
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql install-mongodb
+install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-mariadb install-postgresql install-mongodb
 	$(HELM) dependency build ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
@@ -221,7 +221,7 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql in
 		--timeout $(TIMEOUT) \
 		--values ./charts/lagoon-remote/ci/linter-values.yaml \
 		--set dockerHost.image.repository=$(IMAGE_REGISTRY)/docker-host \
-		--set "lagoon-build-deploy.rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
+		--set "lagoon-build-deploy.enabled=false" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set "dbaas-operator.mariadbProviders.development.environment=development" \
 		--set "dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
@@ -242,14 +242,32 @@ install-lagoon-remote: install-lagoon-core install-mariadb install-postgresql in
 		--set "dbaas-operator.mongodbProviders.development.auth.source=admin" \
 		--set "dbaas-operator.mongodbProviders.development.auth.tls=false" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set lagoon-build-deploy.overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set lagoon-build-deploy.image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set lagoon-build-deploy.image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
-		$$([ $(BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set lagoon-build-deploy.rootlessBuildPods=true') \
-		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoon-build-deploy.lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
-		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoon-build-deploy.lagoonFeatureFlagDefaultIsolationNetworkPolicy=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
 		lagoon-remote \
 		./charts/lagoon-remote
+
+# The following target should only be called as a dependency of lagoon-remote
+# Do not install without lagoon-core
+#
+.PHONY: install-lagoon-build-deploy
+install-lagoon-build-deploy: install-lagoon-core
+	$(HELM) dependency build ./charts/lagoon-build-deploy/
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace lagoon \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--values ./charts/lagoon-build-deploy/ci/linter-values.yaml \
+		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
+		--set "rabbitMQHostname=lagoon-core-broker" \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
+		$$([ $(BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set rootlessBuildPods=true') \
+		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
+		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
+		lagoon-build-deploy \
+		./charts/lagoon-build-deploy
 
 #
 # The following targets facilitate local development only and aren't used in CI.
