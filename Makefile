@@ -207,6 +207,18 @@ install-lagoon-core: install-minio
 		--set s3FilesSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesBucket=lagoon-files \
 		--set s3FilesHost=http://minio.minio.svc:9000 \
+		--set api.ingress.enabled=true \
+		--set api.ingress.hosts[0].host="lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set api.ingress.hosts[0].paths[0]="/" \
+		--set ui.ingress.enabled=true \
+		--set ui.ingress.hosts[0].host="lagoon-ui.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set ui.ingress.hosts[0].paths[0]="/" \
+		--set keycloak.ingress.enabled=true \
+		--set keycloak.ingress.hosts[0].host="lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set keycloak.ingress.hosts[0].paths[0]="/" \
+		--set broker.ingress.enabled=true \
+		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set broker.ingress.hosts[0].paths[0]="/" \
 		lagoon-core \
 		./charts/lagoon-core
 
