@@ -246,12 +246,17 @@ data:
         # if the host key doesn't exist then this was not parsed as JSON, so we
         # just send to @OUTPUT directly because it is an actual nginx
         # controller log. These logs will appear in index_name
-        # router-logs-ingress-nginx_.*
+        # router-logs-ingress-nginx_.* if the keepIngressNginxController value
+        # is set to true.
         invert true
         key host
         pattern /.+/
         tag ${tag}
+{{- if .Values.keepIngressNginxController }}
         label @OUTPUT
+{{- else }}
+        label @DISCARD
+{{- end }}
       </rule>
       <rule>
         # host key exists, so this is a HTTP request log
@@ -464,6 +469,12 @@ data:
         </store>
         {{- end }}
         @include store.d/*.conf
+      </match>
+    </label>
+
+    <label @DISCARD>
+      <match lagoon.**>
+        @type null
       </match>
     </label>
     {{- with .Values.extraConf }}

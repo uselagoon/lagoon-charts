@@ -387,6 +387,11 @@ fluentbitTolerations:
 # default).
 containerRuntime: ""
 
+# The ingress-nginx controller logs are extremely verbose, but sometimes
+# useful. By default we discard these logs. But setting this value to true will
+# capture the logs in an index with the prefix `router-logs-ingress-nginx_`.
+keepIngressNginxController: false
+
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
 # in the README for the lagoon-logs-concentrator chart.
