@@ -194,3 +194,55 @@ workflows:
   replicaCount: 1
   image:
     repository: uselagoon/workflows
+
+# enable nats cluster (and optionally natsbox debugger)
+nats:
+  enabled: true
+  # natsbox:
+  #   enabled: true
+  #   # additional labels are required due to the network policy
+  #   additionalLabels:
+  #     lagoon-core-nats-client: "true"
+
+natsService:
+  type: ClusterIP
+
+natsConfig:
+  users:
+    sshPortal:
+    - user: ci-ssh-portal
+      password: ci-password
+  tls:
+    secretData:
+      ca.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIBgDCCASagAwIBAgIUe/jnFQ0sqoJKQP9CmguStIhyCNcwCgYIKoZIzj0EAwIw
+        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yMjAzMDMxNDU2MDBa
+        Fw0zMjAyMjkxNDU2MDBaMB4xHDAaBgNVBAMTE25hdHMtY2EuZXhhbXBsZS5jb20w
+        WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAT6ZjUtTIpBJSgGRyQIPdcFKBkt3h76
+        eyIdFVkR4L5NxVLwxyrj3ejbkA/KtbHfT+5+i1lpFyneUnCv8uJMGXXDo0IwQDAO
+        BgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUJnGYc+vw
+        zYXQvaFUImSZnEytUkkwCgYIKoZIzj0EAwIDSAAwRQIgET+GwxQ2TokxnPkNhgjb
+        zJ6PDtVHMNclAWSDebP9nnwCIQDrblreePb+pUBHvxFZNVFYBV4wF2gEkJC51tjw
+        a8aklQ==
+        -----END CERTIFICATE-----
+      server.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIB6TCCAY+gAwIBAgIUU0rJ7NyqtVt26P4ymCHc2wI1xTgwCgYIKoZIzj0EAwIw
+        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yMjAzMDMxNDU2MDBa
+        Fw0zMjAyMjkxNDU2MDBaMCgxJjAkBgNVBAMTHWxhZ29vbi1jb3JlLW5hdHMtY29u
+        Y2VudHJhdG9yMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzOKHU61tPi3IS4Tb
+        TekSPQ5j0eS3ALLR8AhHY+lV6K3FNHnrCeCkBP12Kg3c29fjk3OnvdOixqgjXTO9
+        1GvhgqOBoDCBnTAOBgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwEw
+        DAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUs3UCwAl/W6+UyUMhlyL/P2igQCQwHwYD
+        VR0jBBgwFoAUJnGYc+vwzYXQvaFUImSZnEytUkkwKAYDVR0RBCEwH4IdbGFnb29u
+        LWNvcmUtbmF0cy1jb25jZW50cmF0b3IwCgYIKoZIzj0EAwIDSAAwRQIhAOEZUQfm
+        tuziNxJqFdnsQqzEHHDcFBJsMqzC2T4AChinAiBr/BMy3ZFUE57629+mvnevQKF2
+        Xj0jfUL6vS82EAusNQ==
+        -----END CERTIFICATE-----
+      server.key: |
+        -----BEGIN EC PRIVATE KEY-----
+        MHcCAQEEIEEOrqm8DWTCnc6rq2OHmWcfSu/ewpv009gD9ekvWKMDoAoGCCqGSM49
+        AwEHoUQDQgAEzOKHU61tPi3IS4TbTekSPQ5j0eS3ALLR8AhHY+lV6K3FNHnrCeCk
+        BP12Kg3c29fjk3OnvdOixqgjXTO91Gvhgg==
+        -----END EC PRIVATE KEY-----

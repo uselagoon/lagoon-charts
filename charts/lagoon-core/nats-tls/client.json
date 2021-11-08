@@ -1,0 +1,10 @@
+{
+  "hosts": [
+    "ci-ssh-portal"
+  ],
+  "CN": "ci-ssh-portal",
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  }
+}

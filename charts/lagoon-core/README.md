@@ -167,3 +167,94 @@ Lagoon uses S3 compatible storage for it, it can be configured via these helm va
 - `s3FilesBucket` - Name of the S3 Bucket
 - `s3FilesAccessKeyID` - AccessKey for the S3 Bucket
 - `s3FilesSecretAccessKey` - AccessKey Secret for the S3 Bucket
+
+## Securing NATS
+
+This section only applies if using the experimental NATS ssh-portal support.
+
+Refer to the [NATS TLS documentation](https://docs.nats.io/running-a-nats-service/configuration/securing_nats/tls) when reading this section.
+
+The NATS subchart exposes a LoadBalancer port which must be secured by TLS in production.
+
+To do that:
+
+1. Create a secret containing your TLS cert. See below for details on how to do that.
+2. Install the chart with values like:
+```
+nats:
+  leafnodes:
+    tls:
+      secret:
+        name: lagoon-core-nats-tls
+      cert: tls.crt
+      key: tls.key
+      # only required for private CA
+      ca: ca.crt
+    authorization:
+      ...
+```
+
+See the CI values for an example of this configuration.
+
+### Getting a TLS certificate secret
+
+Ideally this will be a valid public TLS certificate.
+You can also use a private certificate authority but this is ([not recommended](https://docs.nats.io/running-a-nats-service/configuration/securing_nats/tls#self-signed-certificates-for-testing) by upstream NATS.
+
+#### Public CA
+
+For example, if using `cert-manager`, use something like this:
+```
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lagoon-core-nats
+spec:
+  secretName: lagoon-core-nats-tls
+  dnsNames:
+  - nats.lagoon.example.com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+```
+Note that since NATS uses a `LoadBalancer` service (not an `Ingress`) HTTP-01 solver cannot be used.
+
+#### Private CA
+
+You can generate a valid CA, leafnode server, and leafnode client certificate using `cfssl` and the configuration files in the `nats-tls/` directory.
+
+Edit the files:
+* For `ca-csr.json` select a CA hostname.
+* For `server.json` set the CN/SAN to the server hostname. This has to be the hostname used by the client to connect to the server.
+* For `client.json` set the CN/SAN to the client leafnode username.
+
+Generate the certificates:
+```
+# CA
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
+rm ca.csr
+
+# Server
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server server.json | cfssljson -bare server
+rm server.csr
+
+# Client
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client client.json | cfssljson -bare client
+rm client.csr
+```
+
+Install the certificates in the `lagoon-core` cluster:
+```
+kubectl create secret generic lagoon-core-nats-tls \
+  --from-file=tls.crt=server.pem \
+  --from-file=tls.key=server-key.pem \
+  --from-file=ca.crt=ca.pem
+```
+
+Install the certificates in the `lagoon-remote` cluster:
+```
+kubectl create secret generic lagoon-remote-nats-tls \
+  --from-file=tls.crt=client.pem \
+  --from-file=tls.key=client-key.pem \
+  --from-file=ca.crt=ca.pem
+```
