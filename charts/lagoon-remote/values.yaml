@@ -63,6 +63,10 @@ dockerHost:
 
   securityContext:
     privileged: true
+    seLinuxOptions:
+      # Ensures selinux relabeling is disabled, this would case the container never to start
+      # as there can be so many files in the persistent storage
+      type: spc_t
 
   resources: {}
 
