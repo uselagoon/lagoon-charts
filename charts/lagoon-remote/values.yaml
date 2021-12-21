@@ -31,6 +31,8 @@ dockerHost:
 
   repositoryToUpdate: amazeeio|lagoon
 
+  pruneImagesUntil: 168h
+
   replicaCount: 1
 
   storage:
