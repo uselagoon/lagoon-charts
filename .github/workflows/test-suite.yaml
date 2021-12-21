@@ -9,13 +9,19 @@ jobs:
     strategy:
       matrix:
         test:
+        - active-standby-kubernetes
         - api
+        - deploytarget
+        - features-api-variables
         - features-kubernetes
         - features-kubernetes-2
-        - active-standby-kubernetes
+        - tasks
         ## Re-enable any of these below tests in your branch for specific testing
-        ## - drupal-php74
+        ## - drupal-php74        
+        ## - drupal-php80
         ## - drupal-postgres
+        ## - drush
+        ## - image-cache
         ## - node-mongodb
         ## - nginx
         ## - node
