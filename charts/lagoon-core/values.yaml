@@ -497,6 +497,8 @@ storageCalculator:
 
   resources: {}
 
+  cron: 5 */12 * * *
+
   additionalEnvs:
   #   FOO: Bar
 
