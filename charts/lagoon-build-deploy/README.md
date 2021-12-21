@@ -1,10 +1,10 @@
-# Lagoon Build Deploy
+# Lagoon Remote Controller
 
-This chart installs the [Lagoon Build Deploy Controllers](https://github.com/amazeeio/lagoon-kbd).
+This chart installs the [Lagoon Remote Controller](https://github.com/uselagoon/remote-controller).
 
 ## Configuration
 
-See the comments in `values.yaml`, and the [Lagoon Build Deploy Controllers](https://github.com/amazeeio/lagoon-kbd) repository.
+See the comments in `values.yaml`, and the [Lagoon Remote Controller](https://github.com/uselagoon/remote-controller) repository.
 
 ## Install
 
