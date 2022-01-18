@@ -9,13 +9,19 @@ jobs:
     strategy:
       matrix:
         test:
+        - active-standby-kubernetes
         - api
+        - deploytarget
+        - features-api-variables
         - features-kubernetes
         - features-kubernetes-2
-        - active-standby-kubernetes
+        - tasks
         ## Re-enable any of these below tests in your branch for specific testing
-        ## - drupal-php74
+        ## - drupal-php74        
+        ## - drupal-php80
         ## - drupal-postgres
+        ## - drush
+        ## - image-cache
         ## - node-mongodb
         ## - nginx
         ## - node
@@ -27,7 +33,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2.3.4
+      uses: actions/checkout@v2.4.0
       with:
         fetch-depth: "0"
 
@@ -35,7 +41,7 @@ jobs:
       run: sudo apt-get -y install python3-wheel
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@v2.1.0
+      uses: helm/chart-testing-action@v2.2.0
 
     - name: Run chart-testing (list-changed)
       id: list-changed

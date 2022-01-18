@@ -9,6 +9,8 @@ data:
     # vi: ft=fluentd
     <system>
       workers 4
+      # set to error because fluentd is quite chatty about to liveness probes
+      log_level error
     </system>
     # prometheus metrics
     <source>
@@ -24,8 +26,6 @@ data:
       @type          forward
       @id            in_forward
       add_tag_prefix in_forward
-      # avoid verbose OpenSSL warnings in fluentd logs due to liveness probes
-      # @log_level      error
       <security>
         self_hostname logs-concentrator
         user_auth true
@@ -54,11 +54,12 @@ data:
       </metric>
     </filter>
 
-
     # send to elasticsearch
     <match in_forward.**>
       @type elasticsearch
       @id out_elasticsearch
+      # be more verbose about elasticsearch problems
+      @log_level info
       # ingestion
       target_index_key index_name
       include_timestamp true
@@ -83,12 +84,13 @@ data:
         # buffer params (per worker)
         total_limit_size 8GB
         # flush params
-        flush_thread_count 8 # 8 threads that flush, makes sure we have enough flushers for all the different buffers
-        flush_interval 10s # flush every 10 secs
-        flush_thread_burst_interval 0 # don't sleep if there is more chunks to be flushed
-        retry_max_interval 30s # limit exponential backoff period
-        chunk_limit_size 32MB # chunks cannot be bigger than the max HTTP limit of Elasticsearch (which is 100MB)
-        overflow_action drop_oldest_chunk
+        flush_thread_count 8              # make sure we have plenty of flush threads for all the different buffers
+        flush_interval 10s                # flush every 10 secs
+        flush_thread_burst_interval 0     # don't sleep if there are more chunks to be flushed
+        retry_max_interval 30s            # limit exponential backoff period
+        retry_timeout 12h                 # limit the time spent retrying chunk submission
+        chunk_limit_size 32MB             # chunks cannot be bigger than the max HTTP limit of Elasticsearch (which is 100MB)
+        overflow_action drop_oldest_chunk # drop chunks once they reach retry limits
       </buffer>
       # silence warnings (these have no effect)
       type_name _doc

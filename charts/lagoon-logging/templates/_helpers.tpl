@@ -204,3 +204,33 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
+
+{{/*
+Create a default fully qualified app name for cdn-logs-collector.
+We truncate at 63 chars because some Kubernetes name fields are limited to this
+(by the DNS naming spec).
+*/}}
+{{- define "lagoon-logging.cdnLogsCollector.fullname" -}}
+{{- include "lagoon-logging.fullname" . }}-{{ .Values.cdnLogsCollector.name }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "lagoon-logging.cdnLogsCollector.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-logging.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "lagoon-logging.cdnLogsCollector.labels" -}}
+helm.sh/chart: {{ include "lagoon-logging.chart" . }}
+{{ include "lagoon-logging.cdnLogsCollector.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
