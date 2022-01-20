@@ -294,9 +294,11 @@ pf-ssh:
 	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-ssh 2020 2>/dev/null &
 pf-ui:
 	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-ui 6060:3000 2>/dev/null &
+pf-broker-ui:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-broker 5050:15672 2>/dev/null &
 
 .PHONY: port-forwards
-port-forwards: pf-keycloak pf-api pf-ssh pf-ui
+port-forwards: pf-keycloak pf-api pf-ssh pf-ui pf-broker-ui
 
 .PHONY: run-tests
 run-tests:
