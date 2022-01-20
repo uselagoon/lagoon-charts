@@ -414,6 +414,34 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 
+{{/*
+Create a default fully qualified app name for insights-handler.
+*/}}
+{{- define "lagoon-core.insightsHandler.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-insights-handler
+{{- end }}
+
+{{/*
+Common labels insights-handler.
+*/}}
+{{- define "lagoon-core.insightsHandler.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.insightsHandler.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels insights-handler.
+*/}}
+{{- define "lagoon-core.insightsHandler.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.insightsHandler.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
 
 {{/*
 Create a default fully qualified app name for storage-calculator.
