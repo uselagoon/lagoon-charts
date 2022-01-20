@@ -465,6 +465,24 @@ backupHandler:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+insightsHandler:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: uselagoon/insights-handler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
 autoIdler:
   enabled: true
   image:

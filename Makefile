@@ -175,6 +175,8 @@ install-lagoon-core:
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
 		--set controllerhandler.image.repository=$(IMAGE_REGISTRY)/controllerhandler \
 		--set drushAlias.image.repository=$(IMAGE_REGISTRY)/drush-alias \
+		--set insightsHandler.enabled=true \
+		--set insightsHandler.image.repository=$(IMAGE_REGISTRY)/insights-handler \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
 		--set logs2email.enabled=false \
