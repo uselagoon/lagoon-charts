@@ -2,7 +2,8 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.4
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
   name: lagoonbuilds.lagoon.amazee.io
 spec:
   group: lagoon.amazee.io
@@ -14,8 +15,6 @@ spec:
   scope: Namespaced
   versions:
   - name: v1alpha1
-    served: true
-    storage: true
     schema:
       openAPIV3Schema:
         description: LagoonBuild is the Schema for the lagoonbuilds API
@@ -45,10 +44,14 @@ spec:
                 description: Build contains the type of build, and the image to use
                   for the builder.
                 properties:
+                  bulkId:
+                    type: string
                   ci:
                     type: string
                   image:
                     type: string
+                  priority:
+                    type: integer
                   type:
                     type: string
                 required:
@@ -64,6 +67,8 @@ spec:
                   environment:
                     type: string
                   environmentId:
+                    type: integer
+                  environmentIdling:
                     type: integer
                   environmentType:
                     type: string
@@ -89,6 +94,8 @@ spec:
                     type: string
                   productionEnvironment:
                     type: string
+                  projectIdling:
+                    type: integer
                   projectSecret:
                     type: string
                   registry:
@@ -163,15 +170,15 @@ spec:
                   of cluster Important: Run "make" to regenerate code after modifying
                   this file'
                 items:
-                  description: LagoonConditions defines the observed conditions of the
-                    pods.
+                  description: LagoonBuildConditions defines the observed conditions
+                    of build pods.
                   properties:
                     lastTransitionTime:
                       type: string
                     status:
                       type: string
                     type:
-                      description: JobConditionType const for the status type
+                      description: BuildStatusType const for the status type
                       type: string
                   required:
                   - lastTransitionTime
@@ -184,12 +191,12 @@ spec:
                 type: string
             type: object
           statusMessages:
-            description: LagoonStatusMessages is where unsent messages are stored for
-              re-sending.
+            description: LagoonStatusMessages is where unsent messages are stored
+              for re-sending.
             properties:
               buildLogMessage:
-                description: LagoonLog is used to sendToLagoonLogs messaging queue this
-                  is general logging information
+                description: LagoonLog is used to sendToLagoonLogs messaging queue
+                  this is general logging information
                 properties:
                   event:
                     type: string
@@ -206,6 +213,8 @@ spec:
                       buildName:
                         type: string
                       buildPhase:
+                        type: string
+                      clusterName:
                         type: string
                       endTime:
                         type: string
@@ -246,8 +255,8 @@ spec:
                       startTime:
                         type: string
                       task:
-                        description: LagoonTaskInfo defines what a task can use to communicate
-                          with Lagoon via SSH/API.
+                        description: LagoonTaskInfo defines what a task can use to
+                          communicate with Lagoon via SSH/API.
                         properties:
                           apiHost:
                             type: string
@@ -275,8 +284,8 @@ spec:
                     type: string
                 type: object
               environmentMessage:
-                description: LagoonMessage is used for sending build info back to Lagoon
-                  messaging queue to update the environment or deployment
+                description: LagoonMessage is used for sending build info back to
+                  Lagoon messaging queue to update the environment or deployment
                 properties:
                   meta:
                     description: LagoonLogMeta is the metadata that is used by logging
@@ -289,6 +298,8 @@ spec:
                       buildName:
                         type: string
                       buildPhase:
+                        type: string
+                      clusterName:
                         type: string
                       endTime:
                         type: string
@@ -329,8 +340,8 @@ spec:
                       startTime:
                         type: string
                       task:
-                        description: LagoonTaskInfo defines what a task can use to communicate
-                          with Lagoon via SSH/API.
+                        description: LagoonTaskInfo defines what a task can use to
+                          communicate with Lagoon via SSH/API.
                         properties:
                           apiHost:
                             type: string
@@ -356,8 +367,8 @@ spec:
                     type: string
                 type: object
               statusMessage:
-                description: LagoonLog is used to sendToLagoonLogs messaging queue this
-                  is general logging information
+                description: LagoonLog is used to sendToLagoonLogs messaging queue
+                  this is general logging information
                 properties:
                   event:
                     type: string
@@ -374,6 +385,8 @@ spec:
                       buildName:
                         type: string
                       buildPhase:
+                        type: string
+                      clusterName:
                         type: string
                       endTime:
                         type: string
@@ -414,8 +427,8 @@ spec:
                       startTime:
                         type: string
                       task:
-                        description: LagoonTaskInfo defines what a task can use to communicate
-                          with Lagoon via SSH/API.
+                        description: LagoonTaskInfo defines what a task can use to
+                          communicate with Lagoon via SSH/API.
                         properties:
                           apiHost:
                             type: string
@@ -444,12 +457,15 @@ spec:
                 type: object
             type: object
         type: object
+    served: true
+    storage: true
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.4
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
   name: lagoontasks.lagoon.amazee.io
 spec:
   group: lagoon.amazee.io
@@ -461,8 +477,6 @@ spec:
   scope: Namespaced
   versions:
   - name: v1alpha1
-    served: true
-    storage: true
     schema:
       openAPIV3Schema:
         description: LagoonTask is the Schema for the lagoontasks API
@@ -483,8 +497,8 @@ spec:
             description: LagoonTaskSpec defines the desired state of LagoonTask
             properties:
               advancedTask:
-                description: LagoonAdvancedTaskInfo defines what an advanced task can
-                  use for the creation of the pod.
+                description: LagoonAdvancedTaskInfo defines what an advanced task
+                  can use for the creation of the pod.
                 properties:
                   JSONPayload:
                     type: string
@@ -492,7 +506,8 @@ spec:
                     type: string
                 type: object
               environment:
-                description: LagoonTaskEnvironment defines the lagoon environment information.
+                description: LagoonTaskEnvironment defines the lagoon environment
+                  information.
                 properties:
                   environmentType:
                     type: string
@@ -520,8 +535,8 @@ spec:
                   for a misc task.
                 properties:
                   backup:
-                    description: LagoonMiscBackupInfo defines the information for a
-                      backup.
+                    description: LagoonMiscBackupInfo defines the information for
+                      a backup.
                     properties:
                       backupId:
                         type: string
@@ -585,15 +600,15 @@ spec:
                   of cluster Important: Run "make" to regenerate code after modifying
                   this file'
                 items:
-                  description: LagoonConditions defines the observed conditions of the
-                    pods.
+                  description: LagoonTaskConditions defines the observed conditions
+                    of task pods.
                   properties:
                     lastTransitionTime:
                       type: string
                     status:
                       type: string
                     type:
-                      description: JobConditionType const for the status type
+                      description: TaskStatusType const for the status type
                       type: string
                   required:
                   - lastTransitionTime
@@ -606,12 +621,12 @@ spec:
                 type: string
             type: object
           statusMessages:
-            description: LagoonStatusMessages is where unsent messages are stored for
-              re-sending.
+            description: LagoonStatusMessages is where unsent messages are stored
+              for re-sending.
             properties:
               buildLogMessage:
-                description: LagoonLog is used to sendToLagoonLogs messaging queue this
-                  is general logging information
+                description: LagoonLog is used to sendToLagoonLogs messaging queue
+                  this is general logging information
                 properties:
                   event:
                     type: string
@@ -628,6 +643,8 @@ spec:
                       buildName:
                         type: string
                       buildPhase:
+                        type: string
+                      clusterName:
                         type: string
                       endTime:
                         type: string
@@ -668,8 +685,8 @@ spec:
                       startTime:
                         type: string
                       task:
-                        description: LagoonTaskInfo defines what a task can use to communicate
-                          with Lagoon via SSH/API.
+                        description: LagoonTaskInfo defines what a task can use to
+                          communicate with Lagoon via SSH/API.
                         properties:
                           apiHost:
                             type: string
@@ -697,8 +714,8 @@ spec:
                     type: string
                 type: object
               environmentMessage:
-                description: LagoonMessage is used for sending build info back to Lagoon
-                  messaging queue to update the environment or deployment
+                description: LagoonMessage is used for sending build info back to
+                  Lagoon messaging queue to update the environment or deployment
                 properties:
                   meta:
                     description: LagoonLogMeta is the metadata that is used by logging
@@ -711,6 +728,8 @@ spec:
                       buildName:
                         type: string
                       buildPhase:
+                        type: string
+                      clusterName:
                         type: string
                       endTime:
                         type: string
@@ -751,8 +770,8 @@ spec:
                       startTime:
                         type: string
                       task:
-                        description: LagoonTaskInfo defines what a task can use to communicate
-                          with Lagoon via SSH/API.
+                        description: LagoonTaskInfo defines what a task can use to
+                          communicate with Lagoon via SSH/API.
                         properties:
                           apiHost:
                             type: string
@@ -778,8 +797,8 @@ spec:
                     type: string
                 type: object
               statusMessage:
-                description: LagoonLog is used to sendToLagoonLogs messaging queue this
-                  is general logging information
+                description: LagoonLog is used to sendToLagoonLogs messaging queue
+                  this is general logging information
                 properties:
                   event:
                     type: string
@@ -796,6 +815,8 @@ spec:
                       buildName:
                         type: string
                       buildPhase:
+                        type: string
+                      clusterName:
                         type: string
                       endTime:
                         type: string
@@ -836,8 +857,8 @@ spec:
                       startTime:
                         type: string
                       task:
-                        description: LagoonTaskInfo defines what a task can use to communicate
-                          with Lagoon via SSH/API.
+                        description: LagoonTaskInfo defines what a task can use to
+                          communicate with Lagoon via SSH/API.
                         properties:
                           apiHost:
                             type: string
@@ -866,3 +887,5 @@ spec:
                 type: object
             type: object
         type: object
+    served: true
+    storage: true
