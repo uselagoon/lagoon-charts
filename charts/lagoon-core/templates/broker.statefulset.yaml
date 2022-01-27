@@ -74,11 +74,33 @@ spec:
         - name: {{ include "lagoon-core.broker.fullname" . }}-data
           mountPath: /var/lib/rabbitmq
         livenessProbe:
-          tcpSocket:
-            port: amqp
+          exec:
+            command:
+              - /bin/bash
+              - -ec
+              - rabbitmq-diagnostics -q ping
+          timeoutSeconds: 60
+          initialDelaySeconds: 5
         readinessProbe:
-          tcpSocket:
-            port: amqp
+          exec:
+            command:
+              - /bin/bash
+              - -ec
+              - rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms
+          timeoutSeconds: 60
+          initialDelaySeconds: 5
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - /bin/bash
+                - -ec
+                - |
+                  until rabbitmqctl cluster_status >/dev/null; do
+                      echo "Waiting for cluster readiness..."
+                      sleep 5
+                  done
+                  rabbitmq-queues rebalance "all"
         resources:
           {{- toYaml .Values.broker.resources | nindent 10 }}
       volumes:
