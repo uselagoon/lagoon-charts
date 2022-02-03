@@ -4,6 +4,10 @@ metadata:
   name: {{ include "lagoon-core.authServer.fullname" . }}
   labels:
     {{- include "lagoon-core.authServer.labels" . | nindent 4 }}
+  {{- with .Values.authServer.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.authServer.service.type }}
   ports:
