@@ -151,7 +151,7 @@ install-mongodb:
 		bitnami/mongodb
 
 .PHONY: install-minio
-install-minio:
+install-minio: install-ingress
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
