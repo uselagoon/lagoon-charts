@@ -48,7 +48,7 @@ overrideBuildDeployImage: ""
 nameOverride: ""
 
 image:
-  repository: amazeeio/lagoon-builddeploy
+  repository: uselagoon/remote-controller
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
