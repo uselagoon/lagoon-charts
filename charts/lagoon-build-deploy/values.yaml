@@ -44,9 +44,6 @@ rootlessBuildPods: false
 # If the controller is running in an openshift,
 # then the argument `--is-openshift=true` should be added
 extraArgs:
-# enable-deprecated-apis tells the controller to start up with support for deprecated apis
-# this is used while transitioning from v1alpha1 to v1beta1 crds, next release this will be disabled
-- "--enable-deprecated-apis=true"
 
 # add extra environment variables if required
 extraEnvs:
