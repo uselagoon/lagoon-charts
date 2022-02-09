@@ -1,1 +1,5 @@
 Lagoon Remote configured with target name "{{ .Values.lagoonTargetName }}", and RabbitMQ host "{{ .Values.rabbitMQHostname }}".
+
+Please make sure to mark the v1alpha1 CRDs as deprecated manually after installing this release:
+kubectl get crd lagoonbuilds.lagoon.amazee.io -o json | jq -r '. | .spec.versions[0].deprecated |= true' | jq -r '. | .spec.versions[0].deprecationWarning |= "use lagoonbuilds.crd.lagoon.sh"' | kubectl apply -f -
+kubectl get crd lagoontasks.lagoon.amazee.io -o json | jq -r '. | .spec.versions[0].deprecated |= true'  | jq -r '. | .spec.versions[0].deprecationWarning |= "use lagoontasks.crd.lagoon.sh"' | kubectl apply -f -
