@@ -295,6 +295,7 @@ authServer:
   service:
     type: ClusterIP
     port: 80
+    annotations: {}
 
   podAnnotations: {}
 
@@ -496,6 +497,8 @@ storageCalculator:
   securityContext: {}
 
   resources: {}
+
+  cron: 5 */12 * * *
 
   additionalEnvs:
   #   FOO: Bar
@@ -708,6 +711,7 @@ ssh:
   service:
     type: ClusterIP
     port: 2020
+    annotations: {}
 
   autoscaling:
     enabled: false
