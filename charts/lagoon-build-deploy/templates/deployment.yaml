@@ -69,6 +69,12 @@ spec:
         {{- with .Values.lagoonFeatureFlagBackupWeeklyRandom }}
         - "--lagoon-feature-flag-backup-weekly-random={{ . }}"
         {{- end }}
+        {{- with .Values.lagoonBackupDefaultSchedule }}
+        - "--backup-default-schedule={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultHourlyRetention }}
+        - "--backup-default-hourly-retention={{ . }}"
+        {{- end }}
         {{- with .Values.lagoonBackupDefaultDailyRetention }}
         - "--backup-default-daily-retention={{ . }}"
         {{- end }}
