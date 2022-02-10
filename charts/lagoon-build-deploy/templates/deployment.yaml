@@ -48,6 +48,7 @@ spec:
         args:
         - "--metrics-addr=127.0.0.1:8080"
         - "--enable-leader-election=true"
+        - "--enable-deprecated-apis=true"
         {{- if .Values.rootlessBuildPods }}
         - "--build-pod-run-as-user=10000"
         - "--build-pod-run-as-group=0"
@@ -64,6 +65,27 @@ spec:
         {{- end }}
         {{- with .Values.lagoonFeatureFlagDefaultIsolationNetworkPolicy }}
         - "--lagoon-feature-flag-default-isolation-network-policy={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagBackupWeeklyRandom }}
+        - "--lagoon-feature-flag-backup-weekly-random={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultSchedule }}
+        - "--backup-default-schedule={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultHourlyRetention }}
+        - "--backup-default-hourly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultDailyRetention }}
+        - "--backup-default-daily-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultWeeklyRetention }}
+        - "--backup-default-weekly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultMonthlyRetention }}
+        - "--backup-default-monthly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.nativeCronPodMinFrequency }}
+        - "--native-cron-pod-min-frequency={{ . }}"
         {{- end }}
         {{- with .Values.extraArgs }}
         {{- toYaml . | nindent 8 }}
