@@ -1,4 +1,4 @@
 Lagoon Remote configured with target name "{{ .Values.lagoonTargetName }}", and RabbitMQ host "{{ .Values.rabbitMQHostname }}".
 
 Please make sure to mark the v1alpha1 CRDs as deprecated manually after installing this release:
-helm show crds lagoon/lagoon-build-deploy --version {{ .Chart.Version | quote }} | kubectl apply -f -
+helm show crds lagoon/lagoon-build-deploy --version {{ .Chart.Version }} | kubectl apply -f -
