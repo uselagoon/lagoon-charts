@@ -1,6 +1,12 @@
 apiVersion: v2
 name: lagoon-insights-remote
-description: A Helm chart for Kubernetes
+description: A Helm chart for Lagoon remote insights
+home: https://github.com/uselagoon/lagoon-charts
+icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+maintainers:
+- name: bomoko
+  email: blaize.kaye@amazee.io
+  url: https://amazee.io
 
 # A chart can be either an 'application' or a 'library' chart.
 #
