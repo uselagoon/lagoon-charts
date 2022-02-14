@@ -219,6 +219,8 @@ install-lagoon-core: install-minio
 		--set broker.ingress.enabled=true \
 		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		--set broker.ingress.hosts[0].paths[0]="/" \
+		--set workflows.enabled=true \
+		--set workflows.image.repository=$(IMAGE_REGISTRY)/workflows \
 		lagoon-core \
 		./charts/lagoon-core
 

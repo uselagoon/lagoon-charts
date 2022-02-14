@@ -182,3 +182,8 @@ controllerhandler:
     repository: uselagoon/controllerhandler
 
 imageTag: ""
+
+workflows:
+  replicaCount: 1
+  image:
+    repository: uselagoon/workflows
