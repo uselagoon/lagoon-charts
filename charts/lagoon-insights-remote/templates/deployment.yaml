@@ -34,18 +34,18 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: RABBITMQ_ADDRESS
-            value: {{ required "A valid .Values.rabbitMQHostname required!" .Values.rabbitMQHostname | quote }}
-          - name: RABBITMQ_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "lagoon-insights-remote.fullname" . }}-rabbitmqsecret
-                key: password
-          - name: RABBITMQ_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "lagoon-insights-remote.fullname" . }}-rabbitmqsecret
-                key: username
+            - name: RABBITMQ_ADDRESS
+              value: {{ required "A valid .Values.rabbitMQHostname required!" .Values.rabbitMQHostname | quote }}
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "lagoon-insights-remote.fullname" . }}-rabbitmqsecret
+                  key: password
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "lagoon-insights-remote.fullname" . }}-rabbitmqsecret
+                  key: username
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
