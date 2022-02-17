@@ -347,8 +347,8 @@ pf-broker:
 	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-broker 5672 2>/dev/null &
 	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-broker 15672 2>/dev/null &
 pf-minio:
-	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-minio 9000 2>/dev/null &
-	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-minio 9001 2>/dev/null &
+	$(KUBECTL) port-forward -n minio svc/minio 9000 2>/dev/null &
+	$(KUBECTL) port-forward -n minio svc/minio 9001 2>/dev/null &
 
 .PHONY: port-forwards
 port-forwards: pf-keycloak pf-api pf-ssh pf-ui
