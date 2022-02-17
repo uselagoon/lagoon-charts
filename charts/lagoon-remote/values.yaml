@@ -123,6 +123,9 @@ dioscuri:
 # by default in future as this is a core Lagoon feature.
 dbaas-operator:
   enabled: false
+  enableMariaDBProviders: true
+  enableMongoDBProviders: true
+  enablePostreSQLProviders: true
 
 # if you are using the dbaas-operator in a different release, you can define the http endpoint to use here
 # setting this will always override whatever `dbaas-operator` would set, useful if you want to target a different endpoint
