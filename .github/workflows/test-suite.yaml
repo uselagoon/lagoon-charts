@@ -18,6 +18,7 @@ jobs:
         - features-kubernetes-2
         - tasks
         - dbaas
+        - ssh-portal
         ## Re-enable any of these below tests in your branch for specific testing
         ## - drupal-php74        
         ## - drupal-php80
