@@ -20,6 +20,8 @@ namespacePrefix: ""
 # lagoonFeatureFlagDefaultRootlessWorkload: enabled
 # lagoonFeatureFlagForceIsolationNetworkPolicy: disabled
 # lagoonFeatureFlagDefaultIsolationNetworkPolicy: disabled
+# lagoonFeatureFlagForceInsights: disabled
+# lagoonFeatureFlagDefaultInsights: disabled
 
 # the following values can be used to override the default
 # backup configurations for a dedicated cluster

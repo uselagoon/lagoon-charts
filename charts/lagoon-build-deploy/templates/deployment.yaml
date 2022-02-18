@@ -66,6 +66,12 @@ spec:
         {{- with .Values.lagoonFeatureFlagDefaultIsolationNetworkPolicy }}
         - "--lagoon-feature-flag-default-isolation-network-policy={{ . }}"
         {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceInsights }}
+        - "--lagoon-feature-flag-force-insights={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultInsights }}
+        - "--lagoon-feature-flag-default-insights={{ . }}"
+        {{- end }}
         {{- with .Values.lagoonFeatureFlagBackupWeeklyRandom }}
         - "--lagoon-feature-flag-backup-weekly-random={{ . }}"
         {{- end }}
