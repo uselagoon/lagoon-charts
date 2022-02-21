@@ -1,3 +1,4 @@
+---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
@@ -445,6 +446,8 @@ spec:
   - name: v1alpha1
     served: true
     storage: true
+    deprecated: true
+    deprecationWarning: "use lagoonbuilds.crd.lagoon.sh"
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -868,3 +871,5 @@ spec:
   - name: v1alpha1
     served: true
     storage: true
+    deprecated: true
+    deprecationWarning: "use lagoonbuilds.crd.lagoon.sh"

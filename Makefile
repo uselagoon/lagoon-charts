@@ -151,7 +151,7 @@ install-mongodb:
 		bitnami/mongodb
 
 .PHONY: install-minio
-install-minio:
+install-minio: install-ingress
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -177,8 +177,8 @@ install-lagoon-core: install-minio
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overwriteKubectlBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		--set "harborAdminPassword=Harbor12345" \
 		--set "harborURL=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
-		--set "keycloakAPIURL=http://localhost:8080/auth" \
-		--set "lagoonAPIURL=http://localhost:7070/graphql" \
+		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
+		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
@@ -219,6 +219,8 @@ install-lagoon-core: install-minio
 		--set broker.ingress.enabled=true \
 		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		--set broker.ingress.hosts[0].paths[0]="/" \
+		--set workflows.enabled=true \
+		--set workflows.image.repository=$(IMAGE_REGISTRY)/workflows \
 		lagoon-core \
 		./charts/lagoon-core
 

@@ -295,6 +295,7 @@ authServer:
   service:
     type: ClusterIP
     port: 80
+    annotations: {}
 
   podAnnotations: {}
 
@@ -710,6 +711,7 @@ ssh:
   service:
     type: ClusterIP
     port: 2020
+    annotations: {}
 
   autoscaling:
     enabled: false
@@ -763,6 +765,32 @@ controllerhandler:
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+
+workflows:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: bomoko/workflows
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "latest"
 
   podAnnotations: {}
 
