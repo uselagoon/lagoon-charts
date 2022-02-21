@@ -785,10 +785,10 @@ workflows:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/workflows
+    repository: bomoko/workflows
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "latest"
 
   podAnnotations: {}
 
