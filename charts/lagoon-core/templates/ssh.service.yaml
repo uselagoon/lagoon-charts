@@ -4,6 +4,10 @@ metadata:
   name: {{ include "lagoon-core.ssh.fullname" . }}
   labels:
     {{- include "lagoon-core.ssh.labels" . | nindent 4 }}
+  {{- with .Values.ssh.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.ssh.service.type }}
   ports:
