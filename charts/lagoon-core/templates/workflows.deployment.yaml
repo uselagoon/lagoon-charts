@@ -37,7 +37,7 @@ spec:
         imagePullPolicy: {{ .Values.workflows.image.pullPolicy }}
         env:
         - name: API_HOST
-          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
