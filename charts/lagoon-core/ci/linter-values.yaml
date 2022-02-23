@@ -96,7 +96,8 @@ broker:
   serviceMonitor:
     enabled: false
   image:
-    repository: uselagoon/broker
+    repository: testlagoon/broker
+    tag: main
 
 authServer:
   replicaCount: 1
