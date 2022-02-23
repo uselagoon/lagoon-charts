@@ -787,10 +787,10 @@ workflows:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/workflows
+    repository: testlagoon/workflows
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "pr-3045"
 
   podAnnotations: {}
 
