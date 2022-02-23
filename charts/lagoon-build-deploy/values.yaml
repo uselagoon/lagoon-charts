@@ -21,6 +21,21 @@ namespacePrefix: ""
 # lagoonFeatureFlagForceIsolationNetworkPolicy: disabled
 # lagoonFeatureFlagDefaultIsolationNetworkPolicy: disabled
 
+# the following values can be used to override the default
+# backup configurations for a dedicated cluster
+
+# lagoonFeatureFlagBackupWeeklyRandom: false
+# lagoonBackupDefaultSchedule: "M H(22-2) * * *"
+# lagoonBackupDefaultHourlyRetention: 0
+# lagoonBackupDefaultDailyRetention: 7
+# lagoonBackupDefaultWeeklyRetention: 5
+# lagoonBackupDefaultMonthlyRetention: 12
+
+# the following value can be used to override the default
+# cronjob interval defined in builds
+
+# nativeCronPodMinFrequency: 30
+
 # the following values are defaults which may be overridden
 
 # rootlessBuildPods tells the build-deploy controller to create build pods
@@ -45,7 +60,7 @@ overrideBuildDeployImage: ""
 nameOverride: ""
 
 image:
-  repository: amazeeio/lagoon-builddeploy
+  repository: uselagoon/remote-controller
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
