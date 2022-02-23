@@ -53,12 +53,10 @@ spec:
           httpGet:
             path: /
             port: http-8080
-          initialDelaySeconds: 90
         readinessProbe:
           httpGet:
             path: /
             port: http-8080
-          initialDelaySeconds: 90
         startupProbe:
           exec:
             command:
