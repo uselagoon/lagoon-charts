@@ -216,6 +216,10 @@ spec:
                         type: string
                       buildPhase:
                         type: string
+                      buildStatus:
+                        type: string
+                      buildStep:
+                        type: string
                       clusterName:
                         type: string
                       endTime:
@@ -227,6 +231,8 @@ spec:
                       jobName:
                         type: string
                       jobStatus:
+                        type: string
+                      jobStep:
                         type: string
                       key:
                         type: string
@@ -301,6 +307,10 @@ spec:
                         type: string
                       buildPhase:
                         type: string
+                      buildStatus:
+                        type: string
+                      buildStep:
+                        type: string
                       clusterName:
                         type: string
                       endTime:
@@ -312,6 +322,8 @@ spec:
                       jobName:
                         type: string
                       jobStatus:
+                        type: string
+                      jobStep:
                         type: string
                       key:
                         type: string
@@ -388,6 +400,10 @@ spec:
                         type: string
                       buildPhase:
                         type: string
+                      buildStatus:
+                        type: string
+                      buildStep:
+                        type: string
                       clusterName:
                         type: string
                       endTime:
@@ -399,6 +415,8 @@ spec:
                       jobName:
                         type: string
                       jobStatus:
+                        type: string
+                      jobStep:
                         type: string
                       key:
                         type: string

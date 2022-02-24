@@ -1,0 +1,15 @@
+{{- if or (index .Values "dbaas-operator" "enabled") (.Values.dbaasHTTPEndpoint) -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbaas
+  labels:
+    {{- include "lagoon-remote.labels" . | nindent 4 }}
+spec:
+  type: ExternalName
+{{- if .Values.dbaasHTTPEndpoint }}
+  externalName: {{ .Values.dbaasHTTPEndpoint | quote }}
+{{- else }}
+  externalName: "lagoon-remote-dbaas-operator-http.{{ .Release.Namespace }}.svc.cluster.local"
+{{- end }}
+{{- end }}
