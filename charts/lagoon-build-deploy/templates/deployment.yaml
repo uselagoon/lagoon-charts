@@ -72,6 +72,12 @@ spec:
         {{- with .Values.lagoonFeatureFlagDefaultInsights }}
         - "--lagoon-feature-flag-default-insights={{ . }}"
         {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceRWX2RWO }}
+        - "--lagoon-feature-flag-force-rwx-rwo={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultRWX2RWO }}
+        - "--lagoon-feature-flag-default-rwx-rwo={{ . }}"
+        {{- end }}
         {{- with .Values.lagoonFeatureFlagBackupWeeklyRandom }}
         - "--lagoon-feature-flag-backup-weekly-random={{ . }}"
         {{- end }}
