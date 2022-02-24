@@ -22,6 +22,8 @@ namespacePrefix: ""
 # lagoonFeatureFlagDefaultIsolationNetworkPolicy: disabled
 # lagoonFeatureFlagForceInsights: disabled
 # lagoonFeatureFlagDefaultInsights: disabled
+# lagoonFeatureFlagForceRWX2RWO: disabled
+# lagoonFeatureFlagDefaultRWX2RWO: disabled
 
 # the following values can be used to override the default
 # backup configurations for a dedicated cluster
