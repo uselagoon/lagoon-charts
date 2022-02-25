@@ -33,6 +33,10 @@ spec:
         image: "{{ .Values.dockerHost.image.repository }}:{{ coalesce .Values.dockerHost.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.dockerHost.image.pullPolicy }}
         env:
+        {{- range $name, $value := .Values.dockerHost.extraEnvs }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
         - name: DOCKER_HOST
           value: localhost
         - name: REGISTRY
