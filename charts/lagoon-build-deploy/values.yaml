@@ -40,6 +40,19 @@ namespacePrefix: ""
 
 # nativeCronPodMinFrequency: 30
 
+## proxy configurations
+# httpProxy: ""
+# httpsProxy: ""
+# noProxy: ""
+
+## enable build pods to be injected with the HTTP_PROXY, HTTPS_PROXY, NO_PROXY variables if they are defined
+# enablePodProxy: false
+## enable pods to use a different proxy than the controller
+# podsUseDifferentProxy: false
+# podHTTPProxy: ""
+# podHTTPSProxy: ""
+# podNoProxy: ""
+
 # the following values are defaults which may be overridden
 
 # rootlessBuildPods tells the build-deploy controller to create build pods
