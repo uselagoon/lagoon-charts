@@ -71,7 +71,7 @@ pendingMessageCron: "*/5 * * * *"
 
 # The controller will use `uselagoon/kubectl-build-deploy-dind:latest` by
 # default, but this can be overridden here.
-overrideBuildDeployImage: ""
+overrideBuildDeployImage: "testlagoon/kubectl-build-deploy-dind:main"
 
 # override .Chart.Name
 nameOverride: ""
