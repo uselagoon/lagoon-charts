@@ -7,11 +7,9 @@ chart-dirs:
 chart-repos:
 - banzaicloud-stable=https://kubernetes-charts.banzaicloud.com
 - lagoon=https://uselagoon.github.io/lagoon-charts/
-- amazeeio=https://amazeeio.github.io/charts/
+# - amazeeio=https://amazeeio.github.io/charts/
 - gatekeeper=https://open-policy-agent.github.io/gatekeeper/charts
-- dbaas-operator=git+https://github.com/amazeeio/dbaas-operator@charts?ref=k8s_122
-- dioscuri=git+https://github.com/amazeeio/dioscuri@charts?ref=k8s_122
-- lagoon-build-deploy=git+https://github.com/uselagoon/lagoon-charts@charts/lagoon-build-deploy?ref=k8s_122
+- amazeeio-k8s-122=git+https://github.com/amazeeio/charts@charts?ref=k8s_122
 excluded-charts:
 - lagoon-test
 helm-extra-args: --timeout 900s
