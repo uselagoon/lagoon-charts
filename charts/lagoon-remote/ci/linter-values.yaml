@@ -23,7 +23,7 @@ lagoon-gatekeeper:
   enabled: false
 
 lagoon-insights-remote:
-  enabled: true
+  enabled: false
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
   rabbitMQHostname: lagoon-core-broker
