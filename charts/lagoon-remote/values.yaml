@@ -35,6 +35,9 @@ dockerHost:
 
   replicaCount: 1
 
+  # add extra environment variables if required
+  extraEnvs:
+
   storage:
     create: true
     size: 750Gi

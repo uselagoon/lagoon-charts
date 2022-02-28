@@ -20,6 +20,10 @@ namespacePrefix: ""
 # lagoonFeatureFlagDefaultRootlessWorkload: enabled
 # lagoonFeatureFlagForceIsolationNetworkPolicy: disabled
 # lagoonFeatureFlagDefaultIsolationNetworkPolicy: disabled
+# lagoonFeatureFlagForceInsights: disabled
+# lagoonFeatureFlagDefaultInsights: disabled
+# lagoonFeatureFlagForceRWX2RWO: disabled
+# lagoonFeatureFlagDefaultRWX2RWO: disabled
 
 # the following values can be used to override the default
 # backup configurations for a dedicated cluster
@@ -35,6 +39,19 @@ namespacePrefix: ""
 # cronjob interval defined in builds
 
 # nativeCronPodMinFrequency: 30
+
+## proxy configurations
+# httpProxy: ""
+# httpsProxy: ""
+# noProxy: ""
+
+## enable build pods to be injected with the HTTP_PROXY, HTTPS_PROXY, NO_PROXY variables if they are defined
+# enablePodProxy: false
+## enable pods to use a different proxy than the controller
+# podsUseDifferentProxy: false
+# podHTTPProxy: ""
+# podHTTPSProxy: ""
+# podNoProxy: ""
 
 # the following values are defaults which may be overridden
 
