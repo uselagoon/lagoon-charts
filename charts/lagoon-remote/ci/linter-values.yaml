@@ -22,4 +22,10 @@ dbaas-operator:
 lagoon-gatekeeper:
   enabled: false
 
+lagoon-insights-remote:
+  enabled: true
+  rabbitMQUsername: lagoon
+  rabbitMQPassword: ci
+  rabbitMQHostname: lagoon-core-broker
+
 mxoutHost: mxout1.example.com

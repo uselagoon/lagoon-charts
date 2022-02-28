@@ -253,7 +253,6 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--set "dbaas-operator.mongodbProviders.development.auth.mechanism=SCRAM-SHA-1" \
 		--set "dbaas-operator.mongodbProviders.development.auth.source=admin" \
 		--set "dbaas-operator.mongodbProviders.development.auth.tls=false" \
-		--set "lagoon-insights-remote.enabled=false" \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		lagoon-remote \
 		./charts/lagoon-remote
