@@ -35,6 +35,11 @@ dockerHost:
 
   replicaCount: 1
 
+  ## proxy configuration
+  # httpProxy: ""
+  # httpsProxy: ""
+  # noProxy: ""
+
   # add extra environment variables if required
   extraEnvs:
 

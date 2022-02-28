@@ -37,6 +37,24 @@ spec:
         - name: {{ .name }}
           value: {{ .value | quote }}
         {{- end }}
+        {{- with .Values.dockerHost.httpProxy }}
+        - name: HTTP_PROXY
+          value: {{ . | quote }}
+        - name: http_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.dockerHost.httpsProxy }}
+        - name: HTTPS_PROXY
+          value: {{ . | quote }}
+        - name: https_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.dockerHost.noProxy }}
+        - name: NO_PROXY
+          value: {{ . | quote }}
+        - name: no_proxy
+          value: {{ . | quote }}
+        {{- end }}
         - name: DOCKER_HOST
           value: localhost
         - name: REGISTRY
