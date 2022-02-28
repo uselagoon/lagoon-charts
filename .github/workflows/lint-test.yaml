@@ -23,6 +23,7 @@ jobs:
         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
         helm repo add dbaas-operator-k8s-122 git+https://github.com/amazeeio/dbaas-operator@charts?ref=k8s_122
         helm repo add dioscuri-k8s-122 git+https://github.com/amazeeio/dioscuri@charts?ref=k8s_122
+        helm repo add lagoon-build-deploy-k8s-122 git+https://github.com/uselagoon/lagoon-charts@charts/lagoon-build-deploy?ref=k8s_122
     - name: Generate helm templates
       run: |
         cd charts
