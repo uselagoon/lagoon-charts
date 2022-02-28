@@ -471,10 +471,10 @@ insightsHandler:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/insights-handler
+    repository: testlagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "pr-2997"
 
   podAnnotations: {}
 
