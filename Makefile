@@ -2,15 +2,15 @@ TESTS = [api]
 # IMAGE_TAG controls the tag used for container images in the lagoon-core,
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
-IMAGE_TAG =
+IMAGE_TAG = main
 # IMAGE_REGISTRY controls the registry used for container images in the
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
 # only affects lagoon-core, lagoon-remote, and the fill-test-ci-values target.
-IMAGE_REGISTRY = uselagoon
+IMAGE_REGISTRY = testlagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/kubectl-build-deploy-dind:latest).
-OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
+OVERRIDE_BUILD_DEPLOY_DIND_IMAGE = testlagoon/kubectl-build-deploy-dind:main
 # Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
 # the lagoon-build-deploy chart appVersion.
 OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
