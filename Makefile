@@ -71,7 +71,9 @@ install-ingress:
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
-		--version=3.31.0 \
+		--set controller.watchIngressWithoutClass=true \
+		--set controller.ingressClassResource.default=true \
+		--version=4.0.16 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -91,7 +93,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.5.5 \
+		--version=1.5.6 \
 		registry \
 		harbor/harbor
 
@@ -160,7 +162,7 @@ install-minio: install-ingress
 		--timeout $(TIMEOUT) \
 		--set accessKey.password=lagoonFilesAccessKey,secretKey.password=lagoonFilesSecretKey \
 		--set defaultBuckets=lagoon-files \
-		--version=8.1.9 \
+		--version=8.1.11 \
 		minio \
 		bitnami/minio
 
@@ -235,6 +237,8 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--set dockerHost.image.repository=$(IMAGE_REGISTRY)/docker-host \
 		--set "lagoon-build-deploy.enabled=false" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set "dbaas-operator.enabled=false" \
+		--set "dbaas-operator.image.tag=k8s_122" \
 		--set "dbaas-operator.mariadbProviders.development.environment=development" \
 		--set "dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
 		--set "dbaas-operator.mariadbProviders.development.password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \

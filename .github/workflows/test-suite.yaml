@@ -69,6 +69,7 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       with:
         config: test-suite.kind-config.yaml
+        node_image: kindest/node:v1.22.0
 
     - name: Install kubectl
       if: |

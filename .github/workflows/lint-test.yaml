@@ -89,6 +89,8 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      with:
+        node_image: kindest/node:v1.22.0
 
     - name: Run chart-testing (install)
       run: ct install --config ./default.ct.yaml
