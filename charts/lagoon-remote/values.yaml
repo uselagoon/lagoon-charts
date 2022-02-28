@@ -135,3 +135,6 @@ dbaasHTTPEndpoint: ""
 # workloads. It is currently experimental so it is disabled by default.
 lagoon-gatekeeper:
   enabled: false
+
+lagoon-insights-remote:
+  enabled: false
