@@ -105,6 +105,7 @@ jobs:
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: |
+        helm plugin install https://github.com/aslafy-z/helm-git
         helm repo add harbor https://helm.goharbor.io
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
         helm repo add stable https://charts.helm.sh/stable
@@ -112,6 +113,8 @@ jobs:
         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
         helm repo add amazeeio https://amazeeio.github.io/charts/
         helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
+        helm repo add dbaas-operator-k8s-122 git+https://github.com/amazeeio/dbaas-operator@charts?ref=k8s_122
+        helm repo add dioscuri-k8s-122 git+https://github.com/amazeeio/dioscuri@charts?ref=k8s_122
 
     - name: Install gojq
       if: |

@@ -31,12 +31,14 @@ dependencies:
   repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-build-deploy.enabled
 - name: dioscuri
-  version: ~0.3.0
-  repository: https://amazeeio.github.io/charts/
+  version: ~0.1.0
+  repository: git+https://github.com/amazeeio/dioscuri@charts?ref=k8s_122
+#  repository: https://amazeeio.github.io/charts/
   condition: dioscuri.enabled
 - name: dbaas-operator
   version: ~0.2.0
-  repository: https://amazeeio.github.io/charts/
+  repository: git+https://github.com/amazeeio/dbaas-operator@charts?ref=k8s_122
+#  repository: https://amazeeio.github.io/charts/
   condition: dbaas-operator.enabled
 - name: lagoon-gatekeeper
   version: ~0.3.1
