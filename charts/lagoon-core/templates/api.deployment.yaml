@@ -54,10 +54,8 @@ spec:
         - name: BITBUCKET_API_TOKEN
           value: {{ . | quote }}
         {{- end }}
-        - name: ELASTICSEARCH_HOST
-          value: {{ required "A valid .Values.elasticsearchHost required!" .Values.elasticsearchHost | quote }}
         - name: ELASTICSEARCH_URL
-          value: {{ .Values.elasticsearchScheme }}://{{ .Values.elasticsearchHost }}:{{ .Values.elasticsearchHostPort }}
+          value: {{ required "A valid .Values.elasticsearchURL required!" .Values.elasticsearchURL | quote }}
         {{- with .Values.gitlabAPIURL }}
         - name: GITLAB_API_HOST
           value: {{ . | quote }}
@@ -69,7 +67,7 @@ spec:
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
         - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
@@ -91,6 +89,11 @@ spec:
         - name: OVERWRITE_KUBECTL_BUILD_DEPLOY_DIND_IMAGE
           value: {{ . | quote }}
         {{- end }}
+        - name: PROJECTSEED
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-secrets
+              key: PROJECTSEED
         - name: RABBITMQ_HOST
           value: {{ include "lagoon-core.broker.fullname" . }}
         - name: RABBITMQ_PASSWORD

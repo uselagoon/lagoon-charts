@@ -1,8 +1,7 @@
 # Any values defined here are not used anywhere other than lint/CI.
 
 # used in api
-elasticsearchHost: opendistro-es-client-service.opendistro-es.svc.cluster.local
-elasticsearchScheme: http
+elasticsearchURL: http://opendistro-es-client-service.opendistro-es.svc.cluster.local:9200
 harborURL: http://harbor:1234
 harborAdminPassword: harbor123
 kibanaURL: http://opendistro-es-kibana-svc.opendistro-es.svc.cluster.local:443
@@ -160,6 +159,11 @@ logs2email:
   replicaCount: 1
   image:
     repository: uselagoon/logs2email
+
+logs2s3:
+  replicaCount: 1
+  image:
+    repository: uselagoon/logs2s3
 
 drushAlias:
   replicaCount: 1

@@ -34,11 +34,11 @@ spec:
         imagePullPolicy: {{ .Values.autoIdler.image.pullPolicy }}
         env:
         - name: ELASTICSEARCH_URL
-          value: {{ .Values.elasticsearchScheme }}://{{ .Values.elasticsearchHost }}
+          value: {{ .Values.elasticsearchURL }}
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
         - name: LOGSDB_ADMIN_PASSWORD
           valueFrom:

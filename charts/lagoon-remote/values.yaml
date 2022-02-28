@@ -31,7 +31,17 @@ dockerHost:
 
   repositoryToUpdate: amazeeio|lagoon
 
+  pruneImagesUntil: 168h
+
   replicaCount: 1
+
+  ## proxy configuration
+  # httpProxy: ""
+  # httpsProxy: ""
+  # noProxy: ""
+
+  # add extra environment variables if required
+  extraEnvs:
 
   storage:
     create: true
@@ -63,6 +73,10 @@ dockerHost:
 
   securityContext:
     privileged: true
+    seLinuxOptions:
+      # Ensures selinux relabeling is disabled, this would case the container never to start
+      # as there can be so many files in the persistent storage
+      type: spc_t
 
   resources: {}
 
@@ -117,6 +131,13 @@ dioscuri:
 # by default in future as this is a core Lagoon feature.
 dbaas-operator:
   enabled: false
+  enableMariaDBProviders: true
+  enableMongoDBProviders: true
+  enablePostreSQLProviders: true
+
+# if you are using the dbaas-operator in a different release, you can define the http endpoint to use here
+# setting this will always override whatever `dbaas-operator` would set, useful if you want to target a different endpoint
+dbaasHTTPEndpoint: ""
 
 # lagoon-gatekeeper is a subchart which enforces security policy for Lagoon
 # workloads. It is currently experimental so it is disabled by default.

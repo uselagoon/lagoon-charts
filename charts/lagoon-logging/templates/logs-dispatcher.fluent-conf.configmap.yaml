@@ -52,6 +52,15 @@ data:
       tag   "lagoon.#{ENV['CLUSTER_NAME']}.router.openshift"
     </source>
 {{- end }}
+{{- if .Values.cdnLogsCollector.enabled }}
+    # cdn logs collected via cdn-logs-collector
+    <source>
+      @type  forward
+      @id    in_cdn
+      port   24226
+      tag   "lagoon.#{ENV['CLUSTER_NAME']}.cdn"
+    </source>
+{{- end }}
 
     #
     # optional sources which can be enabled in the chart
@@ -153,7 +162,11 @@ data:
     # the last "format none" block is a catch-all for unmatched messages.
     <filter lagoon.*.container>
       @type parser
+{{- if eq .Values.containerRuntime "docker" }}
+      key_name log
+{{- else }}
       key_name message
+{{- end }}
       reserve_data true
       <parse>
         @type multi_format
@@ -207,7 +220,11 @@ data:
     # keys in the top-level log object.
     <filter lagoon.*.router.nginx>
       @type parser
+{{- if eq .Values.containerRuntime "docker" }}
+      key_name log
+{{- else }}
       key_name message
+{{- end }}
       reserve_time true
       reserve_data true
       remove_key_name_field true
@@ -229,12 +246,17 @@ data:
         # if the host key doesn't exist then this was not parsed as JSON, so we
         # just send to @OUTPUT directly because it is an actual nginx
         # controller log. These logs will appear in index_name
-        # router-logs-ingress-nginx_.*
+        # router-logs-ingress-nginx_.* if the keepIngressNginxController value
+        # is set to true.
         invert true
         key host
         pattern /.+/
         tag ${tag}
+{{- if .Values.keepIngressNginxController }}
         label @OUTPUT
+{{- else }}
+        label @DISCARD
+{{- end }}
       </rule>
       <rule>
         # host key exists, so this is a HTTP request log
@@ -341,6 +363,17 @@ data:
           index_name router-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
         </record>
       </filter>
+      {{- if .Values.cdnLogsCollector.enabled }}
+      #
+      # add the cdn logs index_name
+      #
+      <filter lagoon.*.cdn>
+        @type record_modifier
+        <record>
+          index_name cdn-logs-_-${ENV['CLUSTER_NAME']}-_-${Time.at(time).strftime("%Y.%m")}
+        </record>
+      </filter>
+      {{- end }}
       {{- if .Values.consolidateServiceIndices }}
       # some cluster services generate namespaces with a random suffix, so
       # consolidate those in a single index for each service
@@ -364,6 +397,11 @@ data:
           expression /^(?<prefix>container-logs-.+-apb)-(?:prov|depr)-[^-]{5}_(?<suffix>.+)$/
           replace \k<prefix>_\k<suffix>
         </replace>
+        <replace>
+          key index_name
+          expression /^(?<prefix>container-logs-openshift-build-test)-[0-9]+-[^-]{5}$/
+          replace \k<prefix>
+        </replace>
       </filter>
       {{- end }}
       #
@@ -376,7 +414,26 @@ data:
           index_name lagoon-logs-${record['project']}-_-all_environments-_-${Time.at(time).strftime("%Y.%m")}
         </record>
       </filter>
-
+      #
+      # exclude the lagoon logs for running builds, and legacy task: updates
+      #
+      <filter lagoon.*.lagoon>
+        @type grep
+        <or>
+          <exclude>
+            key $.meta.buildPhase
+            pattern ^running$
+          </exclude>
+          <exclude>
+            key $.meta.buildStatus
+            pattern ^running$
+          </exclude>
+          <exclude>
+            key $.event
+            pattern ^task:builddeploy-kubernetes:*
+          </exclude>
+        </or>
+      </filter>
       #
       # forward all to logs-concentrator
       #
@@ -414,7 +471,7 @@ data:
             @type file
             path /fluentd/buffer/forward
             # buffer params (per worker)
-            total_limit_size 8GB
+            total_limit_size 7500MB
             # flush params
             flush_thread_count 8 # 8 threads that flush, makes sure we have enough flushers for all the different buffers
             flush_interval 2s # flush every 2 seconds
@@ -431,6 +488,12 @@ data:
         </store>
         {{- end }}
         @include store.d/*.conf
+      </match>
+    </label>
+
+    <label @DISCARD>
+      <match lagoon.**>
+        @type null
       </match>
     </label>
     {{- with .Values.extraConf }}
