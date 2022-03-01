@@ -155,6 +155,18 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: docker system prune -f -a --volumes
 
+    - name: Check that keycloak is ready
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      uses: nick-fields/retry@v2
+      with:
+        timeout_seconds: 5
+        max_attempts: 15
+        retry_wait_seconds: 30
+        retry_on: error
+        command: kubectl logs -l app.kubernetes.io/component=lagoon-core-keycloak -n lagoon --tail=-1 | grep "Config of Keycloak done"
+
     - name: Run chart-testing (install) on lagoon-test
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
