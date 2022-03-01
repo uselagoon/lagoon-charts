@@ -237,7 +237,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--set dockerHost.image.repository=$(IMAGE_REGISTRY)/docker-host \
 		--set "lagoon-build-deploy.enabled=false" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
-		--set "dbaas-operator.enabled=false" \
+		--set "dbaas-operator.enabled=true" \
 		--set "dbaas-operator.image.tag=k8s_122" \
 		--set "dbaas-operator.mariadbProviders.development.environment=development" \
 		--set "dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
