@@ -49,11 +49,11 @@ spec:
           value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3FilesBucket | quote }}
         - name: S3_FILES_HOST
           value: {{ required "A valid .Values.s3FilesHost required!" .Values.s3FilesHost | quote }}
-        {{- with .Values.s3AccessKeyID }}
+        {{- with .Values.s3FilesAccessKeyID }}
         - name: S3_FILES_ACCESS_KEY_ID
           value: {{ . | quote }}
         {{- end }}
-        {{- with .Values.s3SecretAccessKey }}
+        {{- with .Values.s3FilesSecretAccessKey }}
         - name: S3_FILES_SECRET_ACCESS_KEY
           value: {{ . | quote }}
         {{- end }}
