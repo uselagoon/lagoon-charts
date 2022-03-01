@@ -55,6 +55,9 @@ spec:
         - containerPort: 24225
           protocol: TCP
           name: haproxy-forward
+        - containerPort: 24226
+          protocol: TCP
+          name: cdn-forward
         - containerPort: 24231
           protocol: TCP
           name: metrics

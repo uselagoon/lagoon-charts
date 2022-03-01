@@ -33,12 +33,36 @@ spec:
         image: "{{ .Values.dockerHost.image.repository }}:{{ coalesce .Values.dockerHost.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.dockerHost.image.pullPolicy }}
         env:
+        {{- range $name, $value := .Values.dockerHost.extraEnvs }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+        {{- with .Values.dockerHost.httpProxy }}
+        - name: HTTP_PROXY
+          value: {{ . | quote }}
+        - name: http_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.dockerHost.httpsProxy }}
+        - name: HTTPS_PROXY
+          value: {{ . | quote }}
+        - name: https_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.dockerHost.noProxy }}
+        - name: NO_PROXY
+          value: {{ . | quote }}
+        - name: no_proxy
+          value: {{ . | quote }}
+        {{- end }}
         - name: DOCKER_HOST
           value: localhost
         - name: REGISTRY
           value: {{ .Values.dockerHost.registry | quote }}
         - name: REPOSITORY_TO_UPDATE
           value: {{ .Values.dockerHost.repositoryToUpdate | quote }}
+        - name: PRUNE_IMAGES_UNTIL
+          value: {{ .Values.dockerHost.pruneImagesUntil | quote }}
         - name: CRONJOBS
           value: |
             22 1 * * * /lagoon/cronjob.sh "/prune-images.sh"

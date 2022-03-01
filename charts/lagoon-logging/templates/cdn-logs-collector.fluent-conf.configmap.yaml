@@ -1,0 +1,70 @@
+{{- if .Values.cdnLogsCollector.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-fluent-conf
+  labels:
+    {{- include "lagoon-logging.cdnLogsCollector.labels" . | nindent 4 }}
+data:
+  fluent.conf: |
+    <system>
+      workers 2
+      log_level error
+    </system>
+
+    # prometheus metrics
+    <source>
+      @type prometheus
+    </source>
+    <source>
+      @type prometheus_monitor
+    </source>
+    <source>
+      @type prometheus_output_monitor
+    </source>
+
+    <source>
+      @type tcp
+      @id   in_tcp
+      tag   "lagoon.cdn"
+      port  5140
+      <transport tls>
+        ca_path /fluentd/tls/ca.crt
+        cert_path /fluentd/tls/server.crt
+        private_key_path /fluentd/tls/server.key
+        client_cert_auth true
+      </transport>
+      <parse>
+        @type json
+      </parse>
+    </source>
+
+    # uncomment to debug
+    # <filter lagoon.**>
+    #   @type stdout
+    # </filter>
+
+    <match lagoon.**>
+      @type forward
+      @id out_forward
+      # error out early
+      verify_connection_at_startup true
+      <server>
+        port 24226
+        host "{{ include "lagoon-logging.logsDispatcher.fullname" . }}"
+      </server>
+      # buffer chunks by tag
+      <buffer tag>
+        @type file
+        path /fluentd/buffer/forward
+        # buffer params (per worker)
+        total_limit_size 4GB
+        # flush params
+        flush_thread_count 4
+        flush_interval 2s # flush every 2 seconds
+        flush_thread_burst_interval 0 # don't sleep if there is more data to flush
+        retry_max_interval 30s # limit exponential backoff period
+        overflow_action drop_oldest_chunk
+      </buffer>
+    </match>
+{{- end }}

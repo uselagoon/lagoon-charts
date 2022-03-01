@@ -48,10 +48,17 @@ spec:
         args:
         - "--metrics-addr=127.0.0.1:8080"
         - "--enable-leader-election=true"
+        - "--enable-deprecated-apis=true"
         {{- if .Values.rootlessBuildPods }}
         - "--build-pod-run-as-user=10000"
         - "--build-pod-run-as-group=0"
         - "--build-pod-fs-group=10001"
+        {{- end }}
+        {{- if .Values.enablePodProxy }}
+        - "--enable-pod-proxy"
+        {{- end }}
+        {{- if .Values.podsUseDifferentProxy }}
+        - "--pods-use-different-proxy"
         {{- end }}
         {{- with .Values.lagoonFeatureFlagForceRootlessWorkload }}
         - "--lagoon-feature-flag-force-rootless-workload={{ . }}"
@@ -64,6 +71,39 @@ spec:
         {{- end }}
         {{- with .Values.lagoonFeatureFlagDefaultIsolationNetworkPolicy }}
         - "--lagoon-feature-flag-default-isolation-network-policy={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceInsights }}
+        - "--lagoon-feature-flag-force-insights={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultInsights }}
+        - "--lagoon-feature-flag-default-insights={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceRWX2RWO }}
+        - "--lagoon-feature-flag-force-rwx-rwo={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultRWX2RWO }}
+        - "--lagoon-feature-flag-default-rwx-rwo={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagBackupWeeklyRandom }}
+        - "--lagoon-feature-flag-backup-weekly-random={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultSchedule }}
+        - "--backup-default-schedule={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultHourlyRetention }}
+        - "--backup-default-hourly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultDailyRetention }}
+        - "--backup-default-daily-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultWeeklyRetention }}
+        - "--backup-default-weekly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultMonthlyRetention }}
+        - "--backup-default-monthly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.nativeCronPodMinFrequency }}
+        - "--native-cron-pod-min-frequency={{ . }}"
         {{- end }}
         {{- with .Values.lagoonFeatureFlagEnableQoS }}
         - "--enable-qos={{ . }}"
@@ -99,6 +139,38 @@ spec:
         {{- with .Values.taskAPIHost }}
         - name: TASK_API_HOST
           value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.httpProxy }}
+        - name: HTTP_PROXY
+          value: {{ . | quote }}
+        - name: http_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.httpsProxy }}
+        - name: HTTPS_PROXY
+          value: {{ . | quote }}
+        - name: https_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.noProxy }}
+        - name: NO_PROXY
+          value: {{ . | quote }}
+        - name: no_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- if .Values.podsUseDifferentProxy }}
+        {{- with .Values.podHTTPProxy }}
+        - name: LAGOON_HTTP_PROXY
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.podHTTPSProxy }}
+        - name: LAGOON_HTTPS_PROXY
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.podNoProxy }}
+        - name: LAGOON_NO_PROXY
+          value: {{ . | quote }}
+        {{- end }}
         {{- end }}
         - name: PENDING_MESSAGE_CRON
           value: {{ .Values.pendingMessageCron | quote }}

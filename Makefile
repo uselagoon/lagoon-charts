@@ -151,8 +151,22 @@ install-mongodb:
 		mongodb \
 		bitnami/mongodb
 
+.PHONY: install-minio
+install-minio: install-ingress
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace minio \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set accessKey.password=lagoonFilesAccessKey,secretKey.password=lagoonFilesSecretKey \
+		--set defaultBuckets=lagoon-files \
+		--version=8.1.9 \
+		minio \
+		bitnami/minio
+
 .PHONY: install-lagoon-core
-install-lagoon-core:
+install-lagoon-core: install-minio
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -164,8 +178,8 @@ install-lagoon-core:
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overwriteKubectlBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		--set "harborAdminPassword=Harbor12345" \
 		--set "harborURL=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
-		--set "keycloakAPIURL=http://localhost:8080/auth" \
-		--set "lagoonAPIURL=http://localhost:7070/graphql" \
+		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
+		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set actionsHandler.enabled=true \
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
@@ -180,6 +194,7 @@ install-lagoon-core:
 		--set drushAlias.image.repository=$(IMAGE_REGISTRY)/drush-alias \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
+		--set logs2s3.image.repository=$(IMAGE_REGISTRY)/logs2s3 \
 		--set logs2email.enabled=false \
 		--set logs2microsoftteams.enabled=false \
 		--set logs2rocketchat.enabled=false \
@@ -191,6 +206,22 @@ install-lagoon-core:
 		--set ui.image.repository=$(IMAGE_REGISTRY)/ui \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
+		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
+		--set s3FilesSecretAccessKey=lagoonFilesSecretKey \
+		--set s3FilesBucket=lagoon-files \
+		--set s3FilesHost=http://minio.minio.svc:9000 \
+		--set api.ingress.enabled=true \
+		--set api.ingress.hosts[0].host="lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set api.ingress.hosts[0].paths[0]="/" \
+		--set ui.ingress.enabled=true \
+		--set ui.ingress.hosts[0].host="lagoon-ui.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set ui.ingress.hosts[0].paths[0]="/" \
+		--set keycloak.ingress.enabled=true \
+		--set keycloak.ingress.hosts[0].host="lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set keycloak.ingress.hosts[0].paths[0]="/" \
+		--set broker.ingress.enabled=true \
+		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
+		--set broker.ingress.hosts[0].paths[0]="/" \
 		lagoon-core \
 		./charts/lagoon-core
 
@@ -228,6 +259,30 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		lagoon-remote \
 		./charts/lagoon-remote
+
+# The following target should only be called as a dependency of lagoon-remote
+# Do not install without lagoon-core
+#
+.PHONY: install-lagoon-build-deploy
+install-lagoon-build-deploy: install-lagoon-core
+	$(HELM) dependency build ./charts/lagoon-build-deploy/
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace lagoon \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--values ./charts/lagoon-build-deploy/ci/linter-values.yaml \
+		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
+		--set "rabbitMQHostname=lagoon-core-broker" \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
+		$$([ $(BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set rootlessBuildPods=true') \
+		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
+		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoonFeatureFlagDefaultIsolationNetworkPolicy=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
+		lagoon-build-deploy \
+		./charts/lagoon-build-deploy
 
 #
 # The following target should only be called as a dependency of lagoon-remote
@@ -290,7 +345,7 @@ else
 endif
 
 .PHONY: install-test-cluster
-install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb
+install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb install-minio
 
 .PHONY: install-lagoon
 install-lagoon:  install-lagoon-core install-lagoon-remote
@@ -298,7 +353,7 @@ install-lagoon:  install-lagoon-core install-lagoon-remote
 .PHONY: get-admin-creds
 get-admin-creds:
 	echo "\nGraphQL admin token: \n$$(docker run \
-		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-jwtsecret -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
+		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon lagoon-core-secrets -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
 		-e JWTAUDIENCE=api.dev \
 		-e JWTUSER=localadmin \
 		uselagoon/tests \

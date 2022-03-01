@@ -59,3 +59,46 @@ logsDispatcher:
   buffer:
     storageClassName: standard
     size: 4Gi
+
+cdnLogsCollector:
+  enabled: true
+  serviceMonitor:
+    enabled: false
+  replicaCount: 1
+  buffer:
+    storageClassName: standard
+    size: 1Gi
+  serviceType: ClusterIP
+  tls:
+    caCert: |-
+      -----BEGIN CERTIFICATE-----
+      MIIBkzCCATigAwIBAgIUEylWBS30BvLSM7DlTAeiJMqpzF0wCgYIKoZIzj0EAwIw
+      JzElMCMGA1UEAxMcbG9ncy1jYS5jbHVzdGVyMS5leGFtcGxlLmNvbTAeFw0yMTA5
+      MjQwMzMzMDBaFw0zMTA5MjIwMzMzMDBaMCcxJTAjBgNVBAMTHGxvZ3MtY2EuY2x1
+      c3RlcjEuZXhhbXBsZS5jb20wWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARvdkam
+      oZypQWzQDkAP6lz5vZQTk6vlaoVKGhYfbYh9wpIG5Fd6vZaMVpA2kqkmJ2GuuGRi
+      qyzSWHf6rWYHLCYio0IwQDAOBgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB
+      /zAdBgNVHQ4EFgQUNQMSQ5RyyBbMTBQXMe5mxykH2Q0wCgYIKoZIzj0EAwIDSQAw
+      RgIhAJWCXW7sJpJf5DLDSMJ5uPu/FpIr53jt4I87TtGdeWpjAiEA7c9U+ncUyGum
+      KumwMVHOT37qXJQlqekzhbjuqrzGAgM=
+      -----END CERTIFICATE-----
+    serverCert: |-
+      -----BEGIN CERTIFICATE-----
+      MIICBjCCAaygAwIBAgIUTxazeWSnnYEe6fyEzDXM3S8x1MowCgYIKoZIzj0EAwIw
+      JzElMCMGA1UEAxMcbG9ncy1jYS5jbHVzdGVyMS5leGFtcGxlLmNvbTAeFw0yMTA5
+      MjQwMzM0MDBaFw0zMTA5MjIwMzM0MDBaMDIxMDAuBgNVBAMTJ2Nkbi1sb2dzLWNv
+      bGxlY3Rvci5jbHVzdGVyMS5leGFtcGxlLmNvbTBZMBMGByqGSM49AgEGCCqGSM49
+      AwEHA0IABFV+AkbcTWNkytQkBHZ/FpA3MK+HA+Ct9OqCSGocrWJBTHZCj9yVnMUs
+      9YVsdxyA/NW4UYo2fonD76CVNDaU16GjgaowgacwDgYDVR0PAQH/BAQDAgWgMBMG
+      A1UdJQQMMAoGCCsGAQUFBwMBMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFGYfPGoh
+      KNYB+l/QLLx4MZidCyHqMB8GA1UdIwQYMBaAFDUDEkOUcsgWzEwUFzHuZscpB9kN
+      MDIGA1UdEQQrMCmCJ2Nkbi1sb2dzLWNvbGxlY3Rvci5jbHVzdGVyMS5leGFtcGxl
+      LmNvbTAKBggqhkjOPQQDAgNIADBFAiBzVqrMx3FCEt2L4AS1Fp6QpWHz3i+9rozk
+      9wiuLItXYwIhALDp7ukoMWVOxr8ZVyoKcQ3zEUGBLevkTt1rSb6NFxhF
+      -----END CERTIFICATE-----
+    serverKey: |-
+      -----BEGIN EC PRIVATE KEY-----
+      MHcCAQEEIA/x25g6Q5anX7ivoEb0kmfHxuigJaDdNFu0vvvaFjPNoAoGCCqGSM49
+      AwEHoUQDQgAEVX4CRtxNY2TK1CQEdn8WkDcwr4cD4K306oJIahytYkFMdkKP3JWc
+      xSz1hWx3HID81bhRijZ+icPvoJU0NpTXoQ==
+      -----END EC PRIVATE KEY-----
