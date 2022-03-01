@@ -129,7 +129,7 @@ autoIdler:
 
 insightsHandler:
   image:
-    repository: uselagoon/insights-handler
+    repository: testlagoon/insights-handler
 
 storageCalculator:
   image:
