@@ -76,15 +76,6 @@ spec:
         - name: {{ $key }}
           value: {{ $val | quote }}
       {{- end }}
-        ports:
-        - name: http-3000
-          containerPort: 3000
-        livenessProbe:
-          tcpSocket:
-            port: http-3000
-        readinessProbe:
-          tcpSocket:
-            port: http-3000
         resources:
           {{- toYaml .Values.insightsHandler.resources | nindent 10 }}
       {{- with .Values.insightsHandler.nodeSelector }}
