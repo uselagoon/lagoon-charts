@@ -45,6 +45,22 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_PASSWORD
+        - name: S3_FILES_BUCKET
+          value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3FilesBucket | quote }}
+        - name: S3_FILES_HOST
+          value: {{ required "A valid .Values.s3FilesHost required!" .Values.s3FilesHost | quote }}
+        {{- with .Values.s3AccessKeyID }}
+        - name: S3_FILES_ACCESS_KEY_ID
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.s3SecretAccessKey }}
+        - name: S3_FILES_SECRET_ACCESS_KEY
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.s3FilesRegion }}
+        - name: S3_FILES_REGION
+          value: {{ . | quote }}
+        {{- end }}
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
