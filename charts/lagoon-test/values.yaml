@@ -121,10 +121,10 @@ localAPIDataWatcherPusher:
 tests:
 
   image:
-    repository: uselagoon/tests
+    repository: testlagoon/tests
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "pr-3050"
 
   suiteEnabled: true
 
