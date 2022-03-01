@@ -22,6 +22,7 @@ jobs:
         # helm repo add amazeeio https://amazeeio.github.io/charts/
         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
         helm repo add amazeeio-k8s-122 git+https://github.com/amazeeio/charts@charts?ref=k8s_122
+        helm repo add lagoon-build-deploy-k8s-122 git+https://github.com/uselagoon/lagoon-charts@charts/lagoon-build-deploy?ref=k8s_122
         # helm repo add lagoon-k8s-122 git+https://github.com/uselagoon/lagoon-charts@charts?ref=k8s_122
     - name: Generate helm templates
       run: |

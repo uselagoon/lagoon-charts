@@ -7,6 +7,7 @@ chart-dirs:
 chart-repos:
 - banzaicloud-stable=https://kubernetes-charts.banzaicloud.com
 - lagoon=https://uselagoon.github.io/lagoon-charts/
+- lagoon-build-deploy-k8s-122=git+https://github.com/uselagoon/lagoon-charts@charts/lagoon-build-deploy?ref=k8s_122
 # - amazeeio=https://amazeeio.github.io/charts/
 - gatekeeper=https://open-policy-agent.github.io/gatekeeper/charts
 - amazeeio-k8s-122=git+https://github.com/amazeeio/charts@charts?ref=k8s_122
