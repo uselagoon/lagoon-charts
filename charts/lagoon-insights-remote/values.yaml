@@ -1,6 +1,8 @@
 rabbitMQHostname: ""
 rabbitMQPassword: ""
 rabbitMQUsername: ""
+# sets insights configMaps to be removed after being processed
+burnAfterReading: true
 
 replicaCount: 1
 
