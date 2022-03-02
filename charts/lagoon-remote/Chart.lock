@@ -11,5 +11,8 @@ dependencies:
 - name: lagoon-gatekeeper
   repository: https://uselagoon.github.io/lagoon-charts/
   version: 0.3.1
-digest: sha256:59166cf6e44640d6377efd42b497131ba4395002d37a017d726626e97bfbf2f0
-generated: "2022-02-15T15:51:15.119182+11:00"
+- name: lagoon-insights-remote
+  repository: https://uselagoon.github.io/lagoon-charts/
+  version: 0.1.0
+digest: sha256:d3f4aef4413754c7aae9a9f644080c4601a77c6139308bc280737976fc9595c2
+generated: "2022-02-24T15:56:18.743116009+13:00"
