@@ -105,6 +105,51 @@ kubernetesBuildDeploy:
     # If not set, a name is generated using the fullname template.
     name:
 
+# sshPortal is an optional service providing low-latency SSH connectivity to
+# Lagoon environments.
+sshPortal:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.18.1"
+
+  service:
+    type: LoadBalancer
+    ports:
+      sshserver: 22
+
+  metricsService:
+    type: ClusterIP
+    ports:
+      metrics: 9912
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs: {}
+
+  serviceAccount:
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name: ""
+
+  serviceMonitor:
+    enabled: true
+
+  # host keys, PEM encoded
+  hostKeys:
+    ecdsa: ""
+    ed25519: ""
+    rsa: ""
+
 # This subchart is disabled by default until this build-deploy type is in
 # widespread use.
 lagoon-build-deploy:

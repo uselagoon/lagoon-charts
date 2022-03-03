@@ -70,3 +70,23 @@ natsConfig:
         AwEHoUQDQgAEJqD67BGaVtpzW7mFSsK9IAY5bPsI/zDCGO+zhSJhDS44duAbmWCB
         OuWKcMfdfO7LdHmssdwG8RsUsAx7t7qmhQ==
         -----END EC PRIVATE KEY-----
+
+sshPortal:
+  enabled: true
+  replicaCount: 1
+  debug: true
+  serviceMonitor:
+    enabled: false
+  service:
+    type: NodePort
+    ports:
+      sshserver: 2222
+  hostKeys:
+    ed25519: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+      QyNTUxOQAAACA/YqlzbdTqR53BHcDhvP0EVepZ66ZIT2HaXSpxdzwhMgAAAIgc+EPKHPhD
+      ygAAAAtzc2gtZWQyNTUxOQAAACA/YqlzbdTqR53BHcDhvP0EVepZ66ZIT2HaXSpxdzwhMg
+      AAAECW61aE011GKLSFBJ82G6oGEOjJSUV3STx16veSvX38kD9iqXNt1OpHncEdwOG8/QRV
+      6lnrpkhPYdpdKnF3PCEyAAAAAAECAwQF
+      -----END OPENSSH PRIVATE KEY-----

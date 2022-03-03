@@ -1,0 +1,45 @@
+{{- if .Values.sshPortal.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "lagoon-remote.sshPortal.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.sshPortal.labels" . | nindent 4 }}
+rules:
+# k8s.NamespaceDetails
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+# k8s.ensureScaled
+- apiGroups:
+  - apps
+  resources:
+  - deployments/scale
+  verbs:
+  - get
+  - update
+# k8s.podName, k8s.FindDeployment
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - list
+# k8s.Exec
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+{{- end }}
