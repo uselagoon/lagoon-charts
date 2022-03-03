@@ -59,8 +59,6 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
-        - name: JWT_AUDIENCE
-          value: api.dev
         - name: GRAPHQL_ENDPOINT
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
       {{- range $key, $val := .Values.actionsHandler.additionalEnvs }}
