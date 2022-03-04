@@ -468,13 +468,13 @@ backupHandler:
     # targetMemoryUtilizationPercentage: 80
 
 insightsHandler:
-  enabled: true
+  enabled: false
   replicaCount: 2
   image:
-    repository: testlagoon/insights-handler
+    repository: uselagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "pr-2997"
+    tag: main
 
   podAnnotations: {}
 
