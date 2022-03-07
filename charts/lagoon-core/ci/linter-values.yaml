@@ -87,7 +87,6 @@ actionsHandler:
   replicaCount: 1
   image:
     repository: uselagoon/actions-handler
-    # tag: pr-3046
 
 keycloak:
   image:
