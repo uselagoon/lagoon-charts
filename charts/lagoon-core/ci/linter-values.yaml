@@ -85,7 +85,8 @@ apiRedis:
 
 keycloak:
   image:
-    repository: uselagoon/keycloak
+    repository: testlagoon/keycloak
+    tag: main
 
 keycloakDB:
   image:
