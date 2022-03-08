@@ -182,6 +182,7 @@ install-lagoon-core: install-minio
 		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
@@ -276,6 +277,8 @@ install-lagoon-build-deploy: install-lagoon-core
 		--values ./charts/lagoon-build-deploy/ci/linter-values.yaml \
 		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "rabbitMQHostname=lagoon-core-broker" \
+		--set "lagoonFeatureFlagEnableQoS=true" \
+		--set "QoSMaxBuilds=5" \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
