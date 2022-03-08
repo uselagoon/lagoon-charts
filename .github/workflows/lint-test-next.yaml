@@ -1,0 +1,105 @@
+name: Lint and test charts
+
+on: pull_request
+
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Install Helm
+      run: |
+        cd /tmp
+        curl -fsSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+    - name: Add dependency chart repos
+      run: |
+        helm plugin install https://github.com/aslafy-z/helm-git
+        helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
+        helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
+        # helm repo add amazeeio https://amazeeio.github.io/charts/
+        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+        helm repo add amazeeio-k8s-122 git+https://github.com/amazeeio/charts@charts?ref=k8s_122
+        helm repo add lagoon-build-deploy-k8s-122 git+https://github.com/uselagoon/lagoon-charts@charts/lagoon-build-deploy?ref=k8s_122
+        # helm repo add lagoon-k8s-122 git+https://github.com/uselagoon/lagoon-charts@charts?ref=k8s_122
+    - name: Generate helm templates
+      run: |
+        cd charts
+        # hacky workaround for lagoon-test templated values
+        tests=[foo,bar] envsubst '$tests' < lagoon-test/ci/linter-values.yaml.tpl > lagoon-test/ci/linter-values.yaml
+
+        for chart in *; do
+          helm dependency build $chart
+          mkdir -p /tmp/charts/$chart
+          helm template $chart $chart \
+            --values $chart/ci/linter-values.yaml \
+            --output-dir /tmp/charts/$chart
+        done
+
+        # workaround until gatekeeper templates are fixed:
+        # * https://github.com/open-policy-agent/gatekeeper/pull/1114
+        # * https://github.com/open-policy-agent/gatekeeper/pull/1115
+        rm -rf /tmp/charts/lagoon-gatekeeper/lagoon-gatekeeper/charts/gatekeeper
+        rm -rf /tmp/charts/lagoon-remote/lagoon-remote/charts/lagoon-gatekeeper/charts/gatekeeper
+        # workaround until logging-operator templates are fixed:
+        # https://github.com/banzaicloud/logging-operator/pull/792
+        rm -rf /tmp/charts/lagoon-logging/lagoon-logging/charts/logging-operator
+    - name: Install YAMLlint
+      run: sudo apt-get -y install yamllint
+    - name: Lint the templates
+      run: |
+        set -euo pipefail
+        cat > .yamllint <<EOF
+        extends: default
+        rules:
+          indentation:
+            indent-sequences: consistent
+          line-length: disable
+        EOF
+        yamllint -f parsable /tmp/charts | awk -F: '{print; system("sed \"" $2 "q;d\" " $1)}'
+
+  # runs for all charts other than lagoon-test, which is excluded in
+  # default.ct.yaml
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: "0"
+
+    - name: Set up chart-testing dependencies
+      run: sudo apt-get -y install python3-wheel
+
+    - name: Set up chart-testing
+      uses: helm/chart-testing-action@v2.2.0
+
+    - name: Add helm plugin
+      run: |
+        helm env
+        helm plugin install https://github.com/aslafy-z/helm-git
+
+    - name: Run chart-testing (list-changed)
+      id: list-changed
+      run: |
+        changed=$(ct list-changed --config ./default.ct.yaml)
+        if [[ "$changed" ]]; then
+          echo "::set-output name=changed::true"
+          echo "$changed"
+        fi
+
+    - name: Run chart-testing (lint)
+      run: ct lint --config ./default.ct.yaml
+
+    - name: Create kind cluster
+      uses: helm/kind-action@v1.2.0
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      with:
+        node_image: kindest/node:v1.23.0
+
+    - name: Run chart-testing (install)
+      run: ct install --config ./default.ct.yaml

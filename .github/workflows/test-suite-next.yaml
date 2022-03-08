@@ -1,0 +1,217 @@
+name: Lagoon tests - next k8s
+
+on: pull_request
+
+jobs:
+  # runs for lagoon-core, lagoon-remote, lagoon-test
+  test-suite:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+        - active-standby-kubernetes
+        - api
+        - deploytarget
+        - features-api-variables
+        - features-kubernetes
+        - features-kubernetes-2
+        - tasks
+        - dbaas
+        ## Re-enable any of these below tests in your branch for specific testing
+        ## - drupal-php74        
+        ## - drupal-php80
+        ## - drupal-postgres
+        ## - drush
+        ## - image-cache
+        ## - node-mongodb
+        ## - nginx
+        ## - node
+        ## - python
+        ## - elasticsearch
+        ## - github
+        ## - gitlab
+        ## - bitbucket
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: "0"
+
+    - name: Set up chart-testing dependencies
+      run: sudo apt-get -y install python3-wheel
+
+    - name: Set up chart-testing
+      uses: helm/chart-testing-action@v2.2.0
+
+    - name: Run chart-testing (list-changed)
+      id: list-changed
+      run: |
+        changed=$(ct list-changed --config ./test-suite-lint.ct.yaml)
+        if [[ "$changed" ]]; then
+          echo "::set-output name=changed::true"
+          echo "$changed"
+        fi
+
+    - name: Configure node IP in kind-config.yaml
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: |
+        docker network create kind
+        export KIND_NODE_IP=$(docker run --network kind --rm alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p')
+        envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml
+
+    - name: Create kind cluster
+      uses: helm/kind-action@v1.2.0
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      with:
+        config: test-suite.kind-config.yaml
+        node_image: kindest/node:v1.23.0
+
+    - name: Install kubectl
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: |
+        cd /tmp
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        chmod +x ./kubectl
+        sudo cp ./kubectl /usr/local/bin/
+
+    - name: Check node IP matches kind configuration
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: |
+        NODE_IP="$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')"
+        echo Checking for NODE_IP "$NODE_IP"
+        grep $NODE_IP test-suite.kind-config.yaml
+
+    - name: Install Helm
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: |
+        cd /tmp
+        curl -fsSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+
+    - name: Add dependency chart repos
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: |
+        helm plugin install https://github.com/aslafy-z/helm-git
+        helm repo add harbor https://helm.goharbor.io
+        helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+        helm repo add stable https://charts.helm.sh/stable
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+        # helm repo add amazeeio https://amazeeio.github.io/charts/
+        helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
+        helm repo add amazeeio-k8s-122 git+https://github.com/amazeeio/charts@charts?ref=k8s_122
+        helm repo add lagoon-build-deploy-k8s-122 git+https://github.com/uselagoon/lagoon-charts@charts/lagoon-build-deploy?ref=k8s_122
+        # helm repo add lagoon-k8s-122 git+https://github.com/uselagoon/lagoon-charts@charts?ref=k8s_122
+
+    - name: Install gojq
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: |
+        cd /tmp
+        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.11.1/gojq_v0.11.1_linux_amd64.tar.gz
+        tar -xf ./gojq_v0.11.1_linux_amd64.tar.gz
+        sudo cp /tmp/gojq_v0.11.1_linux_amd64/gojq /usr/local/bin/jq
+
+    # Uncomment this snippet in your PR to enable the debug action
+    # https://github.com/marketplace/actions/debugging-with-tmate
+    #
+    # Continue after getting a shell via: `touch continue`
+    #
+    # - name: Install kubens and kubectl alias
+    #   run: |
+    #     cd /tmp
+    #     curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.1/kubens_v0.9.1_linux_x86_64.tar.gz
+    #     tar -xf ./kubens_v0.9.1_linux_x86_64.tar.gz
+    #     sudo cp /tmp/kubens /usr/local/bin/kubens
+    #     sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v3
+
+    - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
+
+    - name: Free up some disk space
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: docker system prune -f -a --volumes
+
+    - name: Check that keycloak is ready
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      uses: nick-fields/retry@v2
+      with:
+        timeout_seconds: 5
+        max_attempts: 15
+        retry_wait_seconds: 30
+        retry_on: error
+        command: kubectl logs -l app.kubernetes.io/component=lagoon-core-keycloak -n lagoon --tail=-1 | grep "Config of Keycloak done"
+
+    - name: Run chart-testing (install) on lagoon-test
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: ct lint-and-install --config ./test-suite-run.ct.yaml
+
+    # the following steps gather various debug information on test failure
+
+    - name: Inspect lagoon-remote pods
+      if: failure()
+      run: |
+        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/instance=lagoon-remote
+        kubectl logs --tail=80 --namespace=lagoon --prefix --timestamps --all-containers --selector=app.kubernetes.io/instance=lagoon-remote
+
+    - name: Inspect lagoon-core pods
+      if: failure()
+      run: |
+        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/instance=lagoon-core
+        kubectl logs --tail=80 --namespace=lagoon --prefix --timestamps --all-containers --selector=app.kubernetes.io/instance=lagoon-core
+
+    - name: Inspect lagoon-build-deploy pods
+      if: failure()
+      run: |
+        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/instance=lagoon-build-deploy
+        kubectl logs --tail=80 --namespace=lagoon --prefix --timestamps --all-containers --selector=app.kubernetes.io/instance=lagoon-build-deploy
+
+    - name: Inspect any remaining CI namespaces
+      if: failure()
+      run: |
+        for ns in $(kubectl get ns -o json | jq -r '.items[].metadata.name | select(match("^ci"))'); do
+          kubectl get events --sort-by=metadata.creationTimestamp --namespace=$ns
+          kubectl get pods --output=wide --namespace=$ns
+          kubectl describe pods --namespace=$ns
+        done
+
+    - name: Gather build logs of any remaining CI namespaces
+      if: failure()
+      run: |
+        for ns in $(kubectl get ns -o json | jq -r '.items[].metadata.name | select(match("^ci"))'); do
+          kubectl logs --tail=80 --namespace=$ns --prefix --timestamps --all-containers --selector=lagoon.sh/jobType
+        done
+
+    - name: Gather workload logs of any remaining CI namespaces
+      if: failure()
+      run: |
+        for ns in $(kubectl get ns -o json | jq -r '.items[].metadata.name | select(match("^ci"))'); do
+          kubectl logs --tail=80 --namespace=$ns --prefix --timestamps --all-containers --selector=lagoon.sh/version
+        done
