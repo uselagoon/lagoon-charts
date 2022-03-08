@@ -1,5 +1,5 @@
 {{- if and .Values.ui.enabled .Values.ui.autoscaling.enabled -}}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "lagoon-core.ui.fullname" . }}

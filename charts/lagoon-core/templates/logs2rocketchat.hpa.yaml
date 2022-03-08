@@ -1,5 +1,5 @@
 {{- if .Values.logs2rocketchat.autoscaling.enabled -}}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "lagoon-core.logs2rocketchat.fullname" . }}
