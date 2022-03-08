@@ -53,17 +53,17 @@ spec:
           httpGet:
             path: /
             port: http-8080
-          initialDelaySeconds: 90
         readinessProbe:
           httpGet:
             path: /
             port: http-8080
-          initialDelaySeconds: 90
         startupProbe:
-          httpGet:
-            path: /
-            port: http-8080
-          failureThreshold: 20
+          exec:
+            command:
+            - test
+            - -f
+            - /tmp/keycloak-config-complete
+          failureThreshold: 30
           periodSeconds: 20
         resources:
           {{- toYaml .Values.keycloak.resources | nindent 10 }}
