@@ -2,12 +2,12 @@ TESTS = [api]
 # IMAGE_TAG controls the tag used for container images in the lagoon-core,
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
-IMAGE_TAG =
+IMAGE_TAG = main
 # IMAGE_REGISTRY controls the registry used for container images in the
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
 # only affects lagoon-core, lagoon-remote, and the fill-test-ci-values target.
-IMAGE_REGISTRY = uselagoon
+IMAGE_REGISTRY = testlagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/kubectl-build-deploy-dind:latest).
 OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
@@ -180,6 +180,7 @@ install-lagoon-core: install-minio
 		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
@@ -272,6 +273,8 @@ install-lagoon-build-deploy: install-lagoon-core
 		--values ./charts/lagoon-build-deploy/ci/linter-values.yaml \
 		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "rabbitMQHostname=lagoon-core-broker" \
+		--set "lagoonFeatureFlagEnableQoS=true" \
+		--set "QoSMaxBuilds=5" \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
