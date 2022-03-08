@@ -86,7 +86,8 @@ apiRedis:
 actionsHandler:
   replicaCount: 1
   image:
-    repository: uselagoon/actions-handler
+    repository: testlagoon/actions-handler
+    tag: main
 
 keycloak:
   image:
