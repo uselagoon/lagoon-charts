@@ -17,12 +17,16 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: {{ .Values.sshPortal.autoscaling.targetCPUUtilizationPercentage }}
+        target:
+          averageUtilization: {{ .Values.sshPortal.autoscaling.targetCPUUtilizationPercentage }}
+          type: Utilization
   {{- end }}
   {{- if .Values.sshPortal.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
-        targetAverageUtilization: {{ .Values.sshPortal.autoscaling.targetMemoryUtilizationPercentage }}
+        target:
+          averageUtilization: {{ .Values.sshPortal.autoscaling.targetMemoryUtilizationPercentage }}
+          type: Utilization
   {{- end }}
 {{- end }}
