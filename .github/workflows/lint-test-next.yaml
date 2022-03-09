@@ -1,4 +1,4 @@
-name: Lint and test charts
+name: Lint and test charts - next k8s
 
 on: pull_request
 
