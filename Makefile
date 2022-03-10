@@ -191,6 +191,7 @@ install-lagoon-core: install-minio
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
 		--set controllerhandler.image.repository=$(IMAGE_REGISTRY)/controllerhandler \
 		--set drushAlias.image.repository=$(IMAGE_REGISTRY)/drush-alias \
+		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloak.image.tag=$(IMAGE_TAG) \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
