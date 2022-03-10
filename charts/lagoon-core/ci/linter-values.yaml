@@ -134,6 +134,11 @@ autoIdler:
   image:
     repository: uselagoon/auto-idler
 
+insightsHandler:
+  image:
+    repository: uselagoon/insights-handler
+    tag: main
+
 storageCalculator:
   image:
     repository: uselagoon/storage-calculator
