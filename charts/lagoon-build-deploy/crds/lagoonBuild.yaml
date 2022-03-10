@@ -42,10 +42,14 @@ spec:
               description: Build contains the type of build, and the image to use
                 for the builder.
               properties:
+                bulkId:
+                  type: string
                 ci:
                   type: string
                 image:
                   type: string
+                priority:
+                  type: integer
                 type:
                   type: string
               required:
@@ -168,7 +172,7 @@ spec:
                   status:
                     type: string
                   type:
-                    description: JobConditionType const for the status type
+                    description: BuildStatusType const for the status type
                     type: string
                 required:
                 - lastTransitionTime
@@ -593,7 +597,7 @@ spec:
                   status:
                     type: string
                   type:
-                    description: JobConditionType const for the status type
+                    description: BuildStatusType const for the status type
                     type: string
                 required:
                 - lastTransitionTime

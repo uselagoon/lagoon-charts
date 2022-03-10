@@ -105,6 +105,15 @@ spec:
         {{- with .Values.nativeCronPodMinFrequency }}
         - "--native-cron-pod-min-frequency={{ . }}"
         {{- end }}
+        {{- with .Values.lagoonFeatureFlagEnableQoS }}
+        - "--enable-qos={{ . }}"
+        {{- end }}
+        {{- with .Values.QoSMaxBuilds }}
+        - "--qos-max-builds={{ . }}"
+        {{- end }}
+        {{- with .Values.QoSDefault }}
+        - "--qos-default={{ . }}"
+        {{- end }}
         {{- with .Values.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
