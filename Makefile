@@ -206,7 +206,6 @@ install-lagoon-core: install-minio
 		--set logs2slack.enabled=false \
 		--set logs2webhook.enabled=false \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
-		--set sshPortal.enabled=false \
 		--set storageCalculator.enabled=false \
 		--set ui.image.repository=$(IMAGE_REGISTRY)/ui \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
