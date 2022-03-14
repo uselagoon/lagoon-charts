@@ -35,6 +35,14 @@ dockerHost:
 
   replicaCount: 1
 
+  ## proxy configuration
+  # httpProxy: ""
+  # httpsProxy: ""
+  # noProxy: ""
+
+  # add extra environment variables if required
+  extraEnvs:
+
   storage:
     create: true
     size: 750Gi
@@ -110,6 +118,8 @@ lagoon-build-deploy:
   # taskSSHHost: ""
   # taskSSHPort: ""
   # taskAPIHost: ""
+  # See the parent chart for the full range of values that can be passed here to control builds
+  # https://github.com/uselagoon/lagoon-charts/blob/main/charts/lagoon-build-deploy/values.yaml
 
 # dioscuri is the operator which implements Lagoon active-standby.
 # This subchart is enabled by default as this is a core Lagoon feature.
@@ -135,3 +145,7 @@ dbaasHTTPEndpoint: ""
 # workloads. It is currently experimental so it is disabled by default.
 lagoon-gatekeeper:
   enabled: false
+
+lagoon-insights-remote:
+  enabled: false
+  # burnAfterReading: false
