@@ -1,0 +1,112 @@
+{{- if .Values.insightsHandler.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.insightsHandler.fullname" . }}
+  labels:
+    {{- include "lagoon-core.insightsHandler.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.insightsHandler.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    {{- with .Values.insightsHandler.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.insightsHandler.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml (coalesce .Values.insightsHandler.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      containers:
+      - name: insights-handler
+        securityContext:
+          {{- toYaml .Values.insightsHandler.securityContext | nindent 10 }}
+        image: "{{ .Values.insightsHandler.image.repository }}:{{ coalesce .Values.insightsHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.insightsHandler.image.pullPolicy }}
+        env:
+        - name: RABBITMQ_ADDRESS
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        - name: S3_FILES_BUCKET
+          value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3FilesBucket | quote }}
+        - name: S3_FILES_HOST
+          value: {{ required "A valid .Values.s3FilesHost required!" .Values.s3FilesHost | quote }}
+        {{- with .Values.s3FilesAccessKeyID }}
+        - name: S3_FILES_ACCESS_KEY_ID
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.s3FilesSecretAccessKey }}
+        - name: S3_FILES_SECRET_ACCESS_KEY
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.s3FilesRegion }}
+        - name: S3_FILES_REGION
+          value: {{ . | quote }}
+        {{- end }}
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-secrets
+              key: JWTSECRET
+        - name: JWT_AUDIENCE
+          value: api.dev
+        - name: GRAPHQL_ENDPOINT
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
+        - name: HTTP_LISTEN_PORT
+          value: "3000"
+      {{- range $key, $val := .Values.insightsHandler.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
+        resources:
+          {{- toYaml .Values.insightsHandler.resources | nindent 10 }}
+      {{- with .Values.insightsHandler.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.name" . }}
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.insightsHandler.fullname" . }}
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- with .Values.insightsHandler.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.insightsHandler.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
