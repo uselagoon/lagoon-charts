@@ -13,4 +13,4 @@ chart-repos:
 excluded-charts:
 - lagoon-test
 - lagoon-gatekeeper
-helm-extra-args: --timeout 900s
+helm-extra-args: --timeout 20m
