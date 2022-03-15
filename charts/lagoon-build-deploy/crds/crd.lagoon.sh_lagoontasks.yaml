@@ -55,15 +55,12 @@ spec:
                     type: string
                   name:
                     type: string
-                  openshiftProjectName:
-                    type: string
                   project:
                     type: string
                 required:
                 - environmentType
                 - id
                 - name
-                - openshiftProjectName
                 - project
                 type: object
               key:
