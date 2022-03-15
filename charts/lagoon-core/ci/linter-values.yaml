@@ -194,3 +194,9 @@ controllerhandler:
     repository: uselagoon/controllerhandler
 
 imageTag: ""
+
+workflows:
+  replicaCount: 1
+  image:
+    repository: testlagoon/workflows
+    tag: main
