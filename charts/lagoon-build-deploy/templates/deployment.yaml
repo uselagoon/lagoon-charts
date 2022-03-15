@@ -48,7 +48,6 @@ spec:
         args:
         - "--metrics-addr=127.0.0.1:8080"
         - "--enable-leader-election=true"
-        - "--enable-deprecated-apis=true"
         {{- if .Values.rootlessBuildPods }}
         - "--build-pod-run-as-user=10000"
         - "--build-pod-run-as-group=0"
