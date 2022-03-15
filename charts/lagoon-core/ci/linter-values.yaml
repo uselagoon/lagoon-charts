@@ -198,4 +198,5 @@ imageTag: ""
 workflows:
   replicaCount: 1
   image:
-    repository: uselagoon/workflows
+    repository: testlagoon/workflows
+    tag: "pr-3045"
