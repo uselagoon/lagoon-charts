@@ -4450,6 +4450,46 @@ entries:
   lagoon-remote:
   - apiVersion: v2
     appVersion: v2.4.1
+    created: "2022-03-15T03:03:02.507590913Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.10.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.2.0
+    - condition: lagoon-gatekeeper.enabled
+      name: lagoon-gatekeeper
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.3.1
+    - condition: lagoon-insights-remote.enabled
+      name: lagoon-insights-remote
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.1.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 0b3222d757c0cc3bb22daa4cfed224b80d87bd484df50b3e7daab7dbe3d9b702
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.48.0/lagoon-remote-0.48.0.tgz
+    version: 0.48.0
+  - apiVersion: v2
+    appVersion: v2.4.1
     created: "2022-03-10T04:57:23.730783982Z"
     dependencies:
     - condition: lagoon-build-deploy.enabled
@@ -7295,4 +7335,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-03-15T02:01:34.568540524Z"
+generated: "2022-03-15T03:03:02.510175059Z"
