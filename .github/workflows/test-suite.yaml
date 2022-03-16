@@ -153,11 +153,17 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: docker system prune -f -a --volumes
 
+    - name: Check lagoon-test config
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: cat /home/runner/work/lagoon-charts/lagoon-charts/charts/lagoon-test/Chart.yaml
+
     - name: Run chart-testing (install) on lagoon-test
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: ct lint-and-install --config ./test-suite-run.ct.yaml
+      run: ct install --config ./test-suite-run.ct.yaml
 
     # the following steps gather various debug information on test failure
 
