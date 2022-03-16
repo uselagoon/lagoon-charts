@@ -10,13 +10,11 @@ jobs:
       fail-fast: false
       matrix:
         test:
-        - active-standby-kubernetes
-        - api
-        - deploytarget
-        - features-api-variables
+        - active-standby-kubernetes,deploytarget,bulk-deployment
+        - api,features-api-variables,features-kubernetes-2
+        - gitlab,github,bitbucket
         - features-kubernetes
-        - features-kubernetes-2
-        - tasks
+        - tasks,workflows,image-cache
         ## Re-enable any of these below tests in your branch for specific testing
         ## - drupal-php74        
         ## - drupal-php80
