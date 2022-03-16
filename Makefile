@@ -181,7 +181,6 @@ install-lagoon-core: install-minio
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
-		--set actionsHandler.image.tag=$(IMAGE_TAG) \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
@@ -193,7 +192,6 @@ install-lagoon-core: install-minio
 		--set drushAlias.image.repository=$(IMAGE_REGISTRY)/drush-alias \
 		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
-		--set keycloak.image.tag=$(IMAGE_TAG) \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
 		--set logs2s3.image.repository=$(IMAGE_REGISTRY)/logs2s3 \
 		--set logs2email.enabled=false \
@@ -224,7 +222,6 @@ install-lagoon-core: install-minio
 		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		--set broker.ingress.hosts[0].paths[0]="/" \
 		--set workflows.image.repository=$(IMAGE_REGISTRY)/workflows \
-		--set workflows.image.tag=$(IMAGE_TAG) \
 		lagoon-core \
 		./charts/lagoon-core
 

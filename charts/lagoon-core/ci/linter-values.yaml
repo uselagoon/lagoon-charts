@@ -86,13 +86,11 @@ apiRedis:
 actionsHandler:
   replicaCount: 1
   image:
-    repository: testlagoon/actions-handler
-    tag: main
+    repository: uselagoon/actions-handler
 
 keycloak:
   image:
-    repository: testlagoon/keycloak
-    tag: main
+    repository: uselagoon/keycloak
 
 keycloakDB:
   image:
@@ -198,5 +196,4 @@ imageTag: ""
 workflows:
   replicaCount: 1
   image:
-    repository: testlagoon/workflows
-    tag: main
+    repository: uselagoon/workflows
