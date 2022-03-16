@@ -1,6 +1,12 @@
 name: Lagoon tests
 
-on: pull_request
+on:
+  push:
+    branches:
+      - 'double-test'
+  pull_request:
+    branches:
+      - 'main'
 
 jobs:
   # runs for lagoon-core, lagoon-remote, lagoon-test
