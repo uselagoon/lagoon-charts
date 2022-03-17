@@ -523,6 +523,22 @@ entries:
     version: 0.1.0
   lagoon-core:
   - apiVersion: v2
+    appVersion: v2.5.0
+    created: "2022-03-17T06:58:01.335331766Z"
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 30201415b996e125a0128686ee232febe7a803f500733cdb15867653c4cdaa51
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-0.67.0/lagoon-core-0.67.0.tgz
+    version: 0.67.0
+  - apiVersion: v2
     appVersion: v2.4.1
     created: "2022-03-15T20:27:41.661521464Z"
     description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
@@ -2215,6 +2231,29 @@ entries:
     version: 0.1.0
   lagoon-logging:
   - apiVersion: v2
+    appVersion: v2.5.0
+    created: "2022-03-17T06:58:01.64004849Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.15.0
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 07b4a84c893a544cb11277114dbb53347682ea7c093c5c9a4fb157ea57dac39b
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.57.0/lagoon-logging-0.57.0.tgz
+    version: 0.57.0
+  - apiVersion: v2
     appVersion: v2.4.1
     created: "2022-02-16T02:06:43.71757194Z"
     dependencies:
@@ -3784,6 +3823,23 @@ entries:
     version: 0.6.3
   lagoon-logs-concentrator:
   - apiVersion: v2
+    appVersion: v2.5.0
+    created: "2022-03-17T06:58:01.912566564Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: 4577a25d1e3c3d86bb2408350977b428c7013279726ae596c83f2e01202434fd
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.32.0/lagoon-logs-concentrator-0.32.0.tgz
+    version: 0.32.0
+  - apiVersion: v2
     appVersion: v2.4.1
     created: "2022-02-16T02:06:43.863606961Z"
     description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
@@ -4464,6 +4520,46 @@ entries:
     - https://github.com/amazeeio/charts/releases/download/lagoon-logs-concentrator-0.2.2/lagoon-logs-concentrator-0.2.2.tgz
     version: 0.2.2
   lagoon-remote:
+  - apiVersion: v2
+    appVersion: v2.5.0
+    created: "2022-03-17T06:58:02.204809852Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.10.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.2.0
+    - condition: lagoon-gatekeeper.enabled
+      name: lagoon-gatekeeper
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.3.1
+    - condition: lagoon-insights-remote.enabled
+      name: lagoon-insights-remote
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.1.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 8761bbe5a66161f83cb69dcea3849f04a706be5841895fa07fc9e0e5bccf4d8e
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.49.0/lagoon-remote-0.49.0.tgz
+    version: 0.49.0
   - apiVersion: v2
     appVersion: v2.4.1
     created: "2022-03-15T03:03:02.507590913Z"
@@ -6712,6 +6808,22 @@ entries:
     version: 0.1.0
   lagoon-test:
   - apiVersion: v2
+    appVersion: v2.5.0
+    created: "2022-03-17T06:58:02.409461385Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 7e377ac0480906f3a691b2ebab724c4b4d386d7b7ae7b28e8b72454b7a132ef5
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.32.0/lagoon-test-0.32.0.tgz
+    version: 0.32.0
+  - apiVersion: v2
     appVersion: v2.4.1
     created: "2022-02-16T02:06:44.185796059Z"
     description: A Helm chart for Kubernetes which runs the Lagoon test suite.
@@ -7351,4 +7463,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-03-15T20:27:41.663806458Z"
+generated: "2022-03-17T06:58:02.415282749Z"
