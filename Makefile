@@ -2,12 +2,12 @@ TESTS = [api]
 # IMAGE_TAG controls the tag used for container images in the lagoon-core,
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
-IMAGE_TAG = main
+IMAGE_TAG =
 # IMAGE_REGISTRY controls the registry used for container images in the
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
 # only affects lagoon-core, lagoon-remote, and the fill-test-ci-values target.
-IMAGE_REGISTRY = testlagoon
+IMAGE_REGISTRY = uselagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/kubectl-build-deploy-dind:latest).
 OVERRIDE_BUILD_DEPLOY_DIND_IMAGE = testlagoon/kubectl-build-deploy-dind:main
@@ -192,6 +192,7 @@ install-lagoon-core: install-minio
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
 		--set controllerhandler.image.repository=$(IMAGE_REGISTRY)/controllerhandler \
 		--set drushAlias.image.repository=$(IMAGE_REGISTRY)/drush-alias \
+		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
 		--set logs2s3.image.repository=$(IMAGE_REGISTRY)/logs2s3 \
@@ -222,6 +223,7 @@ install-lagoon-core: install-minio
 		--set broker.ingress.enabled=true \
 		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		--set broker.ingress.hosts[0].paths[0]="/" \
+		--set workflows.image.repository=$(IMAGE_REGISTRY)/workflows \
 		lagoon-core \
 		./charts/lagoon-core
 
