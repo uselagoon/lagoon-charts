@@ -15,4 +15,6 @@ chart-repos:
 - amazeeio-k8s-122=git+https://github.com/amazeeio/charts@charts?ref=k8s_122
 excluded-charts:
 - lagoon-test
+- lagoon-gatekeeper
+- lagoon-insights-remote
 helm-extra-args: --timeout 900s
