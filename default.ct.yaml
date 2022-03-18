@@ -2,6 +2,7 @@
 # This configuration is used in the lint-test github workflow.
 remote: origin
 namespace: lagoon
+release-label: ci-test
 target-branch: main
 chart-dirs:
 - charts
