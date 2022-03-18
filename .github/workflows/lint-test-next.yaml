@@ -101,5 +101,8 @@ jobs:
       with:
         node_image: kindest/node:v1.23.0
 
+    - name: Create Lagoon namespace
+      run: kubectl create ns lagoon
+
     - name: Run chart-testing (install)
       run: ct install --config ./default.ct.yaml
