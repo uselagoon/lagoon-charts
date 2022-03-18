@@ -14,5 +14,5 @@ dependencies:
 - name: lagoon-insights-remote
   repository: https://uselagoon.github.io/lagoon-charts/
   version: 0.1.1
-digest: sha256:91124b4dc4593e6dd2854c7bc94ac188ed9da3fa9cf14b9bafa13ffd2640b180
-generated: "2022-03-15T13:02:43.936779+11:00"
+digest: sha256:462218399eba380dcd168b6e48ca215a7d5db2bc610364e952289385f05b4390
+generated: "2022-03-18T10:42:57.085750218+11:00"
