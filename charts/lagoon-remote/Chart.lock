@@ -9,10 +9,10 @@ dependencies:
   repository: git+https://github.com/amazeeio/charts@charts?ref=k8s_122
   version: 0.3.0
 - name: lagoon-gatekeeper
-  repository: https://uselagoon.github.io/lagoon-charts/
-  version: 0.3.1
+  repository: file://../lagoon-gatekeeper
+  version: 1.0.0
 - name: lagoon-insights-remote
-  repository: https://uselagoon.github.io/lagoon-charts/
-  version: 0.1.1
-digest: sha256:462218399eba380dcd168b6e48ca215a7d5db2bc610364e952289385f05b4390
-generated: "2022-03-18T10:42:57.085750218+11:00"
+  repository: file://../lagoon-insights-remote
+  version: 1.0.0
+digest: sha256:e8e60a0c15c0dd7f73088a2703cd1b446ec5e010feb63eda01d6d07b05ab4675
+generated: "2022-03-18T11:35:46.053334185+11:00"
