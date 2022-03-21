@@ -7,7 +7,7 @@ maintainers:
 - name: bomoko
   email: blaize.kaye@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.19.0"
+kubeVersion: ">= 1.19.0-0"
 
 # A chart can be either an 'application' or a 'library' chart.
 #
