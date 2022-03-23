@@ -49,14 +49,6 @@ spec:
           value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3FilesBucket | quote }}
         - name: S3_FILES_HOST
           value: {{ required "A valid .Values.s3FilesHost required!" .Values.s3FilesHost | quote }}
-        {{- with .Values.s3FilesAccessKeyID }}
-        - name: S3_FILES_ACCESS_KEY_ID
-          value: {{ . | quote }}
-        {{- end }}
-        {{- with .Values.s3FilesSecretAccessKey }}
-        - name: S3_FILES_SECRET_ACCESS_KEY
-          value: {{ . | quote }}
-        {{- end }}
         {{- with .Values.s3FilesRegion }}
         - name: S3_FILES_REGION
           value: {{ . | quote }}
@@ -76,6 +68,9 @@ spec:
         - name: {{ $key }}
           value: {{ $val | quote }}
       {{- end }}
+        envFrom:
+        - secretRef:
+            name: {{ include "lagoon-core.api.fullname" . }}
         resources:
           {{- toYaml .Values.insightsHandler.resources | nindent 10 }}
       {{- with .Values.insightsHandler.nodeSelector }}
