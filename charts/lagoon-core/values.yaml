@@ -546,17 +546,17 @@ logs2notifications:
     tag: ""
 
   logs2slack:
-    enabled: false
+    disabled: true
   logs2rocketchat:
-    enabled: false
+    disabled: true
   logs2microsoftteams:
-    enabled: false
+    disabled: true
   logs2email:
-    enabled: false
+    disabled: true
   logs2webhooks:
-    enabled: false
+    disabled: true
   logs2s3:
-    enabled: true
+    disabled: false
 
   podAnnotations: {}
 

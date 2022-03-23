@@ -35,24 +35,26 @@ spec:
           {{- toYaml .Values.logs2notifications.securityContext | nindent 10 }}
         image: "{{ .Values.logs2notifications.image.repository }}:{{ coalesce .Values.logs2notifications.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logs2notifications.image.pullPolicy }}
+        command:
+        - /app/logs2notifications
         args:
-        {{- if .Values.logs2notifications.email.enabled -}}
-          - "--disable-email"
+        {{- if .Values.logs2notifications.logs2email.disabled }}
+        - "--disable-email"
         {{- end }}
-        {{- if .Values.logs2notifications.logs2microsoftteams.enabled -}}
-          - "--disable-microsoft-teams"
+        {{- if .Values.logs2notifications.logs2microsoftteams.disabled }}
+        - "--disable-microsoft-teams"
         {{- end }}
-        {{- if .Values.logs2notifications.logs2slack.enabled -}}
-          - "--disable-slack"
+        {{- if .Values.logs2notifications.logs2slack.disabled }}
+        - "--disable-slack"
         {{- end }}
-        {{- if .Values.logs2notifications.logs2rocketchat.enabled -}}
-          - "--disable-rocketchat"
+        {{- if .Values.logs2notifications.logs2rocketchat.disabled }}
+        - "--disable-rocketchat"
         {{- end }}
-        {{- if .Values.logs2notifications.logs2webhooks.enabled -}}
-          - "--disable-webhooks"
+        {{- if .Values.logs2notifications.logs2webhooks.disabled }}
+        - "--disable-webhooks"
         {{- end }}
-        {{- if .Values.logs2notifications.logs2s3.enabled -}}
-          - "--disable-s3"
+        {{- if .Values.logs2notifications.logs2s3.disabled }}
+        - "--disable-s3"
         {{- end }}
         env:
         - name: GRAPHQL_ENDPOINT

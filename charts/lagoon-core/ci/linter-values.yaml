@@ -141,35 +141,10 @@ storageCalculator:
   image:
     repository: uselagoon/storage-calculator
 
-logs2slack:
+logs2notifications:
   replicaCount: 1
   image:
-    repository: uselagoon/logs2slack
-
-logs2webhook:
-  replicaCount: 1
-  image:
-    repository: uselagoon/logs2webhook
-
-logs2microsoftteams:
-  replicaCount: 1
-  image:
-    repository: uselagoon/logs2microsoftteams
-
-logs2rocketchat:
-  replicaCount: 1
-  image:
-    repository: uselagoon/logs2rocketchat
-
-logs2email:
-  replicaCount: 1
-  image:
-    repository: uselagoon/logs2email
-
-logs2s3:
-  replicaCount: 1
-  image:
-    repository: uselagoon/logs2s3
+    repository: uselagoon/logs2notifications
 
 drushAlias:
   replicaCount: 1
