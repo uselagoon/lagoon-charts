@@ -35,6 +35,25 @@ spec:
           {{- toYaml .Values.logs2notifications.securityContext | nindent 10 }}
         image: "{{ .Values.logs2notifications.image.repository }}:{{ coalesce .Values.logs2notifications.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.logs2notifications.image.pullPolicy }}
+        args:
+        {{- if .Values.logs2notifications.email.enabled -}}
+          - "--disable-email"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2microsoftteams.enabled -}}
+          - "--disable-microsoft-teams"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2slack.enabled -}}
+          - "--disable-slack"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2rocketchat.enabled -}}
+          - "--disable-rocketchat"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2webhooks.enabled -}}
+          - "--disable-webhooks"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2s3.enabled -}}
+          - "--disable-s3"
+        {{- end }}
         env:
         - name: GRAPHQL_ENDPOINT
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}

@@ -545,6 +545,19 @@ logs2notifications:
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
+  logs2slack:
+    enabled: false
+  logs2rocketchat:
+    enabled: false
+  logs2microsoftteams:
+    enabled: false
+  logs2email:
+    enabled: false
+  logs2webhooks:
+    enabled: false
+  logs2s3:
+    enabled: true
+
   podAnnotations: {}
 
   securityContext: {}
