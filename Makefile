@@ -194,11 +194,11 @@ install-lagoon-core: install-minio
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
 		--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications \
-		--set logs2notifications.email.enabled=false \
-		--set logs2notifications.microsoftteams.enabled=false \
-		--set logs2notifications.rocketchat.enabled=false \
-		--set logs2notifications.slack.enabled=false \
-		--set logs2notifications.webhooks.enabled=false \
+		--set logs2notifications.email.disabled=true \
+		--set logs2notifications.microsoftteams.disabled=true \
+		--set logs2notifications.rocketchat.disabled=true \
+		--set logs2notifications.slack.disabled=true \
+		--set logs2notifications.webhooks.disabled=true \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
 		--set sshPortal.enabled=false \
 		--set storageCalculator.enabled=false \
