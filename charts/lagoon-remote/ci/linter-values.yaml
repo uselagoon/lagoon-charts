@@ -19,9 +19,6 @@ imageTag: ""
 dbaas-operator:
   enabled: true
 
-lagoon-gatekeeper:
-  enabled: false
-
 lagoon-insights-remote:
   enabled: false
   rabbitMQUsername: lagoon

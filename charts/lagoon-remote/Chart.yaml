@@ -42,13 +42,7 @@ dependencies:
 #  repository: https://amazeeio.github.io/charts/
   repository: git+https://github.com/amazeeio/charts@charts?ref=k8s_122
   condition: dbaas-operator.enabled
-- name: lagoon-gatekeeper
-  version: ~1
-#  repository: https://uselagoon.github.io/lagoon-charts/
-  repository: "file://../lagoon-gatekeeper"
-  condition: lagoon-gatekeeper.enabled
 - name: lagoon-insights-remote
-  version: ~1
-#  repository: https://uselagoon.github.io/lagoon-charts/
-  repository: "file://../lagoon-insights-remote"
+  version: ~0
+  repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-insights-remote.enabled
