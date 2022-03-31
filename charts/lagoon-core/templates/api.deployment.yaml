@@ -69,11 +69,16 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
+        - name: KEYCLOAK_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_USER
         - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
-              key: KEYCLOAK_ADMIN_PASSWORD
+              key: KEYCLOAK_PASSWORD
         - name: KEYCLOAK_API_CLIENT_SECRET
           valueFrom:
             secretKeyRef:

@@ -39,6 +39,7 @@
 
 # apiDBPassword:
 # jwtSecret:
+# keycloakAdminUser:
 # keycloakAdminPassword:
 # keycloakAPIClientSecret:
 # keycloakAuthServerClientSecret:
