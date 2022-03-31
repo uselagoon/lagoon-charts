@@ -11,7 +11,7 @@ This repository contains [Helm](https://helm.sh/) charts related to [Lagoon](htt
 4. Contribution
 
 ## Project Description
-[More in-depth paragraph(s) describing the project. What is this project, and what does it do?]
+This repository provides the helm charts needed to install the various Lagoon components. It hosts the chart configurations and the chart repository itself (via GitHub pages)
 
 ## Usage
 
