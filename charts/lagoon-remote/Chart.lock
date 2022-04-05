@@ -8,11 +8,8 @@ dependencies:
 - name: dbaas-operator
   repository: https://amazeeio.github.io/charts/
   version: 0.2.2
-- name: lagoon-gatekeeper
-  repository: https://uselagoon.github.io/lagoon-charts/
-  version: 0.3.1
 - name: lagoon-insights-remote
   repository: https://uselagoon.github.io/lagoon-charts/
   version: 0.1.1
-digest: sha256:91124b4dc4593e6dd2854c7bc94ac188ed9da3fa9cf14b9bafa13ffd2640b180
-generated: "2022-03-15T13:02:43.936779+11:00"
+digest: sha256:4c29d67624ae72e9d747b56ed04141b9f9b5fb5a62caaf98e0eba13a32251dc3
+generated: "2022-04-05T15:23:01.506928517+10:00"
