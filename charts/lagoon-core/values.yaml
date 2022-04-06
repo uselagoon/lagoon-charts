@@ -500,6 +500,13 @@ insightsHandler:
   additionalEnvs:
   #   FOO: Bar
 
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
 autoIdler:
   enabled: true
   image:

@@ -49,18 +49,20 @@ spec:
           value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3FilesBucket | quote }}
         - name: S3_FILES_HOST
           value: {{ required "A valid .Values.s3FilesHost required!" .Values.s3FilesHost | quote }}
-        {{- with .Values.s3FilesAccessKeyID }}
-        - name: S3_FILES_ACCESS_KEY_ID
-          value: {{ . | quote }}
-        {{- end }}
-        {{- with .Values.s3FilesSecretAccessKey }}
-        - name: S3_FILES_SECRET_ACCESS_KEY
-          value: {{ . | quote }}
-        {{- end }}
         {{- with .Values.s3FilesRegion }}
         - name: S3_FILES_REGION
           value: {{ . | quote }}
         {{- end }}
+        - name: S3_FILES_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}
+              key: S3_FILES_ACCESS_KEY_ID
+        - name: S3_FILES_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}
+              key: S3_FILES_SECRET_ACCESS_KEY
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
