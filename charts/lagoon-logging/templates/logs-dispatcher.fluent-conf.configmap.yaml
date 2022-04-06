@@ -112,6 +112,11 @@ data:
         pattern ^ingress-nginx$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
       </rule>
+      <rule>
+        key     $.kubernetes.namespace_name
+        pattern ^sigsci-ingress-nginx$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
+      </rule>
       # Last rule: catchall
       <rule>
         invert  true
@@ -414,7 +419,26 @@ data:
           index_name lagoon-logs-${record['project']}-_-all_environments-_-${Time.at(time).strftime("%Y.%m")}
         </record>
       </filter>
-
+      #
+      # exclude the lagoon logs for running builds, and legacy task: updates
+      #
+      <filter lagoon.*.lagoon>
+        @type grep
+        <or>
+          <exclude>
+            key $.meta.buildPhase
+            pattern ^running$
+          </exclude>
+          <exclude>
+            key $.meta.buildStatus
+            pattern ^running$
+          </exclude>
+          <exclude>
+            key $.event
+            pattern ^task:builddeploy-kubernetes:*
+          </exclude>
+        </or>
+      </filter>
       #
       # forward all to logs-concentrator
       #
