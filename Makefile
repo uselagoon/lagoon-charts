@@ -180,6 +180,7 @@ install-lagoon-core: install-minio
 		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
@@ -189,6 +190,7 @@ install-lagoon-core: install-minio
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
 		--set controllerhandler.image.repository=$(IMAGE_REGISTRY)/controllerhandler \
 		--set drushAlias.image.repository=$(IMAGE_REGISTRY)/drush-alias \
+		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
 		--set logs2s3.image.repository=$(IMAGE_REGISTRY)/logs2s3 \
@@ -219,6 +221,7 @@ install-lagoon-core: install-minio
 		--set broker.ingress.enabled=true \
 		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		--set broker.ingress.hosts[0].paths[0]="/" \
+		--set workflows.image.repository=$(IMAGE_REGISTRY)/workflows \
 		lagoon-core \
 		./charts/lagoon-core
 
@@ -272,6 +275,8 @@ install-lagoon-build-deploy: install-lagoon-core
 		--values ./charts/lagoon-build-deploy/ci/linter-values.yaml \
 		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "rabbitMQHostname=lagoon-core-broker" \
+		--set "lagoonFeatureFlagEnableQoS=true" \
+		--set "QoSMaxBuilds=5" \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \

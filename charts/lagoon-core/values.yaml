@@ -424,6 +424,21 @@ ui:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+actionsHandler:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: uselagoon/actions-handler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
 backupHandler:
   enabled: true
   replicaCount: 2
@@ -466,6 +481,24 @@ backupHandler:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+insightsHandler:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: uselagoon/insights-handler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: main
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
 
 autoIdler:
   enabled: true
@@ -762,6 +795,32 @@ controllerhandler:
   replicaCount: 2
   image:
     repository: uselagoon/controllerhandler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+
+workflows:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: uselagoon/workflows
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""

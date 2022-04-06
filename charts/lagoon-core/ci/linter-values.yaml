@@ -83,6 +83,11 @@ apiRedis:
   image:
     repository: uselagoon/api-redis
 
+actionsHandler:
+  replicaCount: 1
+  image:
+    repository: uselagoon/actions-handler
+
 keycloak:
   image:
     repository: uselagoon/keycloak
@@ -126,6 +131,11 @@ backupHandler:
 autoIdler:
   image:
     repository: uselagoon/auto-idler
+
+insightsHandler:
+  image:
+    repository: uselagoon/insights-handler
+    tag: main
 
 storageCalculator:
   image:
@@ -182,3 +192,8 @@ controllerhandler:
     repository: uselagoon/controllerhandler
 
 imageTag: ""
+
+workflows:
+  replicaCount: 1
+  image:
+    repository: uselagoon/workflows
