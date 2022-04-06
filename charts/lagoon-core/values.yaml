@@ -1,7 +1,7 @@
 # These values must be set on install, as they don't have sensible defaults.
 
-# elasticsearchHost:
 # harborAdminPassword:
+# elasticsearchURL:
 # harborURL:
 # kibanaURL:
 # registry:
@@ -49,11 +49,12 @@
 # redisPassword:
 # k8upBackupBucketName:
 
+# This value is set to match jwtSecret on existing installs if not defined.
+# It should only ever be set here for backwards compatibility.
+
+# projectSeed:
+
 # These values are the chart defaults, but can be overridden.
-
-elasticsearchScheme: https
-elasticsearchHostPort: 9200
-
 imagePullSecrets: []
 
 rabbitMQUsername: lagoon
@@ -294,6 +295,7 @@ authServer:
   service:
     type: ClusterIP
     port: 80
+    annotations: {}
 
   podAnnotations: {}
 
@@ -422,6 +424,21 @@ ui:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+actionsHandler:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: uselagoon/actions-handler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
 backupHandler:
   enabled: true
   replicaCount: 2
@@ -465,6 +482,24 @@ backupHandler:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+insightsHandler:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: uselagoon/insights-handler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: main
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
 autoIdler:
   enabled: true
   image:
@@ -495,6 +530,8 @@ storageCalculator:
   securityContext: {}
 
   resources: {}
+
+  cron: 5 */12 * * *
 
   additionalEnvs:
   #   FOO: Bar
@@ -619,6 +656,31 @@ logs2email:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+logs2s3:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: uselagoon/logs2s3
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
 drushAlias:
   enabled: true
   replicaCount: 2
@@ -682,6 +744,7 @@ ssh:
   service:
     type: ClusterIP
     port: 2020
+    annotations: {}
 
   autoscaling:
     enabled: false
@@ -732,6 +795,32 @@ controllerhandler:
   replicaCount: 2
   image:
     repository: uselagoon/controllerhandler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+
+workflows:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: uselagoon/workflows
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""

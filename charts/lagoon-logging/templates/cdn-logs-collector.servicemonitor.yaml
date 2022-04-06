@@ -1,0 +1,21 @@
+{{- if and .Values.cdnLogsCollector.enabled .Values.cdnLogsCollector.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}
+  labels:
+    {{- include "lagoon-logging.cdnLogsCollector.labels" . | nindent 4 }}
+    monitoring.lagoon.sh/monitorMe: 'true'
+spec:
+  endpoints:
+  - honorLabels: true
+    path: /aggregated_metrics
+    port: metrics
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-logging.cdnLogsCollector.selectorLabels" . | nindent 6 }}
+{{- end }}

@@ -1,23 +1,21 @@
-{{ if .Capabilities.APIVersions.Has "backup.appuio.ch/v1alpha1/Schedule" }}
+{{- if .Capabilities.APIVersions.Has "backup.appuio.ch/v1alpha1/Schedule" }}
+{{- $schedule := index (lookup "backup.appuio.ch/v1alpha1" "Schedule" .Release.Namespace (include "lagoon-core.fullname" . )) | default dict }}
+{{- $bucket := coalesce .Values.k8upBackupBucketName (dig "spec" "backend" "s3" "bucket" "" $schedule) (print "baas-" (include "lagoon-core.fullname" .) "-" (randAlphaNum 8 | lower)) }}
 apiVersion: backup.appuio.ch/v1alpha1
 kind: Schedule
 metadata:
   name: {{ include "lagoon-core.fullname" . }}
+  labels:
+    {{- include "lagoon-core.labels" . | nindent 4 }}
 spec:
   backend:
     repoPasswordSecretRef:
       key: repo-pw
       name: "{{ include "lagoon-core.fullname" . }}-baas-repo-pw"
     s3:
-      {{ if .Values.k8upBackupBucketName }}
-      bucket: '{{ .Values.k8upBackupBucketName }}'
-      {{ else if (lookup "backup.appuio.ch/v1alpha1" "Schedule" "" (include "lagoon-core.fullname" .) )}}
-      bucket: {{ (lookup "backup.appuio.ch/v1alpha1" "Schedule" "" (include "lagoon-core.fullname" .) ).spec.backend.s3.bucket }}
-      {{ else }}
-      bucket: {{ include "lagoon-core.fullname" . }}-{{ randAlphaNum 8 }}
-      {{ end }}
-      {{ if .Values.k8upS3Endpoint }}
-      endpoint: {{ .Values.k8upS3Endpoint }}
+      bucket: {{ $bucket | quote }}
+      {{ with .Values.k8upS3Endpoint }}
+      endpoint: {{ . | quote }}
       {{ end }}
   backup:
     schedule: '15 * * * *'
@@ -30,4 +28,4 @@ spec:
       keepWeekly: 12
       keepMonthly: 12
     schedule: '26 4 * * 0'
-{{ end }}
+{{- end }}

@@ -41,7 +41,7 @@ spec:
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}

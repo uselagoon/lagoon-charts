@@ -1,0 +1,106 @@
+{{- if .Values.cdnLogsCollector.enabled -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}
+  labels:
+    {{- include "lagoon-logging.cdnLogsCollector.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.cdnLogsCollector.replicaCount }}
+  serviceName: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-logging.cdnLogsCollector.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/cdn-logs-collector.secret.yaml") . | sha256sum }}
+        checksum/fluent-conf-configmap: {{ include (print $.Template.BasePath "/cdn-logs-collector.fluent-conf.configmap.yaml") . | sha256sum }}
+    {{- with .Values.cdnLogsCollector.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-logging.cdnLogsCollector.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "lagoon-logging.logsDispatcher.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.cdnLogsCollector.podSecurityContext | nindent 8 }}
+      initContainers:
+      - image: busybox:musl
+        imagePullPolicy: IfNotPresent
+        name: chown-buffer
+        command:
+        - chown
+        - '100:0'
+        - /fluentd/buffer
+        volumeMounts:
+        - mountPath: /fluentd/buffer/
+          name: buffer
+      containers:
+      - name: fluentd
+        securityContext:
+          {{- toYaml .Values.cdnLogsCollector.securityContext | nindent 10 }}
+        image: "{{ .Values.cdnLogsCollector.image.repository }}:{{ coalesce .Values.cdnLogsCollector.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.cdnLogsCollector.image.pullPolicy }}
+        ports:
+        - containerPort: 5140
+          protocol: TCP
+          name: syslog
+        - containerPort: 24231
+          protocol: TCP
+          name: metrics
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: metrics
+        volumeMounts:
+        - mountPath: /fluentd/buffer/
+          name: buffer
+        - mountPath: /fluentd/etc/fluent.conf
+          name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-fluent-conf
+          subPath: fluent.conf
+        - mountPath: /fluentd/tls/
+          name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-tls
+        resources:
+          {{- toYaml .Values.cdnLogsCollector.resources | nindent 10 }}
+      {{- with .Values.cdnLogsCollector.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cdnLogsCollector.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.cdnLogsCollector.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: fluent.conf
+            path: fluent.conf
+          name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-fluent-conf
+        name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-fluent-conf
+      - secret:
+          defaultMode: 420
+          secretName: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-tls
+        name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-tls
+  volumeClaimTemplates:
+  - metadata:
+      name: buffer
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      {{- with .Values.cdnLogsCollector.buffer.storageClassName }}
+      storageClassName: {{ . }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.cdnLogsCollector.buffer.size }}
+{{- end }}

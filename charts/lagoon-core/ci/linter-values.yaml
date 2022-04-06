@@ -1,8 +1,7 @@
 # Any values defined here are not used anywhere other than lint/CI.
 
 # used in api
-elasticsearchHost: opendistro-es-client-service.opendistro-es.svc.cluster.local
-elasticsearchScheme: http
+elasticsearchURL: http://opendistro-es-client-service.opendistro-es.svc.cluster.local:9200
 harborURL: http://harbor:1234
 harborAdminPassword: harbor123
 kibanaURL: http://opendistro-es-kibana-svc.opendistro-es.svc.cluster.local:443
@@ -84,6 +83,11 @@ apiRedis:
   image:
     repository: uselagoon/api-redis
 
+actionsHandler:
+  replicaCount: 1
+  image:
+    repository: uselagoon/actions-handler
+
 keycloak:
   image:
     repository: uselagoon/keycloak
@@ -128,6 +132,11 @@ autoIdler:
   image:
     repository: uselagoon/auto-idler
 
+insightsHandler:
+  image:
+    repository: uselagoon/insights-handler
+    tag: main
+
 storageCalculator:
   image:
     repository: uselagoon/storage-calculator
@@ -157,6 +166,11 @@ logs2email:
   image:
     repository: uselagoon/logs2email
 
+logs2s3:
+  replicaCount: 1
+  image:
+    repository: uselagoon/logs2s3
+
 drushAlias:
   replicaCount: 1
   image:
@@ -178,3 +192,8 @@ controllerhandler:
     repository: uselagoon/controllerhandler
 
 imageTag: ""
+
+workflows:
+  replicaCount: 1
+  image:
+    repository: uselagoon/workflows

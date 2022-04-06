@@ -1,8 +1,8 @@
 apiVersion: v2
 name: lagoon-build-deploy
 description:
-  A Helm chart for Kubernetes which installs Lagoon build deploy controllers
-  (https://github.com/amazeeio/lagoon-kbd).
+  A Helm chart for Kubernetes which installs Lagoon remote controllers which are used for handling build and task pods
+  (https://github.com/uselagoon/remote-controller).
 home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
@@ -15,6 +15,6 @@ maintainers:
 
 type: application
 
-version: 0.7.4
+version: 0.10.1
 
-appVersion: v0.1.15
+appVersion: v0.3.0

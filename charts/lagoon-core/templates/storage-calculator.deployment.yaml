@@ -35,13 +35,13 @@ spec:
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
-              name: {{ include "lagoon-core.fullname" . }}-jwtsecret
+              name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
         - name: GRAPHQL_ENDPOINT
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
         - name: CRONJOBS
           value: |-
-            5 */12 * * * /lagoon/cronjob.sh /calculate-storage.sh
+            {{ .Values.storageCalculator.cron }} /lagoon/cronjob.sh /calculate-storage.sh
       {{- range $key, $val := .Values.storageCalculator.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}

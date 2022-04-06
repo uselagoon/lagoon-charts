@@ -12,68 +12,67 @@ Logs are collated into a single index per lagoon project.
 
 Run these commands in the `charts/` directory (above `lagoon-logging/`).
 
-0. Obtain dependency.
+1. Obtain dependency.
 
-```
-helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
-helm dependency build lagoon-logging
-```
+   ```
+   helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
+   helm dependency build lagoon-logging
+   ```
 
-1. Create a `lagoon-logging.values.yaml` file inside `charts/` directory containing these fields with the relevant values added.
+2. Create a `lagoon-logging.values.yaml` file inside `charts/` directory containing these fields with the relevant values added.
    For required values and documentation see the comment block at the end of the chart's `values.yaml`.
 
-**OpenShift only**
+   **OpenShift only**
 
-You must set allow the fluentbit pods to run in privileged mode, and enable the haproxy logs collector:
+   You must set allow the fluentbit pods to run in privileged mode, and enable the haproxy logs collector:
 
-```
-fluentbitPrivileged: true
-openshiftHaproxyLogsCollector:
-  enabled: true
-```
+   ```
+   fluentbitPrivileged: true
+   openshiftHaproxyLogsCollector:
+     enabled: true
+   ```
 
-2. Test installation.
+3. Test installation.
 
-```
-helm template --debug --namespace lagoon-logging -f ./lagoon-logging.values.yaml lagoon-logging lagoon-logging
-```
+   ```
+   helm template --debug --namespace lagoon-logging -f ./lagoon-logging.values.yaml lagoon-logging lagoon-logging
+   ```
 
-```
-helm upgrade --dry-run --install --debug --create-namespace --namespace lagoon-logging -f ./lagoon-logging.values.yaml lagoon-logging lagoon-logging
-```
+   ```
+   helm upgrade --dry-run --install --debug --create-namespace --namespace lagoon-logging -f ./lagoon-logging.values.yaml lagoon-logging lagoon-logging
+   ```
 
-3. Run installation.
+4. Run installation.
+   ```
+   helm upgrade --install --debug --create-namespace --namespace lagoon-logging -f ./lagoon-logging.values.yaml lagoon-logging lagoon-logging
+   ```
 
-```
-helm upgrade --install --debug --create-namespace --namespace lagoon-logging -f ./lagoon-logging.values.yaml lagoon-logging lagoon-logging
-```
+   **OpenShift only**
 
-**OpenShift only**
+   Give the various serviceaccounts permissions required:
+   ```
+   oc project lagoon-logging
 
-Give the various serviceaccounts permissions required:
-```
-oc project lagoon-logging
+   # fluentd statefulset serviceaccount (logging-operator chart)
+   oc adm policy add-scc-to-user nonroot -z lagoon-logging-fluentd
 
-# fluentd statefulset serviceaccount (logging-operator chart)
-oc adm policy add-scc-to-user nonroot -z lagoon-logging-fluentd
+   # fluentbit daemonset serviceaccount (logging-operator chart)
+   oc adm policy add-scc-to-user privileged -z lagoon-logging-fluentbit
 
-# fluentbit daemonset serviceaccount (logging-operator chart)
-oc adm policy add-scc-to-user privileged -z lagoon-logging-fluentbit
+   # logs-dispatcher statefulset serviceaccount (lagoon-logging chart)
+   oc adm policy add-scc-to-user anyuid -z lagoon-logging-logs-dispatcher
+   ```
 
-# logs-dispatcher statefulset serviceaccount (lagoon-logging chart)
-oc adm policy add-scc-to-user anyuid -z lagoon-logging-logs-dispatcher
-```
+   And make the project network global:
+   ```
+   oc adm pod-network make-projects-global lagoon-logging
+   ```
 
-And make the project network global:
-```
-oc adm pod-network make-projects-global lagoon-logging
-```
+5. Update application-logs and router-logs services
 
-4. Update application-logs and router-logs services
+   The `application-logs` and `router-logs` services in the `lagoon` namespace needs to be updated to point their `externalName` to the `lagoon-logging-logs-dispatcher` service in the `lagoon-logging` namespace (or wherever you've installed it).
 
-The `application-logs` and `router-logs` services in the `lagoon` namespace needs to be updated to point their `externalName` to the `lagoon-logging-logs-dispatcher` service in the `lagoon-logging` namespace (or wherever you've installed it).
-
-If you are migrating from the old lagoon logging infrastructure and want to keep logs flowing to both old and new infrastructure, point these services at the relevant `logs-tee` service in the `lagoon-logging` namespace. The `logs-tee` services then need to have the legacy `endpoint` configured. See the comments in the chart `values.yaml` for an example.
+   If you are migrating from the old lagoon logging infrastructure and want to keep logs flowing to both old and new infrastructure, point these services at the relevant `logs-tee` service in the `lagoon-logging` namespace. The `logs-tee` services then need to have the legacy `endpoint` configured. See the comments in the chart `values.yaml` for an example.
 
 ## View logs
 
@@ -120,6 +119,16 @@ NOTE: If the `logging-operator` chart upgrade doesn't work, just uninstall the h
 ```
 helm upgrade --debug --namespace lagoon-logging --reuse-values lagoon-logging lagoon-logging
 ```
+
+## Generating certificates
+
+Some components of this chart use server or client TLS authentication.
+These can be generated using the instructions in the `lagoon-logs-concentrator` chart README.
+
+The convention for SAN and CN naming is along the lines of:
+
+* `logs-dispatcher.cluster1.example.com` for the lagoon-logging "client" and `logs-concentrator.cluster2.example.com` for the `lagoon-logs-concentrator` "server".
+* `cdn.cluster1.example.com` for the CDN "client" and `cdn-logs-collector.cluster1.example.com` for the `cdn-logs-collector` "server".
 
 ## Log export
 
