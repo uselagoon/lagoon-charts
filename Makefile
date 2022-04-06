@@ -339,7 +339,7 @@ get-admin-creds:
 	&& $(KUBECTL) get secret -n lagoon lagoon-core-keycloak -o jsonpath="{.data.KEYCLOAK_LAGOON_ADMIN_PASSWORD}" | base64 --decode \
 	&& echo "\n"
 
-.PHONY: pf-keycloak pf-api pf-ssh pf-ui
+.PHONY: pf-keycloak pf-api pf-ssh pf-ui pf-broker pf-minio
 pf-keycloak:
 	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-keycloak 8080 2>/dev/null &
 pf-api:
@@ -348,6 +348,12 @@ pf-ssh:
 	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-ssh 2020 2>/dev/null &
 pf-ui:
 	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-ui 6060:3000 2>/dev/null &
+pf-broker:
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-broker 5672 2>/dev/null &
+	$(KUBECTL) port-forward -n lagoon svc/lagoon-core-broker 15672 2>/dev/null &
+pf-minio:
+	$(KUBECTL) port-forward -n minio svc/minio 9000 2>/dev/null &
+	$(KUBECTL) port-forward -n minio svc/minio 9001 2>/dev/null &
 
 .PHONY: port-forwards
 port-forwards: pf-keycloak pf-api pf-ssh pf-ui
