@@ -90,10 +90,10 @@ elasticsearchTLSVerify: true
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
 # in the README.
-# Sample data shown below.
+elasticsearchAdminUser: "admin"
 
+# Sample data shown below.
 # elasticsearchHost: "logs-db-service.elasticsearch.svc.cluster.local"
-# elasticsearchAdminUser: "admin"
 # elasticsearchAdminPassword: "securepass"
 # tls:
 #   caCert: |
