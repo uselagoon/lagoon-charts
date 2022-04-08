@@ -63,7 +63,7 @@ spec:
             - test
             - -f
             - /tmp/keycloak-config-complete
-          failureThreshold: 30
+          failureThreshold: 45
           periodSeconds: 20
         resources:
           {{- toYaml .Values.keycloak.resources | nindent 10 }}
