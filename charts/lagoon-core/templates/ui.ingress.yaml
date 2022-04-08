@@ -1,7 +1,7 @@
 {{- if and .Values.ui.enabled .Values.ui.ingress.enabled -}}
 {{- $fullName := include "lagoon-core.ui.fullname" . -}}
 {{- $svcPort := .Values.ui.service.port -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -29,9 +29,12 @@ spec:
       paths:
       {{- range .paths }}
       - path: {{ . }}
+        pathType: Prefix
         backend:
-          serviceName: {{ $fullName }}
-          servicePort: {{ $svcPort }}
+          service:
+            name: {{ $fullName }}
+            port:
+              number: {{ $svcPort }}
       {{- end }}
   {{- end }}
 {{- end }}
