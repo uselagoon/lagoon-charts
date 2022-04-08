@@ -10,6 +10,7 @@ maintainers:
   email: scott.leggett@amazee.io
   url: https://amazee.io
 kubeVersion: "< 1.22.0-0"
+deprecated: true
 
 type: application
 
