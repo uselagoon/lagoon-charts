@@ -70,7 +70,7 @@ data:
       scheme "#{ENV.fetch('ELASTICSEARCH_SCHEME','http')}"
       ssl_min_version TLSv1_2
       ssl_max_version TLSv1_3
-      user admin
+      user "#{ENV['LOGSDB_ADMIN_USER']}"
       password "#{ENV['LOGSDB_ADMIN_PASSWORD']}"
       # endpoint error handling
       reconnect_on_error true
