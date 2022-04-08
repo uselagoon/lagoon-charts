@@ -39,6 +39,8 @@ spec:
             -Djava.awt.headless=true
         - name: DB_ADDR
           value: {{ include "lagoon-core.keycloakDB.fullname" . }}
+        - name: KEYCLOAK_ADMIN_USER
+          value: {{ .Values.keycloakAdminUser | quote }}
       {{- range $key, $val := .Values.keycloak.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}

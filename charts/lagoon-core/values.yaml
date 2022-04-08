@@ -39,7 +39,6 @@
 
 # apiDBPassword:
 # jwtSecret:
-# keycloakAdminUser:
 # keycloakAdminPassword:
 # keycloakAPIClientSecret:
 # keycloakAuthServerClientSecret:
@@ -61,6 +60,8 @@ imagePullSecrets: []
 rabbitMQUsername: lagoon
 
 k8upS3Endpoint: ""
+
+keycloakAdminUser: admin
 
 # Set to an empty string to support Harbor v1.x.x
 harborAPIVersion: v2.0
