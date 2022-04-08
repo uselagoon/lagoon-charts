@@ -36,6 +36,10 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.api.fullname" . }}
               key: REDIS_PASSWORD
+      {{- range $key, $val := .Values.apiRedis.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         ports:
         - name: redis
           containerPort: 6379

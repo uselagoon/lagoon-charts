@@ -223,6 +223,9 @@ keycloakDB:
 
   resources: {}
 
+  additionalEnvs:
+  #   FOO: Bar
+
 broker:
   replicaCount: 3
   image:
@@ -439,6 +442,9 @@ actionsHandler:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+  additionalEnvs:
+  #   FOO: Bar
 
 backupHandler:
   enabled: true
