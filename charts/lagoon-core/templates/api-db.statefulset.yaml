@@ -39,6 +39,10 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
+      {{- range $key, $val := .Values.apiDB.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         ports:
         - name: mariadb
           containerPort: 3306
