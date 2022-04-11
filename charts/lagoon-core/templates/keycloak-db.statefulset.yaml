@@ -39,6 +39,10 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: DB_PASSWORD
+      {{- range $key, $val := .Values.keycloakDB.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         ports:
         - name: mariadb
           containerPort: 3306
