@@ -18,7 +18,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.50.0
+version: 0.51.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -30,7 +30,7 @@ dependencies:
   repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-build-deploy.enabled
 - name: dioscuri
-  version: ~0.3.0
+  version: ~0.4.0
   repository: https://amazeeio.github.io/charts/
   condition: dioscuri.enabled
 - name: dbaas-operator
