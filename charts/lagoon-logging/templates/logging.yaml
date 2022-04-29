@@ -12,8 +12,11 @@ spec:
         fsGroup: 0
     scaling:
       replicas: {{ .Values.fluentdReplicaCount }}
-{{- if or .Values.fluentbitPrivileged .Values.fluentbitTolerations }}
   fluentbit:
+    # Enable a default liveness check to avoid stuck pods.
+    # At the time of writing this just hits the metrics endpoint.
+    # https://github.com/banzaicloud/logging-operator/blob/master/pkg/sdk/logging/api/v1beta1/logging_types.go#L452-L467
+    livenessDefaultCheck: true
   {{- if .Values.fluentbitPrivileged }}
     security:
       securityContext:
@@ -23,7 +26,4 @@ spec:
     tolerations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-{{- else }}
-  fluentbit: {}
-{{- end }}
   controlNamespace: {{ .Release.Namespace | quote }}
