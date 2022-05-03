@@ -2314,6 +2314,22 @@ entries:
     version: 0.1.0
   lagoon-insights-remote:
   - apiVersion: v2
+    appVersion: v0.0.3
+    created: "2022-05-03T05:25:54.882332561Z"
+    description: A Helm chart for Lagoon remote insights
+    digest: e94c2fadfd02503d41dd599353502953179b532c4e101eb1a62afa9e055b240e
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    maintainers:
+    - email: blaize.kaye@amazee.io
+      name: bomoko
+      url: https://amazee.io
+    name: lagoon-insights-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-insights-remote-0.1.2/lagoon-insights-remote-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
     appVersion: 1.16.0
     created: "2022-03-02T08:29:19.655752742Z"
     description: A Helm chart for Lagoon remote insights
@@ -7943,4 +7959,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-04-29T07:45:20.09572923Z"
+generated: "2022-05-03T05:25:54.886518972Z"
