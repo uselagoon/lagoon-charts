@@ -72,7 +72,7 @@ install-ingress:
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
 		--set controller.watchIngressWithoutClass=true \
-		--set controller.ingressClassResource.default=true \ 
+		--set controller.ingressClassResource.default=true \
 		--version=4.0.19 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
