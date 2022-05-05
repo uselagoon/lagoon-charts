@@ -60,8 +60,6 @@ namespacePrefix: ""
 # for details.
 rootlessBuildPods: false
 
-# If the controller is running in an openshift,
-# then the argument `--is-openshift=true` should be added
 extraArgs:
 
 # add extra environment variables if required
