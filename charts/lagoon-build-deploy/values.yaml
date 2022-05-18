@@ -60,6 +60,7 @@ namespacePrefix: ""
 # for details.
 rootlessBuildPods: false
 
+# enableServiceMonitor adds a servicemonitor for lagoon metrics, and the ability to adjust the scraping interval
 enableServiceMonitor: false
 metrics:
   interval: 30s
