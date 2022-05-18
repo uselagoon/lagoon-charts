@@ -60,6 +60,10 @@ namespacePrefix: ""
 # for details.
 rootlessBuildPods: false
 
+enableServiceMonitor: false
+metrics:
+  interval: 30s
+
 extraArgs:
 
 # add extra environment variables if required
