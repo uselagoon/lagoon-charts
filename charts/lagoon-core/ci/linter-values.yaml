@@ -128,10 +128,6 @@ backupHandler:
   image:
     repository: uselagoon/backup-handler
 
-autoIdler:
-  image:
-    repository: uselagoon/auto-idler
-
 insightsHandler:
   image:
     repository: uselagoon/insights-handler

@@ -515,23 +515,6 @@ insightsHandler:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
-autoIdler:
-  enabled: true
-  image:
-    repository: uselagoon/auto-idler
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  additionalEnvs:
-  #   FOO: Bar
-
 storageCalculator:
   enabled: true
   image:
