@@ -71,7 +71,9 @@ install-ingress:
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
-		--version=3.31.0 \
+		--set controller.watchIngressWithoutClass=true \
+		--set controller.ingressClassResource.default=true \
+		--version=4.1.0 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -91,7 +93,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.5.5 \
+		--version=1.9.0 \
 		registry \
 		harbor/harbor
 
@@ -118,7 +120,7 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=9.3.13 \
+		--version=10.5.1 \
 		mariadb \
 		bitnami/mariadb
 
@@ -132,7 +134,7 @@ install-postgresql:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set postgresqlPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
-		--version=10.4.8 \
+		--version=10.16.2 \
 		postgresql \
 		bitnami/postgresql
 
@@ -146,7 +148,7 @@ install-mongodb:
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
 		--set tls.enabled=false \
-		--version=10.16.4 \
+		--version=11.2.0 \
 		mongodb \
 		bitnami/mongodb
 
@@ -158,9 +160,9 @@ install-minio: install-ingress
 		--namespace minio \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set accessKey.password=lagoonFilesAccessKey,secretKey.password=lagoonFilesSecretKey \
+		--set auth.rootUser=lagoonFilesAccessKey,auth.rootUser=lagoonFilesSecretKey \
 		--set defaultBuckets=lagoon-files \
-		--version=8.1.9 \
+		--version=11.3.2 \
 		minio \
 		bitnami/minio
 
