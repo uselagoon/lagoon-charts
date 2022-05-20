@@ -1,4 +1,4 @@
-name: Lint and test charts
+name: Lint and test charts - current
 
 on: pull_request
 
@@ -62,15 +62,11 @@ jobs:
   # default.ct.yaml
   lint-test:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
       matrix:
-        kindest_node_version: [v1.21.1, v1.22.7]
-        experimental: [false]
-        include:
-          - kindest_node_version: v1.23.4
-            experimental: true
+        kindest_node_version:
+        - kindest/node:v1.22.9@sha256:8135260b959dfe320206eb36b3aeda9cffcb262f4b44cda6b33f7bb73f453105
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -98,7 +94,7 @@ jobs:
     - name: Create kind cluster
       uses: helm/kind-action@v1.2.0
       with:
-        version: v0.12.0
+        version: v0.14.0
         node_image: kindest/node:${{ matrix.kindest_node_version }}
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
