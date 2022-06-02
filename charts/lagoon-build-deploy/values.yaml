@@ -60,12 +60,17 @@ namespacePrefix: ""
 # for details.
 rootlessBuildPods: false
 
+# enableServiceMonitor adds a servicemonitor for lagoon metrics, and the ability to adjust the scraping interval
+enableServiceMonitor: false
+metrics:
+  interval: 30s
+
 extraArgs:
 
 # add extra environment variables if required
 extraEnvs:
 
-pendingMessageCron: "*/5 * * * *"
+pendingMessageCron: "15,45 * * * *"
 
 # The controller will use `uselagoon/kubectl-build-deploy-dind:latest` by
 # default, but this can be overridden here.
