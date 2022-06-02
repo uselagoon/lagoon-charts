@@ -65,7 +65,7 @@ extraArgs:
 # add extra environment variables if required
 extraEnvs:
 
-pendingMessageCron: "*/5 * * * *"
+pendingMessageCron: "15,45 * * * *"
 
 # The controller will use `uselagoon/kubectl-build-deploy-dind:latest` by
 # default, but this can be overridden here.
