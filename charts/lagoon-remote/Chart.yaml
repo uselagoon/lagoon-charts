@@ -10,6 +10,9 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
+- name: shreddedbacon
+  email: ben.jackson@amazee.io
+  url: https://amazee.io
 
 # Application charts are a collection of templates that can be packaged into
 # versioned archives to be deployed.
@@ -18,7 +21,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.54.0
+version: 0.54.1
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
