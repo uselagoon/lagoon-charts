@@ -5,3 +5,10 @@ lagoonTargetName: ci-local-control-k8s
 taskSSHHost: lagoon-core-ssh.lagoon.svc
 taskSSHPort: 2020
 taskAPIHost: http://lagoon-core-api.lagoon.svc:80
+extraArgs:
+  - "--enable-harbor=true"
+  - "--harbor-rotate-interval=1h"
+  - "--harbor-url=http://harbor:1234"
+  - "--harbor-api=http://harbor:1234/api/"
+  - "--harbor-username=admin"
+  - "--harbor-password=harbor123"

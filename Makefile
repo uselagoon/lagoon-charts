@@ -177,11 +177,11 @@ install-lagoon-core: install-minio
 		--values ./charts/lagoon-core/ci/linter-values.yaml \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overwriteKubectlBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
-		--set "harborAdminPassword=Harbor12345" \
-		--set "harborURL=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set "harborAdminPassword=none" \
+		--set "harborURL=http://none.com" \
+		--set "registry=none.com" \
 		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
-		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
@@ -228,7 +228,7 @@ install-lagoon-core: install-minio
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-mariadb install-postgresql install-mongodb
+install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-mariadb install-postgresql install-mongodb install-nfs-server-provisioner
 	$(HELM) dependency build ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
@@ -266,7 +266,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 # Do not install without lagoon-core
 #
 .PHONY: install-lagoon-build-deploy
-install-lagoon-build-deploy: install-lagoon-core
+install-lagoon-build-deploy: install-lagoon-core install-registry
 	$(HELM) dependency build ./charts/lagoon-build-deploy/
 	$(HELM) upgrade \
 		--install \
@@ -279,6 +279,12 @@ install-lagoon-build-deploy: install-lagoon-core
 		--set "rabbitMQHostname=lagoon-core-broker" \
 		--set "lagoonFeatureFlagEnableQoS=true" \
 		--set "QoSMaxBuilds=5" \
+		--set extraArgs[0]="--enable-harbor=true" \
+		--set extraArgs[1]="--harbor-rotate-interval=1h" \
+		--set extraArgs[2]="--harbor-url=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set extraArgs[3]="--harbor-api=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/api/" \
+		--set extraArgs[4]="--harbor-username=admin" \
+		--set extraArgs[5]="--harbor-password=Harbor12345" \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
