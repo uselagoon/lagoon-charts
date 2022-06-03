@@ -71,7 +71,9 @@ install-ingress:
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
-		--version=3.31.0 \
+		--set controller.watchIngressWithoutClass=true \
+		--set controller.ingressClassResource.default=true \
+		--version=4.1.3 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -91,7 +93,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.5.5 \
+		--version=1.9.1 \
 		registry \
 		harbor/harbor
 
@@ -118,7 +120,7 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=9.3.13 \
+		--version=10.5.1 \
 		mariadb \
 		bitnami/mariadb
 
@@ -132,7 +134,7 @@ install-postgresql:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set postgresqlPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
-		--version=10.4.8 \
+		--version=10.16.2 \
 		postgresql \
 		bitnami/postgresql
 
@@ -146,7 +148,7 @@ install-mongodb:
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
 		--set tls.enabled=false \
-		--version=10.16.4 \
+		--version=11.2.0 \
 		mongodb \
 		bitnami/mongodb
 
@@ -158,9 +160,9 @@ install-minio: install-ingress
 		--namespace minio \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set accessKey.password=lagoonFilesAccessKey,secretKey.password=lagoonFilesSecretKey \
+		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets=lagoon-files \
-		--version=8.1.9 \
+		--version=11.6.3 \
 		minio \
 		bitnami/minio
 
@@ -175,11 +177,11 @@ install-lagoon-core: install-minio
 		--values ./charts/lagoon-core/ci/linter-values.yaml \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overwriteKubectlBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
-		--set "harborAdminPassword=Harbor12345" \
-		--set "harborURL=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
+		--set "harborAdminPassword=none" \
+		--set "harborURL=http://none.com" \
+		--set "registry=none.com" \
 		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
-		--set "registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
@@ -226,7 +228,7 @@ install-lagoon-core: install-minio
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-mariadb install-postgresql install-mongodb
+install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-mariadb install-postgresql install-mongodb install-nfs-server-provisioner
 	$(HELM) dependency build ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
@@ -264,7 +266,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 # Do not install without lagoon-core
 #
 .PHONY: install-lagoon-build-deploy
-install-lagoon-build-deploy: install-lagoon-core
+install-lagoon-build-deploy: install-lagoon-core install-registry
 	$(HELM) dependency build ./charts/lagoon-build-deploy/
 	$(HELM) upgrade \
 		--install \
@@ -277,6 +279,10 @@ install-lagoon-build-deploy: install-lagoon-core
 		--set "rabbitMQHostname=lagoon-core-broker" \
 		--set "lagoonFeatureFlagEnableQoS=true" \
 		--set "QoSMaxBuilds=5" \
+		--set "harbor.enabled=true" \
+		--set "harbor.adminPassword=Harbor12345" \
+		--set "harbor.adminUser=admin" \
+		--set "harbor.host=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
