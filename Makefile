@@ -73,7 +73,7 @@ install-ingress:
 		--set controller.config.proxy-body-size=100m \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.1.0 \
+		--version=4.1.3 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -93,7 +93,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.9.0 \
+		--version=1.9.1 \
 		registry \
 		harbor/harbor
 
@@ -160,9 +160,9 @@ install-minio: install-ingress
 		--namespace minio \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set auth.rootUser=lagoonFilesAccessKey,auth.rootUser=lagoonFilesSecretKey \
+		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets=lagoon-files \
-		--version=11.3.2 \
+		--version=11.6.3 \
 		minio \
 		bitnami/minio
 
@@ -279,12 +279,10 @@ install-lagoon-build-deploy: install-lagoon-core install-registry
 		--set "rabbitMQHostname=lagoon-core-broker" \
 		--set "lagoonFeatureFlagEnableQoS=true" \
 		--set "QoSMaxBuilds=5" \
-		--set extraArgs[0]="--enable-harbor=true" \
-		--set extraArgs[1]="--harbor-rotate-interval=1h" \
-		--set extraArgs[2]="--harbor-url=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
-		--set extraArgs[3]="--harbor-api=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/api/" \
-		--set extraArgs[4]="--harbor-username=admin" \
-		--set extraArgs[5]="--harbor-password=Harbor12345" \
+		--set "harbor.enabled=true" \
+		--set "harbor.adminPassword=Harbor12345" \
+		--set "harbor.adminUser=admin" \
+		--set "harbor.host=http://registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
