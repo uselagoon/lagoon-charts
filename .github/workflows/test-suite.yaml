@@ -17,6 +17,7 @@ jobs:
         - features-kubernetes
         - features-kubernetes-2
         - tasks
+        - dbaas
         ## Re-enable any of these below tests in your branch for specific testing
         ## - drupal-php74        
         ## - drupal-php80
