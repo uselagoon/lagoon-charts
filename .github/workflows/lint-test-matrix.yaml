@@ -1,0 +1,51 @@
+name: Lint and test charts - matrix
+
+on: pull_request
+
+jobs:
+  # runs for all charts other than lagoon-test, which is excluded in
+  # default.ct.yaml
+  lint-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        kindest_node_version:
+        - v1.21.12@sha256:f316b33dd88f8196379f38feb80545ef3ed44d9197dca1bfd48bcb1583210207
+        - v1.23.6@sha256:b1fa224cc6c7ff32455e0b1fd9cbfd3d3bc87ecaa8fcb06961ed1afb3db0f9ae
+        - v1.24.0@sha256:0866296e693efe1fed79d5e6c7af8df71fc73ae45e3679af05342239cdc5bc8e
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: "0"
+
+    - name: Set up chart-testing dependencies
+      run: sudo apt-get -y install python3-wheel
+
+    - name: Set up chart-testing
+      uses: helm/chart-testing-action@v2.2.1
+
+    - name: Run chart-testing (list-changed)
+      id: list-changed
+      run: |
+        changed=$(ct list-changed --config ./default.ct.yaml)
+        if [[ "$changed" ]]; then
+          echo "::set-output name=changed::true"
+          echo "$changed"
+        fi
+
+    - name: Run chart-testing (lint)
+      run: ct lint --config ./default.ct.yaml
+
+    - name: Create kind cluster
+      uses: helm/kind-action@v1.2.0
+      with:
+        version: v0.14.0
+        node_image: kindest/node:${{ matrix.kindest_node_version }}
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+
+    - name: Run chart-testing (install)
+      run: ct install --config ./default.ct.yaml
