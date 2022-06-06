@@ -69,6 +69,8 @@ jobs:
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       with:
+        version: v0.14.0
+        node_image: kindest/node:v1.22.9@sha256:8135260b959dfe320206eb36b3aeda9cffcb262f4b44cda6b33f7bb73f453105
         config: test-suite.kind-config.yaml
 
     - name: Install kubectl

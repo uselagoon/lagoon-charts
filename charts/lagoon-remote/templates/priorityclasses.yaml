@@ -1,5 +1,5 @@
 ---
-apiVersion: scheduling.k8s.io/v1beta1
+apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
   name: lagoon-priority-production
@@ -7,7 +7,7 @@ value: 1000000
 globalDefault: true
 description: "This priority class should be used for production environments."
 ---
-apiVersion: scheduling.k8s.io/v1beta1
+apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
   name: lagoon-priority-staging
@@ -15,7 +15,7 @@ value: 100000
 globalDefault: false
 description: "This priority class should be used for staging environments."
 ---
-apiVersion: scheduling.k8s.io/v1beta1
+apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
   name: lagoon-priority-development
