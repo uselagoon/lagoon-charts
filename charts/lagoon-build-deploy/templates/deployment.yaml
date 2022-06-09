@@ -48,6 +48,13 @@ spec:
         args:
         - "--metrics-addr=127.0.0.1:8080"
         - "--enable-leader-election=true"
+        {{- if .Values.harbor.enabled }}
+        - "--enable-harbor=true"
+        - "--harbor-password={{ .Values.harbor.adminPassword }}"
+        - "--harbor-username={{ .Values.harbor.adminUser }}"
+        - "--harbor-url={{ .Values.harbor.host }}"
+        - "--harbor-api={{ .Values.harbor.host }}/api"
+        {{- end }}
         {{- if .Values.rootlessBuildPods }}
         - "--build-pod-run-as-user=10000"
         - "--build-pod-run-as-group=0"
@@ -100,6 +107,18 @@ spec:
         {{- end }}
         {{- with .Values.lagoonBackupDefaultMonthlyRetention }}
         - "--backup-default-monthly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultDevelopmentSchedule }}
+        - "--backup-default-dev-schedule={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultDevelopmentRetention }}
+        - "--backup-default-dev-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultPullrequestSchedule }}
+        - "--backup-default-pr-schedule={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultPullrequestRetention }}
+        - "--backup-default-pr-retention={{ . }}"
         {{- end }}
         {{- with .Values.nativeCronPodMinFrequency }}
         - "--native-cron-pod-min-frequency={{ . }}"

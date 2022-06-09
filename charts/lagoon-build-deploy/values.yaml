@@ -60,14 +60,25 @@ namespacePrefix: ""
 # for details.
 rootlessBuildPods: false
 
-# If the controller is running in an openshift,
-# then the argument `--is-openshift=true` should be added
+# enableServiceMonitor adds a servicemonitor for lagoon metrics, and the ability to adjust the scraping interval
+enableServiceMonitor: false
+metrics:
+  interval: 30s
+
+# set these to your harbor configuration
+harbor:
+  enabled: false
+  # the following are REQUIRED values if harbor is enabled
+  adminPassword: Harbor12345
+  adminUser: admin
+  host: http://registry.172.16.0.1.nip.io:32080
+
 extraArgs:
 
 # add extra environment variables if required
 extraEnvs:
 
-pendingMessageCron: "*/5 * * * *"
+pendingMessageCron: "15,45 * * * *"
 
 # The controller will use `uselagoon/kubectl-build-deploy-dind:latest` by
 # default, but this can be overridden here.

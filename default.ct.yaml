@@ -11,4 +11,5 @@ chart-repos:
 - gatekeeper=https://open-policy-agent.github.io/gatekeeper/charts
 excluded-charts:
 - lagoon-test
+- lagoon-gatekeeper
 helm-extra-args: --timeout 900s

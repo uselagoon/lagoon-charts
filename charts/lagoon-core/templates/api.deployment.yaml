@@ -74,6 +74,8 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_ADMIN_PASSWORD
+        - name: KEYCLOAK_ADMIN_USER
+          value: {{ .Values.keycloakAdminUser | quote }}
         - name: KEYCLOAK_API_CLIENT_SECRET
           valueFrom:
             secretKeyRef:

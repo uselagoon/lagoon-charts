@@ -59,6 +59,10 @@ spec:
               key: RABBITMQ_USERNAME
         - name: REGISTRY
           value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
+      {{- range $key, $val := .Values.controllerhandler.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         resources:
           {{- toYaml .Values.controllerhandler.resources | nindent 10 }}
       {{- with .Values.controllerhandler.nodeSelector }}

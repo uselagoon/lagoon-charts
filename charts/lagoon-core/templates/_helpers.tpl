@@ -430,15 +430,6 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
-{{/*
-Selector labels auto-idler.
-*/}}
-{{- define "lagoon-core.autoIdler.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-core.autoIdler.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
 
 {{/*
 Create a default fully qualified app name for insights-handler.
