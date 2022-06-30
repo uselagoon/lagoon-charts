@@ -79,6 +79,10 @@ spec:
         readinessProbe:
           tcpSocket:
             port: amqp
+      {{- with .Values.broker.startupProbe }}
+        startupProbe:
+          {{- toYaml . | nindent 10 }}
+      {{- end }}
         resources:
           {{- toYaml .Values.broker.resources | nindent 10 }}
       volumes:

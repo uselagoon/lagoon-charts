@@ -147,6 +147,12 @@ apiDB:
 
   storageSize: 128Gi
 
+  startupProbe:
+    # 60*10s period = 10 minutes
+    failureThreshold: 60
+    tcpSocket:
+      port: mariadb
+
 apiRedis:
   image:
     repository: uselagoon/api-redis
@@ -227,6 +233,12 @@ keycloakDB:
   additionalEnvs:
   #   FOO: Bar
 
+  startupProbe:
+    # 60*10s period = 10 minutes
+    failureThreshold: 60
+    tcpSocket:
+      port: mariadb
+
 broker:
   replicaCount: 3
   image:
@@ -288,6 +300,11 @@ broker:
     #    hosts:
     #      - chart-example.local
 
+  startupProbe:
+    # 60*10s period = 10 minutes
+    failureThreshold: 60
+    tcpSocket:
+      port: amqp
 
 authServer:
   replicaCount: 2
