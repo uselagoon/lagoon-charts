@@ -294,6 +294,11 @@ broker:
     #    hosts:
     #      - chart-example.local
 
+  startupProbe:
+    # 60*10s period = 10 minutes
+    failureThreshold: 60
+    tcpSocket:
+      port: amqp
 
 authServer:
   replicaCount: 2
