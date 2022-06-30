@@ -233,6 +233,12 @@ keycloakDB:
   additionalEnvs:
   #   FOO: Bar
 
+  startupProbe:
+    # 60*10s period = 10 minutes
+    failureThreshold: 60
+    tcpSocket:
+      port: mariadb
+
 broker:
   replicaCount: 3
   image:
