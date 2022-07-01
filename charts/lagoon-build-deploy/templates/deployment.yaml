@@ -54,6 +54,9 @@ spec:
         - "--harbor-username={{ .Values.harbor.adminUser }}"
         - "--harbor-url={{ .Values.harbor.host }}"
         - "--harbor-api={{ .Values.harbor.host }}/api"
+        {{- if .Values.enableHarborRepositoryCleanUp }}
+        - "--cleanup-harbor-repository-on-delete"
+        {{- end }}
         {{- end }}
         {{- if .Values.rootlessBuildPods }}
         - "--build-pod-run-as-user=10000"
