@@ -102,3 +102,7 @@ cdnLogsCollector:
       AwEHoUQDQgAEVX4CRtxNY2TK1CQEdn8WkDcwr4cD4K306oJIahytYkFMdkKP3JWc
       xSz1hWx3HID81bhRijZ+icPvoJU0NpTXoQ==
       -----END EC PRIVATE KEY-----
+
+extraExcludeNamespaces:
+- ci-fake-namespace-0
+- ci-fake-namespace-1
