@@ -12,7 +12,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if or (.Values.webhookHandler.ingress.ingressClassName) (.Values.defaultIngressClass) }}
   ingressClassName: {{coalesce .Values.webhookHandler.ingress.ingressClassName .Values.defaultIngressClass }}
+  {{- end }}
   {{- if .Values.webhookHandler.ingress.tls }}
   tls:
     {{- range .Values.webhookHandler.ingress.tls }}

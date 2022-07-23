@@ -2,6 +2,7 @@
 elasticsearchHost: "logs-db-service.elasticsearch.svc.cluster.local"
 elasticsearchAdminUser: "admin"
 elasticsearchAdminPassword: "securepass"
+defaultIngressClass: nginx
 tls:
   caCert: |-
     -----BEGIN CERTIFICATE-----

@@ -76,7 +76,7 @@ podSecurityContext:
 # Set the default ingressClass for the exposed lagoon-core services
 # it can be overridden per-service if needed via ingress.ingressClassName
 # Note that this is the Class, not the IngressName
-defaultIngressClass: nginx
+# defaultIngressClass: nginx
 
 # this default image tag is set for all services and can be overridden
 # on the service level, if not set it falls back to chart appVersion.
