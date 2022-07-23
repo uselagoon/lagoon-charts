@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # Set the default ingressClass for the exposed logs-concentrator service
-# This gets used in the ingressClassName and certManager annotation
+# it can be overridden per-service if needed via ingress.ingressClassName
 # Note that this is the Class, not the IngressName
 defaultIngressClass: nginx
 
