@@ -12,6 +12,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  ingressClassName: {{coalesce .Values.api.ingress.ingressClassName .Values.defaultIngressClass }}
   {{- if .Values.api.ingress.tls }}
   tls:
     {{- range .Values.api.ingress.tls }}
