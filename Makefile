@@ -11,6 +11,9 @@ IMAGE_REGISTRY = uselagoon
 # if OVERRIDE_BUILD_DEPLOY_DIND_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/kubectl-build-deploy-dind:latest).
 OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
+# if OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE is not set, it will fall back to the
+# controller default (uselagoon/task-activestandby:${lagoonVersion}).
+OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE =
 # Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
 # the lagoon-build-deploy chart appVersion.
 OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
@@ -176,7 +179,7 @@ install-lagoon-core: install-minio
 		--timeout $(TIMEOUT) \
 		--values ./charts/lagoon-core/ci/linter-values.yaml \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overwriteKubectlBuildDeployDindImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE) ] && echo '--set overwriteActiveStandbyTaskImage=$(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE)') \
 		--set "harborAdminPassword=none" \
 		--set "harborURL=http://none.com" \
 		--set "registry=none.com" \

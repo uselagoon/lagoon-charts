@@ -324,6 +324,11 @@ excludeNamespaces:
 - openshift-web-console
 - tiller
 
+# namespaces to exclude in addition to the default list above
+extraExcludeNamespaces: []
+# - extra-namespace-0
+# - extra-namespace-1
+
 # Configure the cluster output buffer.
 # This may require tweaking to handle high volumes of logs.
 clusterOutputBuffer:

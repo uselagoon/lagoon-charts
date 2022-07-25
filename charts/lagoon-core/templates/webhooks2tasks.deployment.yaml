@@ -54,8 +54,8 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
-        {{- with .Values.overwriteKubectlBuildDeployDindImage }}
-        - name: OVERWRITE_KUBECTL_BUILD_DEPLOY_DIND_IMAGE
+        {{- with .Values.overwriteActiveStandbyTaskImage }}
+        - name: OVERWRITE_ACTIVESTANDBY_TASK_IMAGE
           value: {{ . | quote }}
         {{- end }}
         - name: HARBOR_ADMIN_PASSWORD

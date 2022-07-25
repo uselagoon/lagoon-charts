@@ -55,6 +55,10 @@ spec:
         readinessProbe:
           tcpSocket:
             port: mariadb
+      {{- with .Values.apiDB.startupProbe }}
+        startupProbe:
+          {{- toYaml . | nindent 10 }}
+      {{- end }}
         resources:
           {{- toYaml .Values.apiDB.resources | nindent 10 }}
       volumes:
