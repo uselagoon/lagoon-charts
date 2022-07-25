@@ -7,10 +7,11 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "lagoon-core.keycloak.labels" . | nindent 4 }}
-  {{- with .Values.keycloak.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    acme.cert-manager.io/http01-ingress-class: {{coalesce .Values.keycloak.ingress.ingressClassName .Values.defaultIngressClass "not-set" }}
+    {{- with .Values.keycloak.ingress.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- if or (.Values.keycloak.ingress.ingressClassName) (.Values.defaultIngressClass) }}
   ingressClassName: {{coalesce .Values.keycloak.ingress.ingressClassName .Values.defaultIngressClass }}

@@ -57,7 +57,6 @@ serviceMonitor:
 ingress:
   enabled: false
   annotations: {}
-    # acme.cert-manager.io/http01-ingress-class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: chart-example.local

@@ -99,7 +99,6 @@ api:
   ingress:
     enabled: false
     annotations: {}
-      # acme.cert-manager.io/http01-ingress-class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
     - host: api.example.com
@@ -202,7 +201,6 @@ keycloak:
   ingress:
     enabled: false
     annotations: {}
-      # acme.cert-manager.io/http01-ingress-class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
     - host: webhook.example.com
@@ -294,7 +292,6 @@ broker:
   ingress:
     enabled: false
     annotations: {}
-      # acme.cert-manager.io/http01-ingress-class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
     - host: broker.example.com
@@ -390,7 +387,6 @@ webhookHandler:
   ingress:
     enabled: false
     annotations: {}
-      # acme.cert-manager.io/http01-ingress-class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
     - host: webhook.example.com
@@ -433,7 +429,6 @@ ui:
   ingress:
     enabled: false
     annotations: {}
-      # acme.cert-manager.io/http01-ingress-class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
     - host: ui.example.com
@@ -494,7 +489,6 @@ backupHandler:
   ingress:
     enabled: false
     annotations: {}
-      # acme.cert-manager.io/http01-ingress-class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
     - host: backup.example.com
@@ -726,7 +720,6 @@ drushAlias:
   ingress:
     enabled: false
     annotations: {}
-      # acme.cert-manager.io/http01-ingress-class: nginx
       # kubernetes.io/tls-acme: "true"
     hosts:
     - host: drush-alias.example.com

@@ -7,10 +7,11 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "lagoon-core.broker.labels" . | nindent 4 }}
-  {{- with .Values.broker.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    acme.cert-manager.io/http01-ingress-class: {{coalesce .Values.broker.ingress.ingressClassName .Values.defaultIngressClass "not-set" }}
+    {{- with .Values.broker.ingress.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   {{- if or (.Values.broker.ingress.ingressClassName) (.Values.defaultIngressClass) }}
   ingressClassName: {{coalesce .Values.broker.ingress.ingressClassName .Values.defaultIngressClass }}
