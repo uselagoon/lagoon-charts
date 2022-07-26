@@ -8,13 +8,13 @@ metadata:
   labels:
     {{- include "lagoon-core.backupHandler.labels" . | nindent 4 }}
   annotations:
-    acme.cert-manager.io/http01-ingress-class: {{coalesce .Values.backupHandler.ingress.ingressClassName .Values.defaultIngressClass "not-set" }}
+    acme.cert-manager.io/http01-ingress-class: {{coalesce .Values.backupHandler.ingress.ingressClassName .Values.defaultIngressClassName "not-set" }}
     {{- with .Values.backupHandler.ingress.annotations }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  {{- if or (.Values.backupHandler.ingress.ingressClassName) (.Values.defaultIngressClass) }}
-  ingressClassName: {{coalesce .Values.backupHandler.ingress.ingressClassName .Values.defaultIngressClass }}
+  {{- if or (.Values.backupHandler.ingress.ingressClassName) (.Values.defaultIngressClassName) }}
+  ingressClassName: {{coalesce .Values.backupHandler.ingress.ingressClassName .Values.defaultIngressClassName }}
   {{- end }}
   {{- if .Values.backupHandler.ingress.tls }}
   tls:

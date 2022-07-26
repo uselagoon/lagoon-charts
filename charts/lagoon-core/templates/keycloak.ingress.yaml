@@ -8,13 +8,13 @@ metadata:
   labels:
     {{- include "lagoon-core.keycloak.labels" . | nindent 4 }}
   annotations:
-    acme.cert-manager.io/http01-ingress-class: {{coalesce .Values.keycloak.ingress.ingressClassName .Values.defaultIngressClass "not-set" }}
+    acme.cert-manager.io/http01-ingress-class: {{coalesce .Values.keycloak.ingress.ingressClassName .Values.defaultIngressClassName "not-set" }}
     {{- with .Values.keycloak.ingress.annotations }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  {{- if or (.Values.keycloak.ingress.ingressClassName) (.Values.defaultIngressClass) }}
-  ingressClassName: {{coalesce .Values.keycloak.ingress.ingressClassName .Values.defaultIngressClass }}
+  {{- if or (.Values.keycloak.ingress.ingressClassName) (.Values.defaultIngressClassName) }}
+  ingressClassName: {{coalesce .Values.keycloak.ingress.ingressClassName .Values.defaultIngressClassName }}
   {{- end }}
   {{- if .Values.keycloak.ingress.tls }}
   tls:

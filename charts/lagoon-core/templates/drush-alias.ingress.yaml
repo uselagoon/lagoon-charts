@@ -8,13 +8,13 @@ metadata:
   labels:
     {{- include "lagoon-core.drushAlias.labels" . | nindent 4 }}
   annotations:
-    acme.cert-manager.io/http01-ingress-class: {{coalesce .Values.drushAlias.ingress.ingressClassName .Values.defaultIngressClass "not-set" }}
+    acme.cert-manager.io/http01-ingress-class: {{coalesce .Values.drushAlias.ingress.ingressClassName .Values.defaultIngressClassName "not-set" }}
     {{- with .Values.drushAlias.ingress.annotations }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  {{- if or (.Values.drushAlias.ingress.ingressClassName) (.Values.defaultIngressClass) }}
-  ingressClassName: {{coalesce .Values.drushAlias.ingress.ingressClassName .Values.defaultIngressClass }}
+  {{- if or (.Values.drushAlias.ingress.ingressClassName) (.Values.defaultIngressClassName) }}
+  ingressClassName: {{coalesce .Values.drushAlias.ingress.ingressClassName .Values.defaultIngressClassName }}
   {{- end }}
   {{- if .Values.drushAlias.ingress.tls }}
   tls:
