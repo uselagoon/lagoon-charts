@@ -13,8 +13,8 @@ metadata:
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  {{- if or (.Values.keycloak.ingress.ingressClassName) (.Values.defaultIngressClassName) }}
-  ingressClassName: {{coalesce .Values.keycloak.ingress.ingressClassName .Values.defaultIngressClassName }}
+  {{- with coalesce .Values.keycloak.ingress.ingressClassName .Values.defaultIngressClassName }}
+  ingressClassName: {{ . }}
   {{- end }}
   {{- if .Values.keycloak.ingress.tls }}
   tls:
