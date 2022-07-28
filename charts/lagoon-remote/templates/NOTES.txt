@@ -1,4 +1,4 @@
-Lagoon Remote configured with target name "{{ .Values.lagoonTargetName }}", and RabbitMQ host "{{ .Values.rabbitMQHostname }}".
+Lagoon Remote configured.
 
 Please ensure you install the updated CRDs manually after installing this release:
 
