@@ -48,6 +48,8 @@ extraEnvs:
 
 # it is also possible to allow the controller to purge harbor of the associated repositories
 # when an environment is deleted, this can be enabled by setting the following to true
+# if the remote is sharing a harbor with another remote, and migrations are taking place then enabling
+# this feature could cause issues with images missing if one remote deletes an environment that is migrated in another remote
 # note: only works if harbor is enabled too
 # enableHarborRepositoryCleanUp: false
 
