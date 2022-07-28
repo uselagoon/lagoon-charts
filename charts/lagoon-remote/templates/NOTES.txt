@@ -1,0 +1,9 @@
+Lagoon Remote configured with target name "{{ .Values.lagoonTargetName }}", and RabbitMQ host "{{ .Values.rabbitMQHostname }}".
+
+Please ensure you install the updated CRDs manually after installing this release:
+
+{{- range $i, $dep := .Chart.Dependencies }}
+{{- if eq $dep.Name "lagoon-build-deploy" }}
+helm show crds lagoon/lagoon-build-deploy --version {{ $dep.Version }} | kubectl apply -f -
+{{- end }}
+{{- end }}
