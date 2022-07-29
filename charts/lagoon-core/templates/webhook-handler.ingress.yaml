@@ -8,7 +8,9 @@ metadata:
   labels:
     {{- include "lagoon-core.webhookHandler.labels" . | nindent 4 }}
   annotations:
-    acme.cert-manager.io/http01-ingress-class: {{coalesce .Values.webhookHandler.ingress.ingressClassName .Values.defaultIngressClassName "not-set" }}
+    {{- with coalesce .Values.webhookHandler.ingress.ingressClassName .Values.defaultIngressClassName }}
+    acme.cert-manager.io/http01-ingress-class: {{ . }}
+    {{- end }}
     {{- with .Values.webhookHandler.ingress.annotations }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
