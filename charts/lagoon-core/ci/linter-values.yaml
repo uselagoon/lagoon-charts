@@ -15,6 +15,7 @@ s3BAASAccessKeyID: baas
 s3BAASSecretAccessKey: baas123
 lagoonUIURL: http://ui:9101
 lagoonWebhookURL: http://webhook:11213
+defaultIngressClassName: nginx
 
 # used in ui
 lagoonAPIURL: https://api.example.com/graphql
