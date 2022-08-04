@@ -20,8 +20,8 @@ Thank you for installing Lagoon.
 {{- if .Values.api.ingress.enabled }}
 
 The dashboard is available at:
-  {{- range $host := .Values.api.ingress.hosts }}
-  http{{ if $.Values.api.ingress.tls }}s{{ end }}://{{ $host.host }}/projects
+  {{- range $host := .Values.ui.ingress.hosts }}
+  http{{ if $.Values.ui.ingress.tls }}s{{ end }}://{{ $host.host }}/projects
   {{- end }}
 {{- end }}
 
