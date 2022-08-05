@@ -9,7 +9,8 @@ chart-repos:
 - lagoon=https://uselagoon.github.io/lagoon-charts/
 - amazeeio=https://amazeeio.github.io/charts/
 - gatekeeper=https://open-policy-agent.github.io/gatekeeper/charts
+- nats=https://nats-io.github.io/k8s/helm/charts/
 excluded-charts:
 - lagoon-test
 - lagoon-gatekeeper
-helm-extra-args: --timeout 900s
+helm-extra-args: --timeout 20m

@@ -729,43 +729,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Create the name of the service account to use for ssh-portal.
-*/}}
-{{- define "lagoon-core.sshPortal.serviceAccountName" -}}
-{{- default (include "lagoon-core.sshPortal.fullname" .) .Values.sshPortal.serviceAccount.name }}
-{{- end }}
-
-{{/*
-Create a default fully qualified app name for ssh-portal.
-*/}}
-{{- define "lagoon-core.sshPortal.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-ssh-portal
-{{- end }}
-
-{{/*
-Common labels ssh-portal.
-*/}}
-{{- define "lagoon-core.sshPortal.labels" -}}
-helm.sh/chart: {{ include "lagoon-core.chart" . }}
-{{ include "lagoon-core.sshPortal.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels ssh-portal.
-*/}}
-{{- define "lagoon-core.sshPortal.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-core.sshPortal.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-
-
-{{/*
 Create a default fully qualified app name for controllerhandler.
 */}}
 {{- define "lagoon-core.controllerhandler.fullname" -}}
@@ -822,5 +785,51 @@ Selector labels workflows
 {{- define "lagoon-core.workflows.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-core.workflows.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for the nats subchart.
+*/}}
+{{- define "lagoon-core.nats.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-nats
+{{- end }}
+
+
+
+{{/*
+Create the name of the service account to use for ssh-portal-api.
+*/}}
+{{- define "lagoon-core.sshPortalAPI.serviceAccountName" -}}
+{{- default (include "lagoon-core.sshPortalAPI.fullname" .) .Values.sshPortalAPI.serviceAccount.name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for ssh-portal-api.
+*/}}
+{{- define "lagoon-core.sshPortalAPI.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-ssh-portal-api
+{{- end }}
+
+{{/*
+Common labels ssh-portal-api.
+*/}}
+{{- define "lagoon-core.sshPortalAPI.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.sshPortalAPI.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels ssh-portal-api.
+*/}}
+{{- define "lagoon-core.sshPortalAPI.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.sshPortalAPI.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

@@ -11,5 +11,8 @@ dependencies:
 - name: lagoon-insights-remote
   repository: https://uselagoon.github.io/lagoon-charts/
   version: 0.1.2
-digest: sha256:ade588524bcc6f5b788c3d6125de11c7d38e3d9f4584e67ebccc98f99f5877b7
-generated: "2022-08-04T15:47:21.202882291+10:00"
+- name: nats
+  repository: https://nats-io.github.io/k8s/helm/charts/
+  version: 0.17.4
+digest: sha256:a029afa14623c46743f4462d9d7215c3efe2011c9f20427ab8ab072206248795
+generated: "2022-08-04T15:26:51.933315573+08:00"

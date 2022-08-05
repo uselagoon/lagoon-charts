@@ -26,3 +26,67 @@ lagoon-insights-remote:
   rabbitMQHostname: lagoon-core-broker
 
 mxoutHost: mxout1.example.com
+
+nats:
+  enabled: true
+  # natsbox:
+  #   enabled: true
+  #   # additional labels are required due to the network policy
+  #   additionalLabels:
+  #     lagoon-remote-nats-client: "true"
+
+natsConfig:
+  coreURL: "nats://ci-ssh-portal:ci-password@lagoon-core-nats-concentrator:7422"
+  tls:
+    secretData:
+      ca.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIBgDCCASagAwIBAgIUe/jnFQ0sqoJKQP9CmguStIhyCNcwCgYIKoZIzj0EAwIw
+        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yMjAzMDMxNDU2MDBa
+        Fw0zMjAyMjkxNDU2MDBaMB4xHDAaBgNVBAMTE25hdHMtY2EuZXhhbXBsZS5jb20w
+        WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAT6ZjUtTIpBJSgGRyQIPdcFKBkt3h76
+        eyIdFVkR4L5NxVLwxyrj3ejbkA/KtbHfT+5+i1lpFyneUnCv8uJMGXXDo0IwQDAO
+        BgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUJnGYc+vw
+        zYXQvaFUImSZnEytUkkwCgYIKoZIzj0EAwIDSAAwRQIgET+GwxQ2TokxnPkNhgjb
+        zJ6PDtVHMNclAWSDebP9nnwCIQDrblreePb+pUBHvxFZNVFYBV4wF2gEkJC51tjw
+        a8aklQ==
+        -----END CERTIFICATE-----
+      client.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIByDCCAW+gAwIBAgIUaBeYr4jOQfj1tZQsKmDqPtU9s8owCgYIKoZIzj0EAwIw
+        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yMjAzMDMxNDU2MDBa
+        Fw0zMjAyMjkxNDU2MDBaMBgxFjAUBgNVBAMTDWNpLXNzaC1wb3J0YWwwWTATBgcq
+        hkjOPQIBBggqhkjOPQMBBwNCAAQmoPrsEZpW2nNbuYVKwr0gBjls+wj/MMIY77OF
+        ImENLjh24BuZYIE65Ypwx9187st0eayx3AbxGxSwDHu3uqaFo4GQMIGNMA4GA1Ud
+        DwEB/wQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMB0G
+        A1UdDgQWBBRe9ZzMq2SD84txo9aMQb8Rl5OfLTAfBgNVHSMEGDAWgBQmcZhz6/DN
+        hdC9oVQiZJmcTK1SSTAYBgNVHREEETAPgg1jaS1zc2gtcG9ydGFsMAoGCCqGSM49
+        BAMCA0cAMEQCIGeTmjVk5evv1+dpddecLRhZqb2Op6YBuSxtiibEmaAJAiAuRI6A
+        s+LwZcCJaL8Gf3W0NIh03fv7VOJ5AWRzYXzpdg==
+        -----END CERTIFICATE-----
+      client.key: |
+        -----BEGIN EC PRIVATE KEY-----
+        MHcCAQEEIGVXWxCYIOynJpYWn95j19DDNDeMZU+xYOhGU8IN9hwmoAoGCCqGSM49
+        AwEHoUQDQgAEJqD67BGaVtpzW7mFSsK9IAY5bPsI/zDCGO+zhSJhDS44duAbmWCB
+        OuWKcMfdfO7LdHmssdwG8RsUsAx7t7qmhQ==
+        -----END EC PRIVATE KEY-----
+
+sshPortal:
+  enabled: true
+  replicaCount: 1
+  debug: true
+  serviceMonitor:
+    enabled: false
+  service:
+    type: NodePort
+    ports:
+      sshserver: 2222
+  hostKeys:
+    ed25519: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+      QyNTUxOQAAACA/YqlzbdTqR53BHcDhvP0EVepZ66ZIT2HaXSpxdzwhMgAAAIgc+EPKHPhD
+      ygAAAAtzc2gtZWQyNTUxOQAAACA/YqlzbdTqR53BHcDhvP0EVepZ66ZIT2HaXSpxdzwhMg
+      AAAECW61aE011GKLSFBJ82G6oGEOjJSUV3STx16veSvX38kD9iqXNt1OpHncEdwOG8/QRV
+      6lnrpkhPYdpdKnF3PCEyAAAAAAECAwQF
+      -----END OPENSSH PRIVATE KEY-----

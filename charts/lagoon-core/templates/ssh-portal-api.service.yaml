@@ -1,0 +1,16 @@
+{{- if .Values.sshPortalAPI.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.sshPortalAPI.fullname" . }}
+  labels:
+    {{- include "lagoon-core.sshPortalAPI.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sshPortalAPI.service.type }}
+  ports:
+  - port: {{ .Values.sshPortalAPI.service.ports.metrics }}
+    targetPort: metrics
+    name: metrics
+  selector:
+    {{- include "lagoon-core.sshPortalAPI.selectorLabels" . | nindent 4 }}
+{{- end }}

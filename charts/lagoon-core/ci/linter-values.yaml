@@ -21,55 +21,6 @@ defaultIngressClassName: nginx
 lagoonAPIURL: https://api.example.com/graphql
 keycloakAPIURL: https://keycloak.example.com/auth
 
-# used in ssh-portal
-sshHostKeyRSA: |-
-  -----BEGIN OPENSSH PRIVATE KEY-----
-  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
-  -----END OPENSSH PRIVATE KEY-----
-sshHostKeyED25519: |-
-  -----BEGIN OPENSSH PRIVATE KEY-----
-  b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-  QyNTUxOQAAACCGR2030dqgzF7JRSAkQc1WYYtxcts+cAJowq0P0ogtiAAAAJBs3djPbN3Y
-  zwAAAAtzc2gtZWQyNTUxOQAAACCGR2030dqgzF7JRSAkQc1WYYtxcts+cAJowq0P0ogtiA
-  AAAEDPs553Igf3yEBMGZb39WTtxaIpGaje9Ow1kigBCrGocoZHbTfR2qDMXslFICRBzVZh
-  i3Fy2z5wAmjCrQ/SiC2IAAAADHNjb3R0QHRoaW5reQE=
-  -----END OPENSSH PRIVATE KEY-----
-
 api:
   replicaCount: 1
   image:
@@ -178,10 +129,12 @@ ssh:
   image:
     repository: uselagoon/ssh
 
-sshPortal:
+sshPortalAPI:
   enabled: true
   replicaCount: 1
   debug: true
+  serviceMonitor:
+    enabled: false
 
 controllerhandler:
   replicaCount: 1
@@ -194,3 +147,55 @@ workflows:
   replicaCount: 1
   image:
     repository: uselagoon/workflows
+
+# enable nats cluster (and optionally natsbox debugger)
+nats:
+  enabled: true
+  # natsbox:
+  #   enabled: true
+  #   # additional labels are required due to the network policy
+  #   additionalLabels:
+  #     lagoon-core-nats-client: "true"
+
+natsService:
+  type: ClusterIP
+
+natsConfig:
+  users:
+    lagoonRemote:
+    - user: ci-ssh-portal
+      password: ci-password
+  tls:
+    secretData:
+      ca.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIBgDCCASagAwIBAgIUe/jnFQ0sqoJKQP9CmguStIhyCNcwCgYIKoZIzj0EAwIw
+        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yMjAzMDMxNDU2MDBa
+        Fw0zMjAyMjkxNDU2MDBaMB4xHDAaBgNVBAMTE25hdHMtY2EuZXhhbXBsZS5jb20w
+        WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAT6ZjUtTIpBJSgGRyQIPdcFKBkt3h76
+        eyIdFVkR4L5NxVLwxyrj3ejbkA/KtbHfT+5+i1lpFyneUnCv8uJMGXXDo0IwQDAO
+        BgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUJnGYc+vw
+        zYXQvaFUImSZnEytUkkwCgYIKoZIzj0EAwIDSAAwRQIgET+GwxQ2TokxnPkNhgjb
+        zJ6PDtVHMNclAWSDebP9nnwCIQDrblreePb+pUBHvxFZNVFYBV4wF2gEkJC51tjw
+        a8aklQ==
+        -----END CERTIFICATE-----
+      server.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIB6TCCAY+gAwIBAgIUU0rJ7NyqtVt26P4ymCHc2wI1xTgwCgYIKoZIzj0EAwIw
+        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yMjAzMDMxNDU2MDBa
+        Fw0zMjAyMjkxNDU2MDBaMCgxJjAkBgNVBAMTHWxhZ29vbi1jb3JlLW5hdHMtY29u
+        Y2VudHJhdG9yMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEzOKHU61tPi3IS4Tb
+        TekSPQ5j0eS3ALLR8AhHY+lV6K3FNHnrCeCkBP12Kg3c29fjk3OnvdOixqgjXTO9
+        1GvhgqOBoDCBnTAOBgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwEw
+        DAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUs3UCwAl/W6+UyUMhlyL/P2igQCQwHwYD
+        VR0jBBgwFoAUJnGYc+vwzYXQvaFUImSZnEytUkkwKAYDVR0RBCEwH4IdbGFnb29u
+        LWNvcmUtbmF0cy1jb25jZW50cmF0b3IwCgYIKoZIzj0EAwIDSAAwRQIhAOEZUQfm
+        tuziNxJqFdnsQqzEHHDcFBJsMqzC2T4AChinAiBr/BMy3ZFUE57629+mvnevQKF2
+        Xj0jfUL6vS82EAusNQ==
+        -----END CERTIFICATE-----
+      server.key: |
+        -----BEGIN EC PRIVATE KEY-----
+        MHcCAQEEIEEOrqm8DWTCnc6rq2OHmWcfSu/ewpv009gD9ekvWKMDoAoGCCqGSM49
+        AwEHoUQDQgAEzOKHU61tPi3IS4TbTekSPQ5j0eS3ALLR8AhHY+lV6K3FNHnrCeCk
+        BP12Kg3c29fjk3OnvdOixqgjXTO91Gvhgg==
+        -----END EC PRIVATE KEY-----

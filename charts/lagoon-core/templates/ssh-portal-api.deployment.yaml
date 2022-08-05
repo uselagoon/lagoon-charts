@@ -1,0 +1,102 @@
+{{- if .Values.sshPortalAPI.enabled -}}
+{{- if not .Values.nats.enabled }}
+  {{- fail "sshPortalAPI cannot be enabled without NATS (.Values.nats.enabled=true)" }}
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.sshPortalAPI.fullname" . }}
+  labels:
+    {{- include "lagoon-core.sshPortalAPI.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.sshPortalAPI.autoscaling.enabled }}
+  replicas: {{ .Values.sshPortalAPI.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.sshPortalAPI.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
+        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+        checksum/nats.secret: {{ include (print $.Template.BasePath "/nats.secret.yaml") . | sha256sum }}
+    {{- with .Values.sshPortalAPI.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{ include "lagoon-core.fullname" . }}-nats-client: "true"
+        {{- include "lagoon-core.sshPortalAPI.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml (coalesce .Values.sshPortalAPI.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      containers:
+      - name: ssh-portal-api
+        securityContext:
+          {{- toYaml .Values.sshPortalAPI.securityContext | nindent 10 }}
+        image: "{{ .Values.sshPortalAPI.image.repository }}:{{ coalesce .Values.sshPortalAPI.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.sshPortalAPI.image.pullPolicy }}
+        command:
+        - "/ssh-portal-api"
+        env:
+        {{- if .Values.sshPortalAPI.debug }}
+        - name: DEBUG
+          value: "true"
+        {{- end }}
+        - name: KEYCLOAK_BASE_URL
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/
+        - name: KEYCLOAK_SERVICE_API_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_SERVICE_API_CLIENT_SECRET
+        - name: NATS_URL
+          value: nats://{{ include "lagoon-core.fullname" . }}-nats
+        - name: API_DB_ADDRESS
+          value: {{ include "lagoon-core.apiDB.fullname" . }}
+        - name: API_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_PASSWORD
+      {{- range $key, $val := .Values.sshPortalAPI.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
+        ports:
+        - name: metrics
+          containerPort: 9911
+        resources:
+          {{- toYaml .Values.sshPortalAPI.resources | nindent 10 }}
+      {{- with .Values.sshPortalAPI.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.name" . }}
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.sshPortalAPI.fullname" . }}
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- with .Values.sshPortalAPI.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.sshPortalAPI.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

@@ -20,6 +20,7 @@ jobs:
         helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
         helm repo add amazeeio https://amazeeio.github.io/charts/
         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
+        helm repo add nats https://nats-io.github.io/k8s/helm/charts/
     - name: Generate helm templates
       run: |
         cd charts
@@ -44,6 +45,9 @@ jobs:
         # workaround until logging-operator templates are fixed:
         # https://github.com/banzaicloud/logging-operator/pull/792
         rm -rf /tmp/charts/lagoon-logging/lagoon-logging/charts/logging-operator
+        # workaround until nats templates are fixed
+        rm -rf /tmp/charts/lagoon-remote/lagoon-remote/charts/nats
+        rm -rf /tmp/charts/lagoon-core/lagoon-core/charts/nats
     - name: Install YAMLlint
       run: sudo apt-get -y install yamllint
     - name: Lint the templates

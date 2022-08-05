@@ -1,0 +1,17 @@
+{{- if .Values.nats.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.fullname" . }}-nats-concentrator
+  labels:
+    {{- include "lagoon-core.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.natsService.type }}
+  ports:
+  - name: leafnodes
+    port: {{ .Values.natsService.leafnodes.port }}
+    protocol: TCP
+    targetPort: 7422
+  selector:
+    app.kubernetes.io/name: nats
+{{- end }}

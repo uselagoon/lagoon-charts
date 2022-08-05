@@ -18,6 +18,7 @@ jobs:
         - features-kubernetes-2
         - tasks
         - dbaas
+        - ssh-portal
         ## Re-enable any of these below tests in your branch for specific testing
         ## - drupal-php74        
         ## - drupal-php80
@@ -114,6 +115,7 @@ jobs:
         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
         helm repo add amazeeio https://amazeeio.github.io/charts/
         helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
+        helm repo add nats https://nats-io.github.io/k8s/helm/charts/
 
     - name: Install gojq
       if: |

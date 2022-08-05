@@ -5,8 +5,6 @@
 # harborURL:
 # kibanaURL:
 # registry:
-# sshHostKeyED25519:
-# sshHostKeyRSA:
 # s3BAASSecretAccessKey:
 # s3BAASAccessKeyID:
 # s3FilesAccessKeyID:
@@ -766,43 +764,6 @@ ssh:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
-sshPortal:
-  enabled: false
-  replicaCount: 2
-  image:
-    repository: testlagoon/ssh-portal
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "pr-2179"
-
-  service:
-    type: ClusterIP
-    port: 2222
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  additionalEnvs:
-  #   FOO: Bar
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
-  serviceAccount:
-    # Annotations to add to the service account
-    annotations: {}
-    # The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname
-    # template
-    name: ""
-
 controllerhandler:
   enabled: true
   replicaCount: 2
@@ -853,3 +814,107 @@ workflows:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+nats:
+  enabled: false
+  # inject additional config
+  additionalVolumes:
+  - name: lagoon-core-nats-tls
+    secret:
+      secretName: lagoon-core-nats-tls
+  additionalVolumeMounts:
+  - name: lagoon-core-nats-tls
+    mountPath: /etc/lagoon-core-nats-tls
+  nats:
+    config:
+    - name: lagoon-core
+      secret:
+        secretName: lagoon-core-nats-conf
+  cluster:
+    enabled: true
+    name: lagoon-core
+    # internal cluster IPs are not routable, so don't advertise them
+    noAdvertise: true
+  natsbox:
+    enabled: false
+  # to connect to nats, pods must have the right label
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+    # allow inbound leaf connections
+    extraIngress:
+    - ports:
+      - port: 7422
+        protocol: TCP
+
+natsService:
+  # this service is enabled via nats.enabled
+  type: LoadBalancer
+  leafnodes:
+    port: 7422
+
+natsConfig:
+  users:
+    lagoonRemote: []
+    # Remote cluster  credentials and the account they have access to are
+    # specified here.
+    #
+    # - user: ...
+    #   password: ...
+  tls: {}
+    # If the lagoon-core-nats-tls secret should be created by the lagoon-core
+    # chart, certificate values can be specified directly in secretData.
+    # Configuring TLS this way also allows specifying a custom ca.crt.
+    #
+    # secretData:
+    #   ca.crt: |
+    #     ...
+    #   server.crt: |
+    #     ...
+    #   server.key: |
+    #     ...
+    #
+    # If the TLS secret is created outside the lagoon-core chart, it should be
+    # named lagoon-core-nats-tls. This secret should contain fields tls.crt and
+    # tls.key, and the certificate should be issued by a public authority.
+
+sshPortalAPI:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.18.1"
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  serviceAccount:
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name: ""
+
+  serviceMonitor:
+    enabled: true
+
+  service:
+    type: ClusterIP
+    ports:
+      metrics: 9911
