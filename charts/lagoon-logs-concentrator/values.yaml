@@ -2,11 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# Set the default ingressClass for the exposed logs-concentrator service
-# it can be overridden per-service if needed via ingress.ingressClassName
-# Note that this is the Class, not the IngressName
-# defaultIngressClassName: nginx
-
 # this default image tag is set for all services and can be overridden
 # on the service level, if not set it falls back to chart appVersion.
 imageTag: ""
@@ -53,18 +48,6 @@ service:
 
 serviceMonitor:
   enabled: true
-
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths: []
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 resources:
   requests:
