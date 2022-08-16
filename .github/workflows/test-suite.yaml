@@ -129,18 +129,19 @@ jobs:
 
     # Uncomment this snippet in your PR to enable the debug action
     # https://github.com/marketplace/actions/debugging-with-tmate
-    #
+    
     # Continue after getting a shell via: `touch continue`
-    #
-    # - name: Install kubens and kubectl alias
-    #   run: |
-    #     cd /tmp
-    #     curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.1/kubens_v0.9.1_linux_x86_64.tar.gz
-    #     tar -xf ./kubens_v0.9.1_linux_x86_64.tar.gz
-    #     sudo cp /tmp/kubens /usr/local/bin/kubens
-    #     sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
-    # - name: Setup tmate session
-    #   uses: mxschmitt/action-tmate@v3
+    
+    - name: Install kubens and kubectl alias
+      run: |
+        cd /tmp
+        curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.1/kubens_v0.9.1_linux_x86_64.tar.gz
+        tar -xf ./kubens_v0.9.1_linux_x86_64.tar.gz
+        sudo cp /tmp/kubens /usr/local/bin/kubens
+        sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: |
@@ -162,17 +163,19 @@ jobs:
 
     # the following steps gather various debug information on test failure
 
-    - name: Inspect lagoon-remote pods
+    - name: Inspect lagoon-remote and lagoon-build-deploy pods
       if: failure()
       run: |
-        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/name=lagoon-remote
-        kubectl logs --tail=80 --namespace=lagoon --prefix --timestamps --all-containers --selector=app.kubernetes.io/name=lagoon-remote
+        kubectl get pods -A
+        kubectl kubectl describe pods --namespace=lagoon -l 'app.kubernetes.io/instance in (lagoon-remote, lagoon-build-deploy)'
+        kubectl logs --namespace=lagoon --prefix --timestamps --all-containers -l 'app.kubernetes.io/instance in (lagoon-remote, lagoon-build-deploy)'
 
     - name: Inspect lagoon-core pods
       if: failure()
       run: |
-        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/name=lagoon-core
-        kubectl logs --tail=80 --namespace=lagoon --prefix --timestamps --all-containers --selector=app.kubernetes.io/name=lagoon-core
+        kubectl get pods -A
+        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/instance=lagoon-core
+        kubectl logs --namespace=lagoon --prefix --timestamps --all-containers --selector=app.kubernetes.io/instance=lagoon-core
 
     - name: Inspect any remaining CI namespaces
       if: failure()
