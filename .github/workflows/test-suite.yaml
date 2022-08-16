@@ -155,6 +155,14 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: docker system prune -f -a --volumes
 
+    - name: Check API is responsive
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+      run: |
+        kubectl get pods -A
+        curl http://lagoon-api.$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/status
+
     - name: Run chart-testing (install) on lagoon-test
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
@@ -163,19 +171,26 @@ jobs:
 
     # the following steps gather various debug information on test failure
 
+    - name: Inspect lagoon-test pods
+      if: failure()
+      run: |
+        kubectl get pods -A --selector=app.kubernetes.io/instance=lagoon-test
+        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/instance=lagoon-test
+        kubectl logs --namespace=lagoon --prefix --timestamps --tail=-1 --all-containers --selector=app.kubernetes.io/instance=lagoon-test
+
     - name: Inspect lagoon-remote and lagoon-build-deploy pods
       if: failure()
       run: |
-        kubectl get pods -A
-        kubectl kubectl describe pods --namespace=lagoon -l 'app.kubernetes.io/instance in (lagoon-remote, lagoon-build-deploy)'
-        kubectl logs --namespace=lagoon --prefix --timestamps --all-containers -l 'app.kubernetes.io/instance in (lagoon-remote, lagoon-build-deploy)'
+        kubectl get pods -A -l 'app.kubernetes.io/instance in (lagoon-remote, lagoon-build-deploy)'
+        kubectl describe pods --namespace=lagoon -l 'app.kubernetes.io/instance in (lagoon-remote, lagoon-build-deploy)'
+        kubectl logs --namespace=lagoon --prefix --timestamps --tail=-1 --all-containers -l 'app.kubernetes.io/instance in (lagoon-remote, lagoon-build-deploy)'
 
     - name: Inspect lagoon-core pods
       if: failure()
       run: |
-        kubectl get pods -A
+        kubectl get pods -A --selector=app.kubernetes.io/instance=lagoon-core
         kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/instance=lagoon-core
-        kubectl logs --namespace=lagoon --prefix --timestamps --all-containers --selector=app.kubernetes.io/instance=lagoon-core
+        kubectl logs --namespace=lagoon --prefix --timestamps --tail=-1  --all-containers --selector=app.kubernetes.io/instance=lagoon-core
 
     - name: Inspect any remaining CI namespaces
       if: failure()
