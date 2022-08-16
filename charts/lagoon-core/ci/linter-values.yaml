@@ -32,7 +32,8 @@ apiDB:
   additionalEnvs:
     MARIADB_WAIT_TIMEOUT: '60'
   image:
-    repository: uselagoon/api-db
+    repository: testlagoon/api-db
+    tag: pr-3258
   storageSize: 16Gi
 
 apiRedis:
