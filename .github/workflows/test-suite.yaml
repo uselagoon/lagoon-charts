@@ -127,11 +127,6 @@ jobs:
         tar -xf ./gojq_v0.11.1_linux_amd64.tar.gz
         sudo cp /tmp/gojq_v0.11.1_linux_amd64/gojq /usr/local/bin/jq
 
-    # Uncomment this snippet in your PR to enable the debug action
-    # https://github.com/marketplace/actions/debugging-with-tmate
-    
-    # Continue after getting a shell via: `touch continue`
-    
     - name: Install kubens and kubectl alias
       run: |
         cd /tmp
@@ -139,9 +134,6 @@ jobs:
         tar -xf ./kubens_v0.9.1_linux_x86_64.tar.gz
         sudo cp /tmp/kubens /usr/local/bin/kubens
         sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
-
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: |
@@ -164,6 +156,15 @@ jobs:
         curl http://lagoon-api.$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/status
         timeout 60 kubectl exec -n lagoon lagoon-core-api-db-0 -- sh -c "mysql -e 'show tables;' "
 
+    # Uncomment this snippet in your PR to enable the debug action
+    # https://github.com/marketplace/actions/debugging-with-tmate
+    
+    # Continue after getting a shell via: `touch continue`
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      timeout-minutes: 5
+
     - name: Run chart-testing (install) on lagoon-test
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
@@ -172,12 +173,18 @@ jobs:
 
     # the following steps gather various debug information on test failure
 
+    - name: See if api-db is to blame
+      if: failure()
+      run: |
+        curl http://lagoon-api.$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/status
+        timeout 60 kubectl exec -n lagoon lagoon-core-api-db-0 -- sh -c "mysql -e 'show tables;' "
+
     - name: Inspect lagoon-test pods
       if: failure()
       run: |
-        kubectl get pods -A --selector=app.kubernetes.io/instance=lagoon-test
-        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/instance=lagoon-test
-        kubectl logs --namespace=lagoon --prefix --timestamps --tail=-1 --all-containers --selector=app.kubernetes.io/instance=lagoon-test
+        kubectl get pods -A --selector=app.kubernetes.io/name=lagoon-test
+        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/name=lagoon-test
+        kubectl logs --namespace=lagoon --prefix --timestamps --tail=-1 --all-containers --selector=app.kubernetes.io/name=lagoon-test
 
     - name: Inspect lagoon-remote and lagoon-build-deploy pods
       if: failure()
