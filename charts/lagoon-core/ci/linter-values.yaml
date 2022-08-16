@@ -24,7 +24,7 @@ keycloakAPIURL: https://keycloak.example.com/auth
 api:
   additionalEnvs:
     API_DB_CONN_LIMIT: '5'
-  replicaCount: 1
+  replicaCount: 3
   image:
     repository: uselagoon/api
 
