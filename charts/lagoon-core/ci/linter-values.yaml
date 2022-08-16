@@ -28,7 +28,8 @@ api:
 
 apiDB:
   image:
-    repository: uselagoon/api-db
+    repository: testlagoon/api-db
+    tag: pr-3058
   storageSize: 16Gi
 
 apiRedis:
@@ -46,7 +47,8 @@ keycloak:
 
 keycloakDB:
   image:
-    repository: uselagoon/keycloak-db
+    repository: testlagoon/keycloak-db
+    tag: pr-3058
 
 broker:
   replicaCount: 1
