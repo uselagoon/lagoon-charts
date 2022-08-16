@@ -5,7 +5,7 @@ on: pull_request
 jobs:
   # runs for lagoon-core, lagoon-remote, lagoon-test
   test-suite:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
