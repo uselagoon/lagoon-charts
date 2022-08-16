@@ -162,6 +162,7 @@ jobs:
       run: |
         kubectl get pods -A
         curl http://lagoon-api.$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/status
+        timeout 60 kubectl exec -n lagoon lagoon-core-api-db-0 -- sh -c "mysql -e 'show tables;' "
 
     - name: Run chart-testing (install) on lagoon-test
       if: |
