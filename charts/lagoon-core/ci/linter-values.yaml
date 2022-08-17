@@ -24,16 +24,16 @@ keycloakAPIURL: https://keycloak.example.com/auth
 api:
   additionalEnvs:
     API_DB_CONN_LIMIT: '5'
-  replicaCount: 3
+  replicaCount: 1
   image:
-    repository: uselagoon/api
+    repository: testlagoon/api
+    tag: pr-3258
 
 apiDB:
   additionalEnvs:
     MARIADB_WAIT_TIMEOUT: '60'
   image:
-    repository: testlagoon/api-db
-    tag: pr-3258
+    repository: uselagoon/api-db
   storageSize: 16Gi
 
 apiRedis:
