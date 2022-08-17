@@ -1,4 +1,4 @@
-apiHost: lagoon-core-api
+apiHost: lagoon-core-api.lagoon.svc
 apiPort: 80
 apiProtocol: http
 clusterType: control-k8s
