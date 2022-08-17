@@ -161,9 +161,9 @@ jobs:
     
     # Continue after getting a shell via: `touch continue`
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      timeout-minutes: 5
+    #- name: Setup tmate session
+    #  uses: mxschmitt/action-tmate@v3
+    #  timeout-minutes: 5
 
     - name: Run chart-testing (install) on lagoon-test
       if: |
