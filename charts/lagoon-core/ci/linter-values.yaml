@@ -1,12 +1,14 @@
 # Any values defined here are not used anywhere other than lint/CI.
 
+# To be deprecated - see uselagoon/lagoon#2907
+harborURL: http://disabled-only-use-harbor-via-deploy-controller.invalid
+harborAdminPassword: not-needed
+registry: disabled-only-use-harbor-via-deploy-controller.invalid
+
 # used in api
 elasticsearchURL: http://opendistro-es-client-service.opendistro-es.svc.cluster.local:9200
-harborURL: http://harbor:1234
-harborAdminPassword: harbor123
 kibanaURL: http://opendistro-es-kibana-svc.opendistro-es.svc.cluster.local:443
 logsDBAdminPassword: admin
-registry: registry.example.com:5000
 s3FilesAccessKeyID: minio
 s3FilesBucket: lagoon-files
 s3FilesHost: http://minio:9000
