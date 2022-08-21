@@ -1,0 +1,17 @@
+{{- if and .Values.sshPortalAPI.enabled .Values.sshPortalAPI.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lagoon-core.sshPortalAPI.fullname" . }}
+  labels:
+    {{- include "lagoon-core.sshPortalAPI.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  - port: metrics
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.sshPortalAPI.selectorLabels" . | nindent 6 }}
+{{- end }}

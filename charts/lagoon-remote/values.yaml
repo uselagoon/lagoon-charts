@@ -105,6 +105,51 @@ kubernetesBuildDeploy:
     # If not set, a name is generated using the fullname template.
     name:
 
+# sshPortal is an optional service providing low-latency SSH connectivity to
+# Lagoon environments.
+sshPortal:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.18.2"
+
+  service:
+    type: LoadBalancer
+    ports:
+      sshserver: 22
+
+  metricsService:
+    type: ClusterIP
+    ports:
+      metrics: 9912
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs: {}
+
+  serviceAccount:
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name: ""
+
+  serviceMonitor:
+    enabled: true
+
+  # host keys, PEM encoded
+  hostKeys:
+    ecdsa: ""
+    ed25519: ""
+    rsa: ""
+
 # This subchart is disabled by default until this build-deploy type is in
 # widespread use.
 lagoon-build-deploy:
@@ -144,3 +189,59 @@ dbaasHTTPEndpoint: ""
 lagoon-insights-remote:
   enabled: false
   # burnAfterReading: false
+
+# the nats chart is a subchart which is configured for use by lagoon-remote
+nats:
+  enabled: false
+  # inject additional config
+  additionalVolumes:
+  - name: lagoon-remote-nats-tls
+    secret:
+      secretName: lagoon-remote-nats-tls
+  additionalVolumeMounts:
+  - name: lagoon-remote-nats-tls
+    mountPath: /etc/lagoon-remote-nats-tls
+  nats:
+    config:
+    - name: lagoon-remote
+      secret:
+        secretName: lagoon-remote-nats-conf
+  cluster:
+    enabled: true
+    name: lagoon-remote
+    # internal cluster IPs are not routable, so don't advertise them
+    noAdvertise: true
+  natsbox:
+    enabled: false
+  # to connect to nats, pods must have the right label
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+    # allow outbound leaf connection
+    extraEgress:
+    - ports:
+      - port: 7422
+        protocol: TCP
+
+# Configuration for the nats subchart
+natsConfig:
+  # coreURL format nats://<username>:<password>@<host>:7422
+  coreURL: ""
+  tls: {}
+    # If the lagoon-remote-nats-tls secret should be created by the
+    # lagoon-remote chart, certificate values can be specified directly in
+    # secretData. Configuring TLS this way also allows specifying a custom
+    # ca.crt.
+    #
+    # secretData:
+    #   ca.crt: |
+    #     ...
+    #   client.crt: |
+    #     ...
+    #   client.key: |
+    #     ...
+    #
+    # If the TLS secret is created outside the lagoon-remote chart, it should
+    # be named lagoon-remote-nats-tls. This secret should contain fields
+    # tls.crt and tls.key, and the certificate should be issued by a public
+    # authority.

@@ -45,6 +45,9 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command:
         - /manager
+        ports:
+        - containerPort: 9912
+          name: metrics
         args:
         - "--metrics-addr=127.0.0.1:8080"
         - "--enable-leader-election=true"
@@ -54,6 +57,9 @@ spec:
         - "--harbor-username={{ .Values.harbor.adminUser }}"
         - "--harbor-url={{ .Values.harbor.host }}"
         - "--harbor-api={{ .Values.harbor.host }}/api"
+        {{- if .Values.enableHarborRepositoryCleanUp }}
+        - "--cleanup-harbor-repository-on-delete"
+        {{- end }}
         {{- end }}
         {{- if .Values.rootlessBuildPods }}
         - "--build-pod-run-as-user=10000"

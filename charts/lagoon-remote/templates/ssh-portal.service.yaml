@@ -1,0 +1,32 @@
+{{- if .Values.sshPortal.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-remote.sshPortal.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.sshPortal.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sshPortal.service.type }}
+  ports:
+  - port: {{ .Values.sshPortal.service.ports.sshserver }}
+    targetPort: sshserver
+    name: sshserver
+  selector:
+    {{- include "lagoon-remote.sshPortal.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-remote.sshPortal.fullname" . }}-metrics
+  labels:
+    metrics-only: "true"
+    {{- include "lagoon-remote.sshPortal.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sshPortal.metricsService.type }}
+  ports:
+  - port: {{ .Values.sshPortal.metricsService.ports.metrics }}
+    targetPort: metrics
+    name: metrics
+  selector:
+    {{- include "lagoon-remote.sshPortal.selectorLabels" . | nindent 4 }}
+{{- end }}

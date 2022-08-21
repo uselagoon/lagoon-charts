@@ -7,11 +7,17 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "lagoon-core.ui.labels" . | nindent 4 }}
-  {{- with .Values.ui.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- with coalesce .Values.ui.ingress.ingressClassName .Values.defaultIngressClassName }}
+    acme.cert-manager.io/http01-ingress-class: {{ . }}
+    {{- end }}
+    {{- with .Values.ui.ingress.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
+  {{- with coalesce .Values.ui.ingress.ingressClassName .Values.defaultIngressClassName }}
+  ingressClassName: {{ . }}
+  {{- end }}
   {{- if .Values.ui.ingress.tls }}
   tls:
     {{- range .Values.ui.ingress.tls }}

@@ -25,6 +25,17 @@ namespacePrefix: ""
 # lagoonFeatureFlagForceRWX2RWO: disabled
 # lagoonFeatureFlagDefaultRWX2RWO: disabled
 
+# It is also possible to define feature flags using `extraEnvs` by defining them like so
+# this method is useful for enabling features on the fly, ones that might not have built in support
+# in remote-controller, but as of v0.5.0 of remote-controller, these are passed into build pods
+# automatically (anything prefixed with `LAGOON_FEATURE_FLAG_`)
+#   extraEnvs:
+#     - name: "LAGOON_FEATURE_FLAG_FORCE_ROOTLESS_WORKLOAD"
+#       value: "enabled"
+
+# add extra environment variables if required
+extraEnvs:
+
 # the following values can be used to override the default
 # backup configurations for a dedicated cluster
 
@@ -34,6 +45,13 @@ namespacePrefix: ""
 # lagoonBackupDefaultDailyRetention: 7
 # lagoonBackupDefaultWeeklyRetention: 5
 # lagoonBackupDefaultMonthlyRetention: 12
+
+# it is also possible to allow the controller to purge harbor of the associated repositories
+# when an environment is deleted, this can be enabled by setting the following to true
+# if the remote is sharing a harbor with another remote, and migrations are taking place then enabling
+# this feature could cause issues with images missing if one remote deletes an environment that is migrated in another remote
+# note: only works if harbor is enabled too
+# enableHarborRepositoryCleanUp: false
 
 # the following value can be used to override the default
 # cronjob interval defined in builds
@@ -74,9 +92,6 @@ harbor:
   host: http://registry.172.16.0.1.nip.io:32080
 
 extraArgs:
-
-# add extra environment variables if required
-extraEnvs:
 
 pendingMessageCron: "15,45 * * * *"
 

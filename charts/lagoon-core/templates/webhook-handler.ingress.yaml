@@ -7,11 +7,17 @@ metadata:
   name: {{ $fullName }}
   labels:
     {{- include "lagoon-core.webhookHandler.labels" . | nindent 4 }}
-  {{- with .Values.webhookHandler.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- with coalesce .Values.webhookHandler.ingress.ingressClassName .Values.defaultIngressClassName }}
+    acme.cert-manager.io/http01-ingress-class: {{ . }}
+    {{- end }}
+    {{- with .Values.webhookHandler.ingress.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
 spec:
+  {{- with coalesce .Values.webhookHandler.ingress.ingressClassName .Values.defaultIngressClassName }}
+  ingressClassName: {{ . }}
+  {{- end }}
   {{- if .Values.webhookHandler.ingress.tls }}
   tls:
     {{- range .Values.webhookHandler.ingress.tls }}
