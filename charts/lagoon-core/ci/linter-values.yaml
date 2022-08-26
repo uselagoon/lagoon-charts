@@ -94,7 +94,8 @@ storageCalculator:
 logs2notifications:
   replicaCount: 1
   image:
-    repository: uselagoon/logs2notifications
+    repository: testlagoon/logs2notifications
+    tag: "pr-3077"
 
 drushAlias:
   replicaCount: 1
