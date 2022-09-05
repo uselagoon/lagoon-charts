@@ -95,7 +95,7 @@ logs2notifications:
   replicaCount: 1
   image:
     repository: testlagoon/logs2notifications
-    tag: "pr-3077"
+    tag: main
 
 drushAlias:
   replicaCount: 1

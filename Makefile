@@ -200,7 +200,7 @@ install-lagoon-core: install-minio
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
 		--set logs2notifications.image.repository=testlagoon/logs2notifications \
-		--set logs2notifications.image.tag=pr-3077 \
+		--set logs2notifications.image.tag=main \
 		--set logs2notifications.email.disabled=true \
 		--set logs2notifications.microsoftteams.disabled=true \
 		--set logs2notifications.rocketchat.disabled=true \
