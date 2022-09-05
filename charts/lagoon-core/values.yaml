@@ -548,134 +548,27 @@ storageCalculator:
   additionalEnvs:
   #   FOO: Bar
 
-logs2slack:
+logs2notifications:
   enabled: true
   replicaCount: 2
   image:
-    repository: uselagoon/logs2slack
+    repository: testlagoon/logs2notifications
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "main"
 
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  additionalEnvs:
-  #   FOO: Bar
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
-
-logs2webhook:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/logs2webhook
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  additionalEnvs:
-  #   FOO: Bar
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
-logs2microsoftteams:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/logs2microsoftteams
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  additionalEnvs:
-  #   FOO: Bar
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
-logs2rocketchat:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/logs2rocketchat
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
-  additionalEnvs:
-  #   FOO: Bar
-
-logs2email:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/logs2email
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  additionalEnvs:
-  #   FOO: Bar
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
-logs2s3:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/logs2s3
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+  logs2slack:
+    disabled: true
+  logs2rocketchat:
+    disabled: true
+  logs2microsoftteams:
+    disabled: true
+  logs2email:
+    disabled: true
+  logs2webhooks:
+    disabled: true
+  logs2s3:
+    disabled: false
 
   podAnnotations: {}
 

@@ -1,0 +1,28 @@
+{{- if .Values.logs2notifications.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core..fullname" . }}
+  labels:
+    {{- include "lagoon-core.logs2notifications.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.logs2notifications.fullname" . }}
+  minReplicas: {{ .Values.logs2notifications.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.logs2notifications.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.logs2notifications.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.logs2notifications.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.logs2notifications.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.logs2notifications.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}
