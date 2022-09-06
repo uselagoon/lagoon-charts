@@ -787,7 +787,7 @@ sshPortalAPI:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.18.2"
+    tag: "v0.20.1"
 
   podAnnotations: {}
 
