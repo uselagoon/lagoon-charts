@@ -16,6 +16,6 @@ kubeVersion: ">= 1.19.0-0"
 
 type: application
 
-version: 0.14.2
+version: 0.14.3
 
-appVersion: v0.5.3
+appVersion: v0.5.4
