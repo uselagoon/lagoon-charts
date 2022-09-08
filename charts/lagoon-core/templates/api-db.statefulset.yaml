@@ -49,12 +49,13 @@ spec:
         volumeMounts:
         - name: {{ include "lagoon-core.apiDB.fullname" . }}-data
           mountPath: /var/lib/mysql
-        livenessProbe:
-          tcpSocket:
-            port: mariadb
         readinessProbe:
           tcpSocket:
             port: mariadb
+      {{- with .Values.apiDB.livenessProbe }}
+        livenessProbe:
+          {{- toYaml . | nindent 10 }}
+      {{- end }}
       {{- with .Values.apiDB.startupProbe }}
         startupProbe:
           {{- toYaml . | nindent 10 }}
