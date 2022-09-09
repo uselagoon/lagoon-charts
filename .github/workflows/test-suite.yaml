@@ -20,7 +20,7 @@ jobs:
         - dbaas
         - ssh-portal
         ## Re-enable any of these below tests in your branch for specific testing
-        ## - drupal-php74        
+        ## - drupal-php74
         ## - drupal-php80
         ## - drupal-postgres
         ## - drush
@@ -35,6 +35,12 @@ jobs:
         ## - bitbucket
 
     steps:
+    # Continue after getting a shell via: `touch continue`
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      timeout-minutes: 1
+      continue-on-error: true
+
     - name: Checkout
       uses: actions/checkout@v3
       with:
@@ -147,24 +153,6 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: docker system prune -f -a --volumes
 
-    - name: Check API is responsive
-      if: |
-        (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: |
-        curl http://lagoon-api.$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/status
-        timeout 60 kubectl exec -n lagoon lagoon-core-api-db-0 -- sh -c "mysql -e 'show tables;' "
-
-    # Uncomment this snippet in your PR to enable the debug action
-    # https://github.com/marketplace/actions/debugging-with-tmate
-    
-    # Continue after getting a shell via: `touch continue`
-
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
-      timeout-minutes: 5
-      continue-on-error: true
-
     - name: Run chart-testing (install) on lagoon-test
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
@@ -172,12 +160,6 @@ jobs:
       run: ct lint-and-install --config ./test-suite-run.ct.yaml
 
     # the following steps gather various debug information on test failure
-
-    - name: See if api-db is to blame
-      if: failure()
-      run: |
-        curl http://lagoon-api.$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/status
-        timeout 60 kubectl exec -n lagoon lagoon-core-api-db-0 -- sh -c "mysql -e 'show tables;' "
 
     - name: Inspect lagoon-test pods
       if: failure()
