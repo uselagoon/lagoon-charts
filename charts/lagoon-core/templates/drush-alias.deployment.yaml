@@ -31,7 +31,7 @@ spec:
       - name: drush-alias
         securityContext:
           {{- toYaml .Values.drushAlias.securityContext | nindent 10 }}
-        image: "{{ .Values.drushAlias.image.repository }}:{{ coalesce .Values.drushAlias.image.tag .Values.imageTag .Chart.AppVersion }}"
+        image: "{{ .Values.drushAlias.image.repository }}:{{ coalesce .Values.drushAlias.image.tag .Values.imageTag "latest" }}"
         imagePullPolicy: {{ .Values.drushAlias.image.pullPolicy }}
         env:
       {{- range $key, $val := .Values.backupHandler.additionalEnvs }}

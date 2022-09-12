@@ -18,7 +18,7 @@ logsDispatcher:
   image:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
+    # Overrides the image tag whose default is "latest".
     tag: ""
 
   serviceAccount:

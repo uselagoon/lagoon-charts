@@ -601,7 +601,7 @@ drushAlias:
   image:
     repository: uselagoon/drush-alias
     pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
+    # Overrides the image tag whose default is "latest".
     tag: ""
 
   podAnnotations: {}
