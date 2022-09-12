@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.67.0
+version: 0.68.0
 
 dependencies:
 - name: logging-operator
