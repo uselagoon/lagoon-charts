@@ -12,7 +12,7 @@ image:
   repository: uselagoon/logs-concentrator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is "latest".
-  tag: ""
+  tag: "v2.9.2"
 
 imagePullSecrets: []
 nameOverride: ""
