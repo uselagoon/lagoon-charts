@@ -43,6 +43,6 @@ dependencies:
   repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-insights-remote.enabled
 - name: nats
-  version: ~0.17.0
+  version: ~0.18.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
