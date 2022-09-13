@@ -168,9 +168,25 @@ Lagoon uses S3 compatible storage for it, it can be configured via these helm va
 - `s3FilesAccessKeyID` - AccessKey for the S3 Bucket
 - `s3FilesSecretAccessKey` - AccessKey Secret for the S3 Bucket
 
-## Securing NATS
+## NATS
 
-This section only applies if using the experimental NATS ssh-portal support.
+This section only applies if using NATS for ssh-portal support.
+NATS and ssh-portal are currently disabled by default.
+
+### Configuring NATS
+
+The minimum configuration required to enable NATS is:
+
+```
+nats:
+  enabled: true
+  cluster:
+    name: lagoon-core-example
+```
+
+Note that the cluster name used in Lagoon Core and each Lagoon Remote _must_ be unique in order for NATS routing to work correctly.
+
+### Securing NATS
 
 Refer to the [NATS TLS documentation](https://docs.nats.io/running-a-nats-service/configuration/securing_nats/tls) when reading this section.
 
@@ -196,12 +212,12 @@ nats:
 
 See the CI values for an example of this configuration.
 
-### Getting a TLS certificate secret
+#### Getting a TLS certificate secret
 
 Ideally this will be a valid public TLS certificate.
 You can also use a private certificate authority but this is ([not recommended](https://docs.nats.io/running-a-nats-service/configuration/securing_nats/tls#self-signed-certificates-for-testing) by upstream NATS.
 
-#### Public CA
+##### Public CA
 
 For example, if using `cert-manager`, use something like this:
 ```
@@ -219,7 +235,7 @@ spec:
 ```
 Note that since NATS uses a `LoadBalancer` service (not an `Ingress`) HTTP-01 solver cannot be used.
 
-#### Private CA
+##### Private CA
 
 You can generate a valid CA, leafnode server, and leafnode client certificate using `cfssl` and the configuration files in the `nats-tls/` directory.
 
