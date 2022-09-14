@@ -137,6 +137,8 @@ workflows:
 # enable nats cluster (and optionally natsbox debugger)
 nats:
   enabled: true
+  cluster:
+    name: lagoon-core-ci-example
   # natsbox:
   #   enabled: true
   #   # additional labels are required due to the network policy

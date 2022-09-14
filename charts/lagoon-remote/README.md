@@ -35,3 +35,25 @@ helm uninstall lagoon-remote
 ## ServiceAccounts
 
 * The `kubernetesbuilddeploy` serviceaccount is bound to `cluster-admin`.
+
+## NATS
+
+This section only applies if using NATS for ssh-portal support.
+NATS and ssh-portal are currently disabled by default.
+
+### Configuring NATS
+
+The minimum configuration required to enable NATS is:
+
+```
+nats:
+  enabled: true
+  cluster:
+    name: lagoon-remote-example
+```
+
+Note that the cluster name used in Lagoon Core and each Lagoon Remote _must_ be unique in order for NATS routing to work correctly.
+
+### Securing NATS
+
+See the Lagoon Core chart README for instructions for securing NATS.
