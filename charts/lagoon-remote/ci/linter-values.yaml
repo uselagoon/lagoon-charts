@@ -29,6 +29,8 @@ mxoutHost: mxout1.example.com
 
 nats:
   enabled: true
+  cluster:
+    name: lagoon-remote-ci-example
   # natsbox:
   #   enabled: true
   #   # additional labels are required due to the network policy

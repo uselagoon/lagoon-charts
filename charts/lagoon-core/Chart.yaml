@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.9.0
+version: 1.10.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -31,6 +31,6 @@ appVersion: v2.9.2
 
 dependencies:
 - name: nats
-  version: ~0.17.0
+  version: ~0.18.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
