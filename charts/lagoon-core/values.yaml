@@ -61,6 +61,10 @@ k8upS3Endpoint: ""
 
 keycloakAdminUser: admin
 
+buildDeployImage:
+  edge:
+    enabled: false
+
 # Set to an empty string to support Harbor v1.x.x
 harborAPIVersion: v2.0
 
