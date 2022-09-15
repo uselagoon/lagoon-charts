@@ -2,6 +2,10 @@ name: Lint and test charts - matrix
 
 on: pull_request
 
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # runs for all charts other than lagoon-test, which is excluded in
   # default.ct.yaml
