@@ -61,6 +61,10 @@ dockerHost:
     #
     # className: managed-premium
 
+  networkPolicy:
+    # Specifies whether the docker-host network policy should be enabled
+    enabled: true
+
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
