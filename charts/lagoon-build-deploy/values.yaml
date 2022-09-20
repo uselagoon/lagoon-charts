@@ -79,6 +79,10 @@ extraEnvs:
 
 # the following values are defaults which may be overridden
 
+adminLagoonFeatureFlag:
+  # Set the memory resource limit for containers deployed by Lagoon.
+  containerMemoryLimit: 16Gi
+
 # rootlessBuildPods tells the build-deploy controller to create build pods
 # which do not run as root. See https://github.com/amazeeio/lagoon/pull/2481
 # for details.

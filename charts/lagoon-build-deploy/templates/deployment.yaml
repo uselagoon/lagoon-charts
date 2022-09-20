@@ -214,6 +214,10 @@ spec:
           value: {{ . | quote }}
         {{- end }}
         {{- end }}
+        {{- with .Values.adminLagoonFeatureFlag.containerMemoryLimit }}
+        - name: ADMIN_LAGOON_FEATURE_FLAG_CONTAINER_MEMORY_LIMIT
+          value: {{ . | quote}}
+        {{- end }}
         - name: PENDING_MESSAGE_CRON
           value: {{ .Values.pendingMessageCron | quote }}
         - name: RABBITMQ_HOSTNAME
