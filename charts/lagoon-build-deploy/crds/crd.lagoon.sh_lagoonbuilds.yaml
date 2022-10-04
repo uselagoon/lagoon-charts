@@ -105,7 +105,7 @@ spec:
                     type: string
                   standbyEnvironment:
                     type: string
-                  storageCalc:
+                  storageCalculator:
                     type: integer
                   subfolder:
                     type: string
