@@ -105,6 +105,8 @@ spec:
                     type: string
                   standbyEnvironment:
                     type: string
+                  storageCalculator:
+                    type: integer
                   subfolder:
                     type: string
                   uiLink:
