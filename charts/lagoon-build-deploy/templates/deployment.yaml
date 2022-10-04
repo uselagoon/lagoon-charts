@@ -60,6 +60,15 @@ spec:
         {{- if .Values.harbor.rotationCron }}
         - "--harbor-credential-cron={{ .Values.harbor.rotationCron }}"
         {{- end }}
+        {{- if .Values.harbor.robotAccountExpiration }}
+        - "--harbor-robot-account-expiry={{ .Values.harbor.robotAccountExpiration }}"
+        {{- end }}
+        {{- if .Values.harbor.robotAccountExpiryInterval }}
+        - "--harbor-expiry-interval={{ .Values.harbor.robotAccountExpiryInterval }}"
+        {{- end }}
+        {{- if .Values.harbor.robotRotateInterval }}
+        - "--harbor-rotate-interval={{ .Values.harbor.robotRotateInterval }}"
+        {{- end }}
         {{- if .Values.enableHarborRepositoryCleanUp }}
         - "--cleanup-harbor-repository-on-delete"
         {{- end }}
