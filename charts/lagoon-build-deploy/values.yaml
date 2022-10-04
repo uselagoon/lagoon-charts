@@ -53,6 +53,12 @@ extraEnvs:
 # note: only works if harbor is enabled too
 # enableHarborRepositoryCleanUp: false
 
+# the controller supports cleaning up namespaces that have been migrated or no longer required, which have already been
+# handled in lagoon, where the namespace remaining in the cluster can be deleted. this clean up process does not update Lagoon
+# with the deletion completion, it is purely used to remove abandoned or otherwise detatched namespaces.
+# enableExpiredNamespaceCleanup: false
+# expiredNamespaceCleanupCron: 30 * * * *
+
 # the following value can be used to override the default
 # cronjob interval defined in builds
 
@@ -90,6 +96,13 @@ harbor:
   adminPassword: Harbor12345
   adminUser: admin
   host: http://registry.172.16.0.1.nip.io:32080
+  #rotationCron: 0 1 * * *
+  # the expiration length of new robot credentials
+  #robotAccountExpiration: 30d
+  # length of time before expiry that the credential be rotated
+  #robotAccountExpiryInterval: 2d
+  # length of time to force rotation if the credential is expiring or already expired, last line of defence
+  #robotRotateInterval: 1d
 
 extraArgs:
 
