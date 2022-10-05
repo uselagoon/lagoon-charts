@@ -48,6 +48,5 @@ serviceMonitor:
 
 image:
   repository: uselagoon/logs-concentrator
-  tag: ""
 
 imageTag: ""

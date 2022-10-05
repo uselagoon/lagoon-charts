@@ -11,8 +11,8 @@ replicaCount: 1
 image:
   repository: uselagoon/logs-concentrator
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart version.
-  tag: ""
+  # Overrides the image tag whose default is "latest".
+  tag: "v3.0.0"
 
 imagePullSecrets: []
 nameOverride: ""

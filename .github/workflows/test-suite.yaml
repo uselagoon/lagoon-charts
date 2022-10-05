@@ -13,7 +13,7 @@ jobs:
         - active-standby-kubernetes
         - api
         - deploytarget
-        - features-api-variables
+        - features-variables
         - features-kubernetes
         - features-kubernetes-2
         - tasks
@@ -145,7 +145,7 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
+      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main
 
     - name: Free up some disk space
       if: |
