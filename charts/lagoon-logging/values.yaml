@@ -18,8 +18,8 @@ logsDispatcher:
   image:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    # Overrides the image tag whose default is "latest".
+    tag: "v3.0.0"
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -120,7 +120,8 @@ cdnLogsCollector:
   image:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
-    tag: ""
+    # Overrides the image tag whose default is "latest".
+    tag: "v3.0.0"
 
   podAnnotations: {}
 
