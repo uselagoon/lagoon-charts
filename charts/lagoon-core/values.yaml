@@ -606,7 +606,7 @@ drushAlias:
     repository: uselagoon/drush-alias
     pullPolicy: Always
     # Overrides the image tag whose default is "latest".
-    tag: "v2.9.2"
+    tag: "v3.0.0"
 
   podAnnotations: {}
 
