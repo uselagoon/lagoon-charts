@@ -103,13 +103,6 @@ dockerHost:
     effect: PreferNoSchedule
     operator: Exists
 
-# this account is used by the legacy Lagoon kubernetes build deploy system.
-kubernetesBuildDeploy:
-  serviceAccount:
-    # The name of the service account to use.
-    # If not set, a name is generated using the fullname template.
-    name:
-
 # sshPortal is an optional service providing low-latency SSH connectivity to
 # Lagoon environments.
 sshPortal:

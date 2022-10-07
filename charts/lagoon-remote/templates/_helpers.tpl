@@ -83,45 +83,6 @@ app.kubernetes.io/component: {{ include "lagoon-remote.dockerHost.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-
-
-{{/*
-Create the name of the service account to use for kubernetesBuildDeploy.
-*/}}
-{{- define "lagoon-remote.kubernetesBuildDeploy.serviceAccountName" -}}
-{{- default (include "lagoon-remote.kubernetesBuildDeploy.fullname" .) .Values.kubernetesBuildDeploy.serviceAccount.name }}
-{{- end }}
-
-{{/*
-Create a default fully qualified app name for kubernetesBuildDeploy.
-*/}}
-{{- define "lagoon-remote.kubernetesBuildDeploy.fullname" -}}
-{{- include "lagoon-remote.fullname" . }}-kubernetes-build-deploy
-{{- end }}
-
-{{/*
-Common labels kubernetesBuildDeploy.
-*/}}
-{{- define "lagoon-remote.kubernetesBuildDeploy.labels" -}}
-helm.sh/chart: {{ include "lagoon-remote.chart" . }}
-{{ include "lagoon-remote.kubernetesBuildDeploy.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels kubernetesBuildDeploy.
-*/}}
-{{- define "lagoon-remote.kubernetesBuildDeploy.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-remote.kubernetesBuildDeploy.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-
-
 {{/*
 Create the name of the service account to use for sshPortal.
 */}}
