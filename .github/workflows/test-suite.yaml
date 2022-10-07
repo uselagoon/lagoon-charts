@@ -145,7 +145,8 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main
+      # run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main
+      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
 
     - name: Free up some disk space
       if: |
