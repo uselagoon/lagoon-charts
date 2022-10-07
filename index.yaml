@@ -770,6 +770,31 @@ entries:
     version: 0.1.0
   lagoon-core:
   - apiVersion: v2
+    appVersion: v2.10.0
+    created: "2022-10-07T06:14:20.74954084Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 04f55e3f3bd92fefb0bdd000124feebc06f38756aa2dffe153374b6b9eb1e60b
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.12.0/lagoon-core-1.12.0.tgz
+    version: 1.12.0
+  - apiVersion: v2
     appVersion: v2.9.2
     created: "2022-10-05T23:25:12.498374547Z"
     dependencies:
@@ -8878,6 +8903,23 @@ entries:
     version: 0.1.0
   lagoon-test:
   - apiVersion: v2
+    appVersion: v2.10.0
+    created: "2022-10-07T06:14:20.894252498Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 3d5b237c81c29dc4dc6e746b0329358ab061be605b1dfdca380232c66a84ffae
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.40.0/lagoon-test-0.40.0.tgz
+    version: 0.40.0
+  - apiVersion: v2
     appVersion: v2.9.0
     created: "2022-08-05T02:27:00.930933117Z"
     description: A Helm chart for Kubernetes which runs the Lagoon test suite.
@@ -9648,4 +9690,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-06T04:24:30.126583014Z"
+generated: "2022-10-07T06:14:20.89564062Z"
