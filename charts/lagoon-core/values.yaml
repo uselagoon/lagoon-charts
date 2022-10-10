@@ -565,10 +565,10 @@ logs2notifications:
   enabled: true
   replicaCount: 2
   image:
-    repository: testlagoon/logs2notifications
+    repository: uselagoon/logs2notifications
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "main"
+    tag: ""
 
   logs2slack:
     disabled: true
