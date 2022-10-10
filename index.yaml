@@ -771,6 +771,31 @@ entries:
   lagoon-core:
   - apiVersion: v2
     appVersion: v2.10.0
+    created: "2022-10-10T00:06:28.650706156Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 1022f88726be55a69305f756af88a709080f2534955ad53e54ebb283292df233
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.12.1/lagoon-core-1.12.1.tgz
+    version: 1.12.1
+  - apiVersion: v2
+    appVersion: v2.10.0
     created: "2022-10-07T06:14:20.74954084Z"
     dependencies:
     - condition: nats.enabled
@@ -9690,4 +9715,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-07T06:14:20.89564062Z"
+generated: "2022-10-10T00:06:28.65191246Z"
