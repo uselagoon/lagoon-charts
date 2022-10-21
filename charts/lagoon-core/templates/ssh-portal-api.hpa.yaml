@@ -1,5 +1,5 @@
 {{- if and .Values.sshPortalAPI.enabled .Values.sshPortalAPI.autoscaling.enabled -}}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "lagoon-core.sshPortalAPI.fullname" . }}
