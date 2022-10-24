@@ -3,6 +3,27 @@ entries:
   lagoon-build-deploy:
   - apiVersion: v2
     appVersion: v0.6.0
+    created: "2022-10-24T11:50:23.325673934Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: 46e7186b697a21bd2b6bd588e5d46ecb288de0e3f012a76c285c419fbd78c75e
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.16.0/lagoon-build-deploy-0.16.0.tgz
+    version: 0.16.0
+  - apiVersion: v2
+    appVersion: v0.6.0
     created: "2022-10-04T05:35:28.863292227Z"
     description: A Helm chart for Kubernetes which installs Lagoon remote controllers
       which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
@@ -9715,4 +9736,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-10T00:06:28.65191246Z"
+generated: "2022-10-24T11:50:23.326711743Z"
