@@ -250,3 +250,25 @@ natsConfig:
     # be named lagoon-remote-nats-tls. This secret should contain fields
     # tls.crt and tls.key, and the certificate should be issued by a public
     # authority.
+
+storageCalculator:
+  serviceAccount:
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name: 
+  rabbitMQHostname: ""
+  rabbitMQPassword: ""
+  rabbitMQUsername: ""
+
+  image:
+    repository: uselagoon/remote-calculator
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "main"
+  # this is a sidecar in the same pod as the storageCalculator container
+  kubeRBACProxy:
+    image:
+      repository: gcr.io/kubebuilder/kube-rbac-proxy
+      pullPolicy: IfNotPresent
+      tag: v0.4.1

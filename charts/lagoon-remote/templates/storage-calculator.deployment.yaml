@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-remote.storageCalculator.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.storageCalculator.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-remote.storageCalculator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/storage-calculator.secret.yaml") . | sha256sum }}
+      labels:
+        {{- include "lagoon-remote.storageCalculator.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.storageCalculator.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "lagoon-remote.storageCalculator.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.storageCalculator.podSecurityContext | nindent 8 }}
+      containers:
+      - name: kube-rbac-proxy
+        securityContext:
+          {{- toYaml .Values.storageCalculator.kubeRBACProxy.securityContext | nindent 10 }}
+        image: "{{ .Values.storageCalculator.kubeRBACProxy.image.repository }}:{{ .Values.storageCalculator.kubeRBACProxy.image.tag }}"
+        imagePullPolicy: {{ .Values.storageCalculator.kubeRBACProxy.image.pullPolicy }}
+        args:
+        - "--secure-listen-address=0.0.0.0:8443"
+        - "--upstream=http://127.0.0.1:8080/"
+        - "--logtostderr=true"
+        - "--v=10"
+        ports:
+        - containerPort: 8443
+          name: https
+        resources:
+          {{- toYaml .Values.storageCalculator.kubeRBACProxy.resources | nindent 10 }}
+      - name: manager
+        securityContext:
+          {{- toYaml .Values.storageCalculator.securityContext | nindent 10 }}
+        image: "{{ .Values.storageCalculator.image.repository }}:{{ .Values.storageCalculator.image.tag | default .Chart.AppVersion}}"
+        imagePullPolicy: {{ .Values.storageCalculator.image.pullPolicy }}
+        command:
+        - /manager
+        args:
+        - "--metrics-addr=127.0.0.1:8080"
+        - "--enable-leader-election"
+        {{- with .Values.storageCalculator.extraArgs }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        env:
+        {{- range $name, $value := .Values.storageCalculator.extraEnvs }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+        - name: RABBITMQ_HOSTNAME
+          value: {{ required "A valid .Values.storageCalculator.rabbitMQHostname required!" .Values.storageCalculator.rabbitMQHostname | quote }}
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-remote.storageCalculator.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-remote.storageCalculator.fullname" . }}
+              key: RABBITMQ_USERNAME
+        resources:
+          {{- toYaml .Values.storageCalculator.resources | nindent 10 }}
+      {{- with .Values.storageCalculator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.storageCalculator.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.storageCalculator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
