@@ -94,6 +94,7 @@ sshPortal:
       -----END OPENSSH PRIVATE KEY-----
 
 storageCalculator:
+  enabled: true
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
   rabbitMQHostname: lagoon-core-broker
