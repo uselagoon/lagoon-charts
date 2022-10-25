@@ -266,7 +266,7 @@ storageCalculator:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "main"
+    tag: v0.1.0
   # this is a sidecar in the same pod as the storageCalculator container
   kubeRBACProxy:
     image:
