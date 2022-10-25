@@ -48,7 +48,6 @@ spec:
         - /manager
         args:
         - "--metrics-bind-address=127.0.0.1:8080"
-        - "--leader-elect"
         {{- with .Values.storageCalculator.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
