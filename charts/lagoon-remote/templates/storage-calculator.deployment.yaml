@@ -56,6 +56,14 @@ spec:
         - name: {{ .name }}
           value: {{ .value | quote }}
         {{- end }}
+        {{- with .Values.storageCalculator.cronjob }}
+        - name: CALCULATOR_CRON
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.storageCalculator.ignoreRegex }}
+        - name: LAGOON_STORAGE_IGNORE_REGEX
+          value: {{ . | quote }}
+        {{- end }}
         - name: RABBITMQ_HOSTNAME
           value: {{ required "A valid .Values.storageCalculator.rabbitMQHostname required!" .Values.storageCalculator.rabbitMQHostname | quote }}
         - name: RABBITMQ_PASSWORD
