@@ -94,7 +94,7 @@ Create the name of the service account to use for storageCalculator.
 Create a default fully qualified app name for storageCalculator.
 */}}
 {{- define "lagoon-remote.storageCalculator.fullname" -}}
-{{- include "lagoon-remote.fullname" . }}-storageCalculator
+{{- include "lagoon-remote.fullname" . }}-storage-calculator
 {{- end }}
 
 {{/*
