@@ -13,6 +13,15 @@ rules:
   verbs:
   - get
   - list
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - get
+  - list
   - watch
 - apiGroups:
   - ""
@@ -20,6 +29,7 @@ rules:
   - pods
   verbs:
   - create
+  - delete
   - get
   - list
   - update
@@ -38,5 +48,3 @@ rules:
   - get
   - list
 {{- end }}
-
-
