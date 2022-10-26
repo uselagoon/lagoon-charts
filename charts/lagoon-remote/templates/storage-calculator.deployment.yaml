@@ -24,21 +24,6 @@ spec:
       securityContext:
         {{- toYaml .Values.storageCalculator.podSecurityContext | nindent 8 }}
       containers:
-      - name: kube-rbac-proxy
-        securityContext:
-          {{- toYaml .Values.storageCalculator.kubeRBACProxy.securityContext | nindent 10 }}
-        image: "{{ .Values.storageCalculator.kubeRBACProxy.image.repository }}:{{ .Values.storageCalculator.kubeRBACProxy.image.tag }}"
-        imagePullPolicy: {{ .Values.storageCalculator.kubeRBACProxy.image.pullPolicy }}
-        args:
-        - "--secure-listen-address=0.0.0.0:8443"
-        - "--upstream=http://127.0.0.1:8080/"
-        - "--logtostderr=true"
-        - "--v=10"
-        ports:
-        - containerPort: 8443
-          name: https
-        resources:
-          {{- toYaml .Values.storageCalculator.kubeRBACProxy.resources | nindent 10 }}
       - name: manager
         securityContext:
           {{- toYaml .Values.storageCalculator.securityContext | nindent 10 }}
