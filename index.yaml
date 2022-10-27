@@ -3095,6 +3095,27 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-gatekeeper-0.1.0/lagoon-gatekeeper-0.1.0.tgz
     version: 0.1.0
   lagoon-insights-remote:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: Added README.md to explain purpose
+    apiVersion: v2
+    appVersion: v0.0.3
+    created: "2022-10-27T08:48:44.949342098Z"
+    description: A Helm chart for Lagoon remote insights
+    digest: 553ee6d30fc713bfba51d40cbecd25c7a50d82841e7d9957dfedf03ed0858609
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: blaize.kaye@amazee.io
+      name: bomoko
+      url: https://amazee.io
+    name: lagoon-insights-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-insights-remote-0.2.1/lagoon-insights-remote-0.2.1.tgz
+    version: 0.2.1
   - apiVersion: v2
     appVersion: v0.0.3
     created: "2022-06-06T02:05:18.833465829Z"
@@ -9780,4 +9801,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-27T05:15:53.337818441Z"
+generated: "2022-10-27T08:48:44.950759012Z"
