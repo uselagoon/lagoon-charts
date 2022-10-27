@@ -1,42 +1,63 @@
-{{- if .Values.logs2s3.enabled -}}
+{{- if .Values.logs2notifications.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "lagoon-core.logs2s3.fullname" . }}
+  name: {{ include "lagoon-core.logs2notifications.fullname" . }}
   labels:
-    {{- include "lagoon-core.logs2s3.labels" . | nindent 4 }}
+    {{- include "lagoon-core.logs2notifications.labels" . | nindent 4 }}
 spec:
-{{- if not .Values.logs2s3.autoscaling.enabled }}
-  replicas: {{ .Values.logs2s3.replicaCount }}
+{{- if not .Values.logs2notifications.autoscaling.enabled }}
+  replicas: {{ .Values.logs2notifications.replicaCount }}
 {{- end }}
   selector:
     matchLabels:
-      {{- include "lagoon-core.logs2s3.selectorLabels" . | nindent 6 }}
+      {{- include "lagoon-core.logs2notifications.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
-    {{- with .Values.logs2s3.podAnnotations }}
+    {{- with .Values.logs2notifications.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{- include "lagoon-core.logs2s3.selectorLabels" . | nindent 8 }}
+        {{- include "lagoon-core.logs2notifications.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       securityContext:
-        {{- toYaml (coalesce .Values.logs2s3.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+        {{- toYaml (coalesce .Values.logs2notifications.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
-      - name: logs2s3
+      - name: logs2notifications
         securityContext:
-          {{- toYaml .Values.logs2s3.securityContext | nindent 10 }}
-        image: "{{ .Values.logs2s3.image.repository }}:{{ coalesce .Values.logs2s3.image.tag .Values.imageTag .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.logs2s3.image.pullPolicy }}
+          {{- toYaml .Values.logs2notifications.securityContext | nindent 10 }}
+        image: "{{ .Values.logs2notifications.image.repository }}:{{ coalesce .Values.logs2notifications.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.logs2notifications.image.pullPolicy }}
+        command:
+        - /app/logs2notifications
+        args:
+        {{- if .Values.logs2notifications.logs2email.disabled }}
+        - "--disable-email"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2microsoftteams.disabled }}
+        - "--disable-microsoft-teams"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2slack.disabled }}
+        - "--disable-slack"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2rocketchat.disabled }}
+        - "--disable-rocketchat"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2webhooks.disabled }}
+        - "--disable-webhooks"
+        {{- end }}
+        {{- if .Values.logs2notifications.logs2s3.disabled }}
+        - "--disable-s3"
+        {{- end }}
         env:
-        - name: API_HOST
+        - name: GRAPHQL_ENDPOINT
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
         - name: JWTSECRET
           valueFrom:
@@ -63,7 +84,7 @@ spec:
         - name: S3_FILES_REGION
           value: {{ . | quote }}
         {{- end }}
-      {{- range $key, $val := .Values.logs2s3.additionalEnvs }}
+      {{- range $key, $val := .Values.logs2notifications.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
       {{- end }}
@@ -71,8 +92,8 @@ spec:
         - secretRef:
             name: {{ include "lagoon-core.api.fullname" . }}
         resources:
-          {{- toYaml .Values.logs2s3.resources | nindent 10 }}
-      {{- with .Values.logs2s3.nodeSelector }}
+          {{- toYaml .Values.logs2notifications.resources | nindent 10 }}
+      {{- with .Values.logs2notifications.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -90,16 +111,16 @@ spec:
                 - key: app.kubernetes.io/component
                   operator: In
                   values:
-                  - {{ include "lagoon-core.logs2s3.fullname" . }}
+                  - {{ include "lagoon-core.logs2notifications.fullname" . }}
                 - key: app.kubernetes.io/instance
                   operator: In
                   values:
                   - {{ .Release.Name }}
               topologyKey: kubernetes.io/hostname
-      {{- with .Values.logs2s3.affinity }}
+      {{- with .Values.logs2notifications.affinity }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.logs2s3.tolerations }}
+      {{- with .Values.logs2notifications.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

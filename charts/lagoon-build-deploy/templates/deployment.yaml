@@ -57,9 +57,27 @@ spec:
         - "--harbor-username={{ .Values.harbor.adminUser }}"
         - "--harbor-url={{ .Values.harbor.host }}"
         - "--harbor-api={{ .Values.harbor.host }}/api"
+        {{- if .Values.harbor.rotationCron }}
+        - "--harbor-credential-cron={{ .Values.harbor.rotationCron }}"
+        {{- end }}
+        {{- if .Values.harbor.robotAccountExpiration }}
+        - "--harbor-robot-account-expiry={{ .Values.harbor.robotAccountExpiration }}"
+        {{- end }}
+        {{- if .Values.harbor.robotAccountExpiryInterval }}
+        - "--harbor-expiry-interval={{ .Values.harbor.robotAccountExpiryInterval }}"
+        {{- end }}
+        {{- if .Values.harbor.robotRotateInterval }}
+        - "--harbor-rotate-interval={{ .Values.harbor.robotRotateInterval }}"
+        {{- end }}
         {{- if .Values.enableHarborRepositoryCleanUp }}
         - "--cleanup-harbor-repository-on-delete"
         {{- end }}
+        {{- end }}
+        {{- if .Values.enableExpiredNamespaceCleanup }}
+        - "--enable-namespace-cleanup"
+        {{- end }}
+        {{- if .Values.expiredNamespaceCleanupCron }}
+        - "--namespace-cleanup-cron={{ .Values.expiredNamespaceCleanupCron }}"
         {{- end }}
         {{- if .Values.rootlessBuildPods }}
         - "--build-pod-run-as-user=10000"
@@ -195,6 +213,10 @@ spec:
         - name: LAGOON_NO_PROXY
           value: {{ . | quote }}
         {{- end }}
+        {{- end }}
+        {{- with .Values.adminLagoonFeatureFlag.containerMemoryLimit }}
+        - name: ADMIN_LAGOON_FEATURE_FLAG_CONTAINER_MEMORY_LIMIT
+          value: {{ . | quote}}
         {{- end }}
         - name: PENDING_MESSAGE_CRON
           value: {{ .Values.pendingMessageCron | quote }}

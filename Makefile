@@ -198,19 +198,18 @@ install-lagoon-core: install-minio
 		--set backupHandler.enabled=false \
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
 		--set controllerhandler.image.repository=$(IMAGE_REGISTRY)/controllerhandler \
-		--set drushAlias.image.repository=$(IMAGE_REGISTRY)/drush-alias \
 		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
-		--set logs2s3.image.repository=$(IMAGE_REGISTRY)/logs2s3 \
-		--set logs2email.enabled=false \
-		--set logs2microsoftteams.enabled=false \
-		--set logs2rocketchat.enabled=false \
-		--set logs2slack.enabled=false \
-		--set logs2webhook.enabled=false \
+		--set logs2notifications.image.repository=testlagoon/logs2notifications \
+		--set logs2notifications.image.tag=main \
+		--set logs2notifications.email.disabled=true \
+		--set logs2notifications.microsoftteams.disabled=true \
+		--set logs2notifications.rocketchat.disabled=true \
+		--set logs2notifications.slack.disabled=true \
+		--set logs2notifications.webhooks.disabled=true \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
 		--set storageCalculator.enabled=false \
-		--set ui.image.repository=$(IMAGE_REGISTRY)/ui \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
@@ -243,7 +242,6 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--wait \
 		--timeout $(TIMEOUT) \
 		--values ./charts/lagoon-remote/ci/linter-values.yaml \
-		--set dockerHost.image.repository=$(IMAGE_REGISTRY)/docker-host \
 		--set "lagoon-build-deploy.enabled=false" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set "dbaas-operator.mariadbProviders.development.environment=development" \

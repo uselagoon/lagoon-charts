@@ -1,0 +1,24 @@
+{{- if .Values.dockerHost.networkPolicy.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "lagoon-remote.dockerHost.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.dockerHost.labels" . | nindent 4 }}
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchExpressions:
+        - key: lagoon.sh/environment
+          operator: Exists
+      podSelector:
+        matchExpressions:
+        - key: lagoon.sh/buildName
+          operator: Exists
+  podSelector:
+    matchLabels:
+      {{- include "lagoon-remote.dockerHost.selectorLabels" . | nindent 6 }}
+  policyTypes:
+  - Ingress
+{{- end }}
