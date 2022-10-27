@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.63.0
+version: 0.64.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -42,3 +42,8 @@ dependencies:
   version: ~0.18.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: added
+      description: Support for storage-calculator, disabled by default
