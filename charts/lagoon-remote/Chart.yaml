@@ -42,3 +42,8 @@ dependencies:
   version: ~0.18.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: added
+      description: Support for storage-calculator, disabled by default
