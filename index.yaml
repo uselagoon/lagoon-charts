@@ -5946,6 +5946,50 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.2.2/lagoon-logs-concentrator-0.2.2.tgz
     version: 0.2.2
   lagoon-remote:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: Support for storage-calculator, disabled by default
+    apiVersion: v2
+    created: "2022-10-27T05:15:53.33678143Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.15.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.4.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: lagoon-insights-remote.enabled
+      name: lagoon-insights-remote
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.1.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: A Helm chart to run a lagoon-remote
+    digest: c80e00ea3d67a45b8cd012a612ed51e46627335f7102a4920ef6877d9d7dda5a
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.64.0/lagoon-remote-0.64.0.tgz
+    version: 0.64.0
   - apiVersion: v2
     created: "2022-10-06T04:24:30.125103996Z"
     dependencies:
@@ -9736,4 +9780,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-26T16:50:23.326711743Z"
+generated: "2022-10-27T05:15:53.337818441Z"
