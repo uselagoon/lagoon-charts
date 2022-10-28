@@ -40,7 +40,7 @@ spec:
       - name: fluentd
         securityContext:
           {{- toYaml .Values.cdnLogsCollector.securityContext | nindent 10 }}
-        image: "{{ .Values.cdnLogsCollector.image.repository }}:{{ coalesce .Values.cdnLogsCollector.image.tag .Values.imageTag .Chart.AppVersion }}"
+        image: "{{ .Values.cdnLogsCollector.image.repository }}:{{ coalesce .Values.cdnLogsCollector.image.tag .Values.imageTag "latest" }}"
         imagePullPolicy: {{ .Values.cdnLogsCollector.image.pullPolicy }}
         ports:
         - containerPort: 5140

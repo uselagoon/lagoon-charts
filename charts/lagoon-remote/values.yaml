@@ -23,7 +23,8 @@ dockerHost:
   image:
     repository: uselagoon/docker-host
     pullPolicy: Always
-    tag: ""
+    # Overrides the image tag whose default is "latest".
+    tag: "v3.0.0"
 
   name: docker-host
 
@@ -60,6 +61,10 @@ dockerHost:
     # class on the PVC, effectively falling back to the cluster default.
     #
     # className: managed-premium
+
+  networkPolicy:
+    # Specifies whether the docker-host network policy should be enabled
+    enabled: true
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -245,3 +250,22 @@ natsConfig:
     # be named lagoon-remote-nats-tls. This secret should contain fields
     # tls.crt and tls.key, and the certificate should be issued by a public
     # authority.
+
+storageCalculator:
+  enabled: false
+  # cronjob: 5 */12 * * *
+  # ignoreRegex: "solr|redis"
+  serviceAccount:
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name:
+  rabbitMQHostname: ""
+  rabbitMQPassword: ""
+  rabbitMQUsername: ""
+
+  image:
+    repository: uselagoon/remote-calculator
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: v0.2.1

@@ -61,6 +61,10 @@ k8upS3Endpoint: ""
 
 keycloakAdminUser: admin
 
+buildDeployImage:
+  edge:
+    enabled: false
+
 # Set to an empty string to support Harbor v1.x.x
 harborAPIVersion: v2.0
 
@@ -561,10 +565,10 @@ logs2notifications:
   enabled: true
   replicaCount: 2
   image:
-    repository: testlagoon/logs2notifications
+    repository: uselagoon/logs2notifications
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "main"
+    tag: ""
 
   logs2slack:
     disabled: true
@@ -601,8 +605,8 @@ drushAlias:
   image:
     repository: uselagoon/drush-alias
     pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    # Overrides the image tag whose default is "latest".
+    tag: "v3.0.0"
 
   podAnnotations: {}
 

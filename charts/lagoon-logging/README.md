@@ -1,6 +1,6 @@
 # Lagoon Logging Helm Chart
 
-This chart installs a logging system that will send logs to elasticsearch.
+This chart installs a logging system that will collect and route logs.
 
 Logs are collated into a single index per lagoon project.
 
@@ -70,9 +70,7 @@ Run these commands in the `charts/` directory (above `lagoon-logging/`).
 
 5. Update application-logs and router-logs services
 
-   The `application-logs` and `router-logs` services in the `lagoon` namespace needs to be updated to point their `externalName` to the `lagoon-logging-logs-dispatcher` service in the `lagoon-logging` namespace (or wherever you've installed it).
-
-   If you are migrating from the old lagoon logging infrastructure and want to keep logs flowing to both old and new infrastructure, point these services at the relevant `logs-tee` service in the `lagoon-logging` namespace. The `logs-tee` services then need to have the legacy `endpoint` configured. See the comments in the chart `values.yaml` for an example.
+   The `application-logs` service in the `lagoon` namespace needs to be updated to point to the `lagoon-logging-logs-dispatcher` service in the `lagoon-logging` namespace (or wherever you've installed it).
 
 ## View logs
 

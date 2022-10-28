@@ -23,6 +23,13 @@ defaultIngressClassName: nginx
 lagoonAPIURL: https://api.example.com/graphql
 keycloakAPIURL: https://keycloak.example.com/auth
 
+buildDeployImage:
+  default:
+    image: uselagoon/build-deploy-image:latest
+  edge:
+    enabled: true
+    image: uselagoon/build-deploy-image:edge
+
 api:
   replicaCount: 1
   image:
@@ -76,6 +83,7 @@ ui:
   replicaCount: 1
   image:
     repository: uselagoon/ui
+    tag: main
 
 backupHandler:
   replicaCount: 1
@@ -129,6 +137,8 @@ workflows:
 # enable nats cluster (and optionally natsbox debugger)
 nats:
   enabled: true
+  cluster:
+    name: lagoon-core-ci-example
   # natsbox:
   #   enabled: true
   #   # additional labels are required due to the network policy

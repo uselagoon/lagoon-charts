@@ -30,7 +30,7 @@ spec:
       - name: docker-host
         securityContext:
           {{- toYaml .Values.dockerHost.securityContext | nindent 10 }}
-        image: "{{ .Values.dockerHost.image.repository }}:{{ coalesce .Values.dockerHost.image.tag .Values.imageTag .Chart.AppVersion }}"
+        image: "{{ .Values.dockerHost.image.repository }}:{{ coalesce .Values.dockerHost.image.tag .Values.imageTag "latest" }}"
         imagePullPolicy: {{ .Values.dockerHost.image.pullPolicy }}
         env:
         {{- range $name, $value := .Values.dockerHost.extraEnvs }}

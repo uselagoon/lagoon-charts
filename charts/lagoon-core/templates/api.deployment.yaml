@@ -54,6 +54,16 @@ spec:
         - name: BITBUCKET_API_TOKEN
           value: {{ . | quote }}
         {{- end }}
+        - name: DEFAULT_BUILD_DEPLOY_IMAGE
+        {{- with dig "default" "image" nil .Values.buildDeployImage }}
+          value: {{ . }}
+        {{- else }}
+          value: {{ print "uselagoon/build-deploy-image:core-" .Chart.AppVersion }}
+        {{- end }}
+      {{- if dig "edge" "enabled" nil .Values.buildDeployImage }}
+        - name: EDGE_BUILD_DEPLOY_IMAGE
+          value: {{ coalesce .Values.buildDeployImage.edge.image (print "uselagoon/build-deploy-image:edge-v" (semver .Chart.AppVersion).Major "." (semver .Chart.AppVersion).Minor ".x") }}
+      {{- end }}
         - name: ELASTICSEARCH_URL
           value: {{ required "A valid .Values.elasticsearchURL required!" .Values.elasticsearchURL | quote }}
         {{- with .Values.gitlabAPIURL }}
