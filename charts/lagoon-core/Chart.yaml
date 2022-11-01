@@ -38,4 +38,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: added
-      description: Support lagoon-core-api init container to migrate/populate database 
+      description: Support lagoon-core-api init container to migrate/populate database
