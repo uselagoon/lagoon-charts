@@ -670,15 +670,6 @@ ssh:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
-controllerhandler:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/controllerhandler
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
   podAnnotations: {}
 
   securityContext: {}
