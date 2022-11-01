@@ -122,11 +122,6 @@ sshPortalAPI:
   serviceMonitor:
     enabled: false
 
-controllerhandler:
-  replicaCount: 1
-  image:
-    repository: uselagoon/controllerhandler
-
 imageTag: ""
 
 workflows:
