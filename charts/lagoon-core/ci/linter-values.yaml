@@ -47,7 +47,8 @@ apiRedis:
 actionsHandler:
   replicaCount: 1
   image:
-    repository: uselagoon/actions-handler
+    repository: testlagoon/actions-handler
+    tag: pr-3321
 
 keycloak:
   image:
@@ -121,11 +122,6 @@ sshPortalAPI:
   debug: true
   serviceMonitor:
     enabled: false
-
-controllerhandler:
-  replicaCount: 1
-  image:
-    repository: uselagoon/controllerhandler
 
 imageTag: ""
 
