@@ -97,10 +97,6 @@ insightsHandler:
     repository: uselagoon/insights-handler
     tag: main
 
-storageCalculator:
-  image:
-    repository: uselagoon/storage-calculator
-
 logs2notifications:
   replicaCount: 1
   image:

@@ -23,8 +23,6 @@ logs2slack:
   enabled: false
 logs2webhook:
   enabled: false
-storageCalculator:
-  enabled: false
 webhookHandler:
   enabled: false
 webhooks2tasks:

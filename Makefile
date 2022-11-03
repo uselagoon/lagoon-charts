@@ -205,7 +205,6 @@ install-lagoon-core: install-minio
 		--set logs2notifications.slack.disabled=true \
 		--set logs2notifications.webhooks.disabled=true \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
-		--set storageCalculator.enabled=false \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
