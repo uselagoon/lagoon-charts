@@ -575,36 +575,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 
-
-{{/*
-Create a default fully qualified app name for controllerhandler.
-*/}}
-{{- define "lagoon-core.controllerhandler.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-controllerhandler
-{{- end }}
-
-{{/*
-Common labels controllerhandler.
-*/}}
-{{- define "lagoon-core.controllerhandler.labels" -}}
-helm.sh/chart: {{ include "lagoon-core.chart" . }}
-{{ include "lagoon-core.controllerhandler.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels controllerhandler.
-*/}}
-{{- define "lagoon-core.controllerhandler.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-core.controllerhandler.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-
 {{/*
 --- WORKFLOWS ---
 */}}
