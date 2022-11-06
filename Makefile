@@ -186,8 +186,7 @@ install-lagoon-core: install-minio
 		$$([ $(DISABLE_CORE_HARBOR) ] && echo '--set api.additionalEnvs.DISABLE_CORE_HARBOR=$(DISABLE_CORE_HARBOR)') \
 		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
-		--set actionsHandler.image.repository=testlagoon/actions-handler  \
-		--set actionsHandler.image.tag=main \
+		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler  \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
@@ -205,7 +204,6 @@ install-lagoon-core: install-minio
 		--set logs2notifications.slack.disabled=true \
 		--set logs2notifications.webhooks.disabled=true \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
-		--set storageCalculator.enabled=false \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		--set s3FilesAccessKeyID=lagoonFilesAccessKey \

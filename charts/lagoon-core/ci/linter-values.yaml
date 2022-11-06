@@ -51,7 +51,6 @@ actionsHandler:
   replicaCount: 1
   image:
     repository: testlagoon/actions-handler
-    tag: main
 
 keycloak:
   image:
@@ -99,15 +98,10 @@ insightsHandler:
     repository: uselagoon/insights-handler
     tag: main
 
-storageCalculator:
-  image:
-    repository: uselagoon/storage-calculator
-
 logs2notifications:
   replicaCount: 1
   image:
     repository: testlagoon/logs2notifications
-    tag: main
 
 drushAlias:
   replicaCount: 1

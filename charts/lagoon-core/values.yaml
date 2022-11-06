@@ -542,25 +542,6 @@ insightsHandler:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
-storageCalculator:
-  enabled: true
-  image:
-    repository: uselagoon/storage-calculator
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  cron: 5 */12 * * *
-
-  additionalEnvs:
-  #   FOO: Bar
-
 logs2notifications:
   enabled: true
   replicaCount: 2
