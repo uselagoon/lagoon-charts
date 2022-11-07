@@ -83,7 +83,40 @@ app.kubernetes.io/component: {{ include "lagoon-remote.dockerHost.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{/*
+Create the name of the service account to use for storageCalculator.
+*/}}
+{{- define "lagoon-remote.storageCalculator.serviceAccountName" -}}
+{{- default (include "lagoon-remote.storageCalculator.fullname" .) .Values.storageCalculator.serviceAccount.name }}
+{{- end }}
 
+{{/*
+Create a default fully qualified app name for storageCalculator.
+*/}}
+{{- define "lagoon-remote.storageCalculator.fullname" -}}
+{{- include "lagoon-remote.fullname" . }}-storage-calculator
+{{- end }}
+
+{{/*
+Common labels storageCalculator.
+*/}}
+{{- define "lagoon-remote.storageCalculator.labels" -}}
+helm.sh/chart: {{ include "lagoon-remote.chart" . }}
+{{ include "lagoon-remote.storageCalculator.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels storageCalculator.
+*/}}
+{{- define "lagoon-remote.storageCalculator.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-remote.storageCalculator.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{/*
 Create the name of the service account to use for kubernetesBuildDeploy.
