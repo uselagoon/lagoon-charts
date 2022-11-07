@@ -136,7 +136,7 @@ jobs:
     - name: Install kubens and kubectl alias
       run: |
         cd /tmp
-        curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx_v0.9.4_linux_x86_64.tar.gz
+        curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubens_v0.9.4_linux_x86_64.tar.gz
         tar -xf ./kubens_v0.9.4_linux_x86_64.tar.gz
         sudo cp /tmp/kubens /usr/local/bin/kubens
         sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
