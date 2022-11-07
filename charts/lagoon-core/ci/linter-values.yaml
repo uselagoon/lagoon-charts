@@ -34,12 +34,10 @@ api:
   replicaCount: 1
   image:
     repository: testlagoon/api
-    tag: pr-3318
 
 apiDB:
   image:
     repository: testlagoon/api-db
-    tag: pr-3318
   storageSize: 16Gi
 
 apiRedis:
