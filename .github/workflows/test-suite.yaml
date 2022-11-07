@@ -76,8 +76,8 @@ jobs:
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       with:
-        version: v0.14.0
-        node_image: kindest/node:v1.23.12@sha256:9402cf1330bbd3a0d097d2033fa489b2abe40d479cc5ef47d0b6a6960613148a
+        version: v0.17.0
+        node_image: kindest/node:v1.23.13@sha256:ef453bb7c79f0e3caba88d2067d4196f427794086a7d0df8df4f019d5e336b61
         config: test-suite.kind-config.yaml
 
     - name: Install kubectl
@@ -129,15 +129,15 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: |
         cd /tmp
-        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.11.1/gojq_v0.11.1_linux_amd64.tar.gz
-        tar -xf ./gojq_v0.11.1_linux_amd64.tar.gz
-        sudo cp /tmp/gojq_v0.11.1_linux_amd64/gojq /usr/local/bin/jq
+        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.9/gojq_v0.12.9_linux_amd64.tar.gz
+        tar -xf ./gojq_v0.12.9_linux_amd64.tar.gz
+        sudo cp /tmp/gojq_v0.12.9_linux_amd64/gojq /usr/local/bin/jq
 
     - name: Install kubens and kubectl alias
       run: |
         cd /tmp
-        curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.1/kubens_v0.9.1_linux_x86_64.tar.gz
-        tar -xf ./kubens_v0.9.1_linux_x86_64.tar.gz
+        curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx_v0.9.4_linux_x86_64.tar.gz
+        tar -xf ./kubens_v0.9.4_linux_x86_64.tar.gz
         sudo cp /tmp/kubens /usr/local/bin/kubens
         sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
 
