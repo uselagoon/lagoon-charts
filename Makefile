@@ -38,6 +38,8 @@ SKIP_INSTALL_REGISTRY =
 SKIP_ALL_DEPS =
 # Set to `true` to use the disable harbor integration in lagoon-core
 DISABLE_CORE_HARBOR =
+# Set to `true` to enable the elements of lagoon-core that talk to OpenSearch installs
+OPENSEARCH_INTEGRATION_ENABLED = false
 
 TIMEOUT = 30m
 HELM = helm
@@ -184,6 +186,7 @@ install-lagoon-core: install-minio
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE) ] && echo '--set overwriteActiveStandbyTaskImage=$(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE)') \
 		$$([ $(DISABLE_CORE_HARBOR) ] && echo '--set api.additionalEnvs.DISABLE_CORE_HARBOR=$(DISABLE_CORE_HARBOR)') \
+		$$([ $(OPENSEARCH_INTEGRATION_ENABLED) ] && echo '--set api.additionalEnvs.OPENSEARCH_INTEGRATION_ENABLED=$(OPENSEARCH_INTEGRATION_ENABLED)') \
 		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
