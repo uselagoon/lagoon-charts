@@ -138,7 +138,7 @@ install-postgresql:
 		--namespace postgresql \
 		--wait \
 		--timeout $(TIMEOUT) \
-		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
+		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')) \
 		--version=11.9.13 \
 		postgresql \
 		bitnami/postgresql
@@ -248,7 +248,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--set "dbaas-operator.mariadbProviders.development.user=root" \
 		--set "dbaas-operator.postgresqlProviders.development.environment=development" \
 		--set "dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
-		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
+		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')" \
 		--set "dbaas-operator.postgresqlProviders.development.port=5432" \
 		--set "dbaas-operator.postgresqlProviders.development.user=postgres" \
 		--set "dbaas-operator.mongodbProviders.development.environment=development" \
