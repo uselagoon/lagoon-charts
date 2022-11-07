@@ -33,11 +33,11 @@ buildDeployImage:
 api:
   replicaCount: 1
   image:
-    repository: uselagoon/api
+    repository: testlagoon/api
 
 apiDB:
   image:
-    repository: uselagoon/api-db
+    repository: testlagoon/api-db
   storageSize: 16Gi
 
 apiRedis:

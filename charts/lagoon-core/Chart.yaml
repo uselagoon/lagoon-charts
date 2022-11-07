@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.13.0-rc.2
+version: 1.13.0-rc.3
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -44,3 +44,5 @@ annotations:
       description: controller-handler has been removed, it's functions are now in actions-handler
     - kind: removed
       description: storage-calculator is now handled in lagoon-remote
+    - kind: added
+      description: Support lagoon-core-api init container to migrate/populate database
