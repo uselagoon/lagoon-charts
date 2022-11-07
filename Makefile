@@ -138,7 +138,7 @@ install-postgresql:
 		--namespace postgresql \
 		--wait \
 		--timeout $(TIMEOUT) \
-		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set postgresqlPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
+		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
 		--version=11.9.13 \
 		postgresql \
 		bitnami/postgresql
