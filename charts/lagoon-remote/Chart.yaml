@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.65.0
+version: 0.66.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -43,7 +43,10 @@ dependencies:
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
 
+# This section is used to collect a changelog for artifacthub.io
+# It should be started afresh for each release
+# Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Bumped ssh-portal to v0.22.0.
+      description: Updated NATS sub-chart to 0.18.2
