@@ -38,6 +38,8 @@ SKIP_INSTALL_REGISTRY =
 SKIP_ALL_DEPS =
 # Set to `true` to use the disable harbor integration in lagoon-core
 DISABLE_CORE_HARBOR =
+# Set to `true` to enable the elements of lagoon-core that talk to OpenSearch installs
+OPENSEARCH_INTEGRATION_ENABLED = false
 
 TIMEOUT = 30m
 HELM = helm
@@ -78,7 +80,7 @@ install-ingress:
 		--set controller.config.proxy-body-size=100m \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.1.3 \
+		--version=4.3.0 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -98,7 +100,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.9.1 \
+		--version=1.10.1 \
 		registry \
 		harbor/harbor
 
@@ -125,7 +127,7 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=10.5.1 \
+		--version=11.3.4 \
 		mariadb \
 		bitnami/mariadb
 
@@ -138,8 +140,8 @@ install-postgresql:
 		--namespace postgresql \
 		--wait \
 		--timeout $(TIMEOUT) \
-		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set postgresqlPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
-		--version=10.16.2 \
+		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')) \
+		--version=11.9.13 \
 		postgresql \
 		bitnami/postgresql
 
@@ -167,7 +169,7 @@ install-minio: install-ingress
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets=lagoon-files \
-		--version=11.6.3 \
+		--version=11.10.13 \
 		minio \
 		bitnami/minio
 
@@ -184,6 +186,7 @@ install-lagoon-core: install-minio
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE) ] && echo '--set overwriteActiveStandbyTaskImage=$(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE)') \
 		$$([ $(DISABLE_CORE_HARBOR) ] && echo '--set api.additionalEnvs.DISABLE_CORE_HARBOR=$(DISABLE_CORE_HARBOR)') \
+		$$([ $(OPENSEARCH_INTEGRATION_ENABLED) ] && echo '--set api.additionalEnvs.OPENSEARCH_INTEGRATION_ENABLED=$(OPENSEARCH_INTEGRATION_ENABLED)') \
 		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler  \
@@ -245,7 +248,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--set "dbaas-operator.mariadbProviders.development.user=root" \
 		--set "dbaas-operator.postgresqlProviders.development.environment=development" \
 		--set "dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
-		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
+		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')" \
 		--set "dbaas-operator.postgresqlProviders.development.port=5432" \
 		--set "dbaas-operator.postgresqlProviders.development.user=postgres" \
 		--set "dbaas-operator.mongodbProviders.development.environment=development" \
