@@ -790,6 +790,35 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.1.0/lagoon-build-deploy-0.1.0.tgz
     version: 0.1.0
   lagoon-core:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Bumped ssh-portal-api to v0.22.0.
+    apiVersion: v2
+    appVersion: v2.10.0
+    created: "2022-11-09T02:22:33.922371465Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: e30e712a69db9f966c3003fd8984d10f8e2e0bc4e34a15b2b4e52fbd06e16ba4
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.13.0/lagoon-core-1.13.0.tgz
+    version: 1.13.0
   - apiVersion: v2
     appVersion: v2.10.0
     created: "2022-10-10T00:06:28.650706156Z"
@@ -5969,6 +5998,50 @@ entries:
   lagoon-remote:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: Bumped ssh-portal to v0.22.0.
+    apiVersion: v2
+    created: "2022-11-09T02:22:34.074356498Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.15.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.4.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: lagoon-insights-remote.enabled
+      name: lagoon-insights-remote
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.1.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: A Helm chart to run a lagoon-remote
+    digest: e67fea8089d570b5ad7c46f5f270617b9f5145de17a773b57b9082ec396684b7
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.65.0/lagoon-remote-0.65.0.tgz
+    version: 0.65.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Support for storage-calculator, disabled by default
     apiVersion: v2
@@ -9801,4 +9874,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-10-27T08:48:44.950759012Z"
+generated: "2022-11-09T02:22:34.075647399Z"
