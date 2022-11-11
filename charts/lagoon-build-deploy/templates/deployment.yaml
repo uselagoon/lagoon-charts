@@ -156,6 +156,12 @@ spec:
         {{- with .Values.QoSDefault }}
         - "--qos-default={{ . }}"
         {{- end }}
+        {{- with .Values.timeoutForLongRunningBuildPods }}
+        - "--timeout-longrunning-build-pod-cleanup={{ . }}"
+        {{- end }}
+        {{- with .Values.timeoutForLongRunningTaskPods }}
+        - "--timeout-longrunning-task-pod-cleanup={{ . }}"
+        {{- end }}
         {{- with .Values.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
