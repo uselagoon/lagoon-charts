@@ -79,6 +79,10 @@ extraEnvs:
 
 # the following values are defaults which may be overridden
 
+# the number of hours a build/task pod can run before forcefully cancelled.
+timeoutForLongRunningBuildPods: 6
+timeoutForLongRunningTaskPods: 6
+
 adminLagoonFeatureFlag:
   # Set the memory resource limit for containers deployed by Lagoon.
   containerMemoryLimit: 16Gi
