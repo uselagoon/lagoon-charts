@@ -19,11 +19,11 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.66.0
+version: 0.67.0
 
 dependencies:
 - name: lagoon-build-deploy
-  version: ~0.16.0
+  version: ~0.17.0
   repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-build-deploy.enabled
 - name: dioscuri
@@ -49,10 +49,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Updated NATS sub-chart to 0.18.2
-    - kind: changed
-      description: Updated lagoon-build-deploy sub-chart to 0.16.0
-    - kind: changed
-      description: Updated lagoon-insights-remote sub-chart to 0.2.1
-    - kind: changed
-      description: Updated docker-host service image to 3.1.0
+      description: Bumped lagoon-build-deploy to v0.17.0.
