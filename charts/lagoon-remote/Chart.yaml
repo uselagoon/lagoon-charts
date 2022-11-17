@@ -34,10 +34,10 @@ dependencies:
   version: ~0.3.0
   repository: https://amazeeio.github.io/charts/
   condition: dbaas-operator.enabled
-- name: lagoon-insights-remote
-  version: ~0.2.0
-  repository: https://uselagoon.github.io/lagoon-charts/
-  condition: lagoon-insights-remote.enabled
+# - name: lagoon-insights-remote
+#   version: ~0.2.0
+#   repository: https://uselagoon.github.io/lagoon-charts/
+#   condition: lagoon-insights-remote.enabled
 - name: nats
   version: ~0.18.0
   repository: https://nats-io.github.io/k8s/helm/charts/

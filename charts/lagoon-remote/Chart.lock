@@ -8,9 +8,9 @@ dependencies:
 - name: dbaas-operator
   repository: https://amazeeio.github.io/charts/
   version: 0.3.0
-- name: lagoon-insights-remote
-  repository: https://uselagoon.github.io/lagoon-charts/
-  version: 0.2.1
+# - name: lagoon-insights-remote
+#   repository: https://uselagoon.github.io/lagoon-charts/
+#   version: 0.2.1
 - name: nats
   repository: https://nats-io.github.io/k8s/helm/charts/
   version: 0.18.2

@@ -19,11 +19,14 @@ imageTag: ""
 dbaas-operator:
   enabled: true
 
-lagoon-insights-remote:
-  enabled: false
+insightsRemote:
+  enabled: true
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
   rabbitMQHostname: lagoon-core-broker
+  # rabbitMQHostname: "messagebroker"
+  # rabbitMQPassword: "password"
+  # rabbitMQUsername: "user"
 
 mxoutHost: mxout1.example.com
 
