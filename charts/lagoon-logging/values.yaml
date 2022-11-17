@@ -257,6 +257,9 @@ fluentbitTolerations:
 - effect: NoSchedule
   key: lagoon.sh/lb
   operator: Exists
+- effect: NoSchedule
+  key: lagoon.sh/spot
+  operator: Exists
 
 # This chart assumes the container runtime is containerd, which puts the log
 # message in the `message` field of the log record.
