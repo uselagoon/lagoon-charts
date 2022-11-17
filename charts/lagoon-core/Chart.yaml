@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.17.0
+version: 1.18.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -40,9 +40,9 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: removed
-      description: controller-handler has been removed, it's functions are now in actions-handler
-    - kind: removed
-      description: storage-calculator is now handled in lagoon-remote
     - kind: added
-      description: Support lagoon-core-api init container to migrate/populate database
+      description: Add support for experimental ssh-token service.
+    - kind: changed
+      description: Allow disabling the ssh and auth-server services.
+    - kind: changed
+      description: Update ssh-portal-api to v0.26.0.
