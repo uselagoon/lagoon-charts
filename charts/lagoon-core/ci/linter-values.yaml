@@ -107,6 +107,7 @@ drushAlias:
     repository: uselagoon/drush-alias
 
 ssh:
+  enabled: false
   replicaCount: 1
   image:
     repository: uselagoon/ssh
