@@ -587,13 +587,6 @@ Create a default fully qualified app name for the nats subchart.
 
 
 {{/*
-Create the name of the service account to use for ssh-portal-api.
-*/}}
-{{- define "lagoon-core.sshPortalAPI.serviceAccountName" -}}
-{{- default (include "lagoon-core.sshPortalAPI.fullname" .) .Values.sshPortalAPI.serviceAccount.name }}
-{{- end }}
-
-{{/*
 Create a default fully qualified app name for ssh-portal-api.
 */}}
 {{- define "lagoon-core.sshPortalAPI.fullname" -}}
