@@ -1,0 +1,107 @@
+{{- if .Values.sshToken.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.sshToken.fullname" . }}
+  labels:
+    {{- include "lagoon-core.sshToken.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.sshToken.autoscaling.enabled }}
+  replicas: {{ .Values.sshToken.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.sshToken.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
+        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+    {{- with .Values.sshToken.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.sshToken.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml (coalesce .Values.sshToken.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      containers:
+      - name: ssh-token
+        securityContext:
+          {{- toYaml .Values.sshToken.securityContext | nindent 10 }}
+        image: "{{ .Values.sshToken.image.repository }}:{{ coalesce .Values.sshToken.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.sshToken.image.pullPolicy }}
+        command:
+        - "/ssh-token"
+        env:
+        {{- if .Values.sshToken.debug }}
+        - name: DEBUG
+          value: "true"
+        {{- end }}
+        - name: KEYCLOAK_BASE_URL
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/
+        - name: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_AUTH_SERVER_CLIENT_SECRET
+        - name: KEYCLOAK_SERVICE_API_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_SERVICE_API_CLIENT_SECRET
+        - name: API_DB_ADDRESS
+          value: {{ include "lagoon-core.apiDB.fullname" . }}
+        - name: API_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_PASSWORD
+        envFrom:
+        - secretRef:
+            name: {{ include "lagoon-core.sshToken.fullname" . }}
+      {{- range $key, $val := .Values.sshToken.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
+        ports:
+        - name: metrics
+          containerPort: 9948
+          protocol: TCP
+        - name: sshserver
+          containerPort: 2222
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.sshToken.resources | nindent 10 }}
+      {{- with .Values.sshToken.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.name" . }}
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.sshToken.fullname" . }}
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- with .Values.sshToken.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.sshToken.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

@@ -1,0 +1,28 @@
+{{- if and .Values.sshToken.enabled .Values.sshToken.autoscaling.enabled -}}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.sshToken.fullname" . }}
+  labels:
+    {{- include "lagoon-core.sshToken.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.sshToken.fullname" . }}
+  minReplicas: {{ .Values.sshToken.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.sshToken.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.sshToken.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.sshToken.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.sshToken.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.sshToken.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+{{- end }}
