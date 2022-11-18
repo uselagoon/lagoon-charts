@@ -623,6 +623,7 @@ drushAlias:
     # targetMemoryUtilizationPercentage: 80
 
 ssh:
+  enabled: true
   replicaCount: 2
   image:
     repository: uselagoon/ssh

@@ -1,4 +1,4 @@
-{{- if .Values.ssh.autoscaling.enabled -}}
+{{- if and .Values.ssh.enabled .Values.ssh.autoscaling.enabled -}}
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
