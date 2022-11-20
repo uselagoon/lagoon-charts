@@ -3296,6 +3296,32 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-insights-remote-0.1.0/lagoon-insights-remote-0.1.0.tgz
     version: 0.1.0
   lagoon-logging:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Update logs-dispatcher image to v3.1.0
+    apiVersion: v2
+    created: "2022-11-20T22:35:53.193795685Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.17.0
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 52c7832e501f5d064e31796c8cd9635be79f1dec31e5917f446dd18634730bd2
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.71.0/lagoon-logging-0.71.0.tgz
+    version: 0.71.0
   - apiVersion: v2
     created: "2022-11-17T00:19:49.660316429Z"
     dependencies:
@@ -10119,4 +10145,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-18T02:58:59.398559789Z"
+generated: "2022-11-20T22:35:53.194796994Z"
