@@ -32,7 +32,7 @@ spec:
         - name: insights-remote
           securityContext:
             {{- toYaml .Values.insightsRemote.securityContext | nindent 12 }}
-          image: "{{ .Values.insightsRemote.image.repository }}:{{ .Values.insightsRemote.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.insightsRemote.image.repository }}:{{ coalesce .Values.insightsRemote.image.tag .Values.imageTag "latest" }}"
           imagePullPolicy: {{ .Values.insightsRemote.image.pullPolicy }}
           env:
             {{- if .Values.insightsRemote.burnAfterReading }}

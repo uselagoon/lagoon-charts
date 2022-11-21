@@ -196,6 +196,7 @@ dbaasHTTPEndpoint: ""
   # burnAfterReading: false
 
 insightsRemote:
+  enabled: false
   rabbitMQHostname: ""
   rabbitMQPassword: ""
   rabbitMQUsername: ""
@@ -208,7 +209,7 @@ insightsRemote:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "v0.0.4"
 
   imagePullSecrets: []
   nameOverride: ""
