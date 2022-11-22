@@ -4,6 +4,9 @@
 global:
   # set to true to enable openshift support
   openshift: false
+  rabbitMQUsername: ""
+  rabbitMQPassword: ""
+  rabbitMQHostname: ""
 
 imagePullSecrets: []
 
@@ -161,9 +164,6 @@ lagoon-build-deploy:
   enabled: false
   # these values are used by the lagoon-build-deploy controller and do not have
   # sensible defaults.
-  # rabbitMQUsername:
-  # rabbitMQPassword:
-  # rabbitMQHostname:
   # lagoonTargetName:
   # taskSSHHost: ""
   # taskSSHPort: ""
@@ -197,9 +197,6 @@ dbaasHTTPEndpoint: ""
 
 insightsRemote:
   enabled: false
-  rabbitMQHostname: ""
-  rabbitMQPassword: ""
-  rabbitMQUsername: ""
   # sets insights configMaps to be removed after being processed
   burnAfterReading: true
 
@@ -345,9 +342,6 @@ storageCalculator:
     # If not set and create is true, a name is generated using the fullname
     # template
     name:
-  rabbitMQHostname: ""
-  rabbitMQPassword: ""
-  rabbitMQUsername: ""
 
   image:
     repository: uselagoon/remote-calculator

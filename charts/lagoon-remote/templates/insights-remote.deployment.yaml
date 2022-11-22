@@ -1,4 +1,7 @@
 {{- if .Values.insightsRemote.enabled -}}
+
+{{- $rabbitMQHostname := coalesce .Values.global.rabbitMQHostname .Values.insightsRemote.rabbitMQHostname }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,7 +43,7 @@ spec:
               value: "TRUE"
             {{- end }}
             - name: RABBITMQ_ADDRESS
-              value: {{ required "A valid .Values.insightsRemote.rabbitMQHostname required!" .Values.insightsRemote.rabbitMQHostname | quote }}
+              value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
             - name: RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:

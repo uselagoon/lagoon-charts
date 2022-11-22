@@ -1,4 +1,7 @@
 {{- if .Values.storageCalculator.enabled -}}
+
+{{- $rabbitMQHostname := coalesce .Values.global.rabbitMQHostname .Values.storageCalculator.rabbitMQHostname }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,7 +53,7 @@ spec:
           value: {{ . | quote }}
         {{- end }}
         - name: RABBITMQ_HOSTNAME
-          value: {{ required "A valid .Values.storageCalculator.rabbitMQHostname required!" .Values.storageCalculator.rabbitMQHostname | quote }}
+          value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:

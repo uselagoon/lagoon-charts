@@ -1,8 +1,10 @@
-lagoon-build-deploy:
-  enabled: true
+global:
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
   rabbitMQHostname: lagoon-core-broker
+
+lagoon-build-deploy:
+  enabled: true
   lagoonTargetName: ci-local-control-k8s
   taskSSHHost: lagoon-core-ssh.lagoon.svc
   taskSSHPort: 2020
@@ -21,12 +23,6 @@ dbaas-operator:
 
 insightsRemote:
   enabled: true
-  rabbitMQUsername: lagoon
-  rabbitMQPassword: ci
-  rabbitMQHostname: lagoon-core-broker
-  # rabbitMQHostname: "messagebroker"
-  # rabbitMQPassword: "password"
-  # rabbitMQUsername: "user"
 
 mxoutHost: mxout1.example.com
 
@@ -98,6 +94,3 @@ sshPortal:
 
 storageCalculator:
   enabled: true
-  rabbitMQUsername: lagoon
-  rabbitMQPassword: ci
-  rabbitMQHostname: lagoon-core-broker
