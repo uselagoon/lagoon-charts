@@ -3211,6 +3211,24 @@ entries:
   lagoon-insights-remote:
   - annotations:
       artifacthub.io/changes: |
+        - kind: deprecated
+          description: This chart has been deprecated
+    apiVersion: v2
+    appVersion: v0.0.3
+    created: "2022-11-22T22:56:50.605580768Z"
+    deprecated: true
+    description: DEPRECATED A Helm chart for Lagoon remote insights
+    digest: 713c572ea33ff2db0bdf7c91d0ba4ff0acb46547cc6bd73cf1a8dd72985a2802
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    name: lagoon-insights-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-insights-remote-0.2.2/lagoon-insights-remote-0.2.2.tgz
+    version: 0.2.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Added README.md to explain purpose
     apiVersion: v2
@@ -10145,4 +10163,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-20T22:35:53.194796994Z"
+generated: "2022-11-22T22:56:50.606434763Z"
