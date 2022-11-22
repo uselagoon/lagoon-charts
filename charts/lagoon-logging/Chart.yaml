@@ -19,10 +19,18 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.69.0
+version: 0.71.0
 
 dependencies:
 - name: logging-operator
   repository: https://kubernetes-charts.banzaicloud.com
   version: ~3.17.0
   condition: logging-operator.enabled
+
+# This section is used to collect a changelog for artifacthub.io
+# It should be started afresh for each release
+# Valid supported kinds are added, changed, deprecated, removed, fixed and security
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: Update logs-dispatcher image to v3.1.0
