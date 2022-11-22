@@ -9,6 +9,10 @@ lagoon-build-deploy:
   taskSSHHost: lagoon-core-ssh.lagoon.svc
   taskSSHPort: 2020
   taskAPIHost: http://lagoon-core-api.lagoon.svc:80
+  # remove on next release
+  rabbitMQUsername: lagoon
+  rabbitMQPassword: ci
+  rabbitMQHostname: lagoon-core-broker
 
 dockerHost:
   image:

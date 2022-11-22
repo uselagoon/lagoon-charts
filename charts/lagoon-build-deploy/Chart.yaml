@@ -24,4 +24,3 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: Convert to Global values
-      
