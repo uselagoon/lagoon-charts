@@ -6175,6 +6175,46 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Updated remote-calculator to v0.2.3
+    apiVersion: v2
+    created: "2022-11-23T07:12:03.222290171Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.18.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.4.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: A Helm chart to run a lagoon-remote
+    digest: f4474c16729f14987ad1006b9d8941d931f6c77ad5f390e1b80707647f5ea664
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.69.1/lagoon-remote-0.69.1.tgz
+    version: 0.69.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Converted to Global variables.
         - kind: added
           description: Included Insights Remote instead of subchart.
@@ -10230,4 +10270,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-23T05:25:20.940511921Z"
+generated: "2022-11-23T07:12:03.223490905Z"
