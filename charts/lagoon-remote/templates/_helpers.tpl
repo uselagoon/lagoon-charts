@@ -189,3 +189,40 @@ app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-remote.sshPortal.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+
+
+{{/*
+Create the name of the service account to use for insights-remote
+*/}}
+{{- define "lagoon-remote.insightsRemote.serviceAccountName" -}}
+{{- default (include "lagoon-remote.insightsRemote.fullname" .) .Values.insightsRemote.serviceAccount.name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for insights-remote.
+*/}}
+{{- define "lagoon-remote.insightsRemote.fullname" -}}
+{{- include "lagoon-remote.fullname" . }}-insights-remote
+{{- end }}
+
+{{/*
+Common labels insights-remote
+*/}}
+{{- define "lagoon-remote.insightsRemote.labels" -}}
+helm.sh/chart: {{ include "lagoon-remote.chart" . }}
+{{ include "lagoon-remote.insightsRemote.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels insightsRemote
+*/}}
+{{- define "lagoon-remote.insightsRemote.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-remote.insightsRemote.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
