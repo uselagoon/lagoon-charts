@@ -4,6 +4,31 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Convert to Global values
+    apiVersion: v2
+    appVersion: v0.7.0
+    created: "2022-11-23T05:25:20.767549404Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: c1f5a204fddc670a48349fed9729b64ad29f75686e8badf5e1ce219c0d0bf607
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.18.0/lagoon-build-deploy-0.18.0.tgz
+    version: 0.18.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Bumped remote-controller to v0.7.0.
         - kind: added
           description: Configuration items for build and task pod timeouts
@@ -6150,6 +6175,48 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Converted to Global variables.
+        - kind: added
+          description: Included Insights Remote instead of subchart.
+    apiVersion: v2
+    created: "2022-11-23T05:25:20.93947373Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.17.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.4.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 9f68a499fe1d677d30710f3d387d79d88ea7c2b68f867a85c055b89950a3d35d
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.69.0/lagoon-remote-0.69.0.tgz
+    version: 0.69.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Update ssh-portal to latest version.
     apiVersion: v2
     created: "2022-11-18T02:58:59.397318901Z"
@@ -10163,4 +10230,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-22T22:56:50.606434763Z"
+generated: "2022-11-23T05:25:20.940511921Z"
