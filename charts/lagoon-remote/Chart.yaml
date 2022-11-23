@@ -45,4 +45,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Updated lagoon-build-deploy sub-chart to v0.18.0
+      description: Updated remote-calculator to v0.2.3
