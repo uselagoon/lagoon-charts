@@ -49,4 +49,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Update storage-calculator to version 0.2.2
+      description: Update storage-calculator to version 0.2.3
