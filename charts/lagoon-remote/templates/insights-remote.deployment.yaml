@@ -1,0 +1,71 @@
+{{- if .Values.insightsRemote.enabled -}}
+
+{{- $rabbitMQHostname := coalesce .Values.global.rabbitMQHostname .Values.insightsRemote.rabbitMQHostname }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.insightsRemote.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.insightsRemote.autoscaling.enabled }}
+  replicas: {{ .Values.insightsRemote.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-remote.insightsRemote.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.insightsRemote.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "lagoon-remote.insightsRemote.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.insightsRemote.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "lagoon-remote.insightsRemote.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.insightsRemote.podSecurityContext | nindent 8 }}
+      containers:
+        - name: insights-remote
+          securityContext:
+            {{- toYaml .Values.insightsRemote.securityContext | nindent 12 }}
+          image: "{{ .Values.insightsRemote.image.repository }}:{{ coalesce .Values.insightsRemote.image.tag .Values.imageTag "latest" }}"
+          imagePullPolicy: {{ .Values.insightsRemote.image.pullPolicy }}
+          env:
+            {{- if .Values.insightsRemote.burnAfterReading }}
+            - name: BURN_AFTER_READING
+              value: "TRUE"
+            {{- end }}
+            - name: RABBITMQ_ADDRESS
+              value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}-rabbitmqsecret
+                  key: password
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}-rabbitmqsecret
+                  key: username
+          resources:
+            {{- toYaml .Values.insightsRemote.resources | nindent 12 }}
+      {{- with .Values.insightsRemote.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.insightsRemote.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.insightsRemote.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

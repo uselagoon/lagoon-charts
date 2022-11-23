@@ -4,6 +4,9 @@
 global:
   # set to true to enable openshift support
   openshift: false
+  rabbitMQUsername: ""
+  rabbitMQPassword: ""
+  rabbitMQHostname: ""
 
 imagePullSecrets: []
 
@@ -161,9 +164,6 @@ lagoon-build-deploy:
   enabled: false
   # these values are used by the lagoon-build-deploy controller and do not have
   # sensible defaults.
-  # rabbitMQUsername:
-  # rabbitMQPassword:
-  # rabbitMQHostname:
   # lagoonTargetName:
   # taskSSHHost: ""
   # taskSSHPort: ""
@@ -191,9 +191,91 @@ dbaas-operator:
 # setting this will always override whatever `dbaas-operator` would set, useful if you want to target a different endpoint
 dbaasHTTPEndpoint: ""
 
-lagoon-insights-remote:
-  enabled: false
+# lagoon-insights-remote:
+#   enabled: false
   # burnAfterReading: false
+
+insightsRemote:
+  enabled: false
+  # sets insights configMaps to be removed after being processed
+  burnAfterReading: true
+
+  replicaCount: 1
+
+  image:
+    repository: uselagoon/insights-remote
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.0.4"
+
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+  # service:
+  #   type: ClusterIP
+  #   port: 80
+  # ingress:
+  #   enabled: false
+  #   className: ""
+  #   annotations: {}
+  #     # kubernetes.io/ingress.class: nginx
+  #     # kubernetes.io/tls-acme: "true"
+  #   hosts:
+  #     - host: chart-example.local
+  #       paths:
+  #         - path: /
+  #           pathType: ImplementationSpecific
+  #   tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
 
 # the nats chart is a subchart which is configured for use by lagoon-remote
 nats:
@@ -260,12 +342,9 @@ storageCalculator:
     # If not set and create is true, a name is generated using the fullname
     # template
     name:
-  rabbitMQHostname: ""
-  rabbitMQPassword: ""
-  rabbitMQUsername: ""
 
   image:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.2.1
+    tag: v0.2.3

@@ -1,4 +1,5 @@
 # the following values are requried and have no sensible default
+global: {}
 
 lagoonTargetName: ""
 rabbitMQHostname: ""

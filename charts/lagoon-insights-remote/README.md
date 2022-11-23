@@ -1,5 +1,3 @@
-# Lagoon Insights Remote
+# DEPRECATED Lagoon Insights Remote
 
-This chart is currently consumed as a sub-chart of Lagoon Remote, but the service will instead be added as an optional in a coming release.
-
-Only install this chart as a sub-chart of Lagoon-Remote, it serves no functionality without it, and will be deprecated once the service is included.
+This chart was originally consumed as a sub-chart of Lagoon Remote, but the service has instead been added as an optional service in a coming release.
