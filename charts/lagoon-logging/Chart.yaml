@@ -33,4 +33,6 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Add integration test suite and bump logs-dispatcher to v3.2.0.
+      description: Bump logs-dispatcher to v3.2.0 and use dots to read lagoon.sh labels
+    - kind: added
+      description: Add integration test suite
