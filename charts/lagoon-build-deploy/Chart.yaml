@@ -16,11 +16,11 @@ kubeVersion: ">= 1.19.0-0"
 
 type: application
 
-version: 0.18.0
+version: 0.18.1
 
-appVersion: v0.7.0
+appVersion: v0.7.2
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Convert to Global values
+      description: bump remote-controller to v0.7.2
