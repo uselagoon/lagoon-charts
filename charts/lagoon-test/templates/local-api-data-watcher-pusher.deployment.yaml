@@ -49,16 +49,13 @@ spec:
               key: JWTSECRET
         - name: TOKEN
           value: {{ required "A valid .Values.token required!" .Values.token | quote }}
-        readinessProbe:
+        startupProbe:
           exec:
             command:
-            - /bin/sh
-            - -c
-            # this container uses wget to inject test fixtures into the lagoon api.
-            # once wget stops running, it's good to go.
-            - "for i in $(seq 4); do pgrep wget && exit 1 || sleep 1; done"
-          initialDelaySeconds: 32
-          timeoutSeconds: 8
+            - test
+            - -f
+            - /tmp/api-data-pushed
+          failureThreshold: 90
         resources:
           {{- toYaml .Values.localAPIDataWatcherPusher.resources | nindent 10 }}
       {{- with .Values.localAPIDataWatcherPusher.nodeSelector }}
