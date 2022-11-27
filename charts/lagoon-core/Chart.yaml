@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.15.1
+version: 1.16.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.10.0
+appVersion: v2.11.0
 
 dependencies:
 - name: nats
@@ -40,5 +40,9 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: Updated nats to v0.18.3
+    - kind: removed
+      description: controller-handler has been removed, it's functions are now in actions-handler
+    - kind: removed
+      description: storage-calculator is now handled in lagoon-remote
+    - kind: added
+      description: Support lagoon-core-api init container to migrate/populate database

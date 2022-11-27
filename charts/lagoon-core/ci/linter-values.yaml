@@ -44,6 +44,7 @@ apiRedis:
   image:
     repository: uselagoon/api-redis
 
+# TODO - update repo/tag before v2.11 release
 actionsHandler:
   replicaCount: 1
   image:
@@ -95,15 +96,10 @@ insightsHandler:
     repository: uselagoon/insights-handler
     tag: main
 
-storageCalculator:
-  image:
-    repository: uselagoon/storage-calculator
-
 logs2notifications:
   replicaCount: 1
   image:
-    repository: testlagoon/logs2notifications
-    tag: main
+    repository: uselagoon/logs2notifications
 
 drushAlias:
   replicaCount: 1
@@ -121,11 +117,6 @@ sshPortalAPI:
   debug: true
   serviceMonitor:
     enabled: false
-
-controllerhandler:
-  replicaCount: 1
-  image:
-    repository: uselagoon/controllerhandler
 
 imageTag: ""
 
