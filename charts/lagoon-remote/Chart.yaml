@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.69.2
+version: 0.70.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -45,6 +45,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Updated lagoon-build-deploy to v0.18.1
-    - kind: changed
-      description: Updated nats to v0.18.3
+      description: Update ssh-portal to v0.27.0.
