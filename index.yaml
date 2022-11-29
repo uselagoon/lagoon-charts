@@ -3429,6 +3429,32 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Update logging-operator dependency to v3.17.10
+    apiVersion: v2
+    created: "2022-11-29T06:13:09.872668316Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.17.0
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 9c04e33e7e3ed15b4d26d292b422dd79a181761a750dfb2840291ee294d0eafe
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.73.0/lagoon-logging-0.73.0.tgz
+    version: 0.73.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Bump logs-dispatcher to v3.2.0 and use dots to read lagoon.sh labels
         - kind: added
           description: Add integration test suite
@@ -10427,4 +10453,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-29T06:00:15.0088502Z"
+generated: "2022-11-29T06:13:09.873877415Z"
