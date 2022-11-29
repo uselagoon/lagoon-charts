@@ -13,26 +13,24 @@ jobs:
         - active-standby-kubernetes
         - api
         - deploytarget
-        - features-variables
         - features-kubernetes
         - features-kubernetes-2
-        - tasks
-        - dbaas
+        - features-variables
+        - services
         - ssh-portal
+        - tasks
         ## Re-enable any of these below tests in your branch for specific testing
-        ## - drupal-php74
-        ## - drupal-php80
-        ## - drupal-postgres
+        ## - bitbucket
+        ## - bulk-deployment
         ## - drush
+        ## - generic
+        ## - github
+        ## - gitlab
         ## - image-cache
-        ## - node-mongodb
         ## - nginx
         ## - node
         ## - python
-        ## - elasticsearch
-        ## - github
-        ## - gitlab
-        ## - bitbucket
+        ## - workflows
 
     steps:
     # Continue after getting a shell via: `touch continue`
