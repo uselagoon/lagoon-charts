@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.71.0
+version: 0.72.0
 
 dependencies:
 - name: logging-operator
@@ -33,4 +33,6 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Update logs-dispatcher image to v3.1.0
+      description: Bump logs-dispatcher to v3.2.0 and use dots to read lagoon.sh labels
+    - kind: added
+      description: Add integration test suite

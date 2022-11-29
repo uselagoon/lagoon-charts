@@ -106,3 +106,6 @@ cdnLogsCollector:
 extraExcludeNamespaces:
 - ci-fake-namespace-0
 - ci-fake-namespace-1
+
+testFixtures:
+  create: true
