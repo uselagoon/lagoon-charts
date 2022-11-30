@@ -105,6 +105,7 @@ drushAlias:
   replicaCount: 1
   image:
     repository: uselagoon/drush-alias
+    tag: pr-12
 
 ssh:
   enabled: false
