@@ -19,7 +19,7 @@ jobs:
         - services
         - ssh-portal
         - tasks
-        ## Re-enable any of these below tests in your branch for specific testing
+        ## Re-enable any of these tests in your branch for specific testing
         ## - bitbucket
         ## - bulk-deployment
         ## - drush
