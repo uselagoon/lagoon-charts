@@ -783,10 +783,10 @@ sshPortalAPI:
 opensearchSync:
   enabled: false
   image:
-    repository: ghcr.io/uselagoon/lagoon-opensearch-sync/lagoon-opensearch-sync
+    repository: ghcr.io/uselagoon/lagoon-opensearch-sync
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.4.0"
+    tag: "v0.4.1"
 
   # debug logging toggle
   debug: false
