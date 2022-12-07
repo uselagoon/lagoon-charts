@@ -1,4 +1,3 @@
-{{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
@@ -619,5 +618,35 @@ Selector labels ssh-portal-api.
 {{- define "lagoon-core.sshPortalAPI.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-core.sshPortalAPI.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for opensearch-sync.
+*/}}
+{{- define "lagoon-core.opensearchSync.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-opensearch-sync
+{{- end }}
+
+{{/*
+Common labels opensearch-sync.
+*/}}
+{{- define "lagoon-core.opensearchSync.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.opensearchSync.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels opensearch-sync.
+*/}}
+{{- define "lagoon-core.opensearchSync.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.opensearchSync.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

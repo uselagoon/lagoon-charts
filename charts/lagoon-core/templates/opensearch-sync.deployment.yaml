@@ -1,0 +1,107 @@
+{{- if .Values.opensearchSync.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.opensearchSync.fullname" . }}
+  labels:
+    {{- include "lagoon-core.opensearchSync.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.opensearchSync.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
+        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
+        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+        checksum/opensearch-sync.secret: {{ include (print $.Template.BasePath "/opensearch-sync.secret.yaml") . | sha256sum }}
+    {{- with .Values.opensearchSync.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.opensearchSync.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml (coalesce .Values.opensearchSync.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      containers:
+      - name: lagoon-opensearch-sync
+        securityContext:
+          {{- toYaml .Values.opensearchSync.securityContext | nindent 10 }}
+        image: "{{ .Values.opensearchSync.image.repository }}:{{ coalesce .Values.opensearchSync.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.opensearchSync.image.pullPolicy }}
+        command:
+        - "/lagoon-opensearch-sync"
+        env:
+        {{- if .Values.opensearchSync.debug }}
+        - name: DEBUG
+          value: "true"
+        {{- end }}
+        - name: API_DB_ADDRESS
+          value: {{ include "lagoon-core.apiDB.fullname" . }}
+        - name: API_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_PASSWORD
+        - name: KEYCLOAK_BASE_URL
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/
+        - name: KEYCLOAK_CLIENT_ID
+          value: lagoon-opensearch-sync
+        - name: KEYCLOAK_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_LAGOON_OPENSEARCH_SYNC_CLIENT_SECRET
+        - name: OPENSEARCH_BASE_URL
+          value: {{ required "A valid .Values.elasticsearchURL required!" .Values.elasticsearchURL | quote }}
+        - name: OPENSEARCH_DASHBOARDS_BASE_URL
+          value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
+        - name: OPENSEARCH_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}
+              key: LOGSDB_ADMIN_PASSWORD
+        - name: OPENSEARCH_CA_CERTIFICATE
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.opensearchSync.fullname" . }}
+              key: OPENSEARCH_CA_CERTIFICATE
+      {{- range $key, $val := .Values.opensearchSync.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
+        resources:
+          {{- toYaml .Values.opensearchSync.resources | nindent 10 }}
+      {{- with .Values.opensearchSync.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.name" . }}
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.opensearchSync.fullname" . }}
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- with .Values.opensearchSync.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.opensearchSync.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

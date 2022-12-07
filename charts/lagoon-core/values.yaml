@@ -779,3 +779,29 @@ sshPortalAPI:
     type: ClusterIP
     ports:
       metrics: 9911
+
+opensearchSync:
+  enabled: false
+  image:
+    repository: ghcr.io/uselagoon/lagoon-opensearch-sync
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.4.1"
+
+  # debug logging toggle
+  debug: false
+
+  # root certificate for the server certificate presented by opensearch
+  opensearchCACertificate: |
+  # -----BEGIN CERTIFICATE-----
+  # ...
+  # -----END CERTIFICATE-----
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
