@@ -877,6 +877,39 @@ entries:
           description: Support lagoon-core-api init container to migrate/populate database
     apiVersion: v2
     appVersion: v2.11.0
+    created: "2022-12-07T04:59:49.805938213Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 713bb14f93760068a640c7d12939e4d2b5c25e28a898e9f79bc1b23302040306
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.17.0/lagoon-core-1.17.0.tgz
+    version: 1.17.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: removed
+          description: controller-handler has been removed, it's functions are now in actions-handler
+        - kind: removed
+          description: storage-calculator is now handled in lagoon-remote
+        - kind: added
+          description: Support lagoon-core-api init container to migrate/populate database
+    apiVersion: v2
+    appVersion: v2.11.0
     created: "2022-11-27T21:20:16.751966462Z"
     dependencies:
     - condition: nats.enabled
@@ -10479,4 +10512,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-11-30T05:44:08.740569626Z"
+generated: "2022-12-07T04:59:49.806968605Z"
