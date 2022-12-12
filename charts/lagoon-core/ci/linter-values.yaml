@@ -108,7 +108,6 @@ drushAlias:
     tag: pr-12
 
 ssh:
-  enabled: false
   replicaCount: 1
   image:
     repository: uselagoon/ssh
