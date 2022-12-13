@@ -11,7 +11,7 @@ kubeVersion: ">= 1.21.0-0"
 
 type: application
 
-version: 0.41.0
+version: 0.42.0
 
 appVersion: v2.10.0
 
@@ -24,4 +24,5 @@ annotations:
       description: added services test and deprecated old tests
     - kind: changed
       description: introduced minimum kubernetes version 1.21
-
+    - kind: changed
+      description: Use new startup probe on api-data-watcher-pusher.
