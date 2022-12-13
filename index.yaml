@@ -869,6 +869,35 @@ entries:
   lagoon-core:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: updated drush-alias to v3.1.0 for ssh-portal support
+    apiVersion: v2
+    appVersion: v2.11.0
+    created: "2022-12-13T01:55:18.023095257Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 082973669f60a42d2dd402105ae9f3388263e840480804fb5297f31550e84121
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.18.0/lagoon-core-1.18.0.tgz
+    version: 1.18.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: removed
           description: controller-handler has been removed, it's functions are now in actions-handler
         - kind: removed
@@ -10512,4 +10541,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-07T04:59:49.806968605Z"
+generated: "2022-12-13T01:55:18.024088949Z"
