@@ -1,13 +1,11 @@
 apiVersion: v2
 name: lagoon-insights-remote
-description: A Helm chart for Lagoon remote insights
+description: DEPRECATED A Helm chart for Lagoon remote insights
 home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
-maintainers:
-- name: bomoko
-  email: blaize.kaye@amazee.io
-  url: https://amazee.io
 kubeVersion: ">= 1.19.0-0"
+# This sub-chart has been deprecated and will be replaced by a service in lagoon-remote
+deprecated: true
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -22,7 +20,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.2.1
+version: 0.2.2
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
@@ -32,5 +30,5 @@ appVersion: v0.0.3
 
 annotations:
   artifacthub.io/changes: |
-    - kind: added
-      description: Added README.md to explain purpose
+    - kind: deprecated
+      description: This chart has been deprecated

@@ -19,7 +19,7 @@ logsDispatcher:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.0.0"
+    tag: "v3.3.0"
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -121,7 +121,7 @@ cdnLogsCollector:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.0.0"
+    tag: "v3.1.0"
 
   podAnnotations: {}
 
@@ -257,6 +257,9 @@ fluentbitTolerations:
 - effect: NoSchedule
   key: lagoon.sh/lb
   operator: Exists
+- effect: NoSchedule
+  key: lagoon.sh/spot
+  operator: Exists
 
 # This chart assumes the container runtime is containerd, which puts the log
 # message in the `message` field of the log record.
@@ -364,3 +367,9 @@ keepIngressNginxController: false
 # Openshift only!
 #
 # fluentbitPrivileged: true
+
+# Install test fixtures into the cluster.
+# This should _only_ be used in a test cluster, because it creates namespaces for testing.
+# Do not set testFixtures.create=true in a production environment.
+testFixtures:
+  create: false

@@ -1,3 +1,5 @@
+{{- $rabbitMQHostname := coalesce (.Values.global).rabbitMQHostname .Values.rabbitMQHostname }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -227,7 +229,7 @@ spec:
         - name: PENDING_MESSAGE_CRON
           value: {{ .Values.pendingMessageCron | quote }}
         - name: RABBITMQ_HOSTNAME
-          value: {{ required "A valid .Values.rabbitMQHostname required!" .Values.rabbitMQHostname | quote }}
+          value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:

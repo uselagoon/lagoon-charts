@@ -99,7 +99,7 @@ insightsHandler:
 logs2notifications:
   replicaCount: 1
   image:
-    repository: testlagoon/logs2notifications
+    repository: uselagoon/logs2notifications
 
 drushAlias:
   replicaCount: 1
@@ -117,6 +117,31 @@ sshPortalAPI:
   debug: true
   serviceMonitor:
     enabled: false
+
+sshToken:
+  enabled: true
+  replicaCount: 1
+  debug: true
+  serviceMonitor:
+    enabled: false
+  service:
+    type: NodePort
+    ports:
+      sshserver: 2223
+  hostKeys:
+    ed25519: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+      QyNTUxOQAAACA/YqlzbdTqR53BHcDhvP0EVepZ66ZIT2HaXSpxdzwhMgAAAIgc+EPKHPhD
+      ygAAAAtzc2gtZWQyNTUxOQAAACA/YqlzbdTqR53BHcDhvP0EVepZ66ZIT2HaXSpxdzwhMg
+      AAAECW61aE011GKLSFBJ82G6oGEOjJSUV3STx16veSvX38kD9iqXNt1OpHncEdwOG8/QRV
+      6lnrpkhPYdpdKnF3PCEyAAAAAAECAwQF
+      -----END OPENSSH PRIVATE KEY-----
+
+controllerhandler:
+  replicaCount: 1
+  image:
+    repository: uselagoon/controllerhandler
 
 imageTag: ""
 
