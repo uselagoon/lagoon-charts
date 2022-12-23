@@ -286,6 +286,10 @@ install-lagoon-build-deploy: install-lagoon-core install-registry
 # The following targets facilitate local development only and aren't used in CI.
 #
 
+.PHONY: install-bulk-storageclass
+install-bulk-storageclass:
+	$(KUBECTL) apply -f ./ci/storageclass/local-path-bulk.yaml
+
 .PHONY: create-kind-cluster
 create-kind-cluster:
 	docker network inspect kind >/dev/null || docker network create kind \
@@ -301,10 +305,6 @@ ifeq ($(USE_CALICO_CNI),true)
 install-calico:
 	$(KUBECTL) apply -f ./ci/calico/tigera-operator.yaml \
 		&& $(KUBECTL) apply -f ./ci/calico/custom-resources.yaml
-
-.PHONY: install-bulk-storageclass
-install-bulk-storageclass:
-	$(KUBECTL) apply -f ./ci/storageclass/local-path-bulk.yaml
 
 # add dependencies to ensure calico gets installed in the correct order
 install-ingress: install-calico
