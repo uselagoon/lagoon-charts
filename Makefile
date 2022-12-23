@@ -303,7 +303,7 @@ install-calico:
 		&& $(KUBECTL) apply -f ./ci/calico/custom-resources.yaml
 
 .PHONY: install-bulk-storageclass
-install-bulk-storageclass
+install-bulk-storageclass:
 	$(KUBECTL) apply -f ./ci/storageclass/local-path-bulk.yaml
 
 # add dependencies to ensure calico gets installed in the correct order
