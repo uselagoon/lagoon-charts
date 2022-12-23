@@ -5,6 +5,10 @@ metadata:
   name: {{ include "lagoon-remote.sshPortal.fullname" . }}
   labels:
     {{- include "lagoon-remote.sshPortal.labels" . | nindent 4 }}
+  {{- with .Values.sshPortal.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.sshPortal.service.type }}
   ports:
