@@ -6436,6 +6436,46 @@ entries:
   lagoon-remote:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Added annotations support to ssh-portal service.
+    apiVersion: v2
+    created: "2022-12-28T04:30:41.016770483Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.18.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.4.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 584b1662cc3ffb6a1ff801e769458dba03289b69d85b7618e61a46f8c6195ea4
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.71.0/lagoon-remote-0.71.0.tgz
+    version: 0.71.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Update ssh-portal to v0.27.0.
     apiVersion: v2
@@ -10635,4 +10675,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-15T23:07:10.010377504Z"
+generated: "2022-12-28T04:30:41.018098412Z"
