@@ -1,0 +1,17 @@
+{{- if and .Values.sshToken.enabled .Values.sshToken.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lagoon-core.sshToken.fullname" . }}
+  labels:
+    {{- include "lagoon-core.sshToken.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  - port: metrics
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.sshToken.selectorLabels" . | nindent 6 }}
+{{- end }}

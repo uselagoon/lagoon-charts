@@ -623,6 +623,7 @@ drushAlias:
     # targetMemoryUtilizationPercentage: 80
 
 ssh:
+  enabled: true
   replicaCount: 2
   image:
     repository: uselagoon/ssh
@@ -744,9 +745,9 @@ sshPortalAPI:
   replicaCount: 2
   image:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.24.0"
+    tag: "v0.27.1"
 
   podAnnotations: {}
 
@@ -805,3 +806,47 @@ opensearchSync:
 
   additionalEnvs:
   #   FOO: Bar
+
+sshToken:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-token
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.27.1"
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  serviceMonitor:
+    enabled: true
+
+  service:
+    type: LoadBalancer
+    ports:
+      sshserver: 22
+
+  metricsService:
+    type: ClusterIP
+    ports:
+      metrics: 9948
+
+  # host keys, PEM encoded
+  hostKeys:
+    ecdsa: ""
+    ed25519: ""
+    rsa: ""

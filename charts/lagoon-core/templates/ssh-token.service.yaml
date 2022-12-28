@@ -1,0 +1,32 @@
+{{- if .Values.sshToken.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.sshToken.fullname" . }}
+  labels:
+    {{- include "lagoon-core.sshToken.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sshToken.service.type }}
+  ports:
+  - port: {{ .Values.sshToken.service.ports.sshserver }}
+    targetPort: sshserver
+    name: sshserver
+  selector:
+    {{- include "lagoon-core.sshToken.selectorLabels" . | nindent 4 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.sshToken.fullname" . }}-metrics
+  labels:
+    metrics-only: "true"
+    {{- include "lagoon-core.sshToken.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sshToken.metricsService.type }}
+  ports:
+  - port: {{ .Values.sshToken.metricsService.ports.metrics }}
+    targetPort: metrics
+    name: metrics
+  selector:
+    {{- include "lagoon-core.sshToken.selectorLabels" . | nindent 4 }}
+{{- end }}
