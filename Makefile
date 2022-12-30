@@ -49,6 +49,7 @@ JQ = jq
 
 .PHONY: fill-test-ci-values
 fill-test-ci-values:
+	$(KUBECTL) -n lagoon create token lagoon-build-deploy --duration 3h
 	export ingressIP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
 		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
 		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
@@ -59,7 +60,9 @@ fill-test-ci-values:
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
-		&& cat $$valueTemplate
+		&& cat $$valueTemplate \
+		&& $(KUBECTL) -n lagoon create token lagoon-build-deploy --duration 99999h | xargs -I ARGS yq -i eval '.token = "ARGS"' $$valueTemplate \
+		&& cat $$valueTemplate \
 
 ifneq ($(SKIP_ALL_DEPS),true)
 ifneq ($(SKIP_INSTALL_REGISTRY),true)
