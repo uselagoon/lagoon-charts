@@ -148,11 +148,13 @@ jobs:
       # run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main
       run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
 
-    - name: Free up some disk space
+    - name: Free up some disk space, then sleep
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: docker system prune -f -a --volumes
+      run: |
+        docker system prune -f -a --volumes
+        sleep 600
 
     - name: Run chart-testing (install) on lagoon-test
       if: |
