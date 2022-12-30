@@ -77,7 +77,7 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       with:
         version: v0.17.0
-        node_image: kindest/node:v1.23.13@sha256:ef453bb7c79f0e3caba88d2067d4196f427794086a7d0df8df4f019d5e336b61
+        node_image: kindest/node:v1.24.7@sha256:577c630ce8e509131eab1aea12c022190978dd2f745aac5eb1fe65c0807eb315
         config: test-suite.kind-config.yaml
 
     - name: Check node IP matches kind configuration
