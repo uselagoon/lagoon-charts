@@ -59,9 +59,7 @@ fill-test-ci-values:
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
-		&& cat $$valueTemplate \
-		&& $(KUBECTL) -n lagoon create token lagoon-build-deploy --duration 99999h | xargs -I ARGS yq -i eval '.token = "ARGS"' $$valueTemplate \
-		&& cat $$valueTemplate \
+		&& cat $$valueTemplate
 
 ifneq ($(SKIP_ALL_DEPS),true)
 ifneq ($(SKIP_INSTALL_REGISTRY),true)
