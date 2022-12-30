@@ -49,8 +49,6 @@ JQ = jq
 
 .PHONY: fill-test-ci-values
 fill-test-ci-values:
-	$(KUBECTL) version
-	$(KUBECTL) -n lagoon create token lagoon-build-deploy --duration 3h
 	export ingressIP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
 		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
 		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
@@ -304,13 +302,15 @@ create-kind-cluster:
 		&& envsubst < test-suite.kind-config.calico.yaml.tpl > test-suite.kind-config.calico.yaml
 ifeq ($(USE_CALICO_CNI),true)
 	kind create cluster --wait=60s --config=test-suite.kind-config.calico.yaml \
-		&& kubectl apply -f ./ci/calico/tigera-operator.yaml \
-		&& kubectl apply -f ./ci/calico/custom-resources.yaml
+		&& $(KUBECTL) cluster-info --context kind-kind \
+		&& $(KUBECTL) use context kind-kind \
+		&& $(KUBECTL) create -f ./ci/calico/tigera-operator.yaml --context kind-kind \
+		&& $(KUBECTL) create -f ./ci/calico/custom-resources.yaml --context kind-kind
 
 .PHONY: install-calico
 install-calico:
-	$(KUBECTL) apply -f ./ci/calico/tigera-operator.yaml \
-		&& $(KUBECTL) apply -f ./ci/calico/custom-resources.yaml
+	$(KUBECTL) create -f ./ci/calico/tigera-operator.yaml \
+		&& $(KUBECTL) create -f ./ci/calico/custom-resources.yaml
 
 # add dependencies to ensure calico gets installed in the correct order
 install-ingress: install-calico

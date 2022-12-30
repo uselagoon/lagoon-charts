@@ -90,16 +90,6 @@ jobs:
         echo Checking for NODE_IP "$NODE_IP"
         grep $NODE_IP test-suite.kind-config.yaml
 
-    - name: Install Helm
-      if: |
-        (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: |
-        cd /tmp
-        curl -fsSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-        chmod 700 get_helm.sh
-        ./get_helm.sh
-
     - name: Add dependency chart repos
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
@@ -131,7 +121,6 @@ jobs:
         tar -xf ./kubens_v0.9.4_linux_x86_64.tar.gz
         sudo cp /tmp/kubens /usr/local/bin/kubens
         sudo ln -s $(which kubectl) /usr/local/bin/kc
-        kubectl version
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: |
@@ -144,8 +133,7 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: |
-        docker system prune -f -a --volumes
+      run: docker system prune -f -a --volumes
 
     - name: Run chart-testing (install) on lagoon-test
       if: |
