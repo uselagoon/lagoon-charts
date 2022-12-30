@@ -49,6 +49,7 @@ JQ = jq
 
 .PHONY: fill-test-ci-values
 fill-test-ci-values:
+	$(KUBECTL) version
 	$(KUBECTL) -n lagoon create token lagoon-build-deploy --duration 3h
 	export ingressIP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}')" \
 		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
