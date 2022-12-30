@@ -58,7 +58,8 @@ fill-test-ci-values:
 		&& export webhookHandler="lagoon-core-webhook-handler" \
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
-		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
+		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
+		&& cat $$valueTemplate
 
 ifneq ($(SKIP_ALL_DEPS),true)
 ifneq ($(SKIP_INSTALL_REGISTRY),true)
