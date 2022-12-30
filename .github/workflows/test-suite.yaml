@@ -80,16 +80,6 @@ jobs:
         node_image: kindest/node:v1.23.13@sha256:ef453bb7c79f0e3caba88d2067d4196f427794086a7d0df8df4f019d5e336b61
         config: test-suite.kind-config.yaml
 
-    - name: Install kubectl
-      if: |
-        (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: |
-        cd /tmp
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-        chmod +x ./kubectl
-        sudo cp ./kubectl /usr/local/bin/
-
     - name: Check node IP matches kind configuration
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
@@ -139,7 +129,8 @@ jobs:
         curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubens_v0.9.4_linux_x86_64.tar.gz
         tar -xf ./kubens_v0.9.4_linux_x86_64.tar.gz
         sudo cp /tmp/kubens /usr/local/bin/kubens
-        sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
+        sudo ln -s $(which kubectl) /usr/local/bin/kc
+        kubectl version
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: |
