@@ -33,11 +33,11 @@ buildDeployImage:
 api:
   replicaCount: 1
   image:
-    repository: testlagoon/api
+    repository: uselagoon/api
 
 apiDB:
   image:
-    repository: testlagoon/api-db
+    repository: uselagoon/api-db
   storageSize: 16Gi
 
 apiRedis:
@@ -48,7 +48,7 @@ apiRedis:
 actionsHandler:
   replicaCount: 1
   image:
-    repository: testlagoon/actions-handler
+    repository: uselagoon/actions-handler
 
 keycloak:
   image:
