@@ -91,7 +91,7 @@ jobs:
       run: ct lint --config ./default.ct.yaml
 
     - name: Create kind cluster
-      uses: helm/kind-action@v1.4.0
+      uses: helm/kind-action@v1.5.0
       with:
         version: v0.17.0
         node_image: kindest/node:v1.23.13@sha256:ef453bb7c79f0e3caba88d2067d4196f427794086a7d0df8df4f019d5e336b61
@@ -101,3 +101,27 @@ jobs:
 
     - name: Run chart-testing (install)
       run: ct install --config ./default.ct.yaml
+
+  artifacthub-changelog:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: "0"
+
+    - name: Install gojq
+      run: |
+        cd /tmp
+        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.10/gojq_v0.12.10_linux_amd64.tar.gz
+        tar -xf ./gojq_v0.12.10_linux_amd64.tar.gz
+        sudo cp /tmp/gojq_v0.12.10_linux_amd64/gojq /usr/local/bin/gojq
+
+    - name: Run artifacthub.io changelog check
+      run: |
+        for chartyaml in $(git diff --name-only origin/main | awk -F/ '/^charts\// { printf "%s/%s/%s\n",$1,$2,"Chart.yaml" }' | sort -u); do
+          if diff <(gojq -r --yaml-input '.annotations."artifacthub.io/changes"' <(git show HEAD:$chartyaml)) <(gojq -r --yaml-input '.annotations."artifacthub.io/changes"' <(git show origin/main:$chartyaml)); then
+            echo "$chartyaml artifacthub.io changelog needs an update!"
+            exit 1
+          fi
+        done

@@ -11,6 +11,14 @@ kubeVersion: ">= 1.19.0-0"
 
 type: application
 
-version: 0.40.0
+version: 0.41.0
 
 appVersion: v2.10.0
+
+# This section is used to collect a changelog for artifacthub.io
+# It should be started afresh for each release
+# Valid supported kinds are added, changed, deprecated, removed, fixed and security
+annotations:
+  artifacthub.io/changes: |
+    - kind: added
+      description: Add ssh-token environment variables to test container.
