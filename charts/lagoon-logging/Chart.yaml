@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.74.0
+version: 0.74.1
 
 dependencies:
 - name: logging-operator
@@ -32,5 +32,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: Update logs-dispatcher to v3.3.0.
+    - kind: fixed
+      description: Handle forward target hosts with dynamic DNS.
