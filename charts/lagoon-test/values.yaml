@@ -135,7 +135,23 @@ tests:
   tests: []
   # This value is required when suiteEnabled is true, and must be set to one or
   # more of the valid test suites:
-  # - features-kubernetes
   # - active-standby-kubernetes
+  # - api
+  # - deploytarget
+  # - features-kubernetes
+  # - features-kubernetes-2
+  # - features-variables
+  # - services
+  # - ssh-portal
+  # - tasks
+  # - bitbucket
+  # - bulk-deployment
+  # - drush
+  # - generic
+  # - github
+  # - gitlab
+  # - image-cache
   # - nginx
-  # - drupal
+  # - node
+  # - python
+  # - workflows

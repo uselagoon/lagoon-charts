@@ -9,7 +9,7 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.19.0-0"
+kubeVersion: ">= 1.21.0-0"
 
 # Application charts are a collection of templates that can be packaged into
 # versioned archives to be deployed.
@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.74.0
+version: 0.75.0
 
 dependencies:
 - name: logging-operator
@@ -33,4 +33,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Update logs-dispatcher to v3.3.0.
+      description: introduced minimum kubernetes version 1.21

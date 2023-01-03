@@ -7,7 +7,7 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.19.0-0"
+kubeVersion: ">= 1.21.0-0"
 
 type: application
 
@@ -21,4 +21,7 @@ appVersion: v2.10.0
 annotations:
   artifacthub.io/changes: |
     - kind: added
-      description: Add ssh-token environment variables to test container.
+      description: added services test and deprecated old tests
+    - kind: changed
+      description: introduced minimum kubernetes version 1.21
+
