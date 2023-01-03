@@ -3552,6 +3552,32 @@ entries:
   lagoon-logging:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Handle forward target hosts with dynamic DNS.
+    apiVersion: v2
+    created: "2023-01-03T15:11:56.735919363Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.17.0
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 07d614b93bdecab46d728558d7a87f2740d3167fe270b050c0e876e4d86bf58c
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.74.1/lagoon-logging-0.74.1.tgz
+    version: 0.74.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Update logs-dispatcher to v3.3.0.
     apiVersion: v2
@@ -10744,4 +10770,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2022-12-28T05:38:17.273852408Z"
+generated: "2023-01-03T15:11:56.736784084Z"
