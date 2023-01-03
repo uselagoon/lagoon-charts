@@ -28,7 +28,7 @@ LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY =
 LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO = enabled
 # Set to `true` to use the Calico CNI plugin instead of the default kindnet. This
 # is useful for testing network policies.
-USE_CALICO_CNI =
+USE_CALICO_CNI = true
 # Set to `true` to assume that `make install-registry` has been run manually.
 # This avoids running install-registry twice in uselagoon/lagoon CI when
 # invoking fill-test-ci-values.
