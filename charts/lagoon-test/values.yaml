@@ -14,6 +14,8 @@ sshHost: lagoon-core-ssh
 sshPort: 2020
 sshPortalHost: lagoon-remote-ssh-portal
 sshPortalPort: 2222
+sshTokenHost: lagoon-core-ssh-token
+sshTokenPort: 2223
 sshPrivateKey: |-
   -----BEGIN RSA PRIVATE KEY-----
   MIIJKAIBAAKCAgEAxGZZrOV7Islo5p51Moabfd1YB8qbHvQZfJDZJmSU4jNxMf8G
