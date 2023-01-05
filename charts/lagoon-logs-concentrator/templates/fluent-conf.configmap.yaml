@@ -99,8 +99,8 @@ data:
 {{- if not .Values.opensearchTLSVerify }}
       ssl_verify false
 {{- end }}
-{{- if not .Values.verifyESVersionAtStartup }}
-      verify_es_version_at_startup false
+{{- if not .Values.verifyOSVersionAtStartup }}
+      verify_os_version_at_startup false
 {{- end }}
 {{- if .Values.opensearchCACert }}
       ca_file /fluentd/es-tls/ca.crt

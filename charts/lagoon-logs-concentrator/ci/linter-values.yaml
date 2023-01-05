@@ -41,8 +41,8 @@ users:
   password: "securepass"
 - username: "example2"
   password: "securepass"
-# allow fluentd to start without connecting to ES
-verifyESVersionAtStartup: false
+# allow fluentd to start without connecting to Opensearch
+verifyOSVersionAtStartup: false
 serviceMonitor:
   enabled: false
 

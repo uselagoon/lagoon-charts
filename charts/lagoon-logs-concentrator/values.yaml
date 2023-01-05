@@ -66,9 +66,9 @@ tolerations: []
 
 affinity: {}
 
-# this is set to false in CI so that the concentrator will start without ES
+# this is set to false in CI so that the concentrator will start without OS
 # being installed
-verifyESVersionAtStartup: true
+verifyOSVersionAtStartup: true
 # Verification of the certificate presented by the opensearch endpoint can
 # be disabled by setting this option to false, which can be useful for CI and
 # manual testing. Do not disable this in production.
