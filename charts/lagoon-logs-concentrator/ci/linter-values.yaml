@@ -1,7 +1,7 @@
 # values for CI linting and testing
-elasticsearchHost: "logs-db-service.elasticsearch.svc.cluster.local"
-elasticsearchAdminUser: "admin"
-elasticsearchAdminPassword: "securepass"
+opensearchHost: "logs-db-service.opensearch.svc.cluster.local"
+opensearchAdminUser: "admin"
+opensearchAdminPassword: "securepass"
 tls:
   caCert: |-
     -----BEGIN CERTIFICATE-----
