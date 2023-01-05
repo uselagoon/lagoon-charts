@@ -87,7 +87,7 @@ ui:
     tag: main
 
 backupHandler:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: uselagoon/backup-handler
 
