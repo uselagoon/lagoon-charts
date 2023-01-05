@@ -460,7 +460,7 @@ data:
           keepalive true # makes sure the connection is not recreated every second
           keepalive_timeout 10m # reconnect after 10mins in order to handle DNS changes, etc.
           # avoid persistent DNS cache in case the server IP changes
-          expire_dns_cache 21600 # refresh cached DNS every 6 hours
+          expire_dns_cache 3600 # refresh cached DNS every hour
           <server>
             port "#{ENV['LOGS_FORWARD_HOST_PORT']}"
             host "#{ENV['LOGS_FORWARD_HOST']}"
