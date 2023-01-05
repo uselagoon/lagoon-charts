@@ -121,7 +121,7 @@ cdnLogsCollector:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.1.0"
+    tag: "v3.3.0"
 
   podAnnotations: {}
 
