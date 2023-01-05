@@ -87,9 +87,11 @@ ui:
     tag: main
 
 backupHandler:
-  replicaCount: 2
+  replicaCount: 1
   image:
     repository: uselagoon/backup-handler
+  autoscaling:
+    enabled: true
 
 insightsHandler:
   image:
