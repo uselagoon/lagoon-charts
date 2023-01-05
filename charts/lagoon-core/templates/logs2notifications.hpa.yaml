@@ -1,8 +1,8 @@
 {{- if .Values.logs2notifications.autoscaling.enabled -}}
-apiVersion: autoscaling/v2beta1
+apiVersion: {{ include "lagoon-core.hpa.apiVersion" . }}
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "lagoon-core..fullname" . }}
+  name: {{ include "lagoon-core.logs2notifications.fullname" . }}
   labels:
     {{- include "lagoon-core.logs2notifications.labels" . | nindent 4 }}
 spec:
@@ -13,16 +13,20 @@ spec:
   minReplicas: {{ .Values.logs2notifications.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.logs2notifications.autoscaling.maxReplicas }}
   metrics:
-  {{- if .Values.logs2notifications.autoscaling.targetCPUUtilizationPercentage }}
+  {{- if .Values.sshToken.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: {{ .Values.logs2notifications.autoscaling.targetCPUUtilizationPercentage }}
+        target:
+          averageUtilization: {{ .Values.sshToken.autoscaling.targetCPUUtilizationPercentage }}
+          type: Utilization
   {{- end }}
-  {{- if .Values.logs2notifications.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- if .Values.sshToken.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
-        targetAverageUtilization: {{ .Values.logs2notifications.autoscaling.targetMemoryUtilizationPercentage }}
+        target:
+          averageUtilization: {{ .Values.sshToken.autoscaling.targetMemoryUtilizationPercentage }}
+          type: Utilization
   {{- end }}
 {{- end }}
