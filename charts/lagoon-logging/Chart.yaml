@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.74.1
+version: 0.74.2
 
 dependencies:
 - name: logging-operator
@@ -33,4 +33,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: fixed
-      description: Handle forward target hosts with dynamic DNS.
+      description: Use version v3.3.0 of logs-dispatcher for the cdn logs collector.
