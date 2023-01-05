@@ -3553,6 +3553,32 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: Reduce DNS cache TTL from 6 hours to 1 hour to adapt to DNS changes more quickly.
+    apiVersion: v2
+    created: "2023-01-05T07:12:48.493585593Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.17.0
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 62b9598a47cbc97057703fd98bb592be674a2aa8620db50f768478080a4a57ed
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.74.3/lagoon-logging-0.74.3.tgz
+    version: 0.74.3
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Use version v3.3.0 of logs-dispatcher for the cdn logs collector.
     apiVersion: v2
     created: "2023-01-05T03:05:30.373034561Z"
@@ -10796,4 +10822,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-05T03:05:30.374529026Z"
+generated: "2023-01-05T07:12:48.494633998Z"
