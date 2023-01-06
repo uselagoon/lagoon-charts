@@ -13,20 +13,20 @@ spec:
   minReplicas: {{ .Values.sshPortalAPI.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.sshPortalAPI.autoscaling.maxReplicas }}
   metrics:
-  {{- if .Values.sshToken.autoscaling.targetCPUUtilizationPercentage }}
+  {{- if .Values.sshPortalAPI.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
-          averageUtilization: {{ .Values.sshToken.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.sshPortalAPI.autoscaling.targetCPUUtilizationPercentage }}
           type: Utilization
   {{- end }}
-  {{- if .Values.sshToken.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- if .Values.sshPortalAPI.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
-          averageUtilization: {{ .Values.sshToken.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ .Values.sshPortalAPI.autoscaling.targetMemoryUtilizationPercentage }}
           type: Utilization
   {{- end }}
 {{- end }}

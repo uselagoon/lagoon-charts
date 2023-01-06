@@ -13,20 +13,20 @@ spec:
   minReplicas: {{ .Values.logs2notifications.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.logs2notifications.autoscaling.maxReplicas }}
   metrics:
-  {{- if .Values.sshToken.autoscaling.targetCPUUtilizationPercentage }}
+  {{- if .Values.logs2notifications.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
-          averageUtilization: {{ .Values.sshToken.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.logs2notifications.autoscaling.targetCPUUtilizationPercentage }}
           type: Utilization
   {{- end }}
-  {{- if .Values.sshToken.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- if .Values.logs2notifications.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
-          averageUtilization: {{ .Values.sshToken.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ .Values.logs2notifications.autoscaling.targetMemoryUtilizationPercentage }}
           type: Utilization
   {{- end }}
 {{- end }}
