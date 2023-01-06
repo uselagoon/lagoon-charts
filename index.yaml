@@ -5669,6 +5669,31 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.6.3/lagoon-logging-0.6.3.tgz
     version: 0.6.3
   lagoon-logs-concentrator:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Use version v3.1.0 of logs-concentrator which adds the opensearch fluentd plugin.
+        - kind: changed
+          description: Switch default chart configuration from Elasticsearch to Opensearch.
+        - kind: removed
+          description: Default chart support for Elasticsearch.
+    apiVersion: v2
+    created: "2023-01-06T06:36:58.087595891Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: 9df937e0c00b02b3f849ac19278df0b4d3047ecd831e08d4b93b0ec8c76e6e8c
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.43.0/lagoon-logs-concentrator-0.43.0.tgz
+    version: 0.43.0
   - apiVersion: v2
     created: "2022-10-05T23:25:12.767100364Z"
     description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
@@ -10822,4 +10847,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-05T07:12:48.494633998Z"
+generated: "2023-01-06T06:36:58.088743802Z"
