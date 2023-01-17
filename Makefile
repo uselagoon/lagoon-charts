@@ -300,10 +300,8 @@ create-kind-cluster:
 		&& envsubst < test-suite.kind-config.calico.yaml.tpl > test-suite.kind-config.calico.yaml
 ifeq ($(USE_CALICO_CNI),true)
 	kind create cluster --wait=60s --config=test-suite.kind-config.calico.yaml \
-		&& $(KUBECTL) cluster-info --context kind-kind \
-		&& $(KUBECTL) use context kind-kind \
-		&& $(KUBECTL) create -f ./ci/calico/tigera-operator.yaml --context kind-kind \
-		&& $(KUBECTL) create -f ./ci/calico/custom-resources.yaml --context kind-kind
+		&& $(KUBECTL) create -f ./ci/calico/tigera-operator.yaml --context kind-chart-testing \
+		&& $(KUBECTL) create -f ./ci/calico/custom-resources.yaml --context kind-chart-testing
 
 .PHONY: install-calico
 install-calico:
