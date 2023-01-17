@@ -12,7 +12,7 @@ image:
   repository: uselagoon/logs-concentrator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is "latest".
-  tag: "v3.0.0"
+  tag: "v3.1.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -66,22 +66,22 @@ tolerations: []
 
 affinity: {}
 
-# this is set to false in CI so that the concentrator will start without ES
+# this is set to false in CI so that the concentrator will start without OS
 # being installed
-verifyESVersionAtStartup: true
-# Verification of the certificate presented by the elasticsearch endpoint can
+verifyOSVersionAtStartup: true
+# Verification of the certificate presented by the opensearch endpoint can
 # be disabled by setting this option to false, which can be useful for CI and
 # manual testing. Do not disable this in production.
-elasticsearchTLSVerify: true
+opensearchTLSVerify: true
 
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
 # in the README.
-elasticsearchAdminUser: "admin"
+opensearchAdminUser: "admin"
 
 # Sample data shown below.
-# elasticsearchHost: "logs-db-service.elasticsearch.svc.cluster.local"
-# elasticsearchAdminPassword: "securepass"
+# opensearchHost: "logs-db-service.opensearch.svc.cluster.local"
+# opensearchAdminPassword: "securepass"
 # tls:
 #   caCert: |
 #     -----BEGIN CERTIFICATE-----
@@ -104,14 +104,14 @@ elasticsearchAdminUser: "admin"
 
 # The values below are optional.
 
-# elasticsearchHostPort: "443"  # default 9200
-# elasticsearchScheme: https    # default http
+# opensearchHostPort: "443"  # default 9200
+# opensearchScheme: https    # default http
 # service:
 #   type: LoadBalancer          # default ClusterIP. Set to LoadBalancer to
 #                               # expose the logs-concentrator service
 #                               # publicly.
 #
-# elasticsearchCACert: |        # if elasticsearch is presenting a certificate
+# opensearchCACert: |           # if opensearch is presenting a certificate
 #   -----BEGIN CERTIFICATE----- # signed by a private CA, then define the CA
 #   ...                         # root certificate here.
 #   -----END CERTIFICATE-----

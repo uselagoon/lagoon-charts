@@ -54,20 +54,20 @@ data:
       </metric>
     </filter>
 
-    # send to elasticsearch
+    # send to opensearch
     <match in_forward.**>
-      @type elasticsearch
-      @id out_elasticsearch
-      # be more verbose about elasticsearch problems
+      @type opensearch
+      @id out_opensearch
+      # be more verbose about opensearch problems
       @log_level info
       # ingestion
       target_index_key index_name
       include_timestamp true
       time_key time
       # endpoint
-      host "#{ENV['ELASTICSEARCH_HOST']}"
-      port "#{ENV.fetch('ELASTICSEARCH_HOST_PORT','9200')}"
-      scheme "#{ENV.fetch('ELASTICSEARCH_SCHEME','http')}"
+      host "#{ENV['OPENSEARCH_HOST']}"
+      port "#{ENV.fetch('OPENSEARCH_HOST_PORT','9200')}"
+      scheme "#{ENV.fetch('OPENSEARCH_SCHEME','http')}"
       ssl_min_version TLSv1_2
       ssl_max_version TLSv1_3
       user "#{ENV['LOGSDB_ADMIN_USER']}"
@@ -80,7 +80,7 @@ data:
       log_es_400_reason true
       <buffer tag,index_name>
         @type file
-        path /fluentd/buffer/elasticsearch
+        path /fluentd/buffer/opensearch
         # buffer params (per worker)
         total_limit_size 8GB
         # flush params
@@ -89,20 +89,20 @@ data:
         flush_thread_burst_interval 0     # don't sleep if there are more chunks to be flushed
         retry_max_interval 30s            # limit exponential backoff period
         retry_timeout 12h                 # limit the time spent retrying chunk submission
-        chunk_limit_size 32MB             # chunks cannot be bigger than the max HTTP limit of Elasticsearch (which is 100MB)
+        chunk_limit_size 32MB             # chunks cannot be bigger than the max HTTP limit of Opensearch (which is 100MB)
         overflow_action drop_oldest_chunk # drop chunks once they reach retry limits
       </buffer>
       # silence warnings (these have no effect)
       type_name _doc
       suppress_type_name true
       ssl_version TLSv1_2
-{{- if not .Values.elasticsearchTLSVerify }}
+{{- if not .Values.opensearchTLSVerify }}
       ssl_verify false
 {{- end }}
-{{- if not .Values.verifyESVersionAtStartup }}
-      verify_es_version_at_startup false
+{{- if not .Values.verifyOSVersionAtStartup }}
+      verify_os_version_at_startup false
 {{- end }}
-{{- if .Values.elasticsearchCACert }}
+{{- if .Values.opensearchCACert }}
       ca_file /fluentd/es-tls/ca.crt
 {{- end }}
     </match>
