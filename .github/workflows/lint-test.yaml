@@ -99,11 +99,6 @@ jobs:
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
 
-    - name: Install metrics-server
-      id: metrics-server
-      run: |
-        helm upgrade --install --set args={--kubelet-insecure-tls} metrics-server metrics-server/metrics-server --namespace kube-system
-
     - name: Run chart-testing (install)
       run: ct install --config ./default.ct.yaml
 
