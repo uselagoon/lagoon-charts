@@ -675,10 +675,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Get HorizontalPodAutoscaler API Version
+Get HorizontalPodAutoscaler API Version - can be removed once Kubernetes 1.23 is the minimum
 */}}
 {{- define "lagoon-core.hpa.apiVersion" -}}
-  {{- if and (.Capabilities.APIVersions.Has "autoscaling/v2") (semverCompare ">= 1.23-0" .Capabilities.KubeVersion.Version) -}}
+  {{- if (.Capabilities.APIVersions.Has "autoscaling/v2") -}}
       {{- print "autoscaling/v2" -}}
   {{- else -}}
     {{- print "autoscaling/v2beta2" -}}
