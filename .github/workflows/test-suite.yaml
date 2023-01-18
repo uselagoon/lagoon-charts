@@ -77,18 +77,9 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       with:
         version: v0.17.0
-        node_image: kindest/node:v1.23.13@sha256:ef453bb7c79f0e3caba88d2067d4196f427794086a7d0df8df4f019d5e336b61
+        node_image: kindest/node:v1.24.7@sha256:577c630ce8e509131eab1aea12c022190978dd2f745aac5eb1fe65c0807eb315
         config: test-suite.kind-config.yaml
-
-    - name: Install kubectl
-      if: |
-        (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: |
-        cd /tmp
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-        chmod +x ./kubectl
-        sudo cp ./kubectl /usr/local/bin/
+        kubectl_version: v1.24.7
 
     - name: Check node IP matches kind configuration
       if: |
@@ -98,16 +89,6 @@ jobs:
         NODE_IP="$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')"
         echo Checking for NODE_IP "$NODE_IP"
         grep $NODE_IP test-suite.kind-config.yaml
-
-    - name: Install Helm
-      if: |
-        (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: |
-        cd /tmp
-        curl -fsSLo get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-        chmod 700 get_helm.sh
-        ./get_helm.sh
 
     - name: Add dependency chart repos
       if: |
@@ -139,7 +120,7 @@ jobs:
         curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubens_v0.9.4_linux_x86_64.tar.gz
         tar -xf ./kubens_v0.9.4_linux_x86_64.tar.gz
         sudo cp /tmp/kubens /usr/local/bin/kubens
-        sudo ln -s /usr/local/bin/kubectl /usr/local/bin/kc
+        sudo ln -s $(which kubectl) /usr/local/bin/kc
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: |
