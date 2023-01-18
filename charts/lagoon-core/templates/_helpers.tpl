@@ -679,8 +679,8 @@ Get HorizontalPodAutoscaler API Version - can be removed once Kubernetes 1.23 is
 */}}
 {{- define "lagoon-core.hpa.apiVersion" -}}
   {{- if (.Capabilities.APIVersions.Has "autoscaling/v2") -}}
-    {{- print "autoscaling/v2" -}}
+    autoscaling/v2
   {{- else -}}
-    {{- print "autoscaling/v2beta2" -}}
+    autoscaling/v2beta2
   {{- end -}}
 {{- end -}}
