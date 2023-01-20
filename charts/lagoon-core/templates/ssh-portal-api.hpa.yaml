@@ -1,5 +1,5 @@
 {{- if and .Values.sshPortalAPI.enabled .Values.sshPortalAPI.autoscaling.enabled -}}
-apiVersion: autoscaling/v2beta1
+apiVersion: {{ include "lagoon-core.hpa.apiVersion" . }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "lagoon-core.sshPortalAPI.fullname" . }}
@@ -17,12 +17,16 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: {{ .Values.sshPortalAPI.autoscaling.targetCPUUtilizationPercentage }}
+        target:
+          averageUtilization: {{ .Values.sshPortalAPI.autoscaling.targetCPUUtilizationPercentage }}
+          type: Utilization
   {{- end }}
   {{- if .Values.sshPortalAPI.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
-        targetAverageUtilization: {{ .Values.sshPortalAPI.autoscaling.targetMemoryUtilizationPercentage }}
+        target:
+          averageUtilization: {{ .Values.sshPortalAPI.autoscaling.targetMemoryUtilizationPercentage }}
+          type: Utilization
   {{- end }}
 {{- end }}

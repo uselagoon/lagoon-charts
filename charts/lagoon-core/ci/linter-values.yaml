@@ -90,6 +90,8 @@ backupHandler:
   replicaCount: 1
   image:
     repository: uselagoon/backup-handler
+  autoscaling:
+    enabled: true
 
 insightsHandler:
   image:

@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.43.0
+version: 0.44.0
 
 # This section is used to collect a changelog for artifacthub.io
 # It should be started afresh for each release
@@ -27,8 +27,4 @@ version: 0.43.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Use version v3.1.0 of logs-concentrator which adds the opensearch fluentd plugin.
-    - kind: changed
-      description: Switch default chart configuration from Elasticsearch to Opensearch.
-    - kind: removed
-      description: Default chart support for Elasticsearch.
+      description: configured dynamic apiVersion for HorizontalPodAutoscaler
