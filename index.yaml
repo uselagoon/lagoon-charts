@@ -870,6 +870,35 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: configured dynamic apiVersion for HorizontalPodAutoscaler
+    apiVersion: v2
+    appVersion: v2.11.0
+    created: "2023-01-20T05:33:09.329413387Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 4567dad5e07e6026ebfac48f99f203bc5e3350ace40f1940cde7d71cc1966a7f
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.22.0/lagoon-core-1.22.0.tgz
+    version: 1.22.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Update ssh-portal-api and ssh-token to v0.27.2.
     apiVersion: v2
     appVersion: v2.11.0
@@ -5698,6 +5727,27 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.6.3/lagoon-logging-0.6.3.tgz
     version: 0.6.3
   lagoon-logs-concentrator:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: configured dynamic apiVersion for HorizontalPodAutoscaler
+    apiVersion: v2
+    created: "2023-01-20T05:33:09.513649708Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: 7865fa0b63eec6fe6e61388509f85c8a760b866cedf494c7a896789e22dde10b
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.19.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.44.0/lagoon-logs-concentrator-0.44.0.tgz
+    version: 0.44.0
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
@@ -10916,4 +10966,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-01-11T00:15:26.525917508Z"
+generated: "2023-01-20T05:33:09.514791612Z"
