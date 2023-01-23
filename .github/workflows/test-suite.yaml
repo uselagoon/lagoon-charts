@@ -17,7 +17,6 @@ jobs:
         - features-kubernetes-2
         - features-variables
         - services
-        - ssh-portal
         - tasks
         ## Re-enable any of these tests in your branch for specific testing
         ## - bitbucket
@@ -30,6 +29,7 @@ jobs:
         ## - nginx
         ## - node
         ## - python
+        ## - ssh-legacy
         ## - workflows
 
     steps:

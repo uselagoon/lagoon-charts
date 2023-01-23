@@ -7,9 +7,14 @@ token: "${token}"
 webhookHost: "${webhookHandler}"
 webhookRepoPrefix: "${webhookRepoPrefix}"
 
+# localGit:
+#   image:
+#     repository: ${imageRegistry}/local-git
+
 localGit:
   image:
-    repository: ${imageRegistry}/local-git
+    repository: testlagoon/local-git
+    tag: main
 
 # localAPIDataWatcherPusher:
 #   image:
