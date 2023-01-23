@@ -20,9 +20,15 @@ localAPIDataWatcherPusher:
     repository: testlagoon/local-api-data-watcher-pusher
     tag: main
 
+# tests:
+#   image:
+#     repository: ${imageRegistry}/tests
+#   tests: ${tests}
+
 tests:
   image:
-    repository: ${imageRegistry}/tests
+    repository: testlagoon/tests
+    tag: main
   tests: ${tests}
 
 imageTag: ${imageTag}
