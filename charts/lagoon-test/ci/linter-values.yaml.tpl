@@ -11,9 +11,14 @@ localGit:
   image:
     repository: ${imageRegistry}/local-git
 
+# localAPIDataWatcherPusher:
+#   image:
+#     repository: ${imageRegistry}/local-api-data-watcher-pusher
+
 localAPIDataWatcherPusher:
   image:
-    repository: ${imageRegistry}/local-api-data-watcher-pusher
+    repository: testlagoon/local-api-data-watcher-pusher
+    tag: main
 
 tests:
   image:
