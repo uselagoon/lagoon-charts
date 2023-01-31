@@ -46,3 +46,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: introduced minimum kubernetes version 1.21
+    - kind: changed
+      description: update docker-host image to v3.2.0
