@@ -47,4 +47,4 @@ annotations:
     - kind: changed
       description: introduced minimum kubernetes version 1.21
     - kind: changed
-      description: update docker-host image to v3.2.0
+      description: update docker-host image to v3.3.0
