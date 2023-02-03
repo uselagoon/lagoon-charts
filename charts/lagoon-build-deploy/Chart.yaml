@@ -24,3 +24,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: bump remote-controller to v0.9.0
+    - kind: changed
+      description: remove monitoringUrls from CRDs (require CRDs to be updated, see installation notes)
