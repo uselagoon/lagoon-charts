@@ -16,11 +16,13 @@ kubeVersion: ">= 1.19.0-0"
 
 type: application
 
-version: 0.18.1
+version: 0.19.0
 
-appVersion: v0.7.2
+appVersion: v0.9.0
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: bump remote-controller to v0.7.2
+      description: bump remote-controller to v0.9.0
+    - kind: changed
+      description: remove monitoringUrls from CRDs (require CRDs to be updated, see installation notes)
