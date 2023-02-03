@@ -27,7 +27,7 @@ version: 1.23.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.11.0
+appVersion: v2.12.0
 
 dependencies:
 - name: nats
@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: introduced minimum kubernetes version 1.21
+    - kind: changed
+      description: update Lagoon appVersion to v2.12.0
