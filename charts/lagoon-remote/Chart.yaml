@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.74.0
+version: 0.75.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -45,8 +45,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: introduced minimum kubernetes version 1.21
-    - kind: changed
-      description: update docker-host image to v3.3.0
-    - kind: changed
-      description: update lagoon-build-deploy chart to v0.19.0
+      description: update ssh-portal service to v0.28.0
