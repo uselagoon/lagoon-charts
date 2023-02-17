@@ -84,6 +84,15 @@ podSecurityContext:
 # on the service level, if not set it falls back to chart appVersion.
 imageTag: ""
 
+# This value is false by default, which means that Developers can SSH to
+# Development environments as per the Lagoon documentation
+# (https://docs.lagoon.sh/administering-lagoon/rbac/#developer).
+# Set this to true to:
+# * block Developers from SSH access to Lagoon environments; and
+# * stop Developers from getting a redirect message when trying to SSH into the
+#   ssh-token service.
+# blockDeveloperSSH: false
+
 # the following services are part of the lagoon-core chart
 
 api:
@@ -747,7 +756,7 @@ sshPortalAPI:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.27.2"
+    tag: "v0.28.0"
 
   podAnnotations: {}
 
@@ -814,7 +823,7 @@ sshToken:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-token
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.27.2"
+    tag: "v0.28.0"
 
   podAnnotations: {}
 
