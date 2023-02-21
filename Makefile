@@ -158,7 +158,7 @@ install-minio: install-ingress
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets=lagoon-files \
-		--version=12.1.17 \
+		--version=12.1.7 \
 		minio \
 		bitnami/minio
 
