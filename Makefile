@@ -80,9 +80,10 @@ install-ingress:
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
+		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.3.0 \
+		--version=4.5.2 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -102,7 +103,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.10.1 \
+		--version=1.11.0 \
 		registry \
 		harbor/harbor
 
@@ -116,7 +117,7 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=11.3.4 \
+		--version=11.4.7 \
 		mariadb \
 		bitnami/mariadb
 
@@ -158,7 +159,7 @@ install-minio: install-ingress
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets=lagoon-files \
-		--version=11.10.13 \
+		--version=12.1.7 \
 		minio \
 		bitnami/minio
 
