@@ -19,7 +19,7 @@ spec:
           {{- toYaml .Values.api.securityContext | nindent 10 }}
       terminationGracePeriodSeconds: 120
       containers:
-      - name: api-init
+      - name: api-migratedb
         args:
         - ./node_modules/.bin/knex migrate:list --cwd /app/services/api/database;
           ./node_modules/.bin/knex migrate:latest --cwd /app/services/api/database
