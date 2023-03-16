@@ -16,7 +16,7 @@ spec:
     spec:
       restartPolicy: Never
       securityContext:
-          {{- toYaml .Values.api.securityContext | nindent 10 }}
+          {{- toYaml .Values.api.securityContext | nindent 8 }}
       terminationGracePeriodSeconds: 120
       containers:
       - name: api-migratedb
