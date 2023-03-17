@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "lagoon-core.api.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook": post-install, pre-upgrade
     "helm.sh/hook-weight": "-5"
 spec:
   backoffLimit: 2
