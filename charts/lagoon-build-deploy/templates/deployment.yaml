@@ -226,6 +226,10 @@ spec:
         - name: ADMIN_LAGOON_FEATURE_FLAG_CONTAINER_MEMORY_LIMIT
           value: {{ . | quote}}
         {{- end }}
+        {{- with .Values.adminLagoonFeatureFlag.ephemeralStorageRequests }}
+        - name: ADMIN_LAGOON_FEATURE_FLAG_EPHEMERAL_STORAGE_REQUESTS
+          value: {{ . | quote}}
+        {{- end }}
         {{- with .Values.adminLagoonFeatureFlag.ephemeralStorageLimit }}
         - name: ADMIN_LAGOON_FEATURE_FLAG_EPHEMERAL_STORAGE_LIMIT
           value: {{ . | quote}}
