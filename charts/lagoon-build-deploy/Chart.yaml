@@ -16,11 +16,11 @@ kubeVersion: ">= 1.21.0-0"
 
 type: application
 
-version: 0.20.0
+version: 0.20.1
 
 appVersion: v0.9.0
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: introduced minimum kubernetes version 1.21
+      description: introduced ephemeral storage limit configuration
