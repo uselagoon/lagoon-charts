@@ -26,7 +26,7 @@ jobs:
       run: sudo apt-get -y install python3-wheel
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@v2.3.1
+      uses: helm/chart-testing-action@v2.4.0
 
     - name: Run chart-testing (list-changed)
       id: list-changed
