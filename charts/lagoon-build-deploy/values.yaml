@@ -87,6 +87,15 @@ timeoutForLongRunningTaskPods: 6
 adminLagoonFeatureFlag:
   # Set the memory resource limit for containers deployed by Lagoon.
   containerMemoryLimit: 16Gi
+  # Set the ephemeral storage limit for containers deployed by Lagoon.
+  # Setting just the limit will also set requests to be the same value.
+  # See the kubernetes docs before using these values to ensure you know what they do based on your workloads and nodes allocatable values
+  # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#setting-requests-and-limits-for-local-ephemeral-storage
+  # Specifically how pods with requests are scheduled here https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#how-pods-with-ephemeral-storage-requests-are-scheduled
+  # You need to be aware that setting the limit or requests will impact how your pods are scheduled
+  # You may need to set the requests to be a very low value to maintain your desired pod density for Lagoon deployed environments
+  # ephemeralStorageRequests: 100Mi
+  # ephemeralStorageLimit: 4Gi
 
 # rootlessBuildPods tells the build-deploy controller to create build pods
 # which do not run as root. See https://github.com/amazeeio/lagoon/pull/2481
