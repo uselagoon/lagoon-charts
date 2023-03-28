@@ -19,11 +19,11 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.75.0
+version: 0.76.0
 
 dependencies:
 - name: lagoon-build-deploy
-  version: ~0.19.0
+  version: ~0.21.0
   repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-build-deploy.enabled
 - name: dioscuri
@@ -45,4 +45,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update ssh-portal service to v0.28.0
+      description: update lagoon-build-deploy subchart to 0.21.0
