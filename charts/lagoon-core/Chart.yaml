@@ -27,7 +27,7 @@ version: 1.26.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.14.0
+appVersion: v2.14.1
 
 dependencies:
 - name: nats
@@ -43,4 +43,4 @@ annotations:
     - kind: changed
       description: added a job to handle migrations instead of utilizing the api init container
     - kind: changed
-      description: update Lagoon appVersion to v2.14.0
+      description: update Lagoon appVersion to v2.14.1
