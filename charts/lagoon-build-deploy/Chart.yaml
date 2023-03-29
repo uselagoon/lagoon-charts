@@ -16,13 +16,11 @@ kubeVersion: ">= 1.21.0-0"
 
 type: application
 
-version: 0.21.0
+version: 0.21.1
 
-appVersion: v0.11.0
+appVersion: v0.11.1
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: introduced ephemeral storage limit configuration
-    - kind: changed
-      description: update remote-controller appVersion to v0.11.0
+      description: update remote-controller appVersion to v0.11.1
