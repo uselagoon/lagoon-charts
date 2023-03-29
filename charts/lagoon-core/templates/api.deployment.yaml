@@ -199,39 +199,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      initContainers:
-      - name: api-init
-        args:
-        - ./node_modules/.bin/knex migrate:list --cwd /app/services/api/database;
-          ./node_modules/.bin/knex migrate:latest --cwd /app/services/api/database;
-        command:
-        - /bin/sh
-        - -c
-        securityContext:
-          {{- toYaml .Values.api.securityContext | nindent 10 }}
-        image: "{{ .Values.api.image.repository }}:{{ coalesce .Values.api.image.tag .Values.imageTag .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.api.image.pullPolicy }}
-        env:
-        - name: API_DB_HOST
-          value: {{ include "lagoon-core.apiDB.fullname" . }}
-        - name: API_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.apiDB.fullname" . }}
-              key: API_DB_PASSWORD
-        - name: LAGOON_VERSION
-          value: {{ .Chart.AppVersion | replace "-" "." }}
-      {{- range $key, $val := .Values.api.additionalEnvs }}
-        - name: {{ $key }}
-          value: {{ $val | quote }}
-      {{- end }}
-        resources:
-          {{- toYaml .Values.api.resources | nindent 10 }}
-      {{- with .Values.api.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.api.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}

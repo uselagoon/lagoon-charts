@@ -75,6 +75,12 @@ app.kubernetes.io/component: {{ include "lagoon-core.api.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{/*
+Create a default fully qualified app name for api-migratedb-job.
+*/}}
+{{- define "lagoon-core.apiMigrateDB.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-api-migratedb
+{{- end }}
 
 
 {{/*
