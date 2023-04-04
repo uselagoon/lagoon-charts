@@ -120,9 +120,9 @@ sshPortal:
   replicaCount: 2
   image:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.28.0"
+    tag: "v0.30.0"
 
   service:
     type: LoadBalancer
