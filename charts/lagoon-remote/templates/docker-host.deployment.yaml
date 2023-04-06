@@ -63,11 +63,6 @@ spec:
           value: {{ .Values.dockerHost.repositoryToUpdate | quote }}
         - name: PRUNE_IMAGES_UNTIL
           value: {{ .Values.dockerHost.pruneImagesUntil | quote }}
-        - name: CRONJOBS
-          value: |
-            22 1 * * * /lagoon/cronjob.sh "/prune-images.sh"
-            22 */4 * * * /lagoon/cronjob.sh "/remove-exited.sh"
-            */15 * * * * /lagoon/cronjob.sh "/update-images.sh"
         ports:
         - containerPort: 2375
           protocol: TCP
