@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.27.0
+version: 1.28.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.14.1
+appVersion: v2.14.2
 
 dependencies:
 - name: nats
@@ -40,7 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: reference the Opensearch CA certificate correctly for lagoon-opensearch-sync template
     - kind: changed
-      description: update lagoon-opensearch-sync to v0.5.0
+      description: update Lagoon appVersion to v2.14.2
