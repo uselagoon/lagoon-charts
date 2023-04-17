@@ -56,7 +56,7 @@ spec:
           value: {{ . | quote }}
         {{- end }}
         - name: DOCKER_HOST
-          value: localhost
+          value: tcp://localhost:2375
         - name: REGISTRY
           value: {{ .Values.dockerHost.registry | quote }}
         - name: REPOSITORY_TO_UPDATE
