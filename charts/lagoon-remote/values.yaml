@@ -37,6 +37,14 @@ dockerHost:
 
   pruneImagesUntil: 168h
 
+  danglingFilter: true
+
+  pruneImagesSchedule: '22 1 * * *'
+
+  removeExitedSchedule: '22 */4 * * *'
+
+  updateImagesSchedule: '*/15 * * * *'
+
   replicaCount: 1
 
   ## proxy configuration

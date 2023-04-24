@@ -63,6 +63,14 @@ spec:
           value: {{ .Values.dockerHost.repositoryToUpdate | quote }}
         - name: PRUNE_IMAGES_UNTIL
           value: {{ .Values.dockerHost.pruneImagesUntil | quote }}
+        - name: PRUNE_SCHEDULE
+          value: {{ .Values.dockerHost.pruneImagesSchedule | quote }}
+        - name: REMOVE_EXITED_SCHEDULE
+          value: {{ .Values.dockerHost.removeExitedSchedule | quote }}
+        - name: UPDATE_IMAGES_SCHEDULE
+          value: {{ .Values.dockerHost.updateImagesSchedule | quote }}
+        - name: DANGLING_FILTER
+          value: {{ .Values.dockerHost.danglingFilter | quote }}
         ports:
         - containerPort: 2375
           protocol: TCP
