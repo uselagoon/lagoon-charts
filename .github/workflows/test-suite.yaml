@@ -74,10 +74,10 @@ jobs:
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       with:
-        version: v0.17.0
-        node_image: kindest/node:v1.24.7@sha256:577c630ce8e509131eab1aea12c022190978dd2f745aac5eb1fe65c0807eb315
+        version: v0.18.0
+        node_image: kindest/node:v1.25.8@sha256:00d3f5314cc35327706776e95b2f8e504198ce59ac545d0200a89e69fce10b7f
         config: test-suite.kind-config.yaml
-        kubectl_version: v1.24.7
+        kubectl_version: v1.25.8
 
     - name: Check node IP matches kind configuration
       if: |
@@ -108,9 +108,9 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: |
         cd /tmp
-        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.9/gojq_v0.12.9_linux_amd64.tar.gz
-        tar -xf ./gojq_v0.12.9_linux_amd64.tar.gz
-        sudo cp /tmp/gojq_v0.12.9_linux_amd64/gojq /usr/local/bin/jq
+        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.12/gojq_v0.12.12_linux_amd64.tar.gz
+        tar -xf ./gojq_v0.12.12_linux_amd64.tar.gz
+        sudo cp /tmp/gojq_v0.12.12_linux_amd64/gojq /usr/local/bin/jq
 
     - name: Install kubens and kubectl alias
       run: |
