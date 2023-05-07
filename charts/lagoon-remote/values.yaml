@@ -33,6 +33,8 @@ dockerHost:
 
   registry: registry.lagoon.svc:5000
 
+  registryMirror: ""
+
   repositoryToUpdate: amazeeio|lagoon
 
   pruneImagesUntil: 168h
