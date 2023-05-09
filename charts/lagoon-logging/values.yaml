@@ -368,6 +368,33 @@ keepIngressNginxController: false
 #
 # fluentbitPrivileged: true
 
+# Optional post-processing of router logs.
+#
+# This value allows you to insert a snippet of fluentd configuration into the
+# router logs processing pipeline directly before output. This can be used to
+# perform additional custom parsing of router logs. Please only use
+# <filter>...</filter>, and do not retag records in this field to avoid
+# breaking the log pipeline.
+#
+# This example will:
+# * set is_facet_page to true if the request_query field contains "f[0]".
+# * set is_search_page to true if the request_query field contains "search_api".
+# * set is_search_bot to true if the http_user_agent field is FooBot or BarBot.
+#
+# routerLogsPostProcess: |-
+#   <filter lagoon.*.router.nginx>
+#     @type record_modifier
+#     <record>
+#       is_facet_page ${!record["request_query"]&.match(/f\[0\]/).nil?}
+#     </record>
+#     <record>
+#       is_search_page ${!record["request_query"]&.match(/search_api/).nil?}
+#     </record>
+#     <record>
+#       is_search_bot ${!record["http_user_agent"]&.match(/\A(FooBot|BarBot)\z/).nil?}
+#     </record>
+#   </filter>
+
 # Install test fixtures into the cluster.
 # This should _only_ be used in a test cluster, because it creates namespaces for testing.
 # Do not set testFixtures.create=true in a production environment.
