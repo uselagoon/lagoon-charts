@@ -61,8 +61,11 @@ spec:
           value: {{ .Values.dockerHost.registry | quote }}
         - name: REGISTRY_MIRROR
           value: {{ .Values.dockerHost.registryMirror | quote }}
-        - name: REPOSITORY_TO_UPDATE
-          value: {{ .Values.dockerHost.repositoryToUpdate | quote }}
+          {{- /*
+          Define a regex pattern for specified images to be updated during UPDATE_IMAGES_SCHEDULE
+          */ }}
+        - name: REPOSITORIES_TO_UPDATE
+          value: {{ join "|" .Values.dockerHost.repositoriesToUpdate | quote }}
         - name: PRUNE_IMAGES_UNTIL
           value: {{ .Values.dockerHost.pruneImagesUntil | quote }}
         - name: PRUNE_SCHEDULE
