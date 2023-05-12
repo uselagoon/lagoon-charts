@@ -27,7 +27,7 @@ dockerHost:
     repository: uselagoon/docker-host
     pullPolicy: Always
     # Overrides the image tag whose default is "latest".
-    tag: "v3.3.0"
+    tag: "v3.4.0"
 
   name: docker-host
 
