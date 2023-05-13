@@ -6,4 +6,4 @@ namespace: lagoon
 # release-label is required when specifying namespace:
 # https://github.com/helm/chart-testing/blob/v3.1.1/pkg/config/config.go#L117
 release-label: app.kubernetes.io/instance
-helm-extra-args: --timeout 40m
+helm-extra-args: --timeout 60m
