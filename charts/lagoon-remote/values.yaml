@@ -35,11 +35,11 @@ dockerHost:
 
   registryMirror: ""
 
-  repositoriesToUpdate: 
-                  - 'amazeeio/*:*'
-                  - '*lagoon/*:*'
-
-
+  # Define a regex pattern for specified images to be updated during UPDATE_IMAGES_SCHEDULE
+  repositoriesToUpdate:
+    - "amazeeio/*:*"
+    - "*lagoon/*:*"
+    
   pruneImagesUntil: 168h
 
   danglingFilter: true
