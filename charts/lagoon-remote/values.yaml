@@ -39,7 +39,7 @@ dockerHost:
   repositoriesToUpdate:
     - "amazeeio/*:*"
     - "*lagoon/*:*"
-    
+
   pruneImagesUntil: 168h
 
   danglingFilter: true
