@@ -83,7 +83,7 @@ install-ingress:
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.6.0 \
+		--version=4.6.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -103,7 +103,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.12.0 \
+		--version=1.12.1 \
 		registry \
 		harbor/harbor
 
@@ -159,7 +159,7 @@ install-minio: install-ingress
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets=lagoon-files \
-		--version=12.4.1 \
+		--version=12.6.0 \
 		minio \
 		bitnami/minio
 
