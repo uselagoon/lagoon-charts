@@ -261,6 +261,18 @@ fluentbitTolerations:
   key: lagoon.sh/spot
   operator: Exists
 
+# Expose metrics of the Logging Operator's fluentbit daemonset and fluentd
+# statefulset via a Prometheus Operator compatible ServiceMonitor object.
+#
+# The fluentd serviceMonitor is disabled by default until a use-case is found.
+#
+# See here for full documentation of this field:
+# https://kube-logging.dev/docs/operation/logging-operator-monitoring/#metrics-variables
+fluentbitMetrics:
+  serviceMonitor: true
+# fluentdMetrics:
+#   serviceMonitor: true
+
 # This chart assumes the container runtime is containerd, which puts the log
 # message in the `message` field of the log record.
 #
