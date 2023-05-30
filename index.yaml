@@ -3949,6 +3949,32 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: added
+          description: add chart option to configure logging-operator subchart metrics, and enable the fluentbit ServiceMonitor by default
+    apiVersion: v2
+    created: "2023-05-30T04:06:15.4782026Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: https://kubernetes-charts.banzaicloud.com
+      version: ~3.17.0
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 1fdc090a2312aaedd9187a5b6d5e96d1463b0a48e1efbac64512d7244172acfc
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.21.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.77.0/lagoon-logging-0.77.0.tgz
+    version: 0.77.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
           description: added chart option to inject a configuration snippet for post-processing router logs
     apiVersion: v2
     created: "2023-05-25T01:00:19.86842322Z"
@@ -11652,4 +11678,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-05-25T01:00:19.869338219Z"
+generated: "2023-05-30T04:06:15.479151924Z"
