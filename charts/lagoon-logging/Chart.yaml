@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.76.0
+version: 0.77.0
 
 dependencies:
 - name: logging-operator
@@ -33,4 +33,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: added
-      description: added chart option to inject a configuration snippet for post-processing router logs
+      description: add chart option to configure logging-operator subchart metrics, and enable the fluentbit ServiceMonitor by default

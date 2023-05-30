@@ -12,6 +12,10 @@ spec:
         fsGroup: 0
     scaling:
       replicas: {{ .Values.fluentdReplicaCount }}
+  {{- with .Values.fluentdMetrics }}
+    metrics:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
   fluentbit:
     # Enable a default liveness check to avoid stuck pods.
     # At the time of writing this just hits the metrics endpoint.
@@ -25,5 +29,9 @@ spec:
   {{- with .Values.fluentbitTolerations }}
     tolerations:
     {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.fluentbitMetrics }}
+    metrics:
+    {{- toYaml . | nindent 6 }}
   {{- end }}
   controlNamespace: {{ .Release.Namespace | quote }}
