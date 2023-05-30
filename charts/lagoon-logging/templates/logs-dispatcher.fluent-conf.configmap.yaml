@@ -296,6 +296,9 @@ data:
           _dummy_ ${record['kubernetes'].delete('pod_name'); record['kubernetes'].delete('container_name'); record['kubernetes'].delete('pod_id'); nil}
         </record>
       </filter>
+      {{- with .Values.routerLogsPostProcess }}
+        {{- . | nindent 6 }}
+      {{- end }}
       <match lagoon.*.router.nginx>
         @type relabel
         @label @OUTPUT
