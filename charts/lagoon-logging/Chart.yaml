@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.75.0
+version: 0.77.0
 
 dependencies:
 - name: logging-operator
@@ -32,5 +32,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: introduced minimum kubernetes version 1.21
+    - kind: added
+      description: add chart option to configure logging-operator subchart metrics, and enable the fluentbit ServiceMonitor by default
