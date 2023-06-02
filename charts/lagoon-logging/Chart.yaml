@@ -23,8 +23,8 @@ version: 0.77.0
 
 dependencies:
 - name: logging-operator
-  repository: https://kubernetes-charts.banzaicloud.com
-  version: ~3.17.0
+  repository: https://kube-logging.github.io/helm-charts
+  version: ~4.2.0
   condition: logging-operator.enabled
 
 # This section is used to collect a changelog for artifacthub.io
