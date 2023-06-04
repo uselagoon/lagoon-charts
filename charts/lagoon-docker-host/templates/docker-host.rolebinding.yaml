@@ -1,0 +1,17 @@
+{{- if and .Values.serviceAccount.create .Values.global.openshift -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "lagoon-docker-host.dockerHost.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "lagoon-docker-host.dockerHost.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "lagoon-docker-host.dockerHost.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "lagoon-docker-host.dockerHost.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace | quote }}
+{{- end }}
