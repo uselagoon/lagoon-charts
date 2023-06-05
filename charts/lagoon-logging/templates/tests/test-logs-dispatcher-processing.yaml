@@ -1,0 +1,416 @@
+{{- if .Values.testFixtures.create }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    lagoon.sh/environment: dev
+    lagoon.sh/environmentType: development
+    lagoon.sh/project: test-logs-deleteme-fakeproject
+  name: test-logs-deleteme-fakeproject-dev
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    lagoon.sh/environment: prod
+    lagoon.sh/environmentType: production
+    lagoon.sh/project: test-logs-deleteme-fakeproject
+  name: test-logs-deleteme-fakeproject-prod
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-test-processing-fluent-conf
+  labels:
+    {{- include "lagoon-logging.logsDispatcher.labels" . | nindent 4 }}
+data:
+  fluent.conf: |
+    <system>
+      workers 1
+      # comment out this line to see warnings
+      # it is set to error because fluentd is quite chatty
+      log_level error
+    </system>
+    # container logs collected by the logging-operator
+    <source>
+      @type  forward
+      @id    in_container
+      tag    process.container
+    </source>
+
+    #
+    # pre-processing for nginx_router logs
+    #
+    # the reason for having the two match blocks is because we have two checks
+    # to distinguish nginx_router logs:
+    # * app label is "nginx-ingress"
+    # * namespace is "syn-nginx-ingress"
+    # if either of those checks fails the message is tagged as a regular
+    # container log.
+    #
+    # check app name first. if app name didn't match, set tag to container log.
+    <match process.container>
+      @type rewrite_tag_filter
+      <rule>
+        key     $.kubernetes.labels.app
+        pattern ^nginx-ingress$
+        tag     "process.app_nginx_ingress"
+      </rule>
+      <rule>
+        key     $['kubernetes']['labels']['app.kubernetes.io/name']
+        pattern ^ingress-nginx$
+        tag     "process.app_nginx_ingress"
+      </rule>
+      # Last rule: catchall
+      <rule>
+        invert  true
+        key     $.kubernetes.labels.app
+        pattern ^nginx-ingress$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
+      </rule>
+    </match>
+    # check namespace_name. if it is okay too, tag as router log.
+    # if namespace didn't match, set tag to container log.
+    <match process.app_nginx_ingress>
+      @type rewrite_tag_filter
+      <rule>
+        key     $.kubernetes.namespace_name
+        pattern ^syn-nginx-ingress$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
+      </rule>
+      <rule>
+        key     $.kubernetes.namespace_name
+        pattern ^ingress-nginx$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
+      </rule>
+      <rule>
+        key     $.kubernetes.namespace_name
+        pattern ^sigsci-ingress-nginx$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
+      </rule>
+      # Last rule: catchall
+      <rule>
+        invert  true
+        key     $.kubernetes.namespace_name
+        pattern ^syn-nginx-ingress$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
+      </rule>
+    </match>
+
+    #
+    # process container logs
+    #
+    # restructure so the kubernetes_metadata plugin can find the keys it needs
+    <filter lagoon.*.container>
+      @type record_modifier
+      remove_keys _dummy_
+      <record>
+        _dummy_ ${record['docker'] = {'container_id' => "#{record.dig('kubernetes','docker_id')}"}; nil}
+      </record>
+    </filter>
+    # enrich with k8s metadata (will get the namespace labels)
+    <filter lagoon.*.container>
+      @type kubernetes_metadata
+      @log_level warn
+      skip_container_metadata true
+      skip_master_url         true
+    </filter>
+    # strip the duplicate information so that it doesn't appear in logs
+    <filter lagoon.*.container>
+      @type record_modifier
+      remove_keys docker
+    </filter>
+    # post-process to try to eke some more structure out of the logs.
+    # the last "format none" block is a catch-all for unmatched messages.
+    <filter lagoon.*.container>
+      @type parser
+      key_name message
+      reserve_data true
+      <parse>
+        @type multi_format
+        <pattern>
+          format regexp
+          expression /^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)"(?:\s+"(?<forwarded_for>[^"]+)")?)?$/
+          time_format %d/%b/%Y:%H:%M:%S %z
+          types  size:integer
+        </pattern>
+        <pattern>
+          format none
+        </pattern>
+      </parse>
+    </filter>
+
+    #
+    # process nginx_router logs
+    #
+    # The message field may be json-encoded router logs, so parse that and put the
+    # keys in the top-level log object.
+    <filter lagoon.*.router.nginx>
+      @type parser
+      key_name message
+      reserve_time true
+      reserve_data true
+      remove_key_name_field true
+      <parse>
+        @type multi_format
+        <pattern>
+          format json
+        </pattern>
+        <pattern>
+          format none
+        </pattern>
+      </parse>
+    </filter>
+    # match the nginx router logs here and relabel them based on whether they
+    # were successfully parsed as json above or not
+    <match lagoon.*.router.nginx>
+      @type rewrite_tag_filter
+      <rule>
+        # if the host key doesn't exist then this was not parsed as JSON, so we
+        # just send to @OUTPUT directly because it is an actual nginx
+        # controller log. These logs will appear in index_name
+        # router-logs-ingress-nginx_.* if the keepIngressNginxController value
+        # is set to true.
+        invert true
+        key host
+        pattern /.+/
+        tag ${tag}
+        label @DISCARD
+      </rule>
+      <rule>
+        # host key exists, so this is a HTTP request log
+        key host
+        pattern /.+/
+        tag ${tag}
+        label @NGINX_ROUTER_OUTPUT
+      </rule>
+    </match>
+    <label @NGINX_ROUTER_OUTPUT>
+      # Strip the nginx-ingress namespace info and add enough dummy information
+      # so that kubernetes_metadata plugin can get the namespace labels.
+      <filter lagoon.*.router.nginx>
+        @type record_modifier
+        remove_keys _dummy_
+        <record>
+          _dummy_ ${record['kubernetes'] = {'namespace_name' => record['namespace'], 'pod_name' => 'nopod', 'container_name' => 'nocontainer'}; record['docker'] = {'container_id' => "#{record['namespace']}_#{record['ingress_name']}"}; nil}
+        </record>
+      </filter>
+      # enrich with k8s metadata (will get the namespace labels)
+      <filter lagoon.*.router.nginx>
+        @type kubernetes_metadata
+        @log_level warn
+        skip_container_metadata true
+        skip_master_url         true
+      </filter>
+      # strip the dummy information so that it doesn't appear in logs
+      <filter lagoon.*.router.nginx>
+        @type record_modifier
+        remove_keys _dummy_,docker
+        <record>
+          _dummy_ ${record['kubernetes'].delete('pod_name'); record['kubernetes'].delete('container_name'); record['kubernetes'].delete('pod_id'); nil}
+        </record>
+      </filter>
+      <match lagoon.*.router.nginx>
+        @type relabel
+        @label @OUTPUT
+      </match>
+    </label>
+
+    <match lagoon.**>
+      @type relabel
+      @label @OUTPUT
+    </match>
+
+    <label @OUTPUT>
+      #
+      # add cluster identifier
+      #
+      <filter lagoon.**>
+        @type record_modifier
+        <record>
+          cluster "#{ENV['CLUSTER_NAME']}"
+        </record>
+      </filter>
+      #
+      # add the container logs index_name
+      #
+      <filter lagoon.*.container>
+        @type record_modifier
+        <record>
+          index_name container-logs-${record.dig('kubernetes','namespace_labels','lagoon.sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon.sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
+          log ${record['log'] || ""}
+        </record>
+      </filter>
+      #
+      # add the router logs index_name
+      #
+      <filter lagoon.*.router.**>
+        @type record_modifier
+        <record>
+          index_name router-logs-${record.dig('kubernetes','namespace_labels','lagoon.sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon.sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
+        </record>
+      </filter>
+      #
+      # add the lagoon logs index_name
+      # the source for this tag is included when lagoonLogs.enabled is true
+      #
+      <filter lagoon.*.lagoon>
+        @type record_modifier
+        <record>
+          index_name lagoon-logs-${record['project']}-_-all_environments-_-${Time.at(time).strftime("%Y.%m")}
+        </record>
+      </filter>
+      #
+      # exclude the lagoon logs for running builds, and legacy task: updates
+      #
+      <filter lagoon.*.lagoon>
+        @type grep
+        <or>
+          <exclude>
+            key $.meta.buildPhase
+            pattern ^running$
+          </exclude>
+          <exclude>
+            key $.meta.buildStatus
+            pattern ^running$
+          </exclude>
+          <exclude>
+            key $.event
+            pattern ^task:builddeploy-kubernetes:*
+          </exclude>
+        </or>
+      </filter>
+      #
+      # dump all logs to stdout
+      #
+      <match lagoon.**>
+        @type file
+        path /tmp/log.out
+        <format>
+          @type json
+        </format>
+        <buffer time>
+          timekey 1s
+          timekey_use_utc true
+          timekey_wait 1s
+          flush_mode interval
+          flush_interval 1s
+        </buffer>
+      </match>
+    </label>
+
+    <label @DISCARD>
+      <match lagoon.**>
+        @type null
+      </match>
+    </label>
+  input.log: |
+    {{- /* nginx router logs */}}
+    {"stream":"stdout","logtag":"F","message":"{ \"http_section_io_id\": \"-\", \"time\": \"2022-11-22T07:43:13+00:00\", \"remote_addr\": \"119.18.3.40\", \"x-forwarded-for\": \"-\", \"true-client-ip\": \"-\", \"req_id\": \"c3564341bbe8ac46c9044a87ec3db1a7\", \"remote_user\": \"-\", \"bytes_sent\": 3210, \"request_time\": 0.041, \"status\": \"200\", \"host\": \"test-logs-deleteme-fakeproject-dev.test1.amazee.io\", \"request_proto\": \"HTTP/2.0\", \"request_uri\": \"/\", \"request_query\": \"-\", \"request_length\": 303, \"request_time\": 0.041, \"request_method\": \"GET\", \"http_referer\": \"-\", \"http_user_agent\": \"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0\", \"namespace\": \"test-logs-deleteme-fakeproject-dev\", \"ingress_name\": \"test-logs-deleteme-fakeproject-dev.test1.amazee.io\", \"service_name\": \"nginx\", \"service_port\": \"http\" }","kubernetes":{"pod_name":"ingress-nginx-controller-976c576cf-mqzs8","namespace_name":"ingress-nginx","pod_id":"9555ef6d-bbf5-4276-8f5c-c91377feca99","labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"ingress-nginx","app.kubernetes.io/name":"ingress-nginx","pod-template-hash":"976c576cf"},"annotations":{"kubernetes.io/psp":"eks.privileged"},"host":"ip-10-20-30-40.eu-central-1.compute.internal","container_name":"controller","docker_id":"123eee982a5afa82e0fc3dad5d5af10dd93363657bd18bd5e2c548b0d32a19f7","container_hash":"k8s.gcr.io/ingress-nginx/controller@sha256:28b11ce69e57843de44e3db6413e98d09de0f6688e33d4bd384002a44f78405c","container_image":"sha256:7e5c1cecb086f36c6ef4b319a60853020820997f3600c3687e8ba6139e83674d"}}
+    {"stream":"stdout","logtag":"F","message":"{ \"http_section_io_id\": \"-\", \"time\": \"2022-11-22T07:43:13+00:00\", \"remote_addr\": \"119.18.3.40\", \"x-forwarded-for\": \"-\", \"true-client-ip\": \"-\", \"req_id\": \"1a910605e50cbfc5db9090ac5ce9fefb\", \"remote_user\": \"-\", \"bytes_sent\": 3250, \"request_time\": 0.006, \"status\": \"200\", \"host\": \"test-logs-deleteme-fakeproject-dev.test1.amazee.io\", \"request_proto\": \"HTTP/2.0\", \"request_uri\": \"/sites/default/files/css/css_v18WUm75dSk_A-DeLZcRjivGVxxUXl9PCwLE_JJpyIk.css\", \"request_query\": \"-\", \"request_length\": 137, \"request_time\": 0.006, \"request_method\": \"GET\", \"http_referer\": \"https://test-logs-deleteme-fakeproject-dev.test1.amazee.io/\", \"http_user_agent\": \"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0\", \"namespace\": \"test-logs-deleteme-fakeproject-dev\", \"ingress_name\": \"test-logs-deleteme-fakeproject-dev.test1.amazee.io\", \"service_name\": \"nginx\", \"service_port\": \"http\" }","kubernetes":{"pod_name":"ingress-nginx-controller-976c576cf-mqzs8","namespace_name":"ingress-nginx","pod_id":"9555ef6d-bbf5-4276-8f5c-c91377feca99","labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"ingress-nginx","app.kubernetes.io/name":"ingress-nginx","pod-template-hash":"976c576cf"},"annotations":{"kubernetes.io/psp":"eks.privileged"},"host":"ip-10-20-30-40.eu-central-1.compute.internal","container_name":"controller","docker_id":"123eee982a5afa82e0fc3dad5d5af10dd93363657bd18bd5e2c548b0d32a19f7","container_hash":"k8s.gcr.io/ingress-nginx/controller@sha256:28b11ce69e57843de44e3db6413e98d09de0f6688e33d4bd384002a44f78405c","container_image":"sha256:7e5c1cecb086f36c6ef4b319a60853020820997f3600c3687e8ba6139e83674d"}}
+    {"stream":"stdout","logtag":"F","message":"{ \"http_section_io_id\": \"-\", \"time\": \"2022-11-22T07:43:13+00:00\", \"remote_addr\": \"119.18.3.40\", \"x-forwarded-for\": \"-\", \"true-client-ip\": \"-\", \"req_id\": \"7c59ed76f0b17c3059ef4cd401d1f1c1\", \"remote_user\": \"-\", \"bytes_sent\": 802, \"request_time\": 0.011, \"status\": \"200\", \"host\": \"test-logs-deleteme-fakeproject-dev.test1.amazee.io\", \"request_proto\": \"HTTP/2.0\", \"request_uri\": \"/sites/default/files/css/css_jXoGUEFrud0744Ahfg7jDKSYsoEmd3Vq1DLfwEw5fVs.css\", \"request_query\": \"-\", \"request_length\": 74, \"request_time\": 0.011, \"request_method\": \"GET\", \"http_referer\": \"https://test-logs-deleteme-fakeproject-dev.test1.amazee.io/\", \"http_user_agent\": \"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0\", \"namespace\": \"test-logs-deleteme-fakeproject-dev\", \"ingress_name\": \"test-logs-deleteme-fakeproject-dev.test1.amazee.io\", \"service_name\": \"nginx\", \"service_port\": \"http\" }","kubernetes":{"pod_name":"ingress-nginx-controller-976c576cf-mqzs8","namespace_name":"ingress-nginx","pod_id":"9555ef6d-bbf5-4276-8f5c-c91377feca99","labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"ingress-nginx","app.kubernetes.io/name":"ingress-nginx","pod-template-hash":"976c576cf"},"annotations":{"kubernetes.io/psp":"eks.privileged"},"host":"ip-10-20-30-40.eu-central-1.compute.internal","container_name":"controller","docker_id":"123eee982a5afa82e0fc3dad5d5af10dd93363657bd18bd5e2c548b0d32a19f7","container_hash":"k8s.gcr.io/ingress-nginx/controller@sha256:28b11ce69e57843de44e3db6413e98d09de0f6688e33d4bd384002a44f78405c","container_image":"sha256:7e5c1cecb086f36c6ef4b319a60853020820997f3600c3687e8ba6139e83674d"}}
+    {"stream":"stdout","logtag":"F","message":"{ \"http_section_io_id\": \"-\", \"time\": \"2022-11-22T07:43:13+00:00\", \"remote_addr\": \"119.18.3.40\", \"x-forwarded-for\": \"-\", \"true-client-ip\": \"-\", \"req_id\": \"ae8778041f9eb0472f87d54f5fc88339\", \"remote_user\": \"-\", \"bytes_sent\": 13921, \"request_time\": 0.021, \"status\": \"200\", \"host\": \"test-logs-deleteme-fakeproject-prod.test1.amazee.io\", \"request_proto\": \"HTTP/2.0\", \"request_uri\": \"/sites/default/files/css/css_QVAG5D3Tjgmzc55dRjVpYlhI02sBiqX5b0VAkKLpSGg.css\", \"request_query\": \"-\", \"request_length\": 74, \"request_time\": 0.021, \"request_method\": \"GET\", \"http_referer\": \"https://test-logs-deleteme-fakeproject-prod.test1.amazee.io/\", \"http_user_agent\": \"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0\", \"namespace\": \"test-logs-deleteme-fakeproject-prod\", \"ingress_name\": \"test-logs-deleteme-fakeproject-prod.test1.amazee.io\", \"service_name\": \"nginx\", \"service_port\": \"http\" }","kubernetes":{"pod_name":"ingress-nginx-controller-976c576cf-mqzs8","namespace_name":"ingress-nginx","pod_id":"9555ef6d-bbf5-4276-8f5c-c91377feca99","labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"ingress-nginx","app.kubernetes.io/name":"ingress-nginx","pod-template-hash":"976c576cf"},"annotations":{"kubernetes.io/psp":"eks.privileged"},"host":"ip-10-20-30-40.eu-central-1.compute.internal","container_name":"controller","docker_id":"123eee982a5afa82e0fc3dad5d5af10dd93363657bd18bd5e2c548b0d32a19f7","container_hash":"k8s.gcr.io/ingress-nginx/controller@sha256:28b11ce69e57843de44e3db6413e98d09de0f6688e33d4bd384002a44f78405c","container_image":"sha256:7e5c1cecb086f36c6ef4b319a60853020820997f3600c3687e8ba6139e83674d"}}
+    {"stream":"stdout","logtag":"F","message":"{ \"http_section_io_id\": \"-\", \"time\": \"2022-11-22T07:43:13+00:00\", \"remote_addr\": \"119.18.3.40\", \"x-forwarded-for\": \"-\", \"true-client-ip\": \"-\", \"req_id\": \"385dd38e6adf2465724da35224ff8c6c\", \"remote_user\": \"-\", \"bytes_sent\": 3554, \"request_time\": 0.011, \"status\": \"200\", \"host\": \"test-logs-deleteme-fakeproject-prod.test1.amazee.io\", \"request_proto\": \"HTTP/2.0\", \"request_uri\": \"/profiles/contrib/govcms/themes/custom/govcms_bartik/logo.svg\", \"request_query\": \"-\", \"request_length\": 87, \"request_time\": 0.011, \"request_method\": \"GET\", \"http_referer\": \"https://test-logs-deleteme-fakeproject-prod.test1.amazee.io/\", \"http_user_agent\": \"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0\", \"namespace\": \"test-logs-deleteme-fakeproject-prod\", \"ingress_name\": \"test-logs-deleteme-fakeproject-prod.test1.amazee.io\", \"service_name\": \"nginx\", \"service_port\": \"http\" }","kubernetes":{"pod_name":"ingress-nginx-controller-976c576cf-mqzs8","namespace_name":"ingress-nginx","pod_id":"9555ef6d-bbf5-4276-8f5c-c91377feca99","labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"ingress-nginx","app.kubernetes.io/name":"ingress-nginx","pod-template-hash":"976c576cf"},"annotations":{"kubernetes.io/psp":"eks.privileged"},"host":"ip-10-20-30-40.eu-central-1.compute.internal","container_name":"controller","docker_id":"123eee982a5afa82e0fc3dad5d5af10dd93363657bd18bd5e2c548b0d32a19f7","container_hash":"k8s.gcr.io/ingress-nginx/controller@sha256:28b11ce69e57843de44e3db6413e98d09de0f6688e33d4bd384002a44f78405c","container_image":"sha256:7e5c1cecb086f36c6ef4b319a60853020820997f3600c3687e8ba6139e83674d"}}
+    {{- /* nginx container log 0 */}}
+    {"stream":"stderr","logtag":"F","message":"Identity added: /home/.ssh/key (/home/.ssh/key)","kubernetes":{"pod_name":"cli-676f77fc56-pjm8r","namespace_name":"test-logs-deleteme-fakeproject-prod","pod_id":"2df4c564-2900-4b08-922f-36a0d032f670","labels":{"admission.datadoghq.com/enabled":"true","app.kubernetes.io/instance":"cli","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"cli-persistent","helm.sh/chart":"cli-persistent-0.1.0","lagoon.sh/buildType":"branch","lagoon.sh/environment":"prod","lagoon.sh/environmentType":"production","lagoon.sh/project":"test-logs-deleteme-fakeproject","lagoon.sh/service":"cli","lagoon.sh/service-type":"cli-persistent","pod-template-hash":"676f77fc56"},"annotations":{"kubernetes.io/psp":"eks.privileged","lagoon.sh/branch":"prod","lagoon.sh/configMapSha":"4ef7cefb450b614a576f32bd5ceb23bb8f3b44f9ff3569dba498ea92551217ff","lagoon.sh/version":"22.4.1"},"host":"ip-10-200-18-51.eu-central-1.compute.internal","container_name":"cli","docker_id":"f3a44dc65462386c0e0ffdb31528b989c9e55eb2ba5c431683f72e8b6a5458f4"}}
+    {{- /* application log 0 */}}
+  expected.output.log: |
+    {{- /* nginx router logs */}}
+    {"stream":"stdout","logtag":"F","kubernetes":{"namespace_name":"test-logs-deleteme-fakeproject-dev","namespace_labels":{"app.kubernetes.io/managed-by":"Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-dev","lagoon.sh/environment":"dev","lagoon.sh/environmentType":"development","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"http_section_io_id":"-","remote_addr":"119.18.3.40","x-forwarded-for":"-","true-client-ip":"-","req_id":"c3564341bbe8ac46c9044a87ec3db1a7","remote_user":"-","bytes_sent":3210,"request_time":0.041,"status":"200","host":"test-logs-deleteme-fakeproject-dev.test1.amazee.io","request_proto":"HTTP/2.0","request_uri":"/","request_query":"-","request_length":303,"request_method":"GET","http_referer":"-","http_user_agent":"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0","namespace":"test-logs-deleteme-fakeproject-dev","ingress_name":"test-logs-deleteme-fakeproject-dev.test1.amazee.io","service_name":"nginx","service_port":"http","cluster":"test-cluster-name","index_name":"router-logs-test-logs-deleteme-fakeproject-_-development-_-2022.11"}
+    {"stream":"stdout","logtag":"F","kubernetes":{"namespace_name":"test-logs-deleteme-fakeproject-dev","namespace_labels":{"app.kubernetes.io/managed-by":"Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-dev","lagoon.sh/environment":"dev","lagoon.sh/environmentType":"development","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"http_section_io_id":"-","remote_addr":"119.18.3.40","x-forwarded-for":"-","true-client-ip":"-","req_id":"1a910605e50cbfc5db9090ac5ce9fefb","remote_user":"-","bytes_sent":3250,"request_time":0.006,"status":"200","host":"test-logs-deleteme-fakeproject-dev.test1.amazee.io","request_proto":"HTTP/2.0","request_uri":"/sites/default/files/css/css_v18WUm75dSk_A-DeLZcRjivGVxxUXl9PCwLE_JJpyIk.css","request_query":"-","request_length":137,"request_method":"GET","http_referer":"https://test-logs-deleteme-fakeproject-dev.test1.amazee.io/","http_user_agent":"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0","namespace":"test-logs-deleteme-fakeproject-dev","ingress_name":"test-logs-deleteme-fakeproject-dev.test1.amazee.io","service_name":"nginx","service_port":"http","cluster":"test-cluster-name","index_name":"router-logs-test-logs-deleteme-fakeproject-_-development-_-2022.11"}
+    {"stream":"stdout","logtag":"F","kubernetes":{"namespace_name":"test-logs-deleteme-fakeproject-dev","namespace_labels":{"app.kubernetes.io/managed-by":"Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-dev","lagoon.sh/environment":"dev","lagoon.sh/environmentType":"development","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"http_section_io_id":"-","remote_addr":"119.18.3.40","x-forwarded-for":"-","true-client-ip":"-","req_id":"7c59ed76f0b17c3059ef4cd401d1f1c1","remote_user":"-","bytes_sent":802,"request_time":0.011,"status":"200","host":"test-logs-deleteme-fakeproject-dev.test1.amazee.io","request_proto":"HTTP/2.0","request_uri":"/sites/default/files/css/css_jXoGUEFrud0744Ahfg7jDKSYsoEmd3Vq1DLfwEw5fVs.css","request_query":"-","request_length":74,"request_method":"GET","http_referer":"https://test-logs-deleteme-fakeproject-dev.test1.amazee.io/","http_user_agent":"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0","namespace":"test-logs-deleteme-fakeproject-dev","ingress_name":"test-logs-deleteme-fakeproject-dev.test1.amazee.io","service_name":"nginx","service_port":"http","cluster":"test-cluster-name","index_name":"router-logs-test-logs-deleteme-fakeproject-_-development-_-2022.11"}
+    {"stream":"stdout","logtag":"F","kubernetes":{"namespace_name":"test-logs-deleteme-fakeproject-prod","namespace_labels":{"app.kubernetes.io/managed-by":"Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-prod","lagoon.sh/environment":"prod","lagoon.sh/environmentType":"production","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"http_section_io_id":"-","remote_addr":"119.18.3.40","x-forwarded-for":"-","true-client-ip":"-","req_id":"ae8778041f9eb0472f87d54f5fc88339","remote_user":"-","bytes_sent":13921,"request_time":0.021,"status":"200","host":"test-logs-deleteme-fakeproject-prod.test1.amazee.io","request_proto":"HTTP/2.0","request_uri":"/sites/default/files/css/css_QVAG5D3Tjgmzc55dRjVpYlhI02sBiqX5b0VAkKLpSGg.css","request_query":"-","request_length":74,"request_method":"GET","http_referer":"https://test-logs-deleteme-fakeproject-prod.test1.amazee.io/","http_user_agent":"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0","namespace":"test-logs-deleteme-fakeproject-prod","ingress_name":"test-logs-deleteme-fakeproject-prod.test1.amazee.io","service_name":"nginx","service_port":"http","cluster":"test-cluster-name","index_name":"router-logs-test-logs-deleteme-fakeproject-_-production-_-2022.11"}
+    {"stream":"stdout","logtag":"F","kubernetes":{"namespace_name":"test-logs-deleteme-fakeproject-prod","namespace_labels":{"app.kubernetes.io/managed-by":"Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-prod","lagoon.sh/environment":"prod","lagoon.sh/environmentType":"production","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"http_section_io_id":"-","remote_addr":"119.18.3.40","x-forwarded-for":"-","true-client-ip":"-","req_id":"385dd38e6adf2465724da35224ff8c6c","remote_user":"-","bytes_sent":3554,"request_time":0.011,"status":"200","host":"test-logs-deleteme-fakeproject-prod.test1.amazee.io","request_proto":"HTTP/2.0","request_uri":"/profiles/contrib/govcms/themes/custom/govcms_bartik/logo.svg","request_query":"-","request_length":87,"request_method":"GET","http_referer":"https://test-logs-deleteme-fakeproject-prod.test1.amazee.io/","http_user_agent":"Mozilla/5.0 (X11; Linux x86_64; rv:107.0) Gecko/20100101 Firefox/107.0","namespace":"test-logs-deleteme-fakeproject-prod","ingress_name":"test-logs-deleteme-fakeproject-prod.test1.amazee.io","service_name":"nginx","service_port":"http","cluster":"test-cluster-name","index_name":"router-logs-test-logs-deleteme-fakeproject-_-production-_-2022.11"}
+    {{- /* nginx container log 0 */}}
+    {"stream":"stderr","logtag":"F","message":"Identity added: /home/.ssh/key (/home/.ssh/key)","kubernetes":{"container_name":"cli","namespace_name":"test-logs-deleteme-fakeproject-prod","pod_name":"cli-676f77fc56-pjm8r","pod_id":"f3a44dc65462386c0e0ffdb31528b989c9e55eb2ba5c431683f72e8b6a5458f4","namespace_labels":{"app.kubernetes.io/managed-by": "Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-prod","lagoon.sh/environment":"prod","lagoon.sh/environmentType":"production","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"cluster":"test-cluster-name","index_name":"container-logs-test-logs-deleteme-fakeproject-_-production-_-2022.11","log":""}
+    {{- /* application log 0 */}}
+{{- end }}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-test-processing
+  labels:
+    {{- include "lagoon-logging.logsDispatcher.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  serviceAccountName: {{ include "lagoon-logging.logsDispatcher.serviceAccountName" . }}
+  securityContext:
+    {{- toYaml .Values.logsDispatcher.podSecurityContext | nindent 4 }}
+  containers:
+  - name: fluentd
+    securityContext:
+      {{- toYaml .Values.logsDispatcher.securityContext | nindent 6 }}
+    image: "{{ .Values.logsDispatcher.image.repository }}:{{ coalesce .Values.logsDispatcher.image.tag .Values.imageTag "latest" }}"
+    imagePullPolicy: {{ .Values.logsDispatcher.image.pullPolicy }}
+    command:
+    - sh
+    - -c
+    - |
+      set -xe
+      # start fluentd
+      fluentd --config /fluentd/etc/${FLUENTD_CONF} --plugin /fluentd/plugins &
+      sleep 2
+      # send input
+      fluent-cat tag.foo < /fluentd/etc/input.log
+      sleep 4
+      # check output
+      ls -lah /tmp/log.out.*
+      # process test cases before diff using jq:
+      # * strip the namespace_id from the log output, since it is randomly generated by the k8s API
+      # * update the suffix on the index_name in the test cases so the tests continue to pass after 2022.11
+      diff <(jq '.index_name |= gsub("2022.11$";(now|strftime("%Y.%m")))' /fluentd/etc/expected.output.log) <(jq 'del(.kubernetes.namespace_id)' /tmp/log.out.*)
+      # stop fluentd
+      kill %1
+    ports:
+    - containerPort: 24224
+      protocol: TCP
+      name: forward
+    - containerPort: 24231
+      protocol: TCP
+      name: metrics
+    readinessProbe:
+      tcpSocket:
+        port: 24224
+      initialDelaySeconds: 20
+      periodSeconds: 20
+      timeoutSeconds: 2
+    livenessProbe:
+      tcpSocket:
+        port: 24224
+      initialDelaySeconds: 120
+      periodSeconds: 60
+      timeoutSeconds: 2
+    volumeMounts:
+    - mountPath: /fluentd/etc/fluent.conf
+      name: fluent-conf
+      subPath: fluent.conf
+    - mountPath: /fluentd/etc/input.log
+      name: fluent-conf
+      subPath: input.log
+    - mountPath: /fluentd/etc/expected.output.log
+      name: fluent-conf
+      subPath: expected.output.log
+    env:
+    - name: CLUSTER_NAME
+      value: test-cluster-name
+    - name: K8S_NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+  volumes:
+  - configMap:
+      defaultMode: 420
+      items:
+      - key: fluent.conf
+        path: fluent.conf
+      - key: input.log
+        path: input.log
+      - key: expected.output.log
+        path: expected.output.log
+      name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-test-processing-fluent-conf
+    name: fluent-conf
+  restartPolicy: Never

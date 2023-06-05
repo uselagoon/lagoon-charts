@@ -14,6 +14,8 @@ sshHost: lagoon-core-ssh
 sshPort: 2020
 sshPortalHost: lagoon-remote-ssh-portal
 sshPortalPort: 2222
+sshTokenHost: lagoon-core-ssh-token
+sshTokenPort: 2223
 sshPrivateKey: |-
   -----BEGIN RSA PRIVATE KEY-----
   MIIJKAIBAAKCAgEAxGZZrOV7Islo5p51Moabfd1YB8qbHvQZfJDZJmSU4jNxMf8G
@@ -133,7 +135,23 @@ tests:
   tests: []
   # This value is required when suiteEnabled is true, and must be set to one or
   # more of the valid test suites:
-  # - features-kubernetes
   # - active-standby-kubernetes
+  # - api
+  # - deploytarget
+  # - features-kubernetes
+  # - features-kubernetes-2
+  # - features-variables
+  # - services
+  # - ssh-portal
+  # - tasks
+  # - bitbucket
+  # - bulk-deployment
+  # - drush
+  # - generic
+  # - github
+  # - gitlab
+  # - image-cache
   # - nginx
-  # - drupal
+  # - node
+  # - python
+  # - workflows

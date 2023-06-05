@@ -1,3 +1,5 @@
+{{- $rabbitMQHostname := coalesce (.Values.global).rabbitMQHostname .Values.rabbitMQHostname }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -156,6 +158,12 @@ spec:
         {{- with .Values.QoSDefault }}
         - "--qos-default={{ . }}"
         {{- end }}
+        {{- with .Values.timeoutForLongRunningBuildPods }}
+        - "--timeout-longrunning-build-pod-cleanup={{ . }}"
+        {{- end }}
+        {{- with .Values.timeoutForLongRunningTaskPods }}
+        - "--timeout-longrunning-task-pod-cleanup={{ . }}"
+        {{- end }}
         {{- with .Values.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -214,10 +222,22 @@ spec:
           value: {{ . | quote }}
         {{- end }}
         {{- end }}
+        {{- with .Values.adminLagoonFeatureFlag.containerMemoryLimit }}
+        - name: ADMIN_LAGOON_FEATURE_FLAG_CONTAINER_MEMORY_LIMIT
+          value: {{ . | quote}}
+        {{- end }}
+        {{- with .Values.adminLagoonFeatureFlag.ephemeralStorageRequests }}
+        - name: ADMIN_LAGOON_FEATURE_FLAG_EPHEMERAL_STORAGE_REQUESTS
+          value: {{ . | quote}}
+        {{- end }}
+        {{- with .Values.adminLagoonFeatureFlag.ephemeralStorageLimit }}
+        - name: ADMIN_LAGOON_FEATURE_FLAG_EPHEMERAL_STORAGE_LIMIT
+          value: {{ . | quote}}
+        {{- end }}
         - name: PENDING_MESSAGE_CRON
           value: {{ .Values.pendingMessageCron | quote }}
         - name: RABBITMQ_HOSTNAME
-          value: {{ required "A valid .Values.rabbitMQHostname required!" .Values.rabbitMQHostname | quote }}
+          value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:

@@ -11,9 +11,11 @@ jobs:
       fail-fast: false
       matrix:
         kindest_node_version:
-        - v1.21.14@sha256:ad5b7446dd8332439f22a1efdac73670f0da158c00f0a70b45716e7ef3fae20b
-        - v1.23.12@sha256:9402cf1330bbd3a0d097d2033fa489b2abe40d479cc5ef47d0b6a6960613148a
-        - v1.24.6@sha256:97e8d00bc37a7598a0b32d1fabd155a96355c49fa0d4d4790aab0f161bf31be1
+        - v1.21.14@sha256:9d9eb5fb26b4fbc0c6d95fa8c790414f9750dd583f5d7cee45d92e8c26670aa1
+        - v1.22.15@sha256:7d9708c4b0873f0fe2e171e2b1b7f45ae89482617778c1c875f1053d4cef2e41
+        - v1.23.13@sha256:ef453bb7c79f0e3caba88d2067d4196f427794086a7d0df8df4f019d5e336b61
+        - v1.25.3@sha256:f52781bc0d7a19fb6c405c2af83abfeb311f130707a0e219175677e366cc45d1
+        - v1.26.0@sha256:691e24bd2417609db7e589e1a479b902d2e209892a10ce375fab60a8407c7352
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -24,14 +26,14 @@ jobs:
       run: sudo apt-get -y install python3-wheel
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@v2.3.1
+      uses: helm/chart-testing-action@v2.4.0
 
     - name: Run chart-testing (list-changed)
       id: list-changed
       run: |
         changed=$(ct list-changed --config ./default.ct.yaml)
         if [[ "$changed" ]]; then
-          echo "::set-output name=changed::true"
+          echo "changed=true" >> $GITHUB_OUTPUT
           echo "$changed"
         fi
 
@@ -39,9 +41,9 @@ jobs:
       run: ct lint --config ./default.ct.yaml
 
     - name: Create kind cluster
-      uses: helm/kind-action@v1.4.0
+      uses: helm/kind-action@v1.5.0
       with:
-        version: v0.14.0
+        version: v0.17.0
         node_image: kindest/node:${{ matrix.kindest_node_version }}
       if: |
         (steps.list-changed.outputs.changed == 'true') ||

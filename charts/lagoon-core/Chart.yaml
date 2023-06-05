@@ -11,7 +11,7 @@ maintainers:
 - name: shreddedbacon
   email: ben.jackson@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.19.0-0"
+kubeVersion: ">= 1.21.0-0"
 
 # Application charts are a collection of templates that can be packaged into
 # versioned archives to be deployed.
@@ -21,16 +21,24 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.11.0
+version: 1.30.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.9.2
+appVersion: v2.15.0
 
 dependencies:
 - name: nats
   version: ~0.18.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
+
+# This section is used to collect a changelog for artifacthub.io
+# It should be started afresh for each release
+# Valid supported kinds are added, changed, deprecated, removed, fixed and security
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: bump lagoon-opensearch-sync version to v0.7.0

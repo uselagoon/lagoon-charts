@@ -43,6 +43,10 @@ spec:
         - name: DEBUG
           value: "true"
         {{- end }}
+        {{- if .Values.blockDeveloperSSH }}
+        - name: BLOCK_DEVELOPER_SSH
+          value: "true"
+        {{- end }}
         - name: KEYCLOAK_BASE_URL
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/
         - name: KEYCLOAK_SERVICE_API_CLIENT_SECRET

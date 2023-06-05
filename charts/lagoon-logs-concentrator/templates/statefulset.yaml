@@ -78,7 +78,7 @@ spec:
           name: {{ include "lagoon-logs-concentrator.fullname" . }}-buffer
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logs-concentrator.fullname" . }}-tls
-        {{- if .Values.elasticsearchCACert }}
+        {{- if .Values.opensearchCACert }}
         - mountPath: /fluentd/es-tls/
           name: {{ include "lagoon-logs-concentrator.fullname" . }}-es-tls
         {{- end }}
@@ -112,7 +112,7 @@ spec:
           defaultMode: 420
           secretName: {{ include "lagoon-logs-concentrator.fullname" . }}-users
         name: {{ include "lagoon-logs-concentrator.fullname" . }}-users
-      {{- if .Values.elasticsearchCACert }}
+      {{- if .Values.opensearchCACert }}
       - secret:
           defaultMode: 420
           secretName: {{ include "lagoon-logs-concentrator.fullname" . }}-es-tls

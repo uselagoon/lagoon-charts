@@ -1,4 +1,3 @@
-{{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
@@ -76,6 +75,12 @@ app.kubernetes.io/component: {{ include "lagoon-core.api.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{/*
+Create a default fully qualified app name for api-migratedb-job.
+*/}}
+{{- define "lagoon-core.apiMigrateDB.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-api-migratedb
+{{- end }}
 
 
 {{/*
@@ -459,36 +464,6 @@ app.kubernetes.io/component: {{ include "lagoon-core.insightsHandler.fullname" .
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-
-{{/*
-Create a default fully qualified app name for storage-calculator.
-*/}}
-{{- define "lagoon-core.storageCalculator.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-storage-calculator
-{{- end }}
-
-{{/*
-Common labels storage-calculator.
-*/}}
-{{- define "lagoon-core.storageCalculator.labels" -}}
-helm.sh/chart: {{ include "lagoon-core.chart" . }}
-{{ include "lagoon-core.storageCalculator.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels storage-calculator.
-*/}}
-{{- define "lagoon-core.storageCalculator.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-core.storageCalculator.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-
 {{/*
 Create a default fully qualified app name for logs2notifications.
 */}}
@@ -575,36 +550,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 
-
-{{/*
-Create a default fully qualified app name for controllerhandler.
-*/}}
-{{- define "lagoon-core.controllerhandler.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-controllerhandler
-{{- end }}
-
-{{/*
-Common labels controllerhandler.
-*/}}
-{{- define "lagoon-core.controllerhandler.labels" -}}
-helm.sh/chart: {{ include "lagoon-core.chart" . }}
-{{ include "lagoon-core.controllerhandler.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels controllerhandler.
-*/}}
-{{- define "lagoon-core.controllerhandler.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-core.controllerhandler.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-
 {{/*
 --- WORKFLOWS ---
 */}}
@@ -648,13 +593,6 @@ Create a default fully qualified app name for the nats subchart.
 
 
 {{/*
-Create the name of the service account to use for ssh-portal-api.
-*/}}
-{{- define "lagoon-core.sshPortalAPI.serviceAccountName" -}}
-{{- default (include "lagoon-core.sshPortalAPI.fullname" .) .Values.sshPortalAPI.serviceAccount.name }}
-{{- end }}
-
-{{/*
 Create a default fully qualified app name for ssh-portal-api.
 */}}
 {{- define "lagoon-core.sshPortalAPI.fullname" -}}
@@ -681,3 +619,74 @@ app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-core.sshPortalAPI.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for opensearch-sync.
+*/}}
+{{- define "lagoon-core.opensearchSync.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-opensearch-sync
+{{- end }}
+
+{{/*
+Common labels opensearch-sync.
+*/}}
+{{- define "lagoon-core.opensearchSync.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.opensearchSync.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels opensearch-sync.
+*/}}
+{{- define "lagoon-core.opensearchSync.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.opensearchSync.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create a default fully qualified app name for ssh-token.
+*/}}
+{{- define "lagoon-core.sshToken.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-ssh-token
+{{- end }}
+
+{{/*
+Common labels ssh-token.
+*/}}
+{{- define "lagoon-core.sshToken.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.sshToken.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels ssh-token.
+*/}}
+{{- define "lagoon-core.sshToken.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.sshToken.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Get HorizontalPodAutoscaler API Version - can be removed once Kubernetes 1.23 is the minimum
+*/}}
+{{- define "lagoon-core.hpa.apiVersion" -}}
+  {{- if (.Capabilities.APIVersions.Has "autoscaling/v2") -}}
+    autoscaling/v2
+  {{- else -}}
+    autoscaling/v2beta2
+  {{- end -}}
+{{- end -}}

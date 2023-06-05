@@ -1,7 +1,7 @@
 # Logs Concentrator
 
 This service collects logs from logs-dispatchers (both local and remote) using
-fluentd's forward protocol, and sends them to Elasticsearch.
+fluentd's forward protocol, and sends them to Opensearch.
 
 ## Configuration
 

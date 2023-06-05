@@ -1,12 +1,18 @@
-lagoon-build-deploy:
-  enabled: true
+global:
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
   rabbitMQHostname: lagoon-core-broker
+
+lagoon-build-deploy:
+  enabled: true
   lagoonTargetName: ci-local-control-k8s
   taskSSHHost: lagoon-core-ssh.lagoon.svc
   taskSSHPort: 2020
   taskAPIHost: http://lagoon-core-api.lagoon.svc:80
+  # remove on next release
+  rabbitMQUsername: lagoon
+  rabbitMQPassword: ci
+  rabbitMQHostname: lagoon-core-broker
 
 dockerHost:
   image:
@@ -19,11 +25,8 @@ imageTag: ""
 dbaas-operator:
   enabled: true
 
-lagoon-insights-remote:
-  enabled: false
-  rabbitMQUsername: lagoon
-  rabbitMQPassword: ci
-  rabbitMQHostname: lagoon-core-broker
+insightsRemote:
+  enabled: true
 
 mxoutHost: mxout1.example.com
 
@@ -92,3 +95,6 @@ sshPortal:
       AAAECW61aE011GKLSFBJ82G6oGEOjJSUV3STx16veSvX38kD9iqXNt1OpHncEdwOG8/QRV
       6lnrpkhPYdpdKnF3PCEyAAAAAAECAwQF
       -----END OPENSSH PRIVATE KEY-----
+
+storageCalculator:
+  enabled: true

@@ -84,6 +84,78 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Create the name of the service account to use for storageCalculator.
+*/}}
+{{- define "lagoon-remote.storageCalculator.serviceAccountName" -}}
+{{- default (include "lagoon-remote.storageCalculator.fullname" .) .Values.storageCalculator.serviceAccount.name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for storageCalculator.
+*/}}
+{{- define "lagoon-remote.storageCalculator.fullname" -}}
+{{- include "lagoon-remote.fullname" . }}-storage-calculator
+{{- end }}
+
+{{/*
+Common labels storageCalculator.`
+*/}}
+{{- define "lagoon-remote.storageCalculator.labels" -}}
+helm.sh/chart: {{ include "lagoon-remote.chart" . }}
+{{ include "lagoon-remote.storageCalculator.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels storageCalculator.
+*/}}
+{{- define "lagoon-remote.storageCalculator.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-remote.storageCalculator.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use for kubernetesBuildDeploy.
+*/}}
+{{- define "lagoon-remote.kubernetesBuildDeploy.serviceAccountName" -}}
+{{- default (include "lagoon-remote.kubernetesBuildDeploy.fullname" .) .Values.kubernetesBuildDeploy.serviceAccount.name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for kubernetesBuildDeploy.
+*/}}
+{{- define "lagoon-remote.kubernetesBuildDeploy.fullname" -}}
+{{- include "lagoon-remote.fullname" . }}-kubernetes-build-deploy
+{{- end }}
+
+{{/*
+Common labels kubernetesBuildDeploy.
+*/}}
+{{- define "lagoon-remote.kubernetesBuildDeploy.labels" -}}
+helm.sh/chart: {{ include "lagoon-remote.chart" . }}
+{{ include "lagoon-remote.kubernetesBuildDeploy.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels kubernetesBuildDeploy.
+*/}}
+{{- define "lagoon-remote.kubernetesBuildDeploy.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-remote.kubernetesBuildDeploy.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
 Create the name of the service account to use for sshPortal.
 */}}
 {{- define "lagoon-remote.sshPortal.serviceAccountName" -}}
@@ -115,5 +187,42 @@ Selector labels sshPortal.
 {{- define "lagoon-remote.sshPortal.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-remote.sshPortal.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
+Create the name of the service account to use for insights-remote
+*/}}
+{{- define "lagoon-remote.insightsRemote.serviceAccountName" -}}
+{{- default (include "lagoon-remote.insightsRemote.fullname" .) .Values.insightsRemote.serviceAccount.name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for insights-remote.
+*/}}
+{{- define "lagoon-remote.insightsRemote.fullname" -}}
+{{- include "lagoon-remote.fullname" . }}-insights-remote
+{{- end }}
+
+{{/*
+Common labels insights-remote
+*/}}
+{{- define "lagoon-remote.insightsRemote.labels" -}}
+helm.sh/chart: {{ include "lagoon-remote.chart" . }}
+{{ include "lagoon-remote.insightsRemote.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels insightsRemote
+*/}}
+{{- define "lagoon-remote.insightsRemote.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-remote.insightsRemote.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

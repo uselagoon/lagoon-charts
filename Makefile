@@ -25,6 +25,7 @@ BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS =
 # Control the feature flags on the lagoon-build-deploy chart. Valid values: `enabled` or `disabled`.
 LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD =
 LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY =
+LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO = enabled
 # Set to `true` to use the Calico CNI plugin instead of the default kindnet. This
 # is useful for testing network policies.
 USE_CALICO_CNI =
@@ -38,6 +39,8 @@ SKIP_INSTALL_REGISTRY =
 SKIP_ALL_DEPS =
 # Set to `true` to use the disable harbor integration in lagoon-core
 DISABLE_CORE_HARBOR =
+# Set to `true` to enable the elements of lagoon-core that talk to OpenSearch installs
+OPENSEARCH_INTEGRATION_ENABLED = false
 
 TIMEOUT = 30m
 HELM = helm
@@ -50,18 +53,19 @@ fill-test-ci-values:
 		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
 		&& export routeSuffixHTTP="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
 		&& export routeSuffixHTTPS="$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io" \
-		&& export token="$$($(KUBECTL) -n lagoon get secret -o json | $(JQ) -r '.items[] | select(.metadata.name | match("lagoon-build-deploy-token")) | .data.token | @base64d')" \
+		&& export token="$$($(KUBECTL) -n lagoon create token lagoon-build-deploy --duration 3h)" \
 		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
 		&& export webhookHandler="lagoon-core-webhook-handler" \
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
-		&& envsubst < $$valueTemplate.tpl > $$valueTemplate
+		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
+		&& cat $$valueTemplate
 
 ifneq ($(SKIP_ALL_DEPS),true)
 ifneq ($(SKIP_INSTALL_REGISTRY),true)
 fill-test-ci-values: install-registry
 endif
-fill-test-ci-values: install-ingress install-lagoon-core install-lagoon-remote install-nfs-server-provisioner
+fill-test-ci-values: install-ingress install-lagoon-core install-lagoon-remote install-bulk-storageclass
 endif
 
 .PHONY: install-ingress
@@ -76,9 +80,10 @@ install-ingress:
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.proxy-body-size=100m \
+		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.1.3 \
+		--version=4.5.2 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -98,22 +103,9 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.9.1 \
+		--version=1.11.0 \
 		registry \
 		harbor/harbor
-
-.PHONY: install-nfs-server-provisioner
-install-nfs-server-provisioner:
-	$(HELM) upgrade \
-		--install \
-		--create-namespace \
-		--namespace nfs-server-provisioner \
-		--wait \
-		--timeout $(TIMEOUT) \
-		--set storageClass.name=bulk \
-		--version=1.1.3 \
-		nfs-server-provisioner \
-		stable/nfs-server-provisioner
 
 .PHONY: install-mariadb
 install-mariadb:
@@ -125,7 +117,7 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=10.5.1 \
+		--version=11.4.7 \
 		mariadb \
 		bitnami/mariadb
 
@@ -138,8 +130,8 @@ install-postgresql:
 		--namespace postgresql \
 		--wait \
 		--timeout $(TIMEOUT) \
-		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set postgresqlPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')) \
-		--version=10.16.2 \
+		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')) \
+		--version=11.9.13 \
 		postgresql \
 		bitnami/postgresql
 
@@ -153,7 +145,7 @@ install-mongodb:
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
 		--set tls.enabled=false \
-		--version=11.2.0 \
+		--version=12.1.31 \
 		mongodb \
 		bitnami/mongodb
 
@@ -167,7 +159,7 @@ install-minio: install-ingress
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets=lagoon-files \
-		--version=11.6.3 \
+		--version=12.1.7 \
 		minio \
 		bitnami/minio
 
@@ -183,10 +175,12 @@ install-lagoon-core: install-minio
 		--values ./charts/lagoon-core/ci/linter-values.yaml \
 		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE) ] && echo '--set overwriteActiveStandbyTaskImage=$(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set buildDeployImage.default.image=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(DISABLE_CORE_HARBOR) ] && echo '--set api.additionalEnvs.DISABLE_CORE_HARBOR=$(DISABLE_CORE_HARBOR)') \
+		$$([ $(OPENSEARCH_INTEGRATION_ENABLED) ] && echo '--set api.additionalEnvs.OPENSEARCH_INTEGRATION_ENABLED=$(OPENSEARCH_INTEGRATION_ENABLED)') \
 		--set "keycloakAPIURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/auth" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
-		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler \
+		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler  \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
@@ -194,19 +188,16 @@ install-lagoon-core: install-minio
 		--set autoIdler.enabled=false \
 		--set backupHandler.enabled=false \
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
-		--set controllerhandler.image.repository=$(IMAGE_REGISTRY)/controllerhandler \
 		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
-		--set logs2notifications.image.repository=testlagoon/logs2notifications \
-		--set logs2notifications.image.tag=main \
+		--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications \
 		--set logs2notifications.email.disabled=true \
 		--set logs2notifications.microsoftteams.disabled=true \
 		--set logs2notifications.rocketchat.disabled=true \
 		--set logs2notifications.slack.disabled=true \
 		--set logs2notifications.webhooks.disabled=true \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
-		--set storageCalculator.enabled=false \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
 		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
@@ -230,7 +221,7 @@ install-lagoon-core: install-minio
 		./charts/lagoon-core
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-mariadb install-postgresql install-mongodb install-nfs-server-provisioner
+install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-mariadb install-postgresql install-mongodb install-bulk-storageclass
 	$(HELM) dependency build ./charts/lagoon-remote/
 	$(HELM) upgrade \
 		--install \
@@ -248,7 +239,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--set "dbaas-operator.mariadbProviders.development.user=root" \
 		--set "dbaas-operator.postgresqlProviders.development.environment=development" \
 		--set "dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
-		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgresql-password" | @base64d')" \
+		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')" \
 		--set "dbaas-operator.postgresqlProviders.development.port=5432" \
 		--set "dbaas-operator.postgresqlProviders.development.user=postgres" \
 		--set "dbaas-operator.mongodbProviders.development.environment=development" \
@@ -290,12 +281,17 @@ install-lagoon-build-deploy: install-lagoon-core install-registry
 		$$([ $(BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set rootlessBuildPods=true') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoonFeatureFlagDefaultIsolationNetworkPolicy=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
+		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO) ] && echo '--set lagoonFeatureFlagDefaultRWX2RWO=$(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO)') \
 		lagoon-build-deploy \
 		./charts/lagoon-build-deploy
 
 #
 # The following targets facilitate local development only and aren't used in CI.
 #
+
+.PHONY: install-bulk-storageclass
+install-bulk-storageclass:
+	$(KUBECTL) apply -f ./ci/storageclass/local-path-bulk.yaml
 
 .PHONY: create-kind-cluster
 create-kind-cluster:
@@ -305,18 +301,18 @@ create-kind-cluster:
 		&& envsubst < test-suite.kind-config.calico.yaml.tpl > test-suite.kind-config.calico.yaml
 ifeq ($(USE_CALICO_CNI),true)
 	kind create cluster --wait=60s --config=test-suite.kind-config.calico.yaml \
-		&& kubectl apply -f ./ci/calico/tigera-operator.yaml \
-		&& kubectl apply -f ./ci/calico/custom-resources.yaml
+		&& $(KUBECTL) create -f ./ci/calico/tigera-operator.yaml --context kind-chart-testing \
+		&& $(KUBECTL) create -f ./ci/calico/custom-resources.yaml --context kind-chart-testing
 
 .PHONY: install-calico
 install-calico:
-	$(KUBECTL) apply -f ./ci/calico/tigera-operator.yaml \
-		&& $(KUBECTL) apply -f ./ci/calico/custom-resources.yaml
+	$(KUBECTL) create -f ./ci/calico/tigera-operator.yaml \
+		&& $(KUBECTL) create -f ./ci/calico/custom-resources.yaml
 
 # add dependencies to ensure calico gets installed in the correct order
 install-ingress: install-calico
 install-registry: install-calico
-install-nfs-server-provisioner: install-calico
+install-bulk-storageclass: install-calico
 install-mariadb: install-calico
 install-postgresql: install-calico
 install-mongodb: install-calico
@@ -327,7 +323,7 @@ else
 endif
 
 .PHONY: install-test-cluster
-install-test-cluster: install-ingress install-registry install-nfs-server-provisioner install-mariadb install-postgresql install-mongodb install-minio
+install-test-cluster: install-ingress install-registry install-bulk-storageclass install-mariadb install-postgresql install-mongodb install-minio
 
 .PHONY: install-lagoon
 install-lagoon:  install-lagoon-core install-lagoon-remote

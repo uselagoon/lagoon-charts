@@ -84,6 +84,15 @@ podSecurityContext:
 # on the service level, if not set it falls back to chart appVersion.
 imageTag: ""
 
+# This value is false by default, which means that Developers can SSH to
+# Development environments as per the Lagoon documentation
+# (https://docs.lagoon.sh/administering-lagoon/rbac/#developer).
+# Set this to true to:
+# * block Developers from SSH access to Lagoon environments; and
+# * stop Developers from getting a redirect message when trying to SSH into the
+#   ssh-token service.
+# blockDeveloperSSH: false
+
 # the following services are part of the lagoon-core chart
 
 api:
@@ -542,33 +551,14 @@ insightsHandler:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
-storageCalculator:
-  enabled: true
-  image:
-    repository: uselagoon/storage-calculator
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  cron: 5 */12 * * *
-
-  additionalEnvs:
-  #   FOO: Bar
-
 logs2notifications:
   enabled: true
   replicaCount: 2
   image:
-    repository: testlagoon/logs2notifications
+    repository: uselagoon/logs2notifications
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "main"
+    tag: ""
 
   logs2slack:
     disabled: true
@@ -606,7 +596,7 @@ drushAlias:
     repository: uselagoon/drush-alias
     pullPolicy: Always
     # Overrides the image tag whose default is "latest".
-    tag: "v3.0.0"
+    tag: "v3.1.0"
 
   podAnnotations: {}
 
@@ -642,6 +632,7 @@ drushAlias:
     # targetMemoryUtilizationPercentage: 80
 
 ssh:
+  enabled: true
   replicaCount: 2
   image:
     repository: uselagoon/ssh
@@ -669,32 +660,6 @@ ssh:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
-
-controllerhandler:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/controllerhandler
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources: {}
-
-  additionalEnvs:
-  #   FOO: Bar
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
 
 workflows:
   enabled: true
@@ -789,9 +754,9 @@ sshPortalAPI:
   replicaCount: 2
   image:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.20.1"
+    tag: "v0.28.0"
 
   podAnnotations: {}
 
@@ -824,3 +789,73 @@ sshPortalAPI:
     type: ClusterIP
     ports:
       metrics: 9911
+
+opensearchSync:
+  enabled: false
+  image:
+    repository: ghcr.io/uselagoon/lagoon-opensearch-sync
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.7.0"
+
+  # debug logging toggle
+  debug: false
+
+  # root certificate for the server certificate presented by opensearch
+  opensearchCACertificate: |
+  # -----BEGIN CERTIFICATE-----
+  # ...
+  # -----END CERTIFICATE-----
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+sshToken:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-token
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "v0.28.0"
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  serviceMonitor:
+    enabled: true
+
+  service:
+    type: LoadBalancer
+    ports:
+      sshserver: 22
+
+  metricsService:
+    type: ClusterIP
+    ports:
+      metrics: 9948
+
+  # host keys, PEM encoded
+  hostKeys:
+    ecdsa: ""
+    ed25519: ""
+    rsa: ""

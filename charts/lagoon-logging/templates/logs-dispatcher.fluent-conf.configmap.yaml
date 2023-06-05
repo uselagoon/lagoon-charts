@@ -296,6 +296,9 @@ data:
           _dummy_ ${record['kubernetes'].delete('pod_name'); record['kubernetes'].delete('container_name'); record['kubernetes'].delete('pod_id'); nil}
         </record>
       </filter>
+      {{- with .Values.routerLogsPostProcess }}
+        {{- . | nindent 6 }}
+      {{- end }}
       <match lagoon.*.router.nginx>
         @type relabel
         @label @OUTPUT
@@ -346,7 +349,7 @@ data:
       <filter lagoon.*.container>
         @type record_modifier
         <record>
-          index_name container-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
+          index_name container-logs-${record.dig('kubernetes','namespace_labels','lagoon.sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon.sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
           log ${record['log'] || ""}
         </record>
       </filter>
@@ -356,7 +359,7 @@ data:
       <filter lagoon.*.application>
         @type record_modifier
         <record>
-          index_name application-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
+          index_name application-logs-${record.dig('kubernetes','namespace_labels','lagoon.sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon.sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
         </record>
       </filter>
       #
@@ -365,7 +368,7 @@ data:
       <filter lagoon.*.router.**>
         @type record_modifier
         <record>
-          index_name router-logs-${record.dig('kubernetes','namespace_labels','lagoon_sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon_sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
+          index_name router-logs-${record.dig('kubernetes','namespace_labels','lagoon.sh/project')&.gsub("_", "-") || "#{record.dig('kubernetes','namespace_name') || 'unknown_project'}_#{ENV['CLUSTER_NAME']}"}-_-${record.dig('kubernetes','namespace_labels','lagoon.sh/environmentType') || "unknown_environmenttype"}-_-${Time.at(time).strftime("%Y.%m")}
         </record>
       </filter>
       {{- if .Values.cdnLogsCollector.enabled }}
@@ -459,6 +462,8 @@ data:
           # endpoint
           keepalive true # makes sure the connection is not recreated every second
           keepalive_timeout 10m # reconnect after 10mins in order to handle DNS changes, etc.
+          # avoid persistent DNS cache in case the server IP changes
+          expire_dns_cache 3600 # refresh cached DNS every hour
           <server>
             port "#{ENV['LOGS_FORWARD_HOST_PORT']}"
             host "#{ENV['LOGS_FORWARD_HOST']}"
