@@ -98,7 +98,7 @@ Create a default fully qualified app name for storageCalculator.
 {{- end }}
 
 {{/*
-Common labels storageCalculator.`
+Common labels storageCalculator.
 */}}
 {{- define "lagoon-remote.storageCalculator.labels" -}}
 helm.sh/chart: {{ include "lagoon-remote.chart" . }}

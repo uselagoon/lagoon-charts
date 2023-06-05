@@ -44,5 +44,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: update lagoon-build-deploy subchart to 0.22.0
+    - kind: removed
+      description: removed old kubernetes build deploy references
