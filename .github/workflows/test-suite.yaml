@@ -5,7 +5,7 @@ on: pull_request
 jobs:
   # runs for lagoon-core, lagoon-remote, lagoon-test
   test-suite:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -75,9 +75,9 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       with:
         version: v0.19.0
-        node_image: kindest/node:v1.24.13@sha256:cea86276e698af043af20143f4bf0509e730ec34ed3b7fa790cc0bea091bc5dd
+        node_image: kindest/node:v1.25.9@sha256:c08d6c52820aa42e533b70bce0c2901183326d86dcdcbedecc9343681db45161
         config: test-suite.kind-config.yaml
-        kubectl_version: v1.24.1
+        kubectl_version: v1.25.9
 
     - name: Check node IP matches kind configuration
       if: |
