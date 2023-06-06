@@ -4,9 +4,9 @@ description: A Helm chart for Lagoon remote insights
 home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
-- name: bomoko
-  email: blaize.kaye@amazee.io
-  url: https://amazee.io
+  - name: bomoko
+    email: blaize.kaye@amazee.io
+    url: https://amazee.io
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -21,7 +21,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.1
+version: 0.2.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
