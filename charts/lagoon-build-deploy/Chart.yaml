@@ -24,3 +24,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update remote-controller appVersion to v0.13.0
+    - kind: changed
+      description: introduced new values to eventually deprecate taskAPIHost, taskSSHHost, and taskSSHPort. See values.yaml for details
