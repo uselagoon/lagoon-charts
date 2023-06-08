@@ -2,6 +2,8 @@ rabbitMQUsername: lagoon
 rabbitMQPassword: ci
 rabbitMQHostname: lagoon-core-broker
 lagoonTargetName: ci-local-control-k8s
-taskSSHHost: lagoon-core-ssh.lagoon.svc
-taskSSHPort: 2020
-taskAPIHost: http://lagoon-core-api.lagoon.svc:80
+sshPortalHost: lagoon-remote-ssh-portal.lagoon.svc
+sshPortalPort: 22
+lagoonTokenHost: lagoon-core-token.lagoon.svc
+lagoonTokenPort: 22
+lagoonAPIHost: http://lagoon-core-api.lagoon.svc:80
