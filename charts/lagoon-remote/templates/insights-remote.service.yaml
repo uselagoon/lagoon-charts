@@ -4,9 +4,9 @@ metadata:
   name: {{ include "lagoon-remote.insightsRemote.fullname" . }}
   labels: {{- include "lagoon-remote.insightsRemote.labels" . | nindent 4 }}
 spec:
-  type: {{ lagoon-remote.insightsRemote.service.type }}
+  type: {{ "lagoon-remote.insightsRemote.service.type" }}
   ports:
-    - port: {{ lagoon-remote.insightsRemote.service.port }}
+    - port: {{ "lagoon-remote.insightsRemote.service.port" }}
       targetPort: insights-ws
       protocol: TCP
       name: insights-ws
