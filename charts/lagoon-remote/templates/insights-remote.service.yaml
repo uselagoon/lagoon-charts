@@ -4,7 +4,7 @@ metadata:
   name: {{ include "lagoon-remote.insightsRemote.fullname" . }}
   labels: {{- include "lagoon-remote.insightsRemote.labels" . | nindent 4 }}
 spec:
-  type: {{ "lagoon-remote.insightsRemote.service.type" }}
+  type: {{ .Values.insightsRemote.service.type }}
   ports:
     - port: {{ .Values.insightsRemote.service.port }}
       targetPort: 8888
