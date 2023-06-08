@@ -5,9 +5,19 @@ lagoonTargetName: ""
 rabbitMQHostname: ""
 rabbitMQPassword: ""
 rabbitMQUsername: ""
+
+# taskSSHHost is the hostname for the lagoon token service
 taskSSHHost: ""
+# taskSSHPort is the port number for the lagoon token service
 taskSSHPort: ""
+# taskAPIHost is the lagoon graphql API hostname, omitting the `/graphql, eg: https://api.example.com
 taskAPIHost: ""
+# sshPortalHost is the hostname for this remote clusters ssh portal service
+# eg: lagoon-remote-ssh-portal.lagoon.svc can be used for this for internal cluster communications, but a public dns can also be set
+sshPortalHost: ""
+# sshPortalPort is the port number for this remote clusters ssh portal service
+sshPortalPort: ""
+
 
 # if using controller namespace prefixing, define that prefix here
 # limited to 8 characters (will be truncated by controller if it exceeds this)
