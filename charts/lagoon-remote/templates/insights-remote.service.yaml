@@ -7,7 +7,7 @@ spec:
   type: {{ "lagoon-remote.insightsRemote.service.type" }}
   ports:
     - port: {{ "lagoon-remote.insightsRemote.service.port" }}
-      targetPort: insights-ws
+      targetPort: 8888
       protocol: TCP
       name: insights-ws
   selector:
