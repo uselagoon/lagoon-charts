@@ -16,13 +16,11 @@ kubeVersion: ">= 1.21.0-0"
 
 type: application
 
-version: 0.23.0
+version: 0.23.1
 
-appVersion: v0.13.0
+appVersion: v0.13.1
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller appVersion to v0.13.0
-    - kind: changed
-      description: introduced new values to eventually deprecate taskAPIHost, taskSSHHost, and taskSSHPort. See values.yaml for details
+      description: update remote-controller appVersion to v0.13.1
