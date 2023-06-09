@@ -124,7 +124,10 @@ api:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -155,7 +158,10 @@ apiDB:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -188,7 +194,10 @@ apiRedis:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -209,7 +218,10 @@ keycloak:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -251,7 +263,10 @@ keycloakDB:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "100m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -289,7 +304,10 @@ broker:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -345,7 +363,10 @@ authServer:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -370,7 +391,10 @@ webhooks2tasks:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -395,7 +419,10 @@ webhookHandler:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -437,7 +464,10 @@ ui:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -497,7 +527,10 @@ backupHandler:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -539,7 +572,10 @@ insightsHandler:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -577,7 +613,10 @@ logs2notifications:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "16Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -602,7 +641,10 @@ drushAlias:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "8Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -644,7 +686,10 @@ ssh:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -674,7 +719,10 @@ workflows:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "16Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -762,7 +810,10 @@ sshPortalAPI:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "8Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -811,7 +862,10 @@ opensearchSync:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "8Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -829,7 +883,10 @@ sshToken:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "8Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
