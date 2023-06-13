@@ -514,6 +514,11 @@ actionsHandler:
   additionalEnvs:
   #   FOO: Bar
 
+  resources:
+    requests:
+      memory: "16Mi"
+      cpu: "10m"
+
 backupHandler:
   enabled: true
   replicaCount: 2
