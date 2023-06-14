@@ -27,15 +27,24 @@ api:
   replicaCount: 1
   image:
     repository: uselagoon/api
+  resources:
+    requests:
+      cpu: "10m"
 
 apiDB:
   image:
     repository: uselagoon/api-db
   storageSize: 16Gi
+  resources:
+    requests:
+      cpu: "10m"
 
 apiRedis:
   image:
     repository: uselagoon/api-redis
+  resources:
+    requests:
+      cpu: "10m"
 
 # TODO - update repo/tag before v2.11 release
 actionsHandler:
@@ -46,10 +55,16 @@ actionsHandler:
 keycloak:
   image:
     repository: uselagoon/keycloak
+  resources:
+    requests:
+      cpu: "10m"
 
 keycloakDB:
   image:
     repository: uselagoon/keycloak-db
+  resources:
+    requests:
+      cpu: "10m"
 
 broker:
   replicaCount: 1
@@ -57,31 +72,49 @@ broker:
     enabled: false
   image:
     repository: uselagoon/broker
+  resources:
+    requests:
+      cpu: "10m"
 
 authServer:
   replicaCount: 1
   image:
     repository: uselagoon/auth-server
+  resources:
+    requests:
+      cpu: "10m"
 
 webhooks2tasks:
   replicaCount: 1
   image:
     repository: uselagoon/webhooks2tasks
+  resources:
+    requests:
+      cpu: "10m"
 
 webhookHandler:
   replicaCount: 1
   image:
     repository: uselagoon/webhook-handler
+  resources:
+    requests:
+      cpu: "10m"
 
 ui:
   replicaCount: 1
   image:
     repository: uselagoon/ui
+  resources:
+    requests:
+      cpu: "10m"
 
 backupHandler:
   replicaCount: 1
   image:
     repository: uselagoon/backup-handler
+  resources:
+    requests:
+      cpu: "10m"
 
 insightsHandler:
   image:
@@ -102,6 +135,9 @@ ssh:
   replicaCount: 1
   image:
     repository: uselagoon/ssh
+  resources:
+    requests:
+      cpu: "10m"
 
 sshPortalAPI:
   enabled: true
