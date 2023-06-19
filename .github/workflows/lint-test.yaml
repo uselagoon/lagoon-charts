@@ -21,6 +21,7 @@ jobs:
         helm repo add amazeeio https://amazeeio.github.io/charts/
         helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
         helm repo add nats https://nats-io.github.io/k8s/helm/charts/
+        helm repo add kube-logging https://kube-logging.github.io/helm-charts
     - name: Generate helm templates
       run: |
         cd charts
