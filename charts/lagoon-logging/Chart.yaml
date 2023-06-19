@@ -19,12 +19,12 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.78.0
+version: 0.79.0
 
 dependencies:
 - name: logging-operator
-  repository: https://kubernetes-charts.banzaicloud.com
-  version: ~3.17.0
+  repository: https://kube-logging.github.io/helm-charts
+  version: ~4.2.0
   condition: logging-operator.enabled
 
 # This section is used to collect a changelog for artifacthub.io
