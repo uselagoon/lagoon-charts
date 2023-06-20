@@ -1,0 +1,88 @@
+{{- if .Values.sshProxy.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-remote.sshProxy.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.sshProxy.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.sshProxy.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-remote.sshProxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "lagoon-remote.sshProxy.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.sshProxy.podSecurityContext | nindent 8 }}
+      containers:
+      - name: ssh-proxy
+        securityContext:
+          {{- toYaml .Values.sshProxy.securityContext | nindent 10 }}
+        image: "{{ .Values.sshProxy.image.repository }}:{{ .Values.sshProxy.image.tag }}"
+        imagePullPolicy: {{ .Values.sshProxy.image.pullPolicy }}
+        command:
+        - socat
+        args:
+        - TCP4-LISTEN:2020,reuseaddr,fork
+        {{- if .Values.sshPortal.enabled }}
+        - TCP:{{ include "lagoon-remote.sshPortal.fullname" . }}:{{ .Values.sshPortal.service.ports.sshserver }}
+        {{- else }}
+        - TCP:{{ .Values.sshProxy.ssh.host }}:{{ .Values.sshProxy.ssh.port }}
+        {{- end }}
+        ports:
+          - name: sshproxy
+            containerPort: 2020
+            protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: sshproxy
+          initialDelaySeconds: 300
+        readinessProbe:
+          tcpSocket:
+            port: sshproxy
+          initialDelaySeconds: 300
+        resources:
+          {{- toYaml .Values.sshProxy.resources | nindent 10 }}
+      {{- with .Values.sshProxy.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - {{ include "lagoon-remote.name" . }}
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - {{ include "lagoon-remote.sshProxy.fullname" . }}
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- with .Values.sshProxy.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.sshProxy.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

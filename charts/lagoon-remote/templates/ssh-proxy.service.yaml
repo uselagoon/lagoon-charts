@@ -1,0 +1,18 @@
+{{- if .Values.sshProxy.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.sshProxy.service.name }}
+  labels:
+    metrics-only: "true"
+    {{- include "lagoon-remote.sshProxy.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sshProxy.service.type }}
+  ports:
+  - port: {{ .Values.sshProxy.service.port }}
+    targetPort: sshproxy
+    protocol: TCP
+    name: sshproxy
+  selector:
+    {{- include "lagoon-remote.sshProxy.selectorLabels" . | nindent 4 }}
+{{- end }}

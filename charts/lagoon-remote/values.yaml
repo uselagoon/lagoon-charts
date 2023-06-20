@@ -159,6 +159,42 @@ sshPortal:
     ed25519: ""
     rsa: ""
 
+# sshProxy is an optional service that exposes a single `ssh.lagoon.svc` service within a remote
+# this can then be configured to point to the lagoon-core ssh service using `sshProxy.ssh.host` and `sshProxy.ssh.port`
+# or the ssh-portal service that is deployed if the ssh-portal is enabled
+# this service can be used in `lagoon-build-deploy.sshPortalHost` and `lagoon-build-deploy.sshPortalPort` values when configuring the remote
+# and will be exposed by the remote-controller to deployed environments via the LAGOON_CONFIG_SSH_HOST and LAGOON_CONFIG_SSH_PORT values
+# for tasks and pods to use within the cluster scope
+sshProxy:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: alpine/socat
+    pullPolicy: IfNotPresent
+    tag: "1.7.4.4"
+
+  # if ssh-portal is enabled the following `ssh` section is ignored and the ssh-portal service endpoint is used instead
+  ssh:
+    # set these to be the host and port of your lagoon-core ssh service
+    # example for amazeeio cloud:
+    #   host: ssh.amazeeio.cloud
+    #   port: 30831
+    host:
+    port:
+
+  # if you modify these values and are using `lagoon-build-deploy.sshPortalHost` and `lagoon-build-deploy.sshPortalPort`
+  # you'll need to ensure you update those values too
+  service:
+    name: ssh
+    type: ClusterIP
+    port: 2020
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources: {}
+
 # This subchart is disabled by default until this build-deploy type is in
 # widespread use.
 lagoon-build-deploy:
@@ -172,8 +208,8 @@ lagoon-build-deploy:
   # lagoonTokenHost: ""
   # lagoonTokenPort: ""
   # lagoonAPIHost: ""
-  # sshPortalHost: ""
-  # sshPortalPort: ""
+  # sshPortalHost: ssh.lagoon.svc
+  # sshPortalPort: 22
   # See the parent chart for the full range of values that can be passed here to control builds
   # https://github.com/uselagoon/lagoon-charts/blob/main/charts/lagoon-build-deploy/values.yaml
 

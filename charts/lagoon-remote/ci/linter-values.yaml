@@ -96,5 +96,8 @@ sshPortal:
       6lnrpkhPYdpdKnF3PCEyAAAAAAECAwQF
       -----END OPENSSH PRIVATE KEY-----
 
+sshProxy:
+  enabled: true
+
 storageCalculator:
   enabled: true
