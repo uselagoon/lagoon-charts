@@ -19,7 +19,6 @@ jobs:
         helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
         helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
         helm repo add amazeeio https://amazeeio.github.io/charts/
-        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
         helm repo add nats https://nats-io.github.io/k8s/helm/charts/
         helm repo add kube-logging https://kube-logging.github.io/helm-charts
     - name: Generate helm templates
@@ -28,8 +27,6 @@ jobs:
         # hacky workaround for lagoon-test templated values
         tests=[foo,bar] envsubst '$tests' < lagoon-test/ci/linter-values.yaml.tpl > lagoon-test/ci/linter-values.yaml
 
-        # don't lint lagoon-gatekeeper
-        rm -rf lagoon-gatekeeper
         for chart in *; do
           helm dependency build $chart
           mkdir -p /tmp/charts/$chart
@@ -38,11 +35,6 @@ jobs:
             --output-dir /tmp/charts/$chart
         done
 
-        # workaround until gatekeeper templates are fixed:
-        # * https://github.com/open-policy-agent/gatekeeper/pull/1114
-        # * https://github.com/open-policy-agent/gatekeeper/pull/1115
-        rm -rf /tmp/charts/lagoon-gatekeeper/lagoon-gatekeeper/charts/gatekeeper
-        rm -rf /tmp/charts/lagoon-remote/lagoon-remote/charts/lagoon-gatekeeper/charts/gatekeeper
         # workaround until logging-operator templates are fixed:
         # https://github.com/banzaicloud/logging-operator/pull/792
         rm -rf /tmp/charts/lagoon-logging/lagoon-logging/charts/logging-operator
