@@ -9,10 +9,18 @@ metadata:
 spec:
   type: {{ .Values.sshProxy.service.type }}
   ports:
+  {{- if .Values.sshPortal.enabled }}
+  - port: {{ .Values.sshPortal.service.ports.sshserver }}
+    targetPort: sshserver
+    name: sshserver
+  selector:
+    {{- include "lagoon-remote.sshPortal.selectorLabels" . | nindent 4 }}
+  {{- else }}
   - port: {{ .Values.sshProxy.service.port }}
     targetPort: sshproxy
     protocol: TCP
     name: sshproxy
   selector:
     {{- include "lagoon-remote.sshProxy.selectorLabels" . | nindent 4 }}
+  {{- end }}
 {{- end }}

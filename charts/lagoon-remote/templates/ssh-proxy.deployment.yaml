@@ -1,4 +1,4 @@
-{{- if .Values.sshProxy.enabled -}}
+{{- if and .Values.sshProxy.enabled (ne .Values.sshPortal.enabled true) -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -12,7 +12,7 @@ spec:
       {{- include "lagoon-remote.sshProxy.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.sshProxy.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -35,11 +35,7 @@ spec:
         - socat
         args:
         - TCP4-LISTEN:2020,reuseaddr,fork
-        {{- if .Values.sshPortal.enabled }}
-        - TCP:{{ include "lagoon-remote.sshPortal.fullname" . }}:{{ .Values.sshPortal.service.ports.sshserver }}
-        {{- else }}
         - TCP:{{ .Values.sshProxy.ssh.host }}:{{ .Values.sshProxy.ssh.port }}
-        {{- end }}
         ports:
           - name: sshproxy
             containerPort: 2020
