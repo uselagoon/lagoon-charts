@@ -251,6 +251,11 @@ enableDefaultForwarding: true
 # Set how many fluentd pods should be running
 fluentdReplicaCount: 3
 
+fluentd:
+  tolerations: []
+
+  affinity: {}
+
 # Add tolerations to the fluentbit daemonset so that it runs on e.g.
 # load-balancer nodes.
 fluentbitTolerations:
