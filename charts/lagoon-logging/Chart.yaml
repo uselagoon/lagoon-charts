@@ -32,8 +32,8 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: bump the logging-operator chart dependency to v4.2.3
+    - kind: added
+      description: ability to configure toleration/affinity on FluentD deployment 
       links:
         - name: Release Notes
-          url: https://github.com/uselagoon/lagoon-charts/releases/tag/lagoon-logging-0.78.0
+          url: https://github.com/uselagoon/lagoon-charts/releases/tag/lagoon-logging-0.79.0
