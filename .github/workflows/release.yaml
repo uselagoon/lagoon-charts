@@ -31,8 +31,8 @@ jobs:
         helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
         helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
         helm repo add amazeeio https://amazeeio.github.io/charts/
-        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
         helm repo add nats https://nats-io.github.io/k8s/helm/charts/
+        helm repo add kube-logging https://kube-logging.github.io/helm-charts
 
     - name: Run chart-releaser
       uses: helm/chart-releaser-action@v1.5.0

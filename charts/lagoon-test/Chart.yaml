@@ -11,9 +11,9 @@ kubeVersion: ">= 1.21.0-0"
 
 type: application
 
-version: 0.46.0
+version: 0.47.0
 
-appVersion: v2.15.0
+appVersion: v2.15.1
 
 # This section is used to collect a changelog for artifacthub.io
 # It should be started afresh for each release
@@ -21,4 +21,4 @@ appVersion: v2.15.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update Lagoon appVersion to v2.15.0
+      description: update Lagoon appVersion to v2.15.1
