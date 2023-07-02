@@ -1,7 +1,7 @@
 dependencies:
 - name: lagoon-build-deploy
   repository: https://uselagoon.github.io/lagoon-charts/
-  version: 0.22.0
+  version: 0.23.1
 - name: dioscuri
   repository: https://amazeeio.github.io/charts/
   version: 0.4.1
@@ -11,5 +11,5 @@ dependencies:
 - name: nats
   repository: https://nats-io.github.io/k8s/helm/charts/
   version: 0.18.3
-digest: sha256:10455412d7c67ba412139825412301795bce15d2d21476324c147aa88d0cdd10
-generated: "2023-05-08T13:23:41.167070051+10:00"
+digest: sha256:b46d43268f1114fee8e633f79ffdb55577ccb5e0fda164857e3f46b38240c0c5
+generated: "2023-06-09T12:12:07.88969372+10:00"

@@ -19,12 +19,12 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.77.0
+version: 0.78.0
 
 dependencies:
 - name: logging-operator
-  repository: https://kubernetes-charts.banzaicloud.com
-  version: ~3.17.0
+  repository: https://kube-logging.github.io/helm-charts
+  version: ~4.2.0
   condition: logging-operator.enabled
 
 # This section is used to collect a changelog for artifacthub.io
@@ -32,5 +32,8 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: added
-      description: add chart option to configure logging-operator subchart metrics, and enable the fluentbit ServiceMonitor by default
+    - kind: changed
+      description: bump the logging-operator chart dependency to v4.2.3
+      links:
+        - name: Release Notes
+          url: https://github.com/uselagoon/lagoon-charts/releases/tag/lagoon-logging-0.78.0

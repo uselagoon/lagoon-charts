@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "lagoon-logging.labels" . | nindent 4 }}
 spec:
+  enableRecreateWorkloadOnImmutableFieldChange: true
   fluentd:
     security:
       podSecurityContext:

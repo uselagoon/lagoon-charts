@@ -178,15 +178,29 @@ spec:
         - name: OVERRIDE_BUILD_DEPLOY_DIND_IMAGE
           value: {{ . | quote }}
         {{- end }}
-        {{- with .Values.taskSSHHost }}
+        {{- with .Values.sshPortalHost | default .Values.taskSSHHost}}
+        - name: LAGOON_CONFIG_SSH_HOST
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.sshPortalPort | default .Values.taskSSHPort }}
+        - name: LAGOON_CONFIG_SSH_PORT
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.lagoonTokenHost | default .Values.taskSSHHost }}
+        - name: LAGOON_CONFIG_TOKEN_HOST
+          value: {{ . | quote }}
         - name: TASK_SSH_HOST
           value: {{ . | quote }}
         {{- end }}
-        {{- with .Values.taskSSHPort }}
+        {{- with .Values.lagoonTokenPort | default .Values.taskSSHPort }}
+        - name: LAGOON_CONFIG_TOKEN_PORT
+          value: {{ . | quote }}
         - name: TASK_SSH_PORT
           value: {{ . | quote }}
         {{- end }}
-        {{- with .Values.taskAPIHost }}
+        {{- with .Values.lagoonAPIHost | default .Values.taskAPIHost }}
+        - name: LAGOON_CONFIG_API_HOST
+          value: {{ . | quote }}
         - name: TASK_API_HOST
           value: {{ . | quote }}
         {{- end }}

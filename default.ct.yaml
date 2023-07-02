@@ -8,9 +8,8 @@ chart-repos:
 - banzaicloud-stable=https://kubernetes-charts.banzaicloud.com
 - lagoon=https://uselagoon.github.io/lagoon-charts/
 - amazeeio=https://amazeeio.github.io/charts/
-- gatekeeper=https://open-policy-agent.github.io/gatekeeper/charts
 - nats=https://nats-io.github.io/k8s/helm/charts/
+- kube-logging=https://kube-logging.github.io/helm-charts
 excluded-charts:
 - lagoon-test
-- lagoon-gatekeeper
 helm-extra-args: --timeout 20m

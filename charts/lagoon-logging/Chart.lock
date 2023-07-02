@@ -1,6 +1,6 @@
 dependencies:
 - name: logging-operator
-  repository: https://kubernetes-charts.banzaicloud.com
-  version: 3.17.10
-digest: sha256:293ac5ba13713b7edcc8fb655e8fd402c6d466c57edcdc9886f1336b39815b8c
-generated: "2022-11-28T22:12:54.57492083+08:00"
+  repository: https://kube-logging.github.io/helm-charts
+  version: 4.2.3
+digest: sha256:bcfec23e091d887e7892f70bddbcf33a09195e4140372028b25f8e16cf54436f
+generated: "2023-06-14T14:13:35.857841045+08:00"

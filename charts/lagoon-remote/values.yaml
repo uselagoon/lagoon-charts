@@ -166,9 +166,14 @@ lagoon-build-deploy:
   # these values are used by the lagoon-build-deploy controller and do not have
   # sensible defaults.
   # lagoonTargetName:
-  # taskSSHHost: ""
-  # taskSSHPort: ""
-  # taskAPIHost: ""
+  # taskSSHHost: "" # use lagoonTokenHost
+  # taskSSHPort: "" # use lagoonTokenPort
+  # taskAPIHost: "" # use lagoonAPIHost
+  # lagoonTokenHost: ""
+  # lagoonTokenPort: ""
+  # lagoonAPIHost: ""
+  # sshPortalHost: ""
+  # sshPortalPort: ""
   # See the parent chart for the full range of values that can be passed here to control builds
   # https://github.com/uselagoon/lagoon-charts/blob/main/charts/lagoon-build-deploy/values.yaml
 
