@@ -45,8 +45,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-<<<<<<< HEAD
       description: Changes permissions and adds service for insights-remote
-=======
-      description: update lagoon-build-deploy subchart to 0.23.1
->>>>>>> main
