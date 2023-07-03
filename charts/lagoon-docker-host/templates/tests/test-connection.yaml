@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "lagoon-docker-host.dockerHost.fullname" . }}-test-connection"
+  labels:
+    {{- include "lagoon-docker-host.dockerHost.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: nc
+    image: busybox
+    command: ['nc']
+    args:
+    - "-zvw5"
+    - "docker-host"
+    - "{{ .Values.service.port }}"
+  restartPolicy: Never

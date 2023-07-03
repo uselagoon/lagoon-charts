@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-docker-host.dockerHost.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "lagoon-docker-host.dockerHost.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-docker-host.dockerHost.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        {{- include "lagoon-docker-host.dockerHost.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "lagoon-docker-host.dockerHost.serviceAccountName" . }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: docker-host
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        {{- range $name, $value := .Values.extraEnvs }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+        {{- with .Values.httpProxy }}
+        - name: HTTP_PROXY
+          value: {{ . | quote }}
+        - name: http_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.httpsProxy }}
+        - name: HTTPS_PROXY
+          value: {{ . | quote }}
+        - name: https_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.noProxy }}
+        - name: NO_PROXY
+          value: {{ . | quote }}
+        - name: no_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        - name: DOCKER_HOST
+          value: localhost
+        - name: REGISTRY
+          value: {{ .Values.registry | quote }}
+        - name: REPOSITORY_TO_UPDATE
+          value: {{ .Values.repositoryToUpdate | quote }}
+        - name: PRUNE_IMAGES_UNTIL
+          value: {{ .Values.pruneImagesUntil | quote }}
+        - name: CRONJOBS
+          value: |
+            22 1 * * * /lagoon/cronjob.sh "/prune-images.sh"
+            22 */4 * * * /lagoon/cronjob.sh "/remove-exited.sh"
+            */15 * * * * /lagoon/cronjob.sh "/update-images.sh"
+        ports:
+        - containerPort: 2375
+          protocol: TCP
+          name: docker-daemon
+        livenessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 2375
+          timeoutSeconds: 1
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 2375
+          timeoutSeconds: 1
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/lib/docker
+          name: docker-lib
+      volumes:
+      - name: docker-lib
+      {{- if .Values.storage.create }}
+        persistentVolumeClaim:
+          claimName: {{ include "lagoon-docker-host.dockerHost.fullname" . }}
+      {{- else }}
+        emptyDir: {}
+      {{- end -}}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 6 }}
+    {{- end }}
