@@ -3900,6 +3900,28 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-0.1.0/lagoon-core-0.1.0.tgz
     version: 0.1.0
+  lagoon-docker-host:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: update lagoon-docker-host to appversion v3.3.0
+    apiVersion: v2
+    appVersion: v3.3.0
+    created: "2023-07-03T08:36:40.17973828Z"
+    description: A Helm chart to run a lagoon-docker-host
+    digest: 5b2420c1ab717969da36dea099c3ed9db9bf4a51d8de16cdecda1a556185a6ae
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.21.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-docker-host
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-docker-host-0.1.0/lagoon-docker-host-0.1.0.tgz
+    version: 0.1.0
   lagoon-gatekeeper:
   - apiVersion: v2
     appVersion: 2e5e92f
@@ -12016,4 +12038,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-03T06:42:30.825558923Z"
+generated: "2023-07-03T08:36:40.181306507Z"
