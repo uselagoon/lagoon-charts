@@ -208,6 +208,10 @@ insightsRemote:
 
   replicaCount: 1
 
+  # This is the secret used to sign JWT's injected into environments
+  # This shouldn't need to be changed in most circumstances - here for completion
+  #insightsTokenSecret: ""
+
   image:
     repository: uselagoon/insights-remote
     pullPolicy: Always
