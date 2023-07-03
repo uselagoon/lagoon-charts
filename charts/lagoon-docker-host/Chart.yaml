@@ -1,13 +1,9 @@
 apiVersion: v2
-name: lagoon-core
-description: >
-  A Helm chart for Kubernetes which deploys Lagoon's core components.
+name: lagoon-docker-host
+description: A Helm chart to run a lagoon-docker-host
 home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
-- name: smlx
-  email: scott.leggett@amazee.io
-  url: https://amazee.io
 - name: shreddedbacon
   email: ben.jackson@amazee.io
   url: https://amazee.io
@@ -20,20 +16,10 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-# Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.33.0
+version: 0.1.0
 
-# This is the version number of the application being deployed. This version
-# number should be incremented each time you make changes to the application.
-# Versions are not expected to follow Semantic Versioning. They should reflect
-# the version the application is using.
-appVersion: v2.15.1
+appVersion: v3.3.0
 
-dependencies:
-- name: nats
-  version: ~0.18.0
-  repository: https://nats-io.github.io/k8s/helm/charts/
-  condition: nats.enabled
 
 # This section is used to collect a changelog for artifacthub.io
 # It should be started afresh for each release
@@ -41,4 +27,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon-ssh-portal-api and lagoon-ssh-token to v0.30.0
+      description: update lagoon-docker-host to appversion v3.3.0
