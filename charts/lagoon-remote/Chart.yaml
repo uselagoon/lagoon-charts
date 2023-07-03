@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.78.2
+version: 0.78.3
 
 dependencies:
 - name: lagoon-build-deploy
@@ -45,4 +45,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Changes permissions and adds service for insights-remote
+      description: Changes permissions, adds service, updates secret for insights-remote
