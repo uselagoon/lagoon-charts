@@ -1051,6 +1051,35 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update Lagoon appVersion to v2.15.2
+    apiVersion: v2
+    appVersion: v2.15.2
+    created: "2023-07-04T07:29:08.422957041Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.18.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: b150a2c7966d4ba135ed72a24f57086396c96f075052a4190f0171298d247d9d
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.21.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.34.0/lagoon-core-1.34.0.tgz
+    version: 1.34.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon-ssh-portal-api and lagoon-ssh-token to v0.30.0
     apiVersion: v2
     appVersion: v2.15.1
@@ -11100,6 +11129,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update Lagoon appVersion to v2.15.2
+    apiVersion: v2
+    appVersion: v2.15.2
+    created: "2023-07-04T07:29:08.645415715Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 7e0adab606e9b632f44305eb47feb45ddf1c389f15669ffe2ab57bbf6293a9f2
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.21.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.48.0/lagoon-test-0.48.0.tgz
+    version: 0.48.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update Lagoon appVersion to v2.15.1
     apiVersion: v2
     appVersion: v2.15.1
@@ -12038,4 +12088,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-03T08:36:40.181306507Z"
+generated: "2023-07-04T07:29:08.64706754Z"
