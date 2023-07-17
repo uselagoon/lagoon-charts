@@ -1,0 +1,17 @@
+{{- if .Values.storage.create -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "lagoon-docker-host.dockerHost.fullname" . }}
+  labels:
+    {{- include "lagoon-docker-host.dockerHost.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.storage.size | quote }}
+  {{- with .Values.storage.className }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+{{- end }}
