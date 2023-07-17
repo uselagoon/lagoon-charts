@@ -108,6 +108,17 @@ spec:
                     type: string
                   namespacePattern:
                     type: string
+                  variables:
+                    description: Variables contains the project and environment variables
+                      from lagoon.
+                    properties:
+                      environment:
+                        format: byte
+                        type: string
+                      project:
+                        format: byte
+                        type: string
+                    type: object
                 required:
                 - id
                 - name
