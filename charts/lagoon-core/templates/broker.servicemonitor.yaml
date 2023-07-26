@@ -8,6 +8,14 @@ metadata:
 spec:
   endpoints:
     - port: metrics
+    - interval: 30s
+      params:
+        family:
+          - queue_coarse_metrics
+          - queue_metrics
+      path: /metrics/detailed
+      port: metrics
+      scrapeTimeout: 29s       
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
