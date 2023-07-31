@@ -21,7 +21,7 @@ version: 0.49.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.15.3
+appVersion: v2.15.4
 
 # This section is used to collect a changelog for artifacthub.io
 # It should be started afresh for each release
@@ -29,4 +29,4 @@ appVersion: v2.15.3
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update Lagoon appVersion to v2.15.3
+      description: update Lagoon appVersion to v2.15.4
