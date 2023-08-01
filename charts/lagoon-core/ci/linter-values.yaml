@@ -23,6 +23,8 @@ defaultIngressClassName: nginx
 lagoonAPIURL: https://api.example.com/graphql
 keycloakAPIURL: https://keycloak.example.com/auth
 
+keycloakAdminEmail: admin@example.com
+
 api:
   replicaCount: 1
   image:
@@ -53,6 +55,21 @@ actionsHandler:
     repository: uselagoon/actions-handler
 
 keycloak:
+  realmSettings:
+    enabled: true
+    realmSettings:
+      resetPasswordAllowed: true
+      rememberMe: true
+  email:
+    enabled: true
+    smtpServer:
+      envelopeFrom: lagoon@example.com
+      from: lagoon@example.com
+      fromDisplayName: Lagoon
+      host: mailhog
+      port: '1025'
+      replyTo: lagoon@example.com
+      replyToDisplayName: Lagoon No-Reply
   image:
     repository: uselagoon/keycloak
   resources:

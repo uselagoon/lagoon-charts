@@ -60,6 +60,8 @@ rabbitMQUsername: lagoon
 k8upS3Endpoint: ""
 
 keycloakAdminUser: admin
+# this is required if email sending is to be enabled in keycloak
+# keycloakAdminEmail: admin@example.com
 
 buildDeployImage:
   edge:
@@ -207,6 +209,29 @@ apiRedis:
     port: 6379
 
 keycloak:
+  # keycloak realm and email settings configuration
+  realmSettings:
+    enabled: false
+    # the full list of config settings is available TODO
+    options:
+      resetPasswordAllowed: true
+      rememberMe: true
+  email:
+    enabled: false
+    settings:
+      envelopeFrom: lagoon@example.com
+      from: lagoon@example.com
+      fromDisplayName: Lagoon
+      host: mailhog
+      port: '1025'
+      replyTo: lagoon@example.com
+      replyToDisplayName: Lagoon No-Reply
+      ssl: 'false'
+      starttls: 'false'
+      auth: 'false'
+      user: not-used-if-auth=false
+      password: not-used-if-auth=false
+
   replicaCount: 1
   image:
     repository: uselagoon/keycloak
