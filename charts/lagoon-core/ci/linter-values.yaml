@@ -57,19 +57,19 @@ actionsHandler:
 keycloak:
   realmSettings:
     enabled: true
-    realmSettings:
+    options:
       resetPasswordAllowed: true
       rememberMe: true
   email:
     enabled: true
-    smtpServer:
-      envelopeFrom: lagoon@example.com
-      from: lagoon@example.com
-      fromDisplayName: Lagoon
+    settings:
       host: mailhog
       port: '1025'
-      replyTo: lagoon@example.com
+      fromDisplayName: Lagoon
+      from: lagoon@example.com
       replyToDisplayName: Lagoon No-Reply
+      replyTo: lagoon@example.com
+      envelopeFrom: lagoon@example.com
   image:
     repository: uselagoon/keycloak
   resources:
