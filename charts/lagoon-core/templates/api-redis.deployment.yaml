@@ -36,6 +36,10 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.api.fullname" . }}
               key: REDIS_PASSWORD
+        {{- if .Values.apiRedis.persistence.enabled }}
+        - name: FLAVOR
+          value: persistent
+        {{- end }}
       {{- range $key, $val := .Values.apiRedis.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
@@ -43,9 +47,11 @@ spec:
         ports:
         - name: redis
           containerPort: 6379
+        {{- if .Values.apiRedis.persistence.enabled }}
         volumeMounts:
         - name: {{ include "lagoon-core.apiRedis.fullname" . }}-data
           mountPath: /data
+        {{- end }}
         livenessProbe:
           tcpSocket:
             port: redis
@@ -54,10 +60,12 @@ spec:
             port: redis
         resources:
           {{- toYaml .Values.apiRedis.resources | nindent 10 }}
+      {{- if .Values.apiRedis.persistence.enabled }}
       volumes:
       - name: {{ include "lagoon-core.apiRedis.fullname" . }}-data
         persistentVolumeClaim:
           claimName: {{ include "lagoon-core.apiRedis.fullname" . }}-data
+      {{- end }}
       {{- with .Values.apiRedis.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -70,6 +78,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if .Values.apiRedis.persistence.enabled }}
   volumeClaimTemplates:
   - metadata:
       name: {{ include "lagoon-core.apiRedis.fullname" . }}-data
@@ -79,3 +88,4 @@ spec:
       resources:
         requests:
           storage: {{ .Values.apiRedis.storageSize | quote }}
+  {{- end }}
