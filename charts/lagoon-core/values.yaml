@@ -201,7 +201,7 @@ apiRedis:
 
   persistence:
     enabled: true
-    size: 8Gi
+    size: 1Gi
 
   service:
     type: ClusterIP
