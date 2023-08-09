@@ -43,6 +43,9 @@ spec:
         ports:
         - name: redis
           containerPort: 6379
+        volumeMounts:
+        - name: {{ include "lagoon-core.apiRedis.fullname" . }}-data
+          mountPath: /data
         livenessProbe:
           tcpSocket:
             port: redis
@@ -51,6 +54,10 @@ spec:
             port: redis
         resources:
           {{- toYaml .Values.apiRedis.resources | nindent 10 }}
+      volumes:
+      - name: {{ include "lagoon-core.apiRedis.fullname" . }}-data
+        persistentVolumeClaim:
+          claimName: {{ include "lagoon-core.apiRedis.fullname" . }}-data
       {{- with .Values.apiRedis.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -63,3 +70,12 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ include "lagoon-core.apiRedis.fullname" . }}-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.apiRedis.storageSize | quote }}

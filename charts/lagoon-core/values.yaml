@@ -200,7 +200,10 @@ apiRedis:
       cpu: "50m"
 
   additionalEnvs:
-  #   FOO: Bar
+    FLAVOR: persistent
+
+  storage:
+    size: 8Gi
 
   service:
     type: ClusterIP
