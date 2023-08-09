@@ -201,10 +201,8 @@ apiRedis:
       memory: "64Mi"
       cpu: "50m"
 
-  additionalEnvs:
-    FLAVOR: persistent
-
-  storage:
+  persistence:
+    enabled: true
     size: 8Gi
 
   service:
