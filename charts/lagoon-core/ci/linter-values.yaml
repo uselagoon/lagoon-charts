@@ -21,7 +21,7 @@ defaultIngressClassName: nginx
 
 # used in ui
 lagoonAPIURL: https://api.example.com/graphql
-keycloakAPIURL: https://keycloak.example.com/auth
+keycloakFrontEndURL: https://keycloak.example.com
 
 keycloakAdminEmail: admin@example.com
 
@@ -55,6 +55,8 @@ actionsHandler:
     repository: uselagoon/actions-handler
 
 keycloak:
+  keycloakFrontEndURL: https://keycloak.example.com
+  
   realmSettings:
     enabled: true
     options:

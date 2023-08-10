@@ -28,7 +28,7 @@
 # These values may be set on install, otherwise the chart tries to guess
 # sensible defaults.
 
-# keycloakAPIURL: https://keycloak.example.com/auth
+# keycloakFrontEndURL: https://keycloak.example.com
 # lagoonAPIURL: https://api.example.com/graphql
 # lagoonUIURL: https://ui.example.com
 # lagoonWebhookURL: https://webhook-handler.example.com

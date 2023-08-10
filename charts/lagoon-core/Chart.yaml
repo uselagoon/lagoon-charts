@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: add additional keycloak configuration options
+    - kind: changed
+      description: replace keycloakAPIURL with keycloakFrontEndURL
