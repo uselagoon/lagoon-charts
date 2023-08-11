@@ -78,14 +78,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  {{- if .Values.apiRedis.persistence.enabled }}
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ include "lagoon-core.apiRedis.fullname" . }}-data
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: {{ .Values.apiRedis.storageSize | quote }}
-  {{- end }}

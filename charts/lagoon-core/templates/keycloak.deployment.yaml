@@ -43,11 +43,11 @@ spec:
           value: {{ .Values.keycloakAdminUser | quote }}
         - name: KEYCLOAK_FRONTEND_URL
           {{- if .Values.keycloakFrontEndURL }}
-          value: {{ .Values.keycloakFrontEndURL }}/
+          value: {{ .Values.keycloakFrontEndURL }}/auth
           {{- else if .Values.keycloak.ingress.enabled }}
-          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}/
+          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}/auth
           {{- else }}
-          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
           {{- end }}
         {{- with .Values.keycloakAdminEmail }}
         - name: KEYCLOAK_ADMIN_EMAIL
