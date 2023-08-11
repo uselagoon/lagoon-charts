@@ -20,8 +20,8 @@ lagoonWebhookURL: http://webhook:11213
 defaultIngressClassName: nginx
 
 # used in ui
-lagoonAPIURL: https://api.example.com/graphql
-keycloakFrontEndURL: https://keycloak.example.com
+# lagoonAPIURL: https://api.example.com/graphql
+# keycloakFrontEndURL: https://keycloak.example.com
 
 keycloakAdminEmail: admin@example.com
 
