@@ -16,7 +16,8 @@ lagoon-build-deploy:
 
 dockerHost:
   image:
-    repository: uselagoon/docker-host
+    repository: ghcr.io/uselagoon/docker-host
+    tag: "pr-25"
   storage:
     size: 50Gi
 
@@ -27,6 +28,9 @@ dbaas-operator:
 
 insightsRemote:
   enabled: true
+  image:
+    repository: ghcr.io/uselagoon/insights-remote
+    tag: "feature-fix-secret-delete"
 
 mxoutHost: mxout1.example.com
 
