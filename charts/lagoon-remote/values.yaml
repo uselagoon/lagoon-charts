@@ -31,6 +31,8 @@ dockerHost:
 
   name: docker-host
 
+  host: ""
+
   registry: registry.lagoon.svc:5000
 
   registryMirror: ""

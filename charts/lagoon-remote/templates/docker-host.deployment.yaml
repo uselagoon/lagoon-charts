@@ -56,7 +56,7 @@ spec:
           value: {{ . | quote }}
         {{- end }}
         - name: DOCKER_HOST
-          value: tcp://localhost:2375
+          value: {{ .Values.dockerHost.host | tcp://localhost:2375 }}
         - name: REGISTRY
           value: {{ .Values.dockerHost.registry | quote }}
         - name: REGISTRY_MIRROR
@@ -73,6 +73,10 @@ spec:
           value: {{ .Values.dockerHost.updateImagesSchedule | quote }}
         - name: DANGLING_FILTER
           value: {{ .Values.dockerHost.danglingFilter | quote }}
+      {{- range $key, $val := .Values.dockerHost.additionalEnvs }}
+      - name: {{ $key }}
+        value: {{ $val | quote }}
+      {{- end }}
         ports:
         - containerPort: 2375
           protocol: TCP
