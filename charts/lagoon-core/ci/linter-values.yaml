@@ -56,7 +56,6 @@ actionsHandler:
 
 keycloak:
   keycloakFrontEndURL: https://keycloak.example.com
-  
   realmSettings:
     enabled: true
     options:
