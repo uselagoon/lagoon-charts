@@ -56,7 +56,7 @@ spec:
           value: {{ . | quote }}
         {{- end }}
         - name: DOCKER_HOST
-          value: {{ .Values.dockerHost.host | "tcp://localhost:2375" }}
+          value: {{ .Values.dockerHost.host | default "tcp://localhost:2375" }}
         - name: REGISTRY
           value: {{ .Values.dockerHost.registry | quote }}
         - name: REGISTRY_MIRROR
