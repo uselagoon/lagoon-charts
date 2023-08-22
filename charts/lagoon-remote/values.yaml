@@ -46,6 +46,9 @@ dockerHost:
 
   danglingFilter: true
 
+  # Define the logging level for the docker-host | default: "info"
+  logLevel: ""
+
   pruneImagesSchedule: '22 1 * * *'
 
   removeExitedSchedule: '22 */4 * * *'

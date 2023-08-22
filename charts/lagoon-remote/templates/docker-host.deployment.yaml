@@ -73,6 +73,8 @@ spec:
           value: {{ .Values.dockerHost.updateImagesSchedule | quote }}
         - name: DANGLING_FILTER
           value: {{ .Values.dockerHost.danglingFilter | quote }}
+        - name: LOG_LEVEL
+          value: {{ .Values.dockerHost.logLevel | quote }}
       {{- range $key, $val := .Values.dockerHost.additionalEnvs }}
       - name: {{ $key }}
         value: {{ $val | quote }}
