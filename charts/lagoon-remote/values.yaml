@@ -33,8 +33,6 @@ dockerHost:
 
   registry: registry.lagoon.svc:5000
 
-  registryMirror: ""
-
   # Define a regex pattern for specified images to be updated during UPDATE_IMAGES_SCHEDULE
   repositoriesToUpdate:
     - "amazeeio/*:*"
