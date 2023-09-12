@@ -156,6 +156,43 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
+Create the name of the service account to use for sshCore.
+*/}}
+{{- define "lagoon-remote.sshCore.serviceAccountName" -}}
+{{- default (include "lagoon-remote.sshCore.fullname" .) .Values.sshCore.serviceAccount.name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for sshCore.
+*/}}
+{{- define "lagoon-remote.sshCore.fullname" -}}
+{{- include "lagoon-remote.fullname" . }}-ssh-core
+{{- end }}
+
+{{/*
+Common labels sshCore.
+*/}}
+{{- define "lagoon-remote.sshCore.labels" -}}
+helm.sh/chart: {{ include "lagoon-remote.chart" . }}
+{{ include "lagoon-remote.sshCore.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels sshCore.
+*/}}
+{{- define "lagoon-remote.sshCore.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-remote.sshCore.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+
+{{/*
 Create the name of the service account to use for sshPortal.
 */}}
 {{- define "lagoon-remote.sshPortal.serviceAccountName" -}}
