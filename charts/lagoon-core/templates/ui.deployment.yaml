@@ -44,6 +44,12 @@ spec:
           {{- else }}
           value: https://{{ index .Values.api.ingress.hosts 0 "host" }}/graphql
           {{- end }}
+        - name: WEBHOOK_URL
+          {{- if .Values.lagoonWebhookURL }}
+          value: {{ .Values.lagoonWebhookURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.webhookHandler.ingress.hosts 0 "host" }}
+          {{- end }}
         - name: KEYCLOAK_API
           {{- if .Values.keycloakAPIURL }}
           value: {{ .Values.keycloakAPIURL | quote }}
