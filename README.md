@@ -46,3 +46,42 @@ Documentation on probes for pod startup is [here](https://kubernetes.io/docs/con
 $ docker run --rm --interactive --detach --network host --name ct "--volume=$(pwd):/workdir" "--workdir=/workdir" --volume=$(pwd)/default.ct.yaml:/etc/ct/ct.yaml quay.io/helmpack/chart-testing:latest cat
 $ docker exec ct ct lint
 ```
+
+### Run lagoon-remote and lagoon-core in a local kind cluster
+
+#### Create the kind cluster
+
+```shell
+make create-kind-cluster
+```
+
+#### Configure local cache
+
+This step is optional but makes local image pulls much faster.
+
+Start the local image registry cache in another terminal:
+
+```shell
+docker run --rm -it \
+    --name docker_registry_proxy \
+    --net kind \
+    --hostname docker-registry-proxy \
+    -e ENABLE_MANIFEST_CACHE=true \
+    -v $(pwd)/docker_mirror_cache:/docker_mirror_cache \
+    -v $(pwd)/docker_mirror_certs:/ca \
+    -v $(pwd)/resolvers.conf:/etc/nginx/resolvers.conf \
+    -e REGISTRIES="k8s.gcr.io gcr.io quay.io registry.k8s.io" \
+    rpardini/docker-registry-proxy:0.6.4
+```
+
+Configure kind to use the proxy:
+
+```shell
+./configure-kind-node-proxy
+```
+
+#### Install Lagoon Core and Remote
+
+```shell
+make install-lagoon-remote
+```
