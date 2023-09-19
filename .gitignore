@@ -1,2 +1,4 @@
 /test-suite.kind-config.yaml
 /test-suite.kind-config.calico.yaml
+/docker_mirror_cache
+/docker_mirror_certs
