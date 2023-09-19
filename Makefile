@@ -117,7 +117,7 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=11.5.7 \
+		--version=12.2.9 \
 		mariadb \
 		bitnami/mariadb
 
