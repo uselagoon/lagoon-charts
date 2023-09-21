@@ -44,3 +44,5 @@ annotations:
       description: add additional keycloak configuration options
     - kind: changed
       description: replace keycloakAPIURL with keycloakFrontEndURL
+    - kind: changed
+      description: added lagoonWebhookURL to UI deployment

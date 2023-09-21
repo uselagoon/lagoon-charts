@@ -52,6 +52,12 @@ spec:
           {{- else }}
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
           {{- end }}
+        - name: WEBHOOK_URL
+          {{- if .Values.lagoonWebhookURL }}
+          value: {{ .Values.lagoonWebhookURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.webhookHandler.ingress.hosts 0 "host" }}
+          {{- end }}
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}
       {{- range $key, $val := .Values.ui.additionalEnvs }}
