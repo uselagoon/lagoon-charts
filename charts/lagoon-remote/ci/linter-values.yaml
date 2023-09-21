@@ -27,9 +27,6 @@ dbaas-operator:
 
 insightsRemote:
   enabled: true
-  image:
-    repository: ghcr.io/uselagoon/insights-remote
-    tag: "feature-fix-secret-delete"
 
 mxoutHost: mxout1.example.com
 
