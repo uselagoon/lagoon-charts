@@ -739,37 +739,109 @@ workflows:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+# nats subchart is configured for use by lagoon-core
 nats:
   enabled: false
-  # inject additional config
-  additionalVolumes:
-  - name: lagoon-core-nats-tls
-    secret:
-      secretName: lagoon-core-nats-tls
-  additionalVolumeMounts:
-  - name: lagoon-core-nats-tls
-    mountPath: /etc/lagoon-core-nats-tls
-  nats:
-    config:
-    - name: lagoon-core
-      secret:
-        secretName: lagoon-core-nats-conf
-  cluster:
+  # name override provides compatiblity for upgrading nats chart v0.x to v1.x
+  nameOverride: nats1
+  tlsCA:
     enabled: true
-    name: lagoon-core
-    # internal cluster IPs are not routable, so don't advertise them
-    noAdvertise: true
-  natsbox:
+    secretName: lagoon-core-nats-tls
+  # Uncomment this block to enable monitoring if you have Prometheus Operator
+  # installed.
+  # promExporter:
+  #   enabled: true
+  #   podMonitor:
+  #     enabled: true
+  #     # fromNamespaces restricts the namespaces from which monitoring can occur
+  #     # via the NetworkPolicy. At least one namespace name must be listed.
+  #     fromNamespaces:
+  #     - monitoring
+  natsBox:
     enabled: false
+  config:
+    cluster:
+      enabled: true
+      name: lagoon-core
+      # internal cluster IPs are not routable, so don't advertise them
+      noAdvertise: true
+    leafnodes:
+      enabled: true
+      tls:
+        enabled: true
+        secretName: lagoon-core-nats-tls
+        merge:
+          verify: true
+      merge:
+        00$include: ./lagoon-core/leafnodesAuthorization.conf
+    merge:
+      00$include: ./lagoon-core/accounts.conf
+  # Uncomment this block if upgrading from lagoon-core <v1.36.0.
+  # statefulSet:
+  #   patch:
+  #   - op: remove
+  #     path: /spec/selector/matchLabels/app.kubernetes.io~1component
+  podTemplate:
+    patch:
+    - op: add
+      path: /spec/volumes/-
+      value:
+        name: lagoon-core-nats-conf
+        secret:
+          secretName: lagoon-core-nats-conf
+  container:
+    patch:
+    - op: add
+      path: /volumeMounts/-
+      value:
+        name: lagoon-core-nats-conf
+        mountPath: /etc/nats-config/lagoon-core
   # to connect to nats, pods must have the right label
-  networkPolicy:
-    enabled: true
-    allowExternal: false
-    # allow inbound leaf connections
-    extraIngress:
-    - ports:
-      - port: 7422
-        protocol: TCP
+  extraResources:
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name:
+        $tplYaml: >
+          {{ include "nats.fullname" $ | quote }}
+      labels:
+        $tplYaml: |
+          {{ include "nats.labels" $ }}
+    spec:
+      policyTypes:
+      - Ingress
+      podSelector:
+        matchLabels:
+          $tplYaml: |
+            {{- include "nats.selectorLabels" $ }}
+      ingress:
+      - from:
+        # pods in this namespace with the correct label can access NATS pods
+        - podSelector:
+            matchLabels:
+              lagoon-core-nats-client: "true"
+        # NATS inter-pod communication is allowed
+        - podSelector:
+            matchLabels:
+              $tplYaml: |
+                {{- include "nats.selectorLabels" $ }}
+      - ports:
+        # allow external inbound leaf node connections (these are authenticated)
+        - port: 7422
+          protocol: TCP
+      # conditionally allow metrics collection
+      - $tplYamlSpread: |
+          {{- if and .Values.promExporter.enabled .Values.promExporter.podMonitor.enabled }}
+          - from:
+            {{- range .Values.promExporter.podMonitor.fromNamespaces }}
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: {{ . | quote }}
+            {{- end }}
+            ports:
+            - port: 7777
+              protocol: TCP
+          {{- end }}
 
 natsService:
   # this service is enabled via nats.enabled
@@ -789,18 +861,22 @@ natsConfig:
     # If the lagoon-core-nats-tls secret should be created by the lagoon-core
     # chart, certificate values can be specified directly in secretData.
     # Configuring TLS this way also allows specifying a custom ca.crt.
+    # The chart expects expects secretData to be specified unless
+    # nats.tlsCA.enabled is set to false.
     #
     # secretData:
     #   ca.crt: |
     #     ...
-    #   server.crt: |
+    #   tls.crt: |
     #     ...
-    #   server.key: |
+    #   tls.key: |
     #     ...
     #
     # If the TLS secret is created outside the lagoon-core chart, it should be
     # named lagoon-core-nats-tls. This secret should contain fields tls.crt and
     # tls.key, and the certificate should be issued by a public authority.
+    # `nats.tlsCA.enabled: false` should be set in this case (it is true by
+    # default).
 
 sshPortalAPI:
   enabled: false

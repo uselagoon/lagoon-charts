@@ -25,7 +25,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{ include "lagoon-core.fullname" . }}-nats-client: "true"
+        lagoon-core-nats-client: "true"
         {{- include "lagoon-core.sshPortalAPI.selectorLabels" . | nindent 8 }}
     spec:
       securityContext:
@@ -55,7 +55,7 @@ spec:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_SERVICE_API_CLIENT_SECRET
         - name: NATS_URL
-          value: nats://{{ include "lagoon-core.fullname" . }}-nats
+          value: nats://{{ include "lagoon-core.nats.fullname" . }}
         - name: API_DB_ADDRESS
           value: {{ include "lagoon-core.apiDB.fullname" . }}
         - name: API_DB_PASSWORD

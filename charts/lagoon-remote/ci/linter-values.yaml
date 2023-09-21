@@ -32,16 +32,17 @@ mxoutHost: mxout1.example.com
 
 nats:
   enabled: true
-  cluster:
-    name: lagoon-remote-ci-example
-  # natsbox:
+  config:
+    cluster:
+      name: lagoon-remote-ci-example
+  # natsBox:
   #   enabled: true
   #   # additional labels are required due to the network policy
   #   additionalLabels:
   #     lagoon-remote-nats-client: "true"
 
 natsConfig:
-  coreURL: "nats://ci-ssh-portal:ci-password@lagoon-core-nats-concentrator:7422"
+  coreURL: "tls://ci-ssh-portal:ci-password@lagoon-core-nats-concentrator:7422"
   tls:
     secretData:
       ca.crt: |
@@ -56,7 +57,7 @@ natsConfig:
         zJ6PDtVHMNclAWSDebP9nnwCIQDrblreePb+pUBHvxFZNVFYBV4wF2gEkJC51tjw
         a8aklQ==
         -----END CERTIFICATE-----
-      client.crt: |
+      tls.crt: |
         -----BEGIN CERTIFICATE-----
         MIIByDCCAW+gAwIBAgIUaBeYr4jOQfj1tZQsKmDqPtU9s8owCgYIKoZIzj0EAwIw
         HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yMjAzMDMxNDU2MDBa
@@ -69,7 +70,7 @@ natsConfig:
         BAMCA0cAMEQCIGeTmjVk5evv1+dpddecLRhZqb2Op6YBuSxtiibEmaAJAiAuRI6A
         s+LwZcCJaL8Gf3W0NIh03fv7VOJ5AWRzYXzpdg==
         -----END CERTIFICATE-----
-      client.key: |
+      tls.key: |
         -----BEGIN EC PRIVATE KEY-----
         MHcCAQEEIGVXWxCYIOynJpYWn95j19DDNDeMZU+xYOhGU8IN9hwmoAoGCCqGSM49
         AwEHoUQDQgAEJqD67BGaVtpzW7mFSsK9IAY5bPsI/zDCGO+zhSJhDS44duAbmWCB

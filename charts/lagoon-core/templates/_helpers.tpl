@@ -584,10 +584,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Create a default fully qualified app name for the nats subchart.
+Create a definition that matches the fully qualified app name for the nats
+subchart.
 */}}
 {{- define "lagoon-core.nats.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-nats
+{{- include "lagoon-core.fullname" . }}-{{ .Values.nats.nameOverride | default "nats" }}
 {{- end }}
 
 

@@ -294,61 +294,133 @@ insightsRemote:
 
   affinity: {}
 
-# the nats chart is a subchart which is configured for use by lagoon-remote
+# nats subchart is configured for use by lagoon-remote
 nats:
   enabled: false
-  # inject additional config
-  additionalVolumes:
-  - name: lagoon-remote-nats-tls
-    secret:
-      secretName: lagoon-remote-nats-tls
-  additionalVolumeMounts:
-  - name: lagoon-remote-nats-tls
-    mountPath: /etc/lagoon-remote-nats-tls
-  nats:
-    config:
-    - name: lagoon-remote
-      secret:
-        secretName: lagoon-remote-nats-conf
-  cluster:
+  # name override provides compatiblity for upgrading nats chart v0.x to v1.x
+  nameOverride: nats1
+  tlsCA:
     enabled: true
-    name: lagoon-remote
-    # internal cluster IPs are not routable, so don't advertise them
-    noAdvertise: true
-  natsbox:
+    secretName: lagoon-remote-nats-tls
+  # Uncomment this block to enable monitoring if you have Prometheus Operator
+  # installed.
+  # promExporter:
+  #   enabled: true
+  #   podMonitor:
+  #     enabled: true
+  #     # fromNamespaces restricts the namespaces from which monitoring can occur
+  #     # via the NetworkPolicy. At least one namespace name must be listed.
+  #     fromNamespaces:
+  #     - monitoring
+  natsBox:
     enabled: false
+  config:
+    cluster:
+      enabled: true
+      name: lagoon-remote
+      # internal cluster IPs are not routable, so don't advertise them
+      noAdvertise: true
+    merge:
+      00$include: ./lagoon-remote/leafnodes.conf
+  # Uncomment this block if upgrading from lagoon-remote <v0.82.0.
+  # statefulSet:
+  #   patch:
+  #   - op: remove
+  #     path: /spec/selector/matchLabels/app.kubernetes.io~1component
+  podTemplate:
+    patch:
+    - op: add
+      path: /spec/volumes/-
+      value:
+        name: lagoon-remote-nats-conf
+        secret:
+          secretName: lagoon-remote-nats-conf
+    - op: add
+      path: /spec/volumes/-
+      value:
+        name: lagoon-remote-nats-tls
+        secret:
+          secretName: lagoon-remote-nats-tls
+  container:
+    patch:
+    - op: add
+      path: /volumeMounts/-
+      value:
+        name: lagoon-remote-nats-conf
+        mountPath: /etc/nats-config/lagoon-remote
+    - op: add
+      path: /volumeMounts/-
+      value:
+        name: lagoon-remote-nats-tls
+        mountPath: /etc/nats-certs/leafnodes
   # to connect to nats, pods must have the right label
-  networkPolicy:
-    enabled: true
-    allowExternal: false
-    # allow outbound leaf connection
-    extraEgress:
-    - ports:
-      - port: 7422
-        protocol: TCP
+  extraResources:
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name:
+        $tplYaml: >
+          {{ include "nats.fullname" $ | quote }}
+      labels:
+        $tplYaml: |
+          {{ include "nats.labels" $ }}
+    spec:
+      policyTypes:
+      - Ingress
+      podSelector:
+        matchLabels:
+          $tplYaml: |
+            {{- include "nats.selectorLabels" $ }}
+      ingress:
+      - from:
+        # pods in this namespace with the correct label can access NATS pods
+        - podSelector:
+            matchLabels:
+              lagoon-remote-nats-client: "true"
+        # NATS inter-pod communication is allowed
+        - podSelector:
+            matchLabels:
+              $tplYaml: |
+                {{- include "nats.selectorLabels" $ }}
+      # conditionally allow metrics collection
+      - $tplYamlSpread: |
+          {{- if and .Values.promExporter.enabled .Values.promExporter.podMonitor.enabled }}
+          - from:
+            {{- range .Values.promExporter.podMonitor.fromNamespaces }}
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: {{ . | quote }}
+            {{- end }}
+            ports:
+            - port: 7777
+              protocol: TCP
+          {{- end }}
+
 
 # Configuration for the nats subchart
 natsConfig:
-  # coreURL format nats://<username>:<password>@<host>:7422
+  # coreURL format tls://<username>:<password>@<host>:7422
   coreURL: ""
   tls: {}
     # If the lagoon-remote-nats-tls secret should be created by the
     # lagoon-remote chart, certificate values can be specified directly in
     # secretData. Configuring TLS this way also allows specifying a custom
-    # ca.crt.
+    # ca.crt. The chart expects expects secretData to be specified unless
+    # nats.tlsCA.enabled is set to false.
     #
     # secretData:
     #   ca.crt: |
     #     ...
-    #   client.crt: |
+    #   tls.crt: |
     #     ...
-    #   client.key: |
+    #   tls.key: |
     #     ...
     #
     # If the TLS secret is created outside the lagoon-remote chart, it should
     # be named lagoon-remote-nats-tls. This secret should contain fields
     # tls.crt and tls.key, and the certificate should be issued by a public
-    # authority.
+    # authority. `nats.tlsCA.enabled: false` should be set in this case (it is
+    # true by default).
 
 storageCalculator:
   enabled: false

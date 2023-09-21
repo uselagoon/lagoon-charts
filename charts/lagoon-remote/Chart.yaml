@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.83.0
+version: 0.84.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -35,7 +35,7 @@ dependencies:
   repository: https://amazeeio.github.io/charts/
   condition: dbaas-operator.enabled
 - name: nats
-  version: ~0.19.0
+  version: ~1.0.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
 
@@ -45,4 +45,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon-build-deploy to v0.25.0
+      description: update NATS chart dependency to v1.0.x

@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.36.0
+version: 2.0.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -31,7 +31,7 @@ appVersion: v2.15.4
 
 dependencies:
 - name: nats
-  version: ~0.19.0
+  version: ~1.0.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
 
@@ -41,10 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: add additional metrics to broker
-    - kind: changed
-      description: update lagoon-ssh-token and lagoon-ssh-portal-api to v0.30.1
-    - kind: changed
-      description: update NATS chart dependency to v0.19.17
-    - kind: changed
-      description: update Lagoon appVersion to v2.15.4
+      description: update NATS chart dependency to v1.0.x

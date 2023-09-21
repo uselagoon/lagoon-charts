@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       labels:
-        {{ include "lagoon-remote.fullname" . }}-nats-client: "true"
+        lagoon-remote-nats-client: "true"
         {{- include "lagoon-remote.sshPortal.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "lagoon-remote.sshPortal.serviceAccountName" . }}
@@ -38,7 +38,7 @@ spec:
           value: "true"
         {{- end }}
         - name: NATS_URL
-          value: nats://{{ include "lagoon-remote.fullname" . }}-nats
+          value: nats://{{ include "lagoon-remote.nats.fullname" . }}
       {{- range $key, $val := .Values.sshPortal.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
