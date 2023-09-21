@@ -113,6 +113,17 @@ kubernetesBuildDeploy:
     # If not set, a name is generated using the fullname template.
     name:
 
+# sshCore creates a restricted, non-expiring ServiceAccount token for use by
+# lagoon-core.
+sshCore:
+  enabled: false
+  serviceAccount:
+    annotations: {}
+    # The name of the service account to use.
+    # If not set, a name is generated using the fullname
+    # template
+    name: ""
+
 # sshPortal is an optional service providing low-latency SSH connectivity to
 # Lagoon environments.
 sshPortal:
