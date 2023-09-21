@@ -6,19 +6,10 @@ metadata:
   labels:
     {{- include "lagoon-remote.insightsRemote.labels" . | nindent 4 }}
 rules:
-  - verbs:
-      - '*'
-    apiGroups:
-      - ''
-    resources:
-      - configmaps
-      - secrets
-  - verbs:
-      - get
-      - watch
-      - list
-    apiGroups:
-      - ''
-    resources:
-      - namespaces
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - "*"
   {{- end }}

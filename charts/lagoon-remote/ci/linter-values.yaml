@@ -16,8 +16,7 @@ lagoon-build-deploy:
 
 dockerHost:
   image:
-    repository: ghcr.io/uselagoon/docker-host
-    tag: "pr-25"
+    repository: uselagoon/docker-host
   storage:
     size: 50Gi
 

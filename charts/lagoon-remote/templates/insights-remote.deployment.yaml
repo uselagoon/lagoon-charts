@@ -47,24 +47,15 @@ spec:
             - name: RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}
-                  key: RABBITMQ_PASSWORD
+                  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}-rabbitmqsecret
+                  key: password
             - name: RABBITMQ_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}
-                  key: RABBITMQ_USERNAME
-            - name: INSIGHTS_TOKEN_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}
-                  key: INSIGHTS_TOKEN_SECRET
+                  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}-rabbitmqsecret
+                  key: username
           resources:
             {{- toYaml .Values.insightsRemote.resources | nindent 12 }}
-          ports:
-            - name: insights-ws
-              containerPort: 8888
-              protocol: TCP  
       {{- with .Values.insightsRemote.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
