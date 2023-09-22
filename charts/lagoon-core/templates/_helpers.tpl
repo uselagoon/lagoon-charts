@@ -679,14 +679,3 @@ app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-core.sshToken.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Get HorizontalPodAutoscaler API Version - can be removed once Kubernetes 1.23 is the minimum
-*/}}
-{{- define "lagoon-core.hpa.apiVersion" -}}
-  {{- if (.Capabilities.APIVersions.Has "autoscaling/v2") -}}
-    autoscaling/v2
-  {{- else -}}
-    autoscaling/v2beta2
-  {{- end -}}
-{{- end -}}
