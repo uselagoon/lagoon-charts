@@ -10,7 +10,7 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.21.0-0"
+kubeVersion: ">= 1.23.0-0"
 
 # Application charts are a collection of templates that can be packaged into
 # versioned archives to be deployed.
@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.83.0
+version: 0.84.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -45,4 +45,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon-build-deploy to v0.25.0
+      description: require minimum Kubernetes 1.23

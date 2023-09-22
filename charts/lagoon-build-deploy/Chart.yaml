@@ -12,15 +12,15 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.21.0-0"
+kubeVersion: ">= 1.23.0-0"
 
 type: application
 
-version: 0.25.0
+version: 0.26.0
 
 appVersion: v0.15.0
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller appVersion to v0.15.0
+      description: require minimum Kubernetes 1.23
