@@ -30,4 +30,3 @@ annotations:
       description: require minimum Kubernetes 1.23
     - kind: changed
       description: removed autoscaling api version helper
-
