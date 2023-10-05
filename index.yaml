@@ -4,6 +4,33 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update remote-controller appVersion to v0.15.2
+        - kind: changed
+          description: added flag support for enabling k8up v2 support
+    apiVersion: v2
+    appVersion: v0.15.2
+    created: "2023-10-05T23:48:33.112260979Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: 96c98011bf89849aab001b129af6711a68bb6a070a3d8c97fa980048d86624a1
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.21.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.25.2/lagoon-build-deploy-0.25.2.tgz
+    version: 0.25.2
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update remote-controller appVersion to v0.15.1
     apiVersion: v2
     appVersion: v0.15.1
@@ -12473,4 +12500,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-04T22:57:17.367315649Z"
+generated: "2023-10-05T23:48:33.113160288Z"
