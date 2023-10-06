@@ -119,6 +119,9 @@ spec:
         {{- with .Values.lagoonFeatureFlagBackupWeeklyRandom }}
         - "--lagoon-feature-flag-backup-weekly-random={{ . }}"
         {{- end }}
+        {{- with .Values.lagoonFeatureFlagSupportK8upV2 }}
+        - "--lagoon-feature-flag-support-k8upv2={{ . }}"
+        {{- end }}
         {{- with .Values.lagoonBackupDefaultSchedule }}
         - "--backup-default-schedule={{ . }}"
         {{- end }}
