@@ -592,6 +592,12 @@ insightsHandler:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+insightsTrivy:
+  enabled: false
+  service:
+    type: ClusterIP
+    port: 4954
+
 logs2notifications:
   enabled: true
   replicaCount: 2
