@@ -10,7 +10,7 @@ spec:
   ports:
   - port: {{ .Values.insightsTrivy.service.port }}
     targetPort: 4954
-    name: TCP
+    name: tcp-4954
   selector:
     {{- include "lagoon-core.insightsTrivy.selectorLabels" . | nindent 4 }}
 {{- end }}

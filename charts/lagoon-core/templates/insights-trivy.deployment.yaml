@@ -31,12 +31,12 @@ spec:
         ports:
             - containerPort: 4954
               protocol: TCP
-              name: TCP-4954
+              name: tcp-4954
         livenessProbe:
             httpGet:
               path: /healthz
               port: 4954
-          readinessProbe:
+        readinessProbe:
             httpGet:
               path: /healthz
               port: 4954
