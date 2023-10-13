@@ -11,7 +11,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.apiRedis.persistence.size | quote }}
-  {{- with .Values.apiRedis.persistence.className }}
+  {{- with .Values.apiRedis.persistence.storageClass }}
   storageClassName: {{ . | quote }}
   {{- end }}
 {{- end }}

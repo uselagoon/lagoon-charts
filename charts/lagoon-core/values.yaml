@@ -201,9 +201,12 @@ apiRedis:
       memory: "64Mi"
       cpu: "50m"
 
+  additionalEnvs:
+  #   FOO: Bar
+
   persistence:
-    enabled: true
-    size: 8Gi
+    enabled: false
+    size: 100Mi
 
   service:
     type: ClusterIP
