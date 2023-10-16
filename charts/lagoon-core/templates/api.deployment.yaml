@@ -92,7 +92,13 @@ spec:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
         - name: KEYCLOAK_URL
+          {{- if .Values.keycloakFrontEndURL }}
+          value: {{ .Values.keycloakFrontEndURL }}
+          {{- else if .Values.keycloak.ingress.enabled }}
+          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}
+          {{- else }}
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
+          {{- end }}
         - name: KIBANA_URL
           value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
         - name: LAGOON_VERSION
