@@ -45,10 +45,18 @@ spec:
           value: https://{{ index .Values.api.ingress.hosts 0 "host" }}/graphql
           {{- end }}
         - name: KEYCLOAK_API
-          {{- if .Values.keycloakAPIURL }}
-          value: {{ .Values.keycloakAPIURL | quote }}
-          {{- else }}
+          {{- if .Values.keycloakFrontEndURL }}
+          value: {{ .Values.keycloakFrontEndURL }}/auth
+          {{- else if .Values.keycloak.ingress.enabled }}
           value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}/auth
+          {{- else }}
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
+          {{- end }}
+        - name: WEBHOOK_URL
+          {{- if .Values.lagoonWebhookURL }}
+          value: {{ .Values.lagoonWebhookURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.webhookHandler.ingress.hosts 0 "host" }}
           {{- end }}
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}

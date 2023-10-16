@@ -1,0 +1,17 @@
+{{- if .Values.apiRedis.persistence.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "lagoon-core.apiRedis.fullname" . }}-data
+  labels:
+    {{- include "lagoon-core.apiRedis.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.apiRedis.persistence.size | quote }}
+  {{- with .Values.apiRedis.persistence.storageClass }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+{{- end }}

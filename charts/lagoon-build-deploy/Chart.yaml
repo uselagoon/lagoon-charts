@@ -16,13 +16,13 @@ kubeVersion: ">= 1.21.0-0"
 
 type: application
 
-version: 0.24.0
+version: 0.25.2
 
-appVersion: v0.14.0
+appVersion: v0.15.2
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller appVersion to v0.14.0
+      description: update remote-controller appVersion to v0.15.2
     - kind: changed
-      description: updated lagoontask crd, will require crds to be re-applied
+      description: added flag support for enabling k8up v2 support
