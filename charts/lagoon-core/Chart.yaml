@@ -27,7 +27,7 @@ version: 1.37.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.15.4
+appVersion: v2.16.0
 
 dependencies:
 - name: nats
@@ -40,6 +40,8 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
+    - kind: changed
+      description: update Lagoon appVersion to v2.16.0
     - kind: changed
       description: add additional keycloak configuration options
     - kind: changed
