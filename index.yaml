@@ -1155,6 +1155,43 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update Lagoon appVersion to v2.16.0
+        - kind: changed
+          description: add additional keycloak configuration options
+        - kind: changed
+          description: replace keycloakAPIURL with keycloakFrontEndURL
+        - kind: changed
+          description: added lagoonWebhookURL to UI deployment
+        - kind: added
+          description: added "persistence" option to apiRedis
+    apiVersion: v2
+    appVersion: v2.16.0
+    created: "2023-10-16T20:34:15.375190011Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 7667f2cf3567b93ea471afd69bb7f805a606d621a1f04412565da127da7824c7
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.21.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.37.0/lagoon-core-1.37.0.tgz
+    version: 1.37.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: add additional metrics to broker
         - kind: changed
           description: update lagoon-ssh-token and lagoon-ssh-portal-api to v0.30.1
@@ -11539,6 +11576,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update Lagoon appVersion to v2.16.0
+    apiVersion: v2
+    appVersion: v2.16.0
+    created: "2023-10-16T20:34:15.578676425Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 524bb3980aa71524e62a222842b45a44239cb1eab8d5e67cfbf7f653909cf005
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.21.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.51.0/lagoon-test-0.51.0.tgz
+    version: 0.51.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update Lagoon appVersion to v2.15.4
     apiVersion: v2
     appVersion: v2.15.4
@@ -12540,4 +12598,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-12T23:15:13.474399828Z"
+generated: "2023-10-16T20:34:15.579926936Z"
