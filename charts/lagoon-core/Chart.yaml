@@ -48,3 +48,5 @@ annotations:
       description: replace keycloakAPIURL with keycloakFrontEndURL
     - kind: changed
       description: added lagoonWebhookURL to UI deployment
+    - kind: added
+      description: added "persistence" option to apiRedis
