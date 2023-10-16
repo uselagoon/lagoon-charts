@@ -48,6 +48,7 @@ namespacePrefix: ""
 # lagoonFeatureFlagDefaultInsights: disabled
 # lagoonFeatureFlagForceRWX2RWO: disabled
 # lagoonFeatureFlagDefaultRWX2RWO: disabled
+# lagoonFeatureFlagSupportK8upV2: false
 
 # It is also possible to define feature flags using `extraEnvs` by defining them like so
 # this method is useful for enabling features on the fly, ones that might not have built in support
