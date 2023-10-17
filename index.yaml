@@ -4,6 +4,31 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: require minimum Kubernetes 1.23
+    apiVersion: v2
+    appVersion: v0.15.2
+    created: "2023-10-17T21:52:58.067751223Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: 0738617c002da62e50e74c760187e32f9e5f1b704af0e331179193f12edad3a2
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.26.0/lagoon-build-deploy-0.26.0.tgz
+    version: 0.26.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update remote-controller appVersion to v0.15.2
         - kind: changed
           description: added flag support for enabling k8up v2 support
@@ -1152,6 +1177,37 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.1.0/lagoon-build-deploy-0.1.0.tgz
     version: 0.1.0
   lagoon-core:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: require minimum Kubernetes 1.23
+        - kind: changed
+          description: removed autoscaling api version helper
+    apiVersion: v2
+    appVersion: v2.16.0
+    created: "2023-10-17T21:52:58.231817114Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: fd3799a1957ed52f8374f79e66b031f999a750b0263420733c064e1770521706
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.38.0/lagoon-core-1.38.0.tgz
+    version: 1.38.0
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
@@ -4138,6 +4194,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: require minimum Kubernetes 1.23
+    apiVersion: v2
+    appVersion: v3.3.0
+    created: "2023-10-17T21:52:58.387759261Z"
+    description: A Helm chart to run a lagoon-docker-host
+    digest: 1085a3a377ccabe76b451b62abbe2bf80c7133b99733e803b3b50bb042683a14
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-docker-host
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-docker-host-0.2.0/lagoon-docker-host-0.2.0.tgz
+    version: 0.2.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon-docker-host to appversion v3.3.0
     apiVersion: v2
     appVersion: v3.3.0
@@ -4370,6 +4447,32 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-insights-remote-0.1.0/lagoon-insights-remote-0.1.0.tgz
     version: 0.1.0
   lagoon-logging:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: require minimum Kubernetes 1.23
+    apiVersion: v2
+    created: "2023-10-17T21:52:58.53701399Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: https://kube-logging.github.io/helm-charts
+      version: ~4.2.0
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: f33321bff0de83ef3eb71d2c9f36dce28e3446b5e279db95d15b920d679d7e96
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.79.0/lagoon-logging-0.79.0.tgz
+    version: 0.79.0
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
@@ -6599,6 +6702,29 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: require minimum Kubernetes 1.23
+        - kind: changed
+          description: removed autoscaling api version helper
+    apiVersion: v2
+    created: "2023-10-17T21:52:58.67550213Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: 6f360361f4d9b89f8652f86014246bdb7d5547b11901c915b730563539288260
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.46.0/lagoon-logs-concentrator-0.46.0.tgz
+    version: 0.46.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: introduced minimum kubernetes version 1.21
     apiVersion: v2
     created: "2023-02-04T06:45:16.43250937Z"
@@ -7535,6 +7661,46 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.2.2/lagoon-logs-concentrator-0.2.2.tgz
     version: 0.2.2
   lagoon-remote:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: require minimum Kubernetes 1.23
+    apiVersion: v2
+    created: "2023-10-17T21:52:58.82479306Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.25.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.4.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: A Helm chart to run a lagoon-remote
+    digest: dc5c78c8f341db26fcf871c4a047861818b2cf6f3df3ad25c4326ec1fb84addb
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.84.0/lagoon-remote-0.84.0.tgz
+    version: 0.84.0
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
@@ -11576,6 +11742,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: require minimum Kubernetes 1.23
+    apiVersion: v2
+    appVersion: v2.16.0
+    created: "2023-10-17T21:52:58.963756209Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 42b48edbe29f049fe585a7f8e9e674d5754a59693626f46f9c08a5df5ddfe77a
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.52.0/lagoon-test-0.52.0.tgz
+    version: 0.52.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update Lagoon appVersion to v2.16.0
     apiVersion: v2
     appVersion: v2.16.0
@@ -12598,4 +12785,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-16T20:34:15.579926936Z"
+generated: "2023-10-17T21:52:58.965997248Z"
