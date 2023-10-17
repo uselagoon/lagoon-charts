@@ -45,7 +45,13 @@ spec:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
         - name: KEYCLOAK_BASE_URL
+          {{- if .Values.keycloakFrontEndURL }}
+          value: {{ .Values.keycloakFrontEndURL }}/
+          {{- else if .Values.keycloak.ingress.enabled }}
+          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}/
+          {{- else }}
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/
+          {{- end }}
         - name: KEYCLOAK_CLIENT_ID
           value: lagoon-opensearch-sync
         - name: KEYCLOAK_CLIENT_SECRET

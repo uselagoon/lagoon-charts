@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Install Helm
       run: |
         cd /tmp
@@ -19,7 +19,6 @@ jobs:
         helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
         helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
         helm repo add amazeeio https://amazeeio.github.io/charts/
-        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
         helm repo add nats https://nats-io.github.io/k8s/helm/charts/
         helm repo add kube-logging https://kube-logging.github.io/helm-charts
     - name: Generate helm templates
@@ -28,8 +27,6 @@ jobs:
         # hacky workaround for lagoon-test templated values
         tests=[foo,bar] envsubst '$tests' < lagoon-test/ci/linter-values.yaml.tpl > lagoon-test/ci/linter-values.yaml
 
-        # don't lint lagoon-gatekeeper
-        rm -rf lagoon-gatekeeper
         for chart in *; do
           helm dependency build $chart
           mkdir -p /tmp/charts/$chart
@@ -38,11 +35,6 @@ jobs:
             --output-dir /tmp/charts/$chart
         done
 
-        # workaround until gatekeeper templates are fixed:
-        # * https://github.com/open-policy-agent/gatekeeper/pull/1114
-        # * https://github.com/open-policy-agent/gatekeeper/pull/1115
-        rm -rf /tmp/charts/lagoon-gatekeeper/lagoon-gatekeeper/charts/gatekeeper
-        rm -rf /tmp/charts/lagoon-remote/lagoon-remote/charts/lagoon-gatekeeper/charts/gatekeeper
         # workaround until logging-operator templates are fixed:
         # https://github.com/banzaicloud/logging-operator/pull/792
         rm -rf /tmp/charts/lagoon-logging/lagoon-logging/charts/logging-operator
@@ -69,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: "0"
 
@@ -92,10 +84,11 @@ jobs:
       run: ct lint --config ./default.ct.yaml
 
     - name: Create kind cluster
-      uses: helm/kind-action@v1.7.0
+      uses: helm/kind-action@v1.8.0
       with:
-        version: v0.19.0
-        node_image: kindest/node:v1.25.9@sha256:c08d6c52820aa42e533b70bce0c2901183326d86dcdcbedecc9343681db45161
+        version: v0.20.0
+        node_image: kindest/node:v1.27.3@sha256:3966ac761ae0136263ffdb6cfd4db23ef8a83cba8a463690e98317add2c9ba72
+        kubectl_version: v1.27.3
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
@@ -107,16 +100,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: "0"
 
     - name: Install gojq
       run: |
         cd /tmp
-        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.10/gojq_v0.12.10_linux_amd64.tar.gz
-        tar -xf ./gojq_v0.12.10_linux_amd64.tar.gz
-        sudo cp /tmp/gojq_v0.12.10_linux_amd64/gojq /usr/local/bin/gojq
+        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.13/gojq_v0.12.13_linux_amd64.tar.gz
+        tar -xf ./gojq_v0.12.13_linux_amd64.tar.gz
+        sudo cp /tmp/gojq_v0.12.13_linux_amd64/gojq /usr/local/bin/gojq
 
     - name: Run artifacthub.io changelog check
       run: |
