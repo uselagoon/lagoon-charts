@@ -36,3 +36,5 @@ annotations:
       description: update uselagoon/logs-dispatcher image to v3.4.0
     - kind: added
       description: schedule Logging Pods also on infra nodes
+    - kind: added
+      description: ability to configure toleration/affinity on FluentD deployment 
