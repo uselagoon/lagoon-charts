@@ -1,0 +1,30 @@
+apiVersion: v2
+name: lagoon-docker-host
+description: A Helm chart to run a lagoon-docker-host
+home: https://github.com/uselagoon/lagoon-charts
+icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+maintainers:
+- name: shreddedbacon
+  email: ben.jackson@amazee.io
+  url: https://amazee.io
+kubeVersion: ">= 1.23.0-0"
+
+# Application charts are a collection of templates that can be packaged into
+# versioned archives to be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each
+# time you make changes to the chart and its templates, including the app
+# version.
+version: 0.2.0
+
+appVersion: v3.3.0
+
+
+# This section is used to collect a changelog for artifacthub.io
+# It should be started afresh for each release
+# Valid supported kinds are added, changed, deprecated, removed, fixed and security
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: require minimum Kubernetes 1.23

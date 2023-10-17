@@ -19,7 +19,7 @@ logsDispatcher:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.3.0"
+    tag: "v3.4.0"
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -121,7 +121,7 @@ cdnLogsCollector:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.3.0"
+    tag: "v3.4.0"
 
   podAnnotations: {}
 
@@ -263,6 +263,9 @@ fluentbitTolerations:
   operator: Exists
 - effect: NoSchedule
   key: lagoon.sh/spot
+  operator: Exists
+- effect: NoSchedule
+  key: lagoon.sh/infra
   operator: Exists
 
 # Expose metrics of the Logging Operator's fluentbit daemonset and fluentd

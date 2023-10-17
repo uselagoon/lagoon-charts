@@ -1,0 +1,95 @@
+global:
+  # set to true to enable openshift support
+  openshift: false
+
+image:
+  repository: uselagoon/docker-host
+  pullPolicy: Always
+
+name: docker-host
+
+pruneImagesUntil: 168h
+
+# TODO: change this up once new docker-host is released
+registry: registry.lagoon.svc:5000
+repositoryToUpdate: amazeeio|lagoon
+
+replicaCount: 1
+
+## proxy configuration
+# httpProxy: ""
+# httpsProxy: ""
+# noProxy: ""
+
+# add extra environment variables if required
+extraEnvs:
+
+storage:
+  create: true
+  size: 750Gi
+  # className sets the storageClassName for the docker-host PVC. This is
+  # useful if the docker-host requires a specific storage class for features
+  # such as increased IOPS.
+  #
+  # WARNING: On platforms such as AKS not all storage volume classes can be
+  # bound to all node types. So if you configure a storage class that can't
+  # be bound to any nodes in the cluster it will cause the docker-host pod to
+  # fail to schedule. For example AKS requires Premium Storage suport on the
+  # node for the managed-premium storage class.
+  #
+  # If className is not defined the chart will not set any specify storage
+  # class on the PVC, effectively falling back to the cluster default.
+  #
+  # className: managed-premium
+
+networkPolicy:
+  # Specifies whether the docker-host network policy should be enabled
+  enabled: true
+  # Specify the policy to apply, useful to change who can access the docker-host
+  # This default policy just replicates the existing docker-host
+  policy:
+    - namespaceSelector:
+        matchExpressions:
+        - key: lagoon.sh/environment
+          operator: Exists
+      podSelector:
+        matchExpressions:
+        - key: lagoon.sh/buildName
+          operator: Exists
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname
+  # template
+  name:
+
+podSecurityContext: {}
+
+securityContext:
+  privileged: true
+  seLinuxOptions:
+    # Ensures selinux relabeling is disabled, this would case the container never to start
+    # as there can be so many files in the persistent storage
+    type: spc_t
+
+resources: {}
+
+service:
+  type: ClusterIP
+  port: 2375
+
+tolerations:
+- key: lagoon/build
+  effect: NoSchedule
+  operator: Exists
+- key: lagoon/build
+  effect: PreferNoSchedule
+  operator: Exists
+- key: lagoon.sh/build
+  effect: NoSchedule
+  operator: Exists
+- key: lagoon.sh/build
+  effect: PreferNoSchedule
+  operator: Exists
