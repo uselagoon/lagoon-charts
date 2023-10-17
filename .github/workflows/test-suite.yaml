@@ -75,9 +75,9 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       with:
         version: v0.20.0
-        node_image: kindest/node:v1.26.6@sha256:6e2d8b28a5b601defe327b98bd1c2d1930b49e5d8c512e1895099e4504007adb
+        node_image: kindest/node:v1.27.3@sha256:3966ac761ae0136263ffdb6cfd4db23ef8a83cba8a463690e98317add2c9ba72
+        kubectl_version: v1.27.3
         config: test-suite.kind-config.yaml
-        kubectl_version: v1.26.6
 
     - name: Check node IP matches kind configuration
       if: |
@@ -107,15 +107,15 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: |
         cd /tmp
-        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.12/gojq_v0.12.12_linux_amd64.tar.gz
-        tar -xf ./gojq_v0.12.12_linux_amd64.tar.gz
-        sudo cp /tmp/gojq_v0.12.12_linux_amd64/gojq /usr/local/bin/jq
+        curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.13/gojq_v0.12.13_linux_amd64.tar.gz
+        tar -xf ./gojq_v0.12.13_linux_amd64.tar.gz
+        sudo cp /tmp/gojq_v0.12.13_linux_amd64/gojq /usr/local/bin/jq
 
     - name: Install kubens and kubectl alias
       run: |
         cd /tmp
-        curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubens_v0.9.4_linux_x86_64.tar.gz
-        tar -xf ./kubens_v0.9.4_linux_x86_64.tar.gz
+        curl -sSLO https://github.com/ahmetb/kubectx/releases/download/v0.9.5/kubens_v0.9.5_linux_x86_64.tar.gz
+        tar -xf ./kubens_v0.9.5_linux_x86_64.tar.gz
         sudo cp /tmp/kubens /usr/local/bin/kubens
         sudo ln -s $(which kubectl) /usr/local/bin/kc
 

@@ -11,7 +11,7 @@ maintainers:
 - name: shreddedbacon
   email: ben.jackson@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.21.0-0"
+kubeVersion: ">= 1.23.0-0"
 
 # Application charts are a collection of templates that can be packaged into
 # versioned archives to be deployed.
@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.37.0
+version: 1.38.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -41,12 +41,6 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update Lagoon appVersion to v2.16.0
+      description: require minimum Kubernetes 1.23
     - kind: changed
-      description: add additional keycloak configuration options
-    - kind: changed
-      description: replace keycloakAPIURL with keycloakFrontEndURL
-    - kind: changed
-      description: added lagoonWebhookURL to UI deployment
-    - kind: added
-      description: added "persistence" option to apiRedis
+      description: removed autoscaling api version helper
