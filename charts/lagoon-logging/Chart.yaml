@@ -37,4 +37,4 @@ annotations:
     - kind: added
       description: schedule Logging Pods also on infra nodes
     - kind: added
-      description: ability to configure toleration/affinity on FluentD deployment 
+      description: ability to configure toleration/affinity on FluentD deployment
