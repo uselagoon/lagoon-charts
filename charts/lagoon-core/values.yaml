@@ -28,7 +28,7 @@
 # These values may be set on install, otherwise the chart tries to guess
 # sensible defaults.
 
-# keycloakAPIURL: https://keycloak.example.com/auth
+# keycloakFrontEndURL: https://keycloak.example.com
 # lagoonAPIURL: https://api.example.com/graphql
 # lagoonUIURL: https://ui.example.com
 # lagoonWebhookURL: https://webhook-handler.example.com
@@ -60,6 +60,8 @@ rabbitMQUsername: lagoon
 k8upS3Endpoint: ""
 
 keycloakAdminUser: admin
+# this is required if email sending is to be enabled in keycloak
+# keycloakAdminEmail: admin@example.com
 
 buildDeployImage:
   edge:
@@ -202,11 +204,34 @@ apiRedis:
   additionalEnvs:
   #   FOO: Bar
 
+  persistence:
+    enabled: false
+    size: 100Mi
+
   service:
     type: ClusterIP
     port: 6379
 
 keycloak:
+  # keycloak realm and email settings configuration
+  realmSettings:
+    enabled: false
+    # the full list of config settings is available TODO
+    options:
+      resetPasswordAllowed: true
+      rememberMe: true
+  email:
+    enabled: false
+    settings:
+      host: mailhog
+      port: '1025'
+      from: lagoon@example.com
+      fromDisplayName: Lagoon
+      replyTo: lagoon@example.com
+      ssl: 'false'
+      starttls: 'false'
+      auth: 'false'
+
   replicaCount: 1
   image:
     repository: uselagoon/keycloak
