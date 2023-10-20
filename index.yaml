@@ -4450,6 +4450,36 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update uselagoon/logs-dispatcher image to v3.4.0
+        - kind: added
+          description: schedule Logging Pods also on infra nodes
+        - kind: added
+          description: ability to configure toleration/affinity on FluentD deployment
+    apiVersion: v2
+    created: "2023-10-20T03:45:21.915320027Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: https://kube-logging.github.io/helm-charts
+      version: ~4.2.0
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 35a5465731398d488ab965b4d0a0db2ba1fcc2839dcc12c299c21048aae08fbd
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.80.0/lagoon-logging-0.80.0.tgz
+    version: 0.80.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: require minimum Kubernetes 1.23
     apiVersion: v2
     created: "2023-10-17T21:52:58.53701399Z"
@@ -6699,6 +6729,27 @@ entries:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.6.3/lagoon-logging-0.6.3.tgz
     version: 0.6.3
   lagoon-logs-concentrator:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: update uselagoon/logs-concentrator image to v3.2.0
+    apiVersion: v2
+    created: "2023-10-20T03:45:22.12124447Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: 573cb60c3ab0d2f33c84f1e23f11b8540adf0459e2cb1ec5e69ecc3e25d83dab
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.47.0/lagoon-logs-concentrator-0.47.0.tgz
+    version: 0.47.0
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
@@ -12785,4 +12836,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-17T21:52:58.965997248Z"
+generated: "2023-10-20T03:45:22.12340799Z"
