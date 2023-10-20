@@ -19,7 +19,7 @@ logsDispatcher:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.3.0"
+    tag: "v3.4.0"
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -121,7 +121,7 @@ cdnLogsCollector:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.3.0"
+    tag: "v3.4.0"
 
   podAnnotations: {}
 
@@ -248,17 +248,25 @@ consolidateServiceIndices: false
 # sent to a third-party service and not to a central elasticsearch.
 enableDefaultForwarding: true
 
-# Set how many fluentd pods should be running
+# Set how many Fluentd log forwarder pods should be running
 fluentdReplicaCount: 3
 
-# Add tolerations to the fluentbit daemonset so that it runs on e.g.
-# load-balancer nodes.
+# Add tolerations and affinity to the Fluentd log forwarder statefulset to
+# better control where it runs e.g. avoiding spot or load-balancers
+fluentdTolerations: []
+fluentdAffinity: {}
+
+# Add tolerations to the Fluent Bit log collector daemonset to define where it
+# runs on to collect data e.g. load-balancer or infra nodes.
 fluentbitTolerations:
 - effect: NoSchedule
   key: lagoon.sh/lb
   operator: Exists
 - effect: NoSchedule
   key: lagoon.sh/spot
+  operator: Exists
+- effect: NoSchedule
+  key: lagoon.sh/infra
   operator: Exists
 
 # Expose metrics of the Logging Operator's fluentbit daemonset and fluentd
