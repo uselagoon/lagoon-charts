@@ -28,6 +28,7 @@ spec:
         imagePullPolicy: {{ .Values.insightsTrivy.image.pullPolicy }}
         resources:
           {{- toYaml .Values.insightsTrivy.resources | nindent 10 }}
+        command: ["trivy", "server", "--cache-dir=/tmp", "--listen=0.0.0.0:4954", "-d"]
         ports:
             - containerPort: 4954
               protocol: TCP

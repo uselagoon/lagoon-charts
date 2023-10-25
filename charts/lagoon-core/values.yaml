@@ -618,6 +618,9 @@ insightsHandler:
     # targetMemoryUtilizationPercentage: 80
 
 insightsTrivy:
+  image:
+    repository: aquasec/trivy
+    tag: latest
   enabled: false
   service:
     type: ClusterIP
