@@ -13,6 +13,14 @@ spec:
         fsGroup: 0
     scaling:
       replicas: {{ .Values.fluentdReplicaCount }}
+  {{- with .Values.fluentdAffinity }}
+    affinity:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with .Values.fluentdTolerations }}
+    tolerations:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
   {{- with .Values.fluentdMetrics }}
     metrics:
     {{- toYaml . | nindent 6 }}
