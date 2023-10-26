@@ -74,11 +74,11 @@ spec:
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
         - name: HTTP_LISTEN_PORT
           value: "3000"
-      {{- if .Values.insightsTrivy.enabled }}
+      {{- if .Values.insightsHandler.trivy.enabled }}
         - name: PROBLEMS_FROM_SBOM
           value: "true"
         - name: TRIVY_SERVER_ENDPOINT
-          value: http://{{ include "lagoon-core.insightsTrivy.fullname" . }}:{{ .Values.insightsTrivy.service.port }}
+          value: http://{{ include "lagoon-core.insightsTrivy.fullname" . }}:{{ .Values.insightsHandler.trivy.service.port }}
       {{- end }}
       {{- range $key, $val := .Values.insightsHandler.additionalEnvs }}
         - name: {{ $key }}

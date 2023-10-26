@@ -616,15 +616,14 @@ insightsHandler:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
-
-insightsTrivy:
-  image:
-    repository: aquasec/trivy
-    tag: latest
-  enabled: false
-  service:
-    type: ClusterIP
-    port: 4954
+  trivy:
+    enabled: false
+    image:
+      repository: aquasec/trivy
+      tag: latest
+    service:
+      type: ClusterIP
+      port: 4954
 
 logs2notifications:
   enabled: true
