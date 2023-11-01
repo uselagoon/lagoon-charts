@@ -16,11 +16,11 @@ kubeVersion: ">= 1.23.0-0"
 
 type: application
 
-version: 0.26.0
+version: 0.26.1
 
-appVersion: v0.15.2
+appVersion: v0.15.3
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: require minimum Kubernetes 1.23
+      description: update remote-controller to v0.15.3
