@@ -26,7 +26,7 @@ jobs:
       run: sudo apt-get -y install python3-wheel
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@v2.4.0
+      uses: helm/chart-testing-action@v2.6.0
 
     - name: Run chart-testing (list-changed)
       id: list-changed
@@ -50,9 +50,9 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
 
     - name: Run chart-testing (install)
-      run: ct install --config ./default.ct.yaml
+      run: ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
 
     - name: Run chart-testing (needs-testing)
-      run: ct install --config ./default.ct.yaml --all
+      run: ct install --config ./default.ct.yaml  --helm-extra-args "--timeout 30m" --all
       if: |
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
