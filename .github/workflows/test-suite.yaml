@@ -138,7 +138,7 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: |
         ct lint --config ./test-suite-run.ct.yaml
-        ct install --config ./test-suite-run.ct.yaml
+        ct install --config ./test-suite-run.ct.yaml --helm-extra-args "--timeout 60m"
 
     # the following steps gather various debug information on test failure
 
