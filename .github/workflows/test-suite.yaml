@@ -136,7 +136,9 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: ct lint-and-install --config ./test-suite-run.ct.yaml
+      run: |
+        ct lint --config ./test-suite-run.ct.yaml
+        ct install --config ./test-suite-run.ct.yaml
 
     # the following steps gather various debug information on test failure
 
