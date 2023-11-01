@@ -7,4 +7,3 @@ excluded-charts:
 - lagoon-logging
 - lagoon-logs-concentrator
 - lagoon-build-deploy
-helm-extra-args: --timeout 20m
