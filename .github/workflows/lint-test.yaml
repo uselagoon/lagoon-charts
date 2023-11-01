@@ -81,7 +81,7 @@ jobs:
         fi
 
     - name: Run chart-testing (lint)
-      run: ct lint --config ./default.ct.yaml
+      run: ct lint --config ./default.ct.yaml --all
 
     - name: Create kind cluster
       uses: helm/kind-action@v1.8.0
