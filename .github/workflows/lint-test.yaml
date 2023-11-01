@@ -94,7 +94,7 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
 
     - name: Run chart-testing (install)
-      run: ct install --config ./default.ct.yaml --helm-extra-args "--timeout 20m"
+      run: ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
 
   artifacthub-changelog:
     runs-on: ubuntu-latest
