@@ -12,17 +12,15 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.21.0-0"
+kubeVersion: ">= 1.23.0-0"
 
 type: application
 
-version: 0.24.0
+version: 0.26.1
 
-appVersion: v0.14.0
+appVersion: v0.15.3
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller appVersion to v0.14.0
-    - kind: changed
-      description: updated lagoontask crd, will require crds to be re-applied
+      description: update remote-controller to v0.15.3

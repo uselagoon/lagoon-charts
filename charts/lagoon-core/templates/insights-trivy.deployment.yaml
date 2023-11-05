@@ -1,0 +1,75 @@
+{{- if .Values.insightsHandler.trivy.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.insightsTrivy.fullname" . }}
+  labels:
+    {{- include "lagoon-core.insightsTrivy.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.insightsTrivy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+    {{- with .Values.insightsHandler.trivy.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.insightsTrivy.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml (coalesce .Values.insightsHandler.trivy.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      containers:
+      - name: insights-trivy
+        securityContext:
+          {{- toYaml .Values.insightsHandler.trivy.securityContext | nindent 10 }}
+        image: "{{ .Values.insightsHandler.trivy.image.repository }}:{{ coalesce .Values.insightsHandler.trivy.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.insightsHandler.trivy.image.pullPolicy }}
+        resources:
+          {{- toYaml .Values.insightsHandler.trivy.resources | nindent 10 }}
+        command: ["trivy", "server", "--cache-dir=/tmp", "--listen=0.0.0.0:4954", "-d"]
+        ports:
+            - containerPort: 4954
+              protocol: TCP
+              name: tcp-4954
+        livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 4954
+        readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 4954
+      {{- with .Values.insightsHandler.trivy.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.name" . }}
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                  - {{ include "lagoon-core.insightsTrivy.fullname" . }}
+                - key: app.kubernetes.io/instance
+                  operator: In
+                  values:
+                  - {{ .Release.Name }}
+              topologyKey: kubernetes.io/hostname
+      {{- with .Values.insightsHandler.trivy.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.insightsHandler.trivy.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

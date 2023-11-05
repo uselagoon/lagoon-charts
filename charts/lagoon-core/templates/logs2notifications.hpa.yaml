@@ -1,5 +1,5 @@
 {{- if .Values.logs2notifications.autoscaling.enabled -}}
-apiVersion: {{ include "lagoon-core.hpa.apiVersion" . }}
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "lagoon-core.logs2notifications.fullname" . }}
