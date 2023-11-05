@@ -41,6 +41,18 @@ spec:
           value: {{ include "lagoon-core.keycloakDB.fullname" . }}
         - name: KEYCLOAK_ADMIN_USER
           value: {{ .Values.keycloakAdminUser | quote }}
+        - name: KEYCLOAK_FRONTEND_URL
+          {{- if .Values.keycloakFrontEndURL }}
+          value: {{ .Values.keycloakFrontEndURL }}/auth
+          {{- else if .Values.keycloak.ingress.enabled }}
+          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}/auth
+          {{- else }}
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
+          {{- end }}
+        {{- with .Values.keycloakAdminEmail }}
+        - name: KEYCLOAK_ADMIN_EMAIL
+          value: {{ . | quote }}
+        {{- end }}
       {{- range $key, $val := .Values.keycloak.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
@@ -67,6 +79,17 @@ spec:
             - /tmp/keycloak-config-complete
           failureThreshold: 90
           periodSeconds: 20
+        volumeMounts:
+        {{- if .Values.keycloak.email.enabled }}
+        - mountPath: /lagoon/keycloak/keycloak-smtp-settings.json
+          name: {{ include "lagoon-core.keycloak.fullname" . }}-smtp-settings
+          subPath: keycloak-smtp-settings.json
+        {{- end }}
+        {{- if .Values.keycloak.realmSettings.enabled }}
+        - mountPath: /lagoon/keycloak/keycloak-realm-settings.json
+          name: {{ include "lagoon-core.keycloak.fullname" . }}-realm-settings
+          subPath: keycloak-realm-settings.json
+        {{- end }}
         resources:
           {{- toYaml .Values.keycloak.resources | nindent 10 }}
       {{- with .Values.keycloak.nodeSelector }}
@@ -80,4 +103,17 @@ spec:
       {{- with .Values.keycloak.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      {{- if .Values.keycloak.email.enabled }}
+      - configMap:
+          defaultMode: 420
+          name: {{ include "lagoon-core.keycloak.fullname" . }}-smtp-settings
+        name: {{ include "lagoon-core.keycloak.fullname" . }}-smtp-settings
+      {{- end }}
+      {{- if .Values.keycloak.realmSettings.enabled }}
+      - configMap:
+          defaultMode: 420
+          name: {{ include "lagoon-core.keycloak.fullname" . }}-realm-settings
+        name: {{ include "lagoon-core.keycloak.fullname" . }}-realm-settings
       {{- end }}

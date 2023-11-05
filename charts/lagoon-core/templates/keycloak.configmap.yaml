@@ -1,0 +1,24 @@
+{{- if .Values.keycloak.email.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lagoon-core.keycloak.fullname" . }}-smtp-settings
+  labels:
+    {{- include "lagoon-core.keycloak.labels" . | nindent 4 }}
+data:
+  keycloak-smtp-settings.json: |
+    {"smtpServer":{{ .Values.keycloak.email.settings | toJson }}}
+{{ end -}}
+{{- if .Values.keycloak.realmSettings.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lagoon-core.keycloak.fullname" . }}-realm-settings
+  labels:
+    {{- include "lagoon-core.keycloak.labels" . | nindent 4 }}
+data:
+  keycloak-realm-settings.json: |
+    {{ .Values.keycloak.realmSettings.options | toJson }}
+{{ end -}}

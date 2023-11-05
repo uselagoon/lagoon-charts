@@ -20,8 +20,10 @@ lagoonWebhookURL: http://webhook:11213
 defaultIngressClassName: nginx
 
 # used in ui
-lagoonAPIURL: https://api.example.com/graphql
-keycloakAPIURL: https://keycloak.example.com/auth
+# lagoonAPIURL: https://api.example.com/graphql
+# keycloakFrontEndURL: https://keycloak.example.com
+
+keycloakAdminEmail: admin@example.com
 
 api:
   replicaCount: 1
@@ -53,6 +55,22 @@ actionsHandler:
     repository: uselagoon/actions-handler
 
 keycloak:
+  keycloakFrontEndURL: https://keycloak.example.com
+  realmSettings:
+    enabled: true
+    options:
+      resetPasswordAllowed: true
+      rememberMe: true
+  email:
+    enabled: true
+    settings:
+      host: mailhog
+      port: '1025'
+      fromDisplayName: Lagoon
+      from: lagoon@example.com
+      replyToDisplayName: Lagoon No-Reply
+      replyTo: lagoon@example.com
+      envelopeFrom: lagoon@example.com
   image:
     repository: uselagoon/keycloak
   resources:
