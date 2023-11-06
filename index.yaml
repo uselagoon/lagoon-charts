@@ -7769,6 +7769,46 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: Changes permissions, adds service, updates secret for insights-remote
+    apiVersion: v2
+    created: "2023-11-06T00:18:34.254291204Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.26.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.4.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: A Helm chart to run a lagoon-remote
+    digest: d5246a5c5e72b8eea086bc4f693cdc03dec5513ed45514433250358bd0ad5d9b
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.86.0/lagoon-remote-0.86.0.tgz
+    version: 0.86.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon-build-deploy to v0.26.1
     apiVersion: v2
     created: "2023-11-02T03:25:10.978113717Z"
@@ -12930,4 +12970,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-02T03:25:10.979258498Z"
+generated: "2023-11-06T00:18:34.255551094Z"
