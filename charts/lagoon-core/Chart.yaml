@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.39.0
+version: 1.40.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -40,5 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: added
-      description: Insights trivy service
+    - kind: changed
+      description: bump lagoon-opensearch-sync version to v0.7.1
