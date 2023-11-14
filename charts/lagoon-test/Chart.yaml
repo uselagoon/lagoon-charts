@@ -29,4 +29,4 @@ appVersion: v2.16.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: add minio settings to api-data-watcher-pusher
+      description: add minio settings to api-data-watcher-pusher and make into a helm test job
