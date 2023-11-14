@@ -7823,6 +7823,46 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update lagoon-build-deploy to v0.26.2 with updated remote-controller
+    apiVersion: v2
+    created: "2023-11-14T01:04:39.983626594Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.26.0
+    - condition: dioscuri.enabled
+      name: dioscuri
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.4.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 7fc93dbee59b52e308aed6e0c05da6289e0471099cee9abfaeb670c1c0e97b5f
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.86.1/lagoon-remote-0.86.1.tgz
+    version: 0.86.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: Changes permissions, adds service, updates secret for insights-remote
     apiVersion: v2
     created: "2023-11-06T00:18:34.254291204Z"
@@ -13024,4 +13064,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2023-11-13T23:11:15.275403802Z"
+generated: "2023-11-14T01:04:39.985226963Z"
