@@ -47,6 +47,12 @@ spec:
             secretKeyRef:
               name: {{ .Values.jwtSecretSecret | quote }}
               key: JWTSECRET
+        - name: MINIO_SERVER_URL
+          value: {{ .Values.minioURL | quote }}
+        - name: MINIO_ROOT_USER
+          value: {{ .Values.minioUser | quote }}
+        - name: MINIO_ROOT_PASSWORD
+          value: {{ .Values.minioPass | quote }}
         - name: TOKEN
           value: {{ required "A valid .Values.token required!" .Values.token | quote }}
         startupProbe:
