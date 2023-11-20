@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "lagoon-logging.labels" . | nindent 4 }}
 spec:
+  enableRecreateWorkloadOnImmutableFieldChange: true
   fluentd:
     security:
       podSecurityContext:
@@ -12,6 +13,14 @@ spec:
         fsGroup: 0
     scaling:
       replicas: {{ .Values.fluentdReplicaCount }}
+  {{- with .Values.fluentdAffinity }}
+    affinity:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with .Values.fluentdTolerations }}
+    tolerations:
+      {{- toYaml . | nindent 6 }}
+  {{- end }}
   {{- with .Values.fluentdMetrics }}
     metrics:
     {{- toYaml . | nindent 6 }}

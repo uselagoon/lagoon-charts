@@ -45,7 +45,7 @@ kind create cluster
 helm upgrade --install --create-namespace --namespace lagoon-core \
   --values ./charts/lagoon-core/ci/linter-values.yaml \
   --set lagoonAPIURL=http://localhost:7070/graphql \
-  --set keycloakAPIURL=http://localhost:8080/auth \
+  --set keycloakFrontEndURL=http://localhost:8080 \
   lagoon-core \
   ./charts/lagoon-core
 

@@ -106,6 +106,17 @@ dockerHost:
     effect: PreferNoSchedule
     operator: Exists
 
+# sshCore creates a restricted, non-expiring ServiceAccount token for use by
+# lagoon-core.
+sshCore:
+  enabled: false
+  serviceAccount:
+    annotations: {}
+    # The name of the service account to use.
+    # If not set, a name is generated using the fullname
+    # template
+    name: ""
+
 # sshPortal is an optional service providing low-latency SSH connectivity to
 # Lagoon environments.
 sshPortal:
@@ -113,9 +124,9 @@ sshPortal:
   replicaCount: 2
   image:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.28.0"
+    tag: "v0.30.1"
 
   service:
     type: LoadBalancer
@@ -159,9 +170,14 @@ lagoon-build-deploy:
   # these values are used by the lagoon-build-deploy controller and do not have
   # sensible defaults.
   # lagoonTargetName:
-  # taskSSHHost: ""
-  # taskSSHPort: ""
-  # taskAPIHost: ""
+  # taskSSHHost: "" # use lagoonTokenHost
+  # taskSSHPort: "" # use lagoonTokenPort
+  # taskAPIHost: "" # use lagoonAPIHost
+  # lagoonTokenHost: ""
+  # lagoonTokenPort: ""
+  # lagoonAPIHost: ""
+  # sshPortalHost: ""
+  # sshPortalPort: ""
   # See the parent chart for the full range of values that can be passed here to control builds
   # https://github.com/uselagoon/lagoon-charts/blob/main/charts/lagoon-build-deploy/values.yaml
 
@@ -196,11 +212,15 @@ insightsRemote:
 
   replicaCount: 1
 
+  # This is the secret used to sign JWT's injected into environments
+  # This shouldn't need to be changed in most circumstances - here for completion
+  # insightsTokenSecret: ""
+
   image:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.4"
+    tag: "v0.0.7"
 
   imagePullSecrets: []
   nameOverride: ""
@@ -270,6 +290,11 @@ insightsRemote:
   tolerations: []
 
   affinity: {}
+
+  service:
+    type: ClusterIP
+    port: 80
+
 
 # the nats chart is a subchart which is configured for use by lagoon-remote
 nats:

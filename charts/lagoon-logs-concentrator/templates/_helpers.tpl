@@ -61,14 +61,3 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/*
-Get HorizontalPodAutoscaler API Version - can be removed once Kubernetes 1.23 is the minimum
-*/}}
-{{- define "lagoon-logs-concentrator.hpa.apiVersion" -}}
-  {{- if (.Capabilities.APIVersions.Has "autoscaling/v2") -}}
-    autoscaling/v2
-  {{- else -}}
-    autoscaling/v2beta2
-  {{- end -}}
-{{- end -}}

@@ -1,0 +1,17 @@
+{{- if .Values.networkPolicy.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "lagoon-docker-host.dockerHost.fullname" . }}
+  labels:
+    {{- include "lagoon-docker-host.dockerHost.labels" . | nindent 4 }}
+spec:
+  ingress:
+  - from:
+    {{- toYaml .Values.networkPolicy.policy | nindent 4 }}
+  podSelector:
+    matchLabels:
+      {{- include "lagoon-docker-host.dockerHost.selectorLabels" . | nindent 6 }}
+  policyTypes:
+  - Ingress
+{{- end }}

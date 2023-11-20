@@ -28,7 +28,7 @@
 # These values may be set on install, otherwise the chart tries to guess
 # sensible defaults.
 
-# keycloakAPIURL: https://keycloak.example.com/auth
+# keycloakFrontEndURL: https://keycloak.example.com
 # lagoonAPIURL: https://api.example.com/graphql
 # lagoonUIURL: https://ui.example.com
 # lagoonWebhookURL: https://webhook-handler.example.com
@@ -60,6 +60,8 @@ rabbitMQUsername: lagoon
 k8upS3Endpoint: ""
 
 keycloakAdminUser: admin
+# this is required if email sending is to be enabled in keycloak
+# keycloakAdminEmail: admin@example.com
 
 buildDeployImage:
   edge:
@@ -124,7 +126,10 @@ api:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -155,7 +160,10 @@ apiDB:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -188,16 +196,42 @@ apiRedis:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
+
+  persistence:
+    enabled: false
+    size: 100Mi
 
   service:
     type: ClusterIP
     port: 6379
 
 keycloak:
+  # keycloak realm and email settings configuration
+  realmSettings:
+    enabled: false
+    # the full list of config settings is available TODO
+    options:
+      resetPasswordAllowed: true
+      rememberMe: true
+  email:
+    enabled: false
+    settings:
+      host: mailhog
+      port: '1025'
+      from: lagoon@example.com
+      fromDisplayName: Lagoon
+      replyTo: lagoon@example.com
+      ssl: 'false'
+      starttls: 'false'
+      auth: 'false'
+
   replicaCount: 1
   image:
     repository: uselagoon/keycloak
@@ -209,7 +243,10 @@ keycloak:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -251,7 +288,10 @@ keycloakDB:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "100m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -289,7 +329,10 @@ broker:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -345,7 +388,10 @@ authServer:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -370,7 +416,10 @@ webhooks2tasks:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -395,7 +444,10 @@ webhookHandler:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -437,7 +489,10 @@ ui:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -484,6 +539,11 @@ actionsHandler:
   additionalEnvs:
   #   FOO: Bar
 
+  resources:
+    requests:
+      memory: "16Mi"
+      cpu: "10m"
+
 backupHandler:
   enabled: true
   replicaCount: 2
@@ -497,7 +557,10 @@ backupHandler:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "50m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -539,7 +602,10 @@ insightsHandler:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -550,6 +616,14 @@ insightsHandler:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+  trivy:
+    enabled: false
+    image:
+      repository: aquasec/trivy
+      tag: latest
+    service:
+      type: ClusterIP
+      port: 4954
 
 logs2notifications:
   enabled: true
@@ -577,7 +651,10 @@ logs2notifications:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "16Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -602,7 +679,10 @@ drushAlias:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "8Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -644,7 +724,10 @@ ssh:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "500m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -674,7 +757,10 @@ workflows:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "16Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -756,13 +842,16 @@ sshPortalAPI:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.28.0"
+    tag: "v0.30.1"
 
   podAnnotations: {}
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "8Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -796,7 +885,7 @@ opensearchSync:
     repository: ghcr.io/uselagoon/lagoon-opensearch-sync
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.7.0"
+    tag: "v0.7.1"
 
   # debug logging toggle
   debug: false
@@ -811,7 +900,10 @@ opensearchSync:
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "8Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar
@@ -823,13 +915,16 @@ sshToken:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-token
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.28.0"
+    tag: "v0.30.1"
 
   podAnnotations: {}
 
   securityContext: {}
 
-  resources: {}
+  resources:
+    requests:
+      memory: "8Mi"
+      cpu: "10m"
 
   additionalEnvs:
   #   FOO: Bar

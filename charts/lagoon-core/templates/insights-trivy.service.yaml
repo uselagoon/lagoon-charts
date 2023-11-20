@@ -1,0 +1,16 @@
+{{- if .Values.insightsHandler.trivy.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.insightsTrivy.fullname" . }}
+  labels:
+    {{- include "lagoon-core.insightsTrivy.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.insightsHandler.trivy.service.type }}
+  ports:
+  - port: {{ .Values.insightsHandler.trivy.service.port }}
+    targetPort: 4954
+    name: tcp-4954
+  selector:
+    {{- include "lagoon-core.insightsTrivy.selectorLabels" . | nindent 4 }}
+{{- end }}

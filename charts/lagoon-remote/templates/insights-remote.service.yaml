@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}
+  labels: 
+    {{- include "lagoon-remote.insightsRemote.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.insightsRemote.service.type }}
+  ports:
+    - port: {{ .Values.insightsRemote.service.port }}
+      targetPort: 8888
+      protocol: TCP
+      name: insights-ws
+  selector:
+    {{- include "lagoon-remote.insightsRemote.selectorLabels" . | nindent 4 }}
