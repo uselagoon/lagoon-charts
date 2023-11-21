@@ -119,6 +119,9 @@ localAPIDataWatcherPusher:
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
+  additionalEnvs:
+  #   CLEAR_API_DATA: true
+
   podSecurityContext: {}
 
   securityContext: {}

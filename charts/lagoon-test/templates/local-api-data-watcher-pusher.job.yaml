@@ -50,6 +50,10 @@ spec:
           value: {{ .Values.minioPass | quote }}
         - name: TOKEN
           value: {{ required "A valid .Values.token required!" .Values.token | quote }}
+      {{- range $key, $val := .Values.localAPIDataWatcherPusher.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         resources:
           {{- toYaml .Values.localAPIDataWatcherPusher.resources | nindent 10 }}
       {{- with .Values.localAPIDataWatcherPusher.nodeSelector }}
