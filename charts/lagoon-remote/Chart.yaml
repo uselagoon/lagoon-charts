@@ -46,3 +46,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: remove insights-remote service if not enabled
+    - kind: removed
+      description: removed old kubernetes build deploy references
