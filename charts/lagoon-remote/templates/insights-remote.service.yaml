@@ -1,3 +1,4 @@
+{{- if .Values.insightsRemote.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,3 +14,4 @@ spec:
       name: insights-ws
   selector:
     {{- include "lagoon-remote.insightsRemote.selectorLabels" . | nindent 4 }}
+{{- end }}
