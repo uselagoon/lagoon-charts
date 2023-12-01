@@ -30,6 +30,12 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml (coalesce .Values.api.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      initContainers:
+        - command:
+            - "node -r dotenv-extended/config dist/migrations/lagoon/migration.js"
+          image: "{{ .Values.api.image.repository }}:{{ coalesce .Values.api.image.tag .Values.imageTag .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          name: migrations
       containers:
       - name: api
         securityContext:
