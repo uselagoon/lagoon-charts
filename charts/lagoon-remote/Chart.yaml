@@ -48,3 +48,5 @@ annotations:
       description: remove insights-remote service if not enabled
     - kind: removed
       description: removed old kubernetes build deploy references
+    - kind: changed
+      description: updated to insights-remote:v0.0.8
