@@ -261,7 +261,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 # Do not install without lagoon-core
 #
 .PHONY: install-lagoon-build-deploy
-install-lagoon-build-deploy: install-lagoon-core install-registry
+install-lagoon-build-deploy: install-lagoon-core
 	$(HELM) dependency build ./charts/lagoon-build-deploy/
 	$(HELM) upgrade \
 		--install \
@@ -287,6 +287,11 @@ install-lagoon-build-deploy: install-lagoon-core install-registry
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO) ] && echo '--set lagoonFeatureFlagDefaultRWX2RWO=$(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO)') \
 		lagoon-build-deploy \
 		./charts/lagoon-build-deploy
+
+# allow skipping registry install for install-lagoon-remote target
+ifneq ($(SKIP_INSTALL_REGISTRY),true)
+install-lagoon-build-deploy: install-registry
+endif
 
 #
 # The following targets facilitate local development only and aren't used in CI.
