@@ -41,6 +41,9 @@ SKIP_ALL_DEPS =
 DISABLE_CORE_HARBOR =
 # Set to `true` to enable the elements of lagoon-core that talk to OpenSearch installs
 OPENSEARCH_INTEGRATION_ENABLED = false
+# Ordinarily we shouldn't need to clear the API data as it's usually a first run. Set this
+# variable on a test run to clear (what's clearable) first
+CLEAR_API_DATA = false
 
 TIMEOUT = 30m
 HELM = helm
@@ -56,7 +59,7 @@ fill-test-ci-values:
 		&& export token="$$($(KUBECTL) -n lagoon create token lagoon-build-deploy --duration 3h)" \
 		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
 		&& export webhookHandler="lagoon-core-webhook-handler" \
-		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
+		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' clearApiData='$(CLEAR_API_DATA)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
 		&& cat $$valueTemplate
@@ -158,7 +161,7 @@ install-minio: install-ingress
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
-		--set defaultBuckets=lagoon-files \
+		--set defaultBuckets='lagoon-files\,restores' \
 		--version=12.8.7 \
 		minio \
 		bitnami/minio
