@@ -16,11 +16,11 @@ kubeVersion: ">= 1.23.0-0"
 
 type: application
 
-version: 0.26.2
+version: 0.26.3
 
 appVersion: v0.15.4
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller to v0.15.4
+      description: added clusterroles for tasks and builds
