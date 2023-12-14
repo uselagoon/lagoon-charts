@@ -1,34 +1,29 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: {{ include "lagoon-test.localAPIDataWatcherPusher.fullname" . }}
   labels:
     {{- include "lagoon-test.localAPIDataWatcherPusher.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-weight": "10"
 spec:
-  selector:
-    matchLabels:
-      {{- include "lagoon-test.localAPIDataWatcherPusher.selectorLabels" . | nindent 6 }}
+  backoffLimit: 2
   template:
     metadata:
-    {{- with .Values.localAPIDataWatcherPusher.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
       labels:
         {{- include "lagoon-test.localAPIDataWatcherPusher.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.localAPIDataWatcherPusher.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      restartPolicy: Never
       securityContext:
         {{- toYaml .Values.localAPIDataWatcherPusher.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 120
       containers:
       - name: api-data-watcher-pusher
-        securityContext:
-          {{- toYaml .Values.localAPIDataWatcherPusher.securityContext | nindent 10 }}
         image: "{{ .Values.localAPIDataWatcherPusher.image.repository }}:{{ coalesce .Values.localAPIDataWatcherPusher.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.localAPIDataWatcherPusher.image.pullPolicy }}
+        securityContext:
+          {{- toYaml .Values.localAPIDataWatcherPusher.securityContext | nindent 10 }}
         env:
         - name: API_HOST
           value: {{ .Values.apiHost | quote }}
@@ -47,15 +42,18 @@ spec:
             secretKeyRef:
               name: {{ .Values.jwtSecretSecret | quote }}
               key: JWTSECRET
+        - name: MINIO_SERVER_URL
+          value: {{ .Values.minioURL | quote }}
+        - name: MINIO_ROOT_USER
+          value: {{ .Values.minioUser | quote }}
+        - name: MINIO_ROOT_PASSWORD
+          value: {{ .Values.minioPass | quote }}
         - name: TOKEN
           value: {{ required "A valid .Values.token required!" .Values.token | quote }}
-        startupProbe:
-          exec:
-            command:
-            - test
-            - -f
-            - /tmp/api-data-pushed
-          failureThreshold: 90
+      {{- range $key, $val := .Values.localAPIDataWatcherPusher.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
         resources:
           {{- toYaml .Values.localAPIDataWatcherPusher.resources | nindent 10 }}
       {{- with .Values.localAPIDataWatcherPusher.nodeSelector }}

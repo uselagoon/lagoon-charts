@@ -92,14 +92,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Create a default fully qualified app name for local-git.
+Create a default fully qualified app name for local-api-data-watcher-pusher.
 */}}
 {{- define "lagoon-test.localAPIDataWatcherPusher.fullname" -}}
 {{- include "lagoon-test.fullname" . }}-local-api-data-watcher-pusher
 {{- end }}
 
 {{/*
-Common labels local-git.
+Common labels local-api-data-watcher-pusher.
 */}}
 {{- define "lagoon-test.localAPIDataWatcherPusher.labels" -}}
 helm.sh/chart: {{ include "lagoon-test.chart" . }}
@@ -111,7 +111,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels local-git.
+Selector labels local-api-data-watcher-pusher.
 */}}
 {{- define "lagoon-test.localAPIDataWatcherPusher.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "lagoon-test.name" . }}

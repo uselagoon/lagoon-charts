@@ -106,13 +106,6 @@ dockerHost:
     effect: PreferNoSchedule
     operator: Exists
 
-# this account is used by the legacy Lagoon kubernetes build deploy system.
-kubernetesBuildDeploy:
-  serviceAccount:
-    # The name of the service account to use.
-    # If not set, a name is generated using the fullname template.
-    name:
-
 # sshCore creates a restricted, non-expiring ServiceAccount token for use by
 # lagoon-core.
 sshCore:
@@ -227,7 +220,7 @@ insightsRemote:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.7"
+    tag: "v0.0.8"
 
   imagePullSecrets: []
   nameOverride: ""
