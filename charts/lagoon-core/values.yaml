@@ -616,6 +616,14 @@ insightsHandler:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+  trivy:
+    enabled: false
+    image:
+      repository: aquasec/trivy
+      tag: latest
+    service:
+      type: ClusterIP
+      port: 4954
 
 logs2notifications:
   enabled: true
@@ -877,7 +885,7 @@ opensearchSync:
     repository: ghcr.io/uselagoon/lagoon-opensearch-sync
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.7.0"
+    tag: "v0.7.1"
 
   # debug logging toggle
   debug: false

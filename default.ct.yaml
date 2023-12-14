@@ -12,4 +12,3 @@ chart-repos:
 - kube-logging=https://kube-logging.github.io/helm-charts
 excluded-charts:
 - lagoon-test
-helm-extra-args: --timeout 20m

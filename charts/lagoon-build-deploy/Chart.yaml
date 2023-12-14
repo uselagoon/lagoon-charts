@@ -12,17 +12,15 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.21.0-0"
+kubeVersion: ">= 1.23.0-0"
 
 type: application
 
-version: 0.25.2
+version: 0.26.3
 
-appVersion: v0.15.2
+appVersion: v0.15.4
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller appVersion to v0.15.2
-    - kind: changed
-      description: added flag support for enabling k8up v2 support
+      description: added clusterroles for tasks and builds
