@@ -27,7 +27,7 @@ version: 1.41.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.16.0
+appVersion: v2.17.0
 
 dependencies:
 - name: nats
@@ -46,3 +46,5 @@ annotations:
       description: updated to insights-handler:v0.0.2
     - kind: changed
       description: pinned insights to trivy:0.48.0
+    - kind: changed
+      description: update lagoon appVersion to v2.17.0

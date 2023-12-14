@@ -50,3 +50,5 @@ annotations:
       description: removed old kubernetes build deploy references
     - kind: changed
       description: updated to insights-remote:v0.0.8
+    - kind: changed
+      description: updated lagoon-build-deploy chart to v0.26.3
