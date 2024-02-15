@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.87.0
+version: 0.88.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -45,10 +45,6 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: remove insights-remote service if not enabled
-    - kind: removed
-      description: removed old kubernetes build deploy references
+      description: update storage-calculator to v0.5.1
     - kind: changed
-      description: updated to insights-remote:v0.0.8
-    - kind: changed
-      description: updated lagoon-build-deploy chart to v0.26.3
+      description: added metrics to storage-calculator
