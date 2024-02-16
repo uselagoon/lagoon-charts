@@ -144,7 +144,9 @@ cdnLogsCollector:
     size: 8Gi
     storageClassName: ""
 
-  serviceType: LoadBalancer
+  service:
+    type: LoadBalancer
+    annotations: {}
 
   # TLS configuration is required
   # These should be server certificates, and the CDN should be configured to

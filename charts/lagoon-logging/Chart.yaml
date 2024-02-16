@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.80.0
+version: 0.81.0
 
 dependencies:
 - name: logging-operator
@@ -32,9 +32,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: update uselagoon/logs-dispatcher image to v3.4.0
     - kind: added
-      description: schedule Logging Pods also on infra nodes
-    - kind: added
-      description: ability to configure toleration/affinity on FluentD deployment
+      description: support for annotations on the CDN service
