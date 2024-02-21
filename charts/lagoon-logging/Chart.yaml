@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.81.0
+version: 0.81.1
 
 dependencies:
 - name: logging-operator
@@ -31,6 +31,16 @@ dependencies:
 # It should be started afresh for each release
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
+  artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
-    - kind: added
-      description: support for annotations on the CDN service
+    - kind: security
+      description: >
+        Previously the test role and rolebinding were being installed
+        unconditionally. With this change they are only installed when running
+        helm test and then removed.
+
+        Having the role and rolebinding installed unconditionally would mean
+        that any serviceaccount (including the default) would be able to view
+        service objects in the lagoon-logging namespace. This is an unnecessary
+        elevation of privilege, but these service objects do not contain
+        anything sensitive.
