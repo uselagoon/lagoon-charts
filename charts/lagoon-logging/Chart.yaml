@@ -34,13 +34,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
     - kind: security
-      description: >
-        Previously the test role and rolebinding were being installed
-        unconditionally. With this change they are only installed when running
-        helm test and then removed.
-
-        Having the role and rolebinding installed unconditionally would mean
-        that any serviceaccount (including the default) would be able to view
-        service objects in the lagoon-logging namespace. This is an unnecessary
-        elevation of privilege, but these service objects do not contain
-        anything sensitive.
+      description: avoid test role and rolebinding being wrongly installed
