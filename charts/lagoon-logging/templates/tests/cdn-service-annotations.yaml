@@ -3,6 +3,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: service-reader
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 rules:
 - apiGroups: [""] # "" indicates the core API group
   resources: ["services"]
@@ -12,6 +15,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: read-services
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 subjects:
 - kind: Group
   name: system:serviceaccounts # all serviceaccounts
@@ -29,6 +35,7 @@ metadata:
     {{- include "lagoon-logging.logsDispatcher.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
   containers:
   - name: kubectl
