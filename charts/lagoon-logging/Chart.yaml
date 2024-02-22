@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.81.0
+version: 0.81.1
 
 dependencies:
 - name: logging-operator
@@ -31,6 +31,7 @@ dependencies:
 # It should be started afresh for each release
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
+  artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
-    - kind: added
-      description: support for annotations on the CDN service
+    - kind: security
+      description: avoid test role and rolebinding being wrongly installed
