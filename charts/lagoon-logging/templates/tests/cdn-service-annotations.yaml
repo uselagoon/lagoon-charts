@@ -6,6 +6,7 @@ metadata:
   annotations:
     "helm.sh/hook": test
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "-2"
 rules:
 - apiGroups: [""] # "" indicates the core API group
   resources: ["services"]
@@ -18,6 +19,7 @@ metadata:
   annotations:
     "helm.sh/hook": test
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "-1"
 subjects:
 - kind: Group
   name: system:serviceaccounts # all serviceaccounts
@@ -36,6 +38,7 @@ metadata:
   annotations:
     "helm.sh/hook": test
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "0"
 spec:
   containers:
   - name: kubectl
