@@ -69,7 +69,7 @@ jobs:
       run: sudo apt-get -y install python3-wheel
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@v2.6.0
+      uses: helm/chart-testing-action@v2.6.1
 
     - name: Run chart-testing (list-changed)
       id: list-changed
@@ -84,11 +84,11 @@ jobs:
       run: ct lint --config ./default.ct.yaml
 
     - name: Create kind cluster
-      uses: helm/kind-action@v1.8.0
+      uses: helm/kind-action@v1.9.0
       with:
-        version: v0.20.0
-        node_image: kindest/node:v1.28.0@sha256:b7a4cad12c197af3ba43202d3efe03246b3f0793f162afb40a33c923952d5b31
-        kubectl_version: v1.28.0
+        version: v0.22.0
+        node_image: kindest/node:v1.28.7@sha256:9bc6c451a289cf96ad0bbaf33d416901de6fd632415b076ab05f5fa7e4f65c58
+        kubectl_version: v1.28.7
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
