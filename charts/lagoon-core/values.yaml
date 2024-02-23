@@ -4,7 +4,6 @@
 # elasticsearchURL:
 # harborURL:
 # kibanaURL:
-# registry:
 # s3BAASSecretAccessKey:
 # s3BAASAccessKeyID:
 # s3FilesAccessKeyID:
