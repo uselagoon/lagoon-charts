@@ -73,6 +73,7 @@ endif
 
 .PHONY: install-ingress
 install-ingress:
+	# Using 4.7.x because server snippets https://github.com/kubernetes/ingress-nginx/issues/10543
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -86,7 +87,7 @@ install-ingress:
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.9.1 \
+		--version=4.7.5 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
