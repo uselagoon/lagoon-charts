@@ -41,6 +41,9 @@ SKIP_ALL_DEPS =
 DISABLE_CORE_HARBOR =
 # Set to `true` to enable the elements of lagoon-core that talk to OpenSearch installs
 OPENSEARCH_INTEGRATION_ENABLED = false
+# Ordinarily we shouldn't need to clear the API data as it's usually a first run. Set this
+# variable on a test run to clear (what's clearable) first
+CLEAR_API_DATA = false
 
 TIMEOUT = 30m
 HELM = helm
@@ -56,7 +59,7 @@ fill-test-ci-values:
 		&& export token="$$($(KUBECTL) -n lagoon create token lagoon-build-deploy --duration 3h)" \
 		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
 		&& export webhookHandler="lagoon-core-webhook-handler" \
-		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' \
+		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' clearApiData='$(CLEAR_API_DATA)' \
 		&& valueTemplate=charts/lagoon-test/ci/linter-values.yaml \
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
 		&& cat $$valueTemplate
@@ -70,6 +73,7 @@ endif
 
 .PHONY: install-ingress
 install-ingress:
+	# Using 4.7.x because server snippets https://github.com/kubernetes/ingress-nginx/issues/10543
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -83,7 +87,7 @@ install-ingress:
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.7.2 \
+		--version=4.7.5 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -103,7 +107,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.13.0 \
+		--version=1.14.0 \
 		registry \
 		harbor/harbor
 
@@ -158,8 +162,8 @@ install-minio: install-ingress
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
-		--set defaultBuckets=lagoon-files \
-		--version=12.8.7 \
+		--set defaultBuckets='lagoon-files\,restores' \
+		--version=13.6.2 \
 		minio \
 		bitnami/minio
 
@@ -258,7 +262,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 # Do not install without lagoon-core
 #
 .PHONY: install-lagoon-build-deploy
-install-lagoon-build-deploy: install-lagoon-core install-registry
+install-lagoon-build-deploy: install-lagoon-core
 	$(HELM) dependency build ./charts/lagoon-build-deploy/
 	$(HELM) upgrade \
 		--install \
@@ -284,6 +288,11 @@ install-lagoon-build-deploy: install-lagoon-core install-registry
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO) ] && echo '--set lagoonFeatureFlagDefaultRWX2RWO=$(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO)') \
 		lagoon-build-deploy \
 		./charts/lagoon-build-deploy
+
+# allow skipping registry install for install-lagoon-remote target
+ifneq ($(SKIP_INSTALL_REGISTRY),true)
+install-lagoon-build-deploy: install-registry
+endif
 
 #
 # The following targets facilitate local development only and aren't used in CI.

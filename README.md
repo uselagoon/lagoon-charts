@@ -42,7 +42,18 @@ Documentation on probes for pod startup is [here](https://kubernetes.io/docs/con
 
 ### Run chart-testing (lint) locally
 
+```bash
+docker run --rm --interactive --detach --network host --name ct "--volume=$(pwd):/workdir" "--workdir=/workdir" --volume=$(pwd)/default.ct.yaml:/etc/ct/ct.yaml quay.io/helmpack/chart-testing:latest cat
+docker exec ct git config --global --add safe.directory /workdir
+docker exec ct ct lint
 ```
-$ docker run --rm --interactive --detach --network host --name ct "--volume=$(pwd):/workdir" "--workdir=/workdir" --volume=$(pwd)/default.ct.yaml:/etc/ct/ct.yaml quay.io/helmpack/chart-testing:latest cat
-$ docker exec ct ct lint
+
+### Run chart-testing (install) locally
+
+Prerequisite: install [ct](https://github.com/helm/chart-testing).
+
+```bash
+kind create cluster -n chart-testing
+ct install --charts=charts/lagoon-logging
+kind delete cluster -n chart-testing
 ```
