@@ -73,13 +73,13 @@ endif
 
 .PHONY: install-ingress
 install-ingress:
-	# Using 4.7.x because server snippets https://github.com/kubernetes/ingress-nginx/issues/10543
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace ingress-nginx \
 		--wait \
 		--timeout $(TIMEOUT) \
+		--set controller.allowSnippetAnnotations=true \
 		--set controller.service.type=NodePort \
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
@@ -87,7 +87,7 @@ install-ingress:
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.7.5 \
+		--version=4.9.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
