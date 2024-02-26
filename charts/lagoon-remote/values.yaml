@@ -181,11 +181,6 @@ lagoon-build-deploy:
   # See the parent chart for the full range of values that can be passed here to control builds
   # https://github.com/uselagoon/lagoon-charts/blob/main/charts/lagoon-build-deploy/values.yaml
 
-# dioscuri is the operator which implements Lagoon active-standby.
-# This subchart is enabled by default as this is a core Lagoon feature.
-dioscuri:
-  enabled: true
-
 # dbaas-operator provisions database-as-a-service accounts for projects.
 # Example provider configuration can be found in the dbaas-operator values.yaml
 # https://github.com/amazeeio/charts/blob/main/charts/dbaas-operator/values.yaml
