@@ -40,5 +40,9 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
+    - kind: changed
+      description: update storage-calculator to v0.5.1
+    - kind: changed
+      description: added metrics to storage-calculator
     - kind: removed
       description: removed dioscuri subchart, activestandby is handled via a Lagoon task directly now
