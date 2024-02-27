@@ -26,10 +26,6 @@ dependencies:
   version: ~0.26.0
   repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-build-deploy.enabled
-- name: dioscuri
-  version: ~0.4.0
-  repository: https://amazeeio.github.io/charts/
-  condition: dioscuri.enabled
 - name: dbaas-operator
   version: ~0.3.0
   repository: https://amazeeio.github.io/charts/
@@ -48,3 +44,5 @@ annotations:
       description: update storage-calculator to v0.5.1
     - kind: changed
       description: added metrics to storage-calculator
+    - kind: removed
+      description: removed dioscuri subchart, activestandby is handled via a Lagoon task directly now
