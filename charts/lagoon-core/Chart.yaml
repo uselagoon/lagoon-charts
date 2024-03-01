@@ -41,4 +41,6 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
+      description: remove unused legacy registry setting from core
+    - kind: changed
       description: modify keycloak liveness and readiness endpoint

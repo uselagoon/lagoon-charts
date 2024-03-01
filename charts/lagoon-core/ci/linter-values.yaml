@@ -3,7 +3,6 @@
 # To be deprecated - see uselagoon/lagoon#2907
 harborURL: http://disabled-only-use-harbor-via-deploy-controller.invalid
 harborAdminPassword: not-needed
-registry: disabled-only-use-harbor-via-deploy-controller.invalid
 
 # used in api
 elasticsearchURL: http://opendistro-es-client-service.opendistro-es.svc.cluster.local:9200
