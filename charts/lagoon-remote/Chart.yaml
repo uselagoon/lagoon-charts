@@ -41,8 +41,10 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update storage-calculator to v0.5.1
+      description: update storage-calculator to v0.5.2
     - kind: changed
       description: added metrics to storage-calculator
     - kind: removed
       description: removed dioscuri subchart, activestandby is handled via a Lagoon task directly now
+    - kind: changed
+      description: updated insights-remote version to v0.0.9
