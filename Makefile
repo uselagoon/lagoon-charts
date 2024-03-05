@@ -181,8 +181,8 @@ install-lagoon-core: install-minio
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set buildDeployImage.default.image=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(DISABLE_CORE_HARBOR) ] && echo '--set api.additionalEnvs.DISABLE_CORE_HARBOR=$(DISABLE_CORE_HARBOR)') \
 		$$([ $(OPENSEARCH_INTEGRATION_ENABLED) ] && echo '--set api.additionalEnvs.OPENSEARCH_INTEGRATION_ENABLED=$(OPENSEARCH_INTEGRATION_ENABLED)') \
-		$$([ $(ENABLE_SSH_PORTAL) ] && echo '--set .sshPortalAPI.enabled=$(ENABLE_SSH_PORTAL)') \
-		$$([ $(ENABLE_SSH_PORTAL) ] && echo '--set .nats.enabled=$(ENABLE_SSH_PORTAL)') \
+		$$([ $(ENABLE_SSH_PORTAL) ] && echo '--set sshPortalAPI.enabled=$(ENABLE_SSH_PORTAL)') \
+		$$([ $(ENABLE_SSH_PORTAL) ] && echo '--set nats.enabled=$(ENABLE_SSH_PORTAL)') \
 		--set "keycloakFrontEndURL=http://lagoon-keycloak.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler  \
@@ -235,8 +235,8 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--wait \
 		--timeout $(TIMEOUT) \
 		--values ./charts/lagoon-remote/ci/linter-values.yaml \
-		$$([ $(ENABLE_SSH_PORTAL) ] && echo '--set .sshPortal.enabled=$(ENABLE_SSH_PORTAL)') \
-		$$([ $(ENABLE_SSH_PORTAL) ] && echo '--set .nats.enabled=$(ENABLE_SSH_PORTAL)') \
+		$$([ $(ENABLE_SSH_PORTAL) ] && echo '--set sshPortal.enabled=$(ENABLE_SSH_PORTAL)') \
+		$$([ $(ENABLE_SSH_PORTAL) ] && echo '--set nats.enabled=$(ENABLE_SSH_PORTAL)') \
 		--set "lagoon-build-deploy.enabled=false" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080" \
 		--set "dbaas-operator.mariadbProviders.development.environment=development" \
