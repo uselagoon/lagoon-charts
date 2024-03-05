@@ -44,3 +44,5 @@ annotations:
       description: remove unused legacy registry setting from core
     - kind: changed
       description: modify keycloak liveness and readiness endpoint
+    - kind: changed
+      description: updated insights-handler to v0.0.4
