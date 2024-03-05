@@ -9,28 +9,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        test:
-        - active-standby-kubernetes
-        - api
-        - deploytarget
-        - features-kubernetes
-        - features-kubernetes-2
-        - features-variables
-        - services
-        - tasks
+        test: [ 
+          { test: "active-standby-kubernetes", sshportal: false },
+          { test: "api", sshportal: false },
+          { test: "deploytarget", sshportal: false },
+          { test: "features-kubernetes", sshportal: true },
+          { test: "features-kubernetes-2", sshportal: false },
+          { test: "features-variables", sshportal: false },
+          { test: "services", sshportal: false },
+          { test: "tasks", sshportal: false }
+          ]
         ## Re-enable any of these tests in your branch for specific testing
-        ## - bitbucket
-        ## - bulk-deployment
-        ## - drush
-        ## - generic
-        ## - github
-        ## - gitlab
-        ## - image-cache
-        ## - nginx
-        ## - node
-        ## - python
-        ## - ssh-legacy
-        ## - workflows
+        ## { test: "bitbucket", sshportal: false },
+        ## { test: "bulk-deployment", sshportal: false },
+        ## { test: "drush", sshportal: true },
+        ## { test: "generic", sshportal: false },
+        ## { test: "github", sshportal: false },
+        ## { test: "gitlab", sshportal: false },
+        ## { test: "image-cache", sshportal: false },
+        ## { test: "nginx", sshportal: false },
+        ## { test: "node", sshportal: false },
+        ## { test: "python", sshportal: false },
+        ## { test: "ssh-legacy", sshportal: false },
+        ## { test: "workflows", sshportal: false },
 
     steps:
     # Continue after getting a shell via: `touch continue`
@@ -118,6 +119,11 @@ jobs:
         tar -xf ./kubens_v0.9.5_linux_x86_64.tar.gz
         sudo cp /tmp/kubens /usr/local/bin/kubens
         sudo ln -s $(which kubectl) /usr/local/bin/kc
+
+    - name: Set SSH Portal environment variable
+      if: matrix.test.sshportal
+      run: |
+        echo "ENABLE_SSH_PORTAL=${{ matrix.test.sshportal }}" >> $GITHUB_ENV
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: |
