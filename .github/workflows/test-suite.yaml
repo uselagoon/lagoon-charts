@@ -121,16 +121,15 @@ jobs:
         sudo ln -s $(which kubectl) /usr/local/bin/kc
 
     - name: Set SSH Portal environment variable
-      if: matrix.test.sshportal
       run: |
-        echo "ENABLE_SSH_PORTAL=${{ matrix.test.sshportal }}" >> $GITHUB_ENV
+        echo "ENABLE_SSH_PORTAL=${{ matrix.test.sshportal || 'true' }}" >> $GITHUB_ENV
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      # run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
-      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
+      # run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
+      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test.test }}]
 
     - name: Free up some disk space
       if: |
