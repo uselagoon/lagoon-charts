@@ -122,7 +122,7 @@ jobs:
 
     - name: Set SSH Portal environment variable
       run: |
-        echo "ENABLE_SSH_PORTAL=${{ matrix.test.sshportal || 'true' }}" >> $GITHUB_ENV
+        echo "ENABLE_SSH_PORTAL=${{ matrix.test.sshportal }}" >> $GITHUB_ENV
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
       if: |
