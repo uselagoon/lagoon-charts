@@ -42,3 +42,4 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: initial support for changing the database vendor
+      description: add support for s3 files bucket to actions-handler
