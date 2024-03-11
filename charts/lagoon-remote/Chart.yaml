@@ -48,3 +48,5 @@ annotations:
       description: removed dioscuri subchart, activestandby is handled via a Lagoon task directly now
     - kind: changed
       description: updated insights-remote version to v0.0.9
+    - kind: changed
+      description: added initcontainer to api to handle keycloak migrations
