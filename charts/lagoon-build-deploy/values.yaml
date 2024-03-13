@@ -6,6 +6,10 @@ rabbitMQHostname: ""
 rabbitMQPassword: ""
 rabbitMQUsername: ""
 
+# This is here due to the removal of the passthrough from core https://github.com/uselagoon/lagoon/pull/3659
+# if you leveraged this value in your core, you should ensure you update your remotes with this value to reflect what you previously had provided in core
+# unauthenticatedRegistry: registry.lagoon.svc:5000
+
 # NOTE!! lagoon api/host/port values if left empty fall back to the task api/host/port values
 # taskSSHHost/lagoonTokenHost is the hostname for the lagoon token service
 # taskSSHHost will be deprecated in favor of lagoonTokenHost
