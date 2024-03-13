@@ -52,3 +52,7 @@ annotations:
       description: added initcontainer to api to handle keycloak migrations
     - kind: changed
       description: update lagoon-build-deploy to 0.26.4
+    - kind: changed
+      description: update ssh-portal to v0.34.0
+    - kind: added
+      description: add support for logs access via SSH
