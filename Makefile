@@ -186,6 +186,7 @@ install-lagoon-core: install-minio
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler  \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
+		--set api.image.tag=$(IMAGE_TAG) \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
 		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
@@ -194,6 +195,7 @@ install-lagoon-core: install-minio
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
 		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
+		--set keycloak.image.tag=$(IMAGE_TAG) \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
 		--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications \
 		--set logs2notifications.email.disabled=true \
