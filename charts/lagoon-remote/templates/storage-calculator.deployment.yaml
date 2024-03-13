@@ -35,10 +35,14 @@ spec:
         command:
         - /manager
         args:
-        - "--metrics-bind-address=127.0.0.1:8080"
+        - "--metrics-bind-address=0.0.0.0:8080"
+        - "--prometheus-metrics=true"
         {{- with .Values.storageCalculator.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        ports:
+        - name: metrics
+          containerPort: 8080
         env:
         {{- range $name, $value := .Values.storageCalculator.extraEnvs }}
         - name: {{ .name }}

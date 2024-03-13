@@ -16,11 +16,11 @@ kubeVersion: ">= 1.23.0-0"
 
 type: application
 
-version: 0.26.3
+version: 0.26.4
 
-appVersion: v0.15.4
+appVersion: v0.15.5
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: added clusterroles for tasks and builds
+      description: added legacy registry passthrough support

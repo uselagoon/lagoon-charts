@@ -26,10 +26,6 @@ dependencies:
   version: ~0.26.0
   repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-build-deploy.enabled
-- name: dioscuri
-  version: ~0.4.0
-  repository: https://amazeeio.github.io/charts/
-  condition: dioscuri.enabled
 - name: dbaas-operator
   version: ~0.3.0
   repository: https://amazeeio.github.io/charts/
@@ -44,6 +40,18 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
+    - kind: changed
+      description: update storage-calculator to v0.5.2
+    - kind: changed
+      description: added metrics to storage-calculator
+    - kind: removed
+      description: removed dioscuri subchart, activestandby is handled via a Lagoon task directly now
+    - kind: changed
+      description: updated insights-remote version to v0.0.9
+    - kind: changed
+      description: added initcontainer to api to handle keycloak migrations
+    - kind: changed
+      description: update lagoon-build-deploy to 0.26.4
     - kind: changed
       description: update ssh-portal to v0.34.0
     - kind: added

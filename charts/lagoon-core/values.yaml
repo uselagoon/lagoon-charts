@@ -4,7 +4,6 @@
 # elasticsearchURL:
 # harborURL:
 # kibanaURL:
-# registry:
 # s3BAASSecretAccessKey:
 # s3BAASAccessKeyID:
 # s3FilesAccessKeyID:
@@ -596,7 +595,7 @@ insightsHandler:
     repository: uselagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: main
+    tag: "v0.0.4"
 
   podAnnotations: {}
 
