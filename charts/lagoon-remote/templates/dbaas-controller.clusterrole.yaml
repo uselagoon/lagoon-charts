@@ -1,0 +1,158 @@
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "lagoon-remote.dbaasController.fullname" . }}-manager
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databasemongodbproviders
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databasemongodbproviders/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databasemongodbproviders/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databasemysqlproviders
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databasemysqlproviders/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databasemysqlproviders/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databasepostgresqlproviders
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databasepostgresqlproviders/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databasepostgresqlproviders/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databaserequests
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databaserequests/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - crd.lagoon.sh
+  resources:
+  - databaserequests/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "lagoon-remote.dbaasController.fullname" . }}-metrics-reader
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "lagoon-remote.dbaasController.fullname" . }}-proxy-role
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
