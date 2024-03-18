@@ -1,0 +1,39 @@
+{{- range $providerScope, $providerConnections := .Values.dbaasController.mysqlProviders }}
+{{- range $providerConnection := $providerConnections }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "lagoon-remote.dbaasController.fullname" $ }}-{{ $providerScope }}-{{ $providerConnection.name }}
+type: Opaque
+stringData:
+  password: {{ required (printf "password is required for connection in %s" $providerScope) $providerConnection.password }}
+{{- end }}
+{{- end }}
+{{- range $providerScope, $providerConnections := .Values.dbaasController.mysqlProviders }}
+---
+apiVersion: crd.lagoon.sh/v1alpha1
+kind: RelationalDatabaseProvider
+metadata:
+  name: {{ include "lagoon-remote.dbaasController.fullname" $ }}-{{ $providerScope }}
+spec:
+  scope: {{ required (printf "environment is required for %s" $providerScope) $providerScope }}
+  type: mysql
+  connections:
+  {{- range $providerConnection := $providerConnections }}
+    - name: {{ required (printf "name is required for connection in %s" $providerScope) $providerConnection.name }}
+      hostname: {{ required (printf "hostname is required for connection in %s" $providerScope) $providerConnection.hostname }}
+      {{- if $providerConnection.replicaHostnames }}
+      replicaHostnames:
+      {{- range $replicaHostname := $providerConnection.replicaHostnames }}
+        - {{ $replicaHostname }}
+      {{- end }}
+      {{- end }}
+      port: {{ required (printf "port is required for connection in %s" $providerScope) $providerConnection.port }}
+      username: {{ required (printf "username is required for connection in %s" $providerScope) $providerConnection.username }}
+      passwordSecretRef:
+        name: {{ include "lagoon-remote.dbaasController.fullname" $ }}-{{ $providerScope }}-{{ $providerConnection.name }}
+        namespace: {{ $.Release.Namespace }}
+      enabled: {{ required (printf "enabled is required for connection in %s" $providerScope) $providerConnection.enabled }}
+  {{- end }}
+{{- end }}
