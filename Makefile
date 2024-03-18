@@ -781,6 +781,18 @@ endif
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.password='$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.port=3306') \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.user=root') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.development[0].name=development"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.development[0].hostname=mariadb.mariadb.svc.cluster.local"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.development[0].password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.development[0].port=3306"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.development[0].username=root"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.development[0].enabled=true"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.production[0].name=production"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.production[0].hostname=mariadb.mariadb.svc.cluster.local"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.production[0].password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.production[0].port=3306"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.production[0].user=root"') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set "dbaasController.mysqlProviders.production[0].enabled=true"') \
 		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.environment=development') \
 		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local') \
 		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.password='$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')'') \

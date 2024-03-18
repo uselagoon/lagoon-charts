@@ -274,7 +274,6 @@ app.kubernetes.io/component: {{ include "lagoon-remote.insightsRemote.fullname" 
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-
 {{/*
 Create the name of the service account to use for sysctlConfigure.
 */}}
@@ -307,5 +306,40 @@ Selector labels sysctlConfigure.
 {{- define "lagoon-remote.sysctlConfigure.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-remote.sysctlConfigure.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use for dbaasController.
+*/}}
+{{- define "lagoon-remote.dbaasController.serviceAccountName" -}}
+{{- default (include "lagoon-remote.dbaasController.fullname" .) .Values.dbaasController.serviceAccount.name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for dbaasController.
+*/}}
+{{- define "lagoon-remote.dbaasController.fullname" -}}
+{{- include "lagoon-remote.fullname" . }}-dbaas-controller
+{{- end }}
+
+{{/*
+Common labels dbaasController.
+*/}}
+{{- define "lagoon-remote.dbaasController.labels" -}}
+helm.sh/chart: {{ include "lagoon-remote.chart" . }}
+{{ include "lagoon-remote.dbaasController.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels dbaasController.
+*/}}
+{{- define "lagoon-remote.dbaasController.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-remote.dbaasController.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
