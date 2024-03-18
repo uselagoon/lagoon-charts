@@ -1,0 +1,79 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-remote.dbaasController.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "lagoon-remote.dbaasController.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.dbaasController.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-remote.dbaasController.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "lagoon-remote.dbaasController.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=0
+        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.15.0
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 5m
+            memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      - args:
+        - --health-probe-bind-address=:8081
+        - --metrics-bind-address=127.0.0.1:8080
+        - --leader-elect
+        command:
+        - /manager
+        image: "{{ .Values.dbaasController.image.repository }}:{{ coalesce .Values.dbaasController.image.tag .Values.imageTag "latest" }}"
+        imagePullPolicy: {{ .Values.dbaasController.image.pullPolicy }}
+        env:
+        {{- range $name, $value := .Values.dbaasController.extraEnvs }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        name: manager
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          {{- toYaml .Values.dbaasController.resources | nindent 10 }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+      serviceAccountName: {{ include "lagoon-remote.dbaasController.serviceAccountName" . }}
+      terminationGracePeriodSeconds: 10
