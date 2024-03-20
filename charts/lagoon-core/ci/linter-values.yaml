@@ -78,6 +78,9 @@ keycloak:
   resources:
     requests:
       cpu: "10m"
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
 
 keycloakDB:
   image:
