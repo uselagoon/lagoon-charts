@@ -36,7 +36,9 @@ api:
 
 apiDB:
   image:
-    repository: uselagoon/api-db
+# TODO - update repo/tag before v2.18 release
+    repository: testlagoon/api-db
+    tag: testing-updated-db-images
   storageSize: 16Gi
   resources:
     requests:
@@ -84,7 +86,9 @@ keycloak:
 
 keycloakDB:
   image:
-    repository: uselagoon/keycloak-db
+# TODO - update repo/tag before v2.18 release
+    repository: testlagoon/keycloak-db
+    tag: testing-updated-db-images
   resources:
     requests:
       cpu: "10m"
