@@ -188,6 +188,7 @@ install-lagoon-core: install-minio
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set api.image.tag=$(IMAGE_TAG) \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
+		--set apiDB.image.tag=testing-updated-db-images \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
 		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
 		--set autoIdler.enabled=false \
@@ -197,6 +198,7 @@ install-lagoon-core: install-minio
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloak.image.tag=$(IMAGE_TAG) \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
+		--set keycloakDB.image.tag=testing-updated-db-images \
 		--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications \
 		--set logs2notifications.email.disabled=true \
 		--set logs2notifications.microsoftteams.disabled=true \

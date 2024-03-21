@@ -46,3 +46,13 @@ annotations:
       description: modify keycloak liveness and readiness endpoint
     - kind: changed
       description: updated insights-handler to v0.0.4
+    - kind: fixed
+      description: apiDB livenessProbe access denied
+    - kind: added
+      description: apiDB readinessProbe uses sql query
+    - kind: added
+      description: apiDB startupProbe waits for init completion
+    - kind: added
+      description: apiDB configurable terminationGracePeriodSeconds
+    - kind: added
+      description: keycloakDB aligns to apiDB
