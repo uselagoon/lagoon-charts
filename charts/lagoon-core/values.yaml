@@ -173,8 +173,11 @@ apiDB:
   startupProbe:
     # 60*10s period = 10 minutes
     failureThreshold: 60
-    tcpSocket:
-      port: mariadb
+    exec:
+      command:
+      - test
+      - -f
+      - /tmp/mariadb-init-complete
 
   livenessProbe:
     exec:
