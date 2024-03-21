@@ -183,6 +183,11 @@ apiDB:
       - --connect-timeout=4
       - ping
 
+  readinessProbe:
+    exec:
+      command:
+      - /usr/share/container-scripts/mysql/readiness-probe.sh
+
 apiRedis:
   image:
     repository: uselagoon/api-redis
