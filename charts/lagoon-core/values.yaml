@@ -304,11 +304,25 @@ keycloakDB:
   additionalEnvs:
   #   FOO: Bar
 
+  terminationGracePeriodSeconds: 30
+
   startupProbe:
     # 60*10s period = 10 minutes
     failureThreshold: 60
     tcpSocket:
       port: mariadb
+
+  livenessProbe:
+    exec:
+      command:
+      - mysqladmin
+      - --connect-timeout=4
+      - ping
+
+  readinessProbe:
+    exec:
+      command:
+      - /usr/share/container-scripts/mysql/readiness-probe.sh
 
 broker:
   replicaCount: 3
