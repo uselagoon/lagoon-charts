@@ -79,6 +79,7 @@ install-ingress:
 		--namespace ingress-nginx \
 		--wait \
 		--timeout $(TIMEOUT) \
+		--set controller.allowSnippetAnnotations=true \
 		--set controller.service.type=NodePort \
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
@@ -86,7 +87,7 @@ install-ingress:
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.7.2 \
+		--version=4.9.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -106,7 +107,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.13.0 \
+		--version=1.14.0 \
 		registry \
 		harbor/harbor
 
@@ -162,7 +163,7 @@ install-minio: install-ingress
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets='lagoon-files\,restores' \
-		--version=12.8.7 \
+		--version=13.6.2 \
 		minio \
 		bitnami/minio
 
@@ -185,6 +186,7 @@ install-lagoon-core: install-minio
 		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) get nodes -o jsonpath='{.items[0].status.addresses[0].address}').nip.io:32080/graphql" \
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler  \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
+		--set api.image.tag=$(IMAGE_TAG) \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
 		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
@@ -193,6 +195,7 @@ install-lagoon-core: install-minio
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
 		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
+		--set keycloak.image.tag=$(IMAGE_TAG) \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
 		--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications \
 		--set logs2notifications.email.disabled=true \
@@ -261,7 +264,7 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 # Do not install without lagoon-core
 #
 .PHONY: install-lagoon-build-deploy
-install-lagoon-build-deploy: install-lagoon-core install-registry
+install-lagoon-build-deploy: install-lagoon-core
 	$(HELM) dependency build ./charts/lagoon-build-deploy/
 	$(HELM) upgrade \
 		--install \
@@ -287,6 +290,11 @@ install-lagoon-build-deploy: install-lagoon-core install-registry
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO) ] && echo '--set lagoonFeatureFlagDefaultRWX2RWO=$(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO)') \
 		lagoon-build-deploy \
 		./charts/lagoon-build-deploy
+
+# allow skipping registry install for install-lagoon-remote target
+ifneq ($(SKIP_INSTALL_REGISTRY),true)
+install-lagoon-build-deploy: install-registry
+endif
 
 #
 # The following targets facilitate local development only and aren't used in CI.
