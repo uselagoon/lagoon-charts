@@ -1,0 +1,18 @@
+{{- if and .Values.storageCalculator.enabled .Values.storageCalculator.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lagoon-remote.storageCalculator.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.storageCalculator.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  - port: metrics
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      metrics-only: "true"
+      {{- include "lagoon-remote.storageCalculator.selectorLabels" . | nindent 6 }}
+{{- end }}

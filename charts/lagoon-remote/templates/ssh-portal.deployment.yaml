@@ -37,6 +37,10 @@ spec:
         - name: DEBUG
           value: "true"
         {{- end }}
+        {{- if .Values.sshPortal.logAccessEnabled }}
+        - name: LOG_ACCESS_ENABLED
+          value: "true"
+        {{- end }}
         - name: NATS_URL
           value: nats://{{ include "lagoon-remote.fullname" . }}-nats
       {{- range $key, $val := .Values.sshPortal.additionalEnvs }}

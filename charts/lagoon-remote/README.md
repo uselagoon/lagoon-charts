@@ -12,7 +12,7 @@ This is outside the scope of this README.
 
 ## Install
 
-*NOTE:* This chart must be installed into the `lagoon` namespace because software that consumes lagoon services inside the cluster asumes that services are available at `*.lagoon.svc`.
+*NOTE:* This chart must be installed into the `lagoon` namespace because software that consumes lagoon services inside the cluster assumes that services are available at `*.lagoon.svc`.
 
 ```
 helm upgrade --install --create-namespace --namespace lagoon lagoon-remote ./charts/lagoon-remote
@@ -20,7 +20,7 @@ helm upgrade --install --create-namespace --namespace lagoon lagoon-remote ./cha
 
 ### OpenShift
 
-the included docker-host needs `priviledged` permissions:
+the included docker-host needs `privileged` permissions:
 
 ```
 oc -n lagoon adm policy add-scc-to-user privileged  -z lagoon-remote-docker-host

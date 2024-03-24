@@ -1,0 +1,17 @@
+{{- if .Values.storageCalculator.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-remote.storageCalculator.fullname" . }}-metrics
+  labels:
+    metrics-only: "true"
+    {{- include "lagoon-remote.storageCalculator.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.storageCalculator.metricsService.type }}
+  ports:
+  - port: {{ .Values.storageCalculator.metricsService.ports.metrics }}
+    targetPort: metrics
+    name: metrics
+  selector:
+    {{- include "lagoon-remote.storageCalculator.selectorLabels" . | nindent 4 }}
+{{- end }}

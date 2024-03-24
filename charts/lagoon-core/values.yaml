@@ -4,7 +4,6 @@
 # elasticsearchURL:
 # harborURL:
 # kibanaURL:
-# registry:
 # s3BAASSecretAccessKey:
 # s3BAASAccessKeyID:
 # s3FilesAccessKeyID:
@@ -170,20 +169,28 @@ apiDB:
 
   storageSize: 128Gi
 
+  terminationGracePeriodSeconds: 30
+
   startupProbe:
     # 60*10s period = 10 minutes
     failureThreshold: 60
-    tcpSocket:
-      port: mariadb
+    exec:
+      command:
+      - test
+      - -f
+      - /tmp/mariadb-init-complete
 
   livenessProbe:
     exec:
       command:
       - mysqladmin
-      - --host=localhost
-      - --port=3306
       - --connect-timeout=4
       - ping
+
+  readinessProbe:
+    exec:
+      command:
+      - /usr/share/container-scripts/mysql/readiness-probe.sh
 
 apiRedis:
   image:
@@ -296,11 +303,25 @@ keycloakDB:
   additionalEnvs:
   #   FOO: Bar
 
+  terminationGracePeriodSeconds: 30
+
   startupProbe:
     # 60*10s period = 10 minutes
     failureThreshold: 60
     tcpSocket:
       port: mariadb
+
+  livenessProbe:
+    exec:
+      command:
+      - mysqladmin
+      - --connect-timeout=4
+      - ping
+
+  readinessProbe:
+    exec:
+      command:
+      - /usr/share/container-scripts/mysql/readiness-probe.sh
 
 broker:
   replicaCount: 3
@@ -596,7 +617,7 @@ insightsHandler:
     repository: uselagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: main
+    tag: "v0.0.4"
 
   podAnnotations: {}
 

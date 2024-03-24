@@ -96,5 +96,9 @@ sshPortal:
       6lnrpkhPYdpdKnF3PCEyAAAAAAECAwQF
       -----END OPENSSH PRIVATE KEY-----
 
+  logAccessEnabled: true
+
 storageCalculator:
   enabled: true
+  serviceMonitor:
+    enabled: false
