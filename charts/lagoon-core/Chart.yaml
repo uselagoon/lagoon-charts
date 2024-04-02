@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.41.0
+version: 1.42.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.17.0
+appVersion: v2.18.0
 
 dependencies:
 - name: nats
@@ -41,10 +41,22 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: bump lagoon-opensearch-sync version to v0.7.1
+      description: update Lagoon appVersion to v2.18.0
     - kind: changed
-      description: updated to insights-handler:v0.0.2
+      description: remove unused legacy registry setting from core
     - kind: changed
-      description: pinned insights to trivy:0.48.0
+      description: modify keycloak liveness and readiness endpoint
     - kind: changed
-      description: update lagoon appVersion to v2.17.0
+      description: added initcontainer to api to handle keycloak migrations
+    - kind: changed
+      description: updated insights-handler to v0.0.4
+    - kind: fixed
+      description: apiDB livenessProbe access denied
+    - kind: added
+      description: apiDB readinessProbe uses sql query
+    - kind: added
+      description: apiDB startupProbe waits for init completion
+    - kind: added
+      description: apiDB configurable terminationGracePeriodSeconds
+    - kind: added
+      description: keycloakDB aligns to apiDB

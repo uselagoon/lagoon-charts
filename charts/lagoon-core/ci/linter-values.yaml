@@ -3,7 +3,6 @@
 # To be deprecated - see uselagoon/lagoon#2907
 harborURL: http://disabled-only-use-harbor-via-deploy-controller.invalid
 harborAdminPassword: not-needed
-registry: disabled-only-use-harbor-via-deploy-controller.invalid
 
 # used in api
 elasticsearchURL: http://opendistro-es-client-service.opendistro-es.svc.cluster.local:9200
@@ -48,7 +47,6 @@ apiRedis:
     requests:
       cpu: "10m"
 
-# TODO - update repo/tag before v2.11 release
 actionsHandler:
   replicaCount: 1
   image:
@@ -76,6 +74,9 @@ keycloak:
   resources:
     requests:
       cpu: "10m"
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
 
 keycloakDB:
   image:
