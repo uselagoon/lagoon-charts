@@ -27,18 +27,14 @@ keycloakAdminEmail: admin@example.com
 api:
   replicaCount: 1
   image:
-# TODO - update repo/tag before v2.18 release
-    repository: testlagoon/api
-    tag: main
+    repository: uselagoon/api
   resources:
     requests:
       cpu: "10m"
 
 apiDB:
   image:
-# TODO - update repo/tag before v2.18 release
-    repository: testlagoon/api-db
-    tag: main
+    repository: uselagoon/api-db
   storageSize: 16Gi
   resources:
     requests:
@@ -74,9 +70,7 @@ keycloak:
       replyTo: lagoon@example.com
       envelopeFrom: lagoon@example.com
   image:
-# TODO - update repo/tag before v2.18 release
-    repository: testlagoon/keycloak
-    tag: main
+    repository: uselagoon/keycloak
   resources:
     requests:
       cpu: "10m"
@@ -86,9 +80,7 @@ keycloak:
 
 keycloakDB:
   image:
-# TODO - update repo/tag before v2.18 release
-    repository: testlagoon/keycloak-db
-    tag: main
+    repository: uselagoon/keycloak-db
   resources:
     requests:
       cpu: "10m"
