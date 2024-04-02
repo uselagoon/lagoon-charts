@@ -1280,6 +1280,53 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update Lagoon appVersion to v2.18.0
+        - kind: changed
+          description: remove unused legacy registry setting from core
+        - kind: changed
+          description: modify keycloak liveness and readiness endpoint
+        - kind: changed
+          description: added initcontainer to api to handle keycloak migrations
+        - kind: changed
+          description: updated insights-handler to v0.0.4
+        - kind: fixed
+          description: apiDB livenessProbe access denied
+        - kind: added
+          description: apiDB readinessProbe uses sql query
+        - kind: added
+          description: apiDB startupProbe waits for init completion
+        - kind: added
+          description: apiDB configurable terminationGracePeriodSeconds
+        - kind: added
+          description: keycloakDB aligns to apiDB
+    apiVersion: v2
+    appVersion: v2.18.0
+    created: "2024-04-02T05:27:47.914669155Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 752851f65c1a5a567c9d7dd48c321b9d8b7a9e5b2d3952a29b007e2a8b939732
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.42.0/lagoon-core-1.42.0.tgz
+    version: 1.42.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: bump lagoon-opensearch-sync version to v0.7.1
         - kind: changed
           description: updated to insights-handler:v0.0.2
@@ -7961,6 +8008,54 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update storage-calculator to v0.5.2
+        - kind: changed
+          description: added metrics to storage-calculator
+        - kind: removed
+          description: removed dioscuri subchart, activestandby is handled via a Lagoon task directly now
+        - kind: changed
+          description: updated insights-remote version to v0.0.9
+        - kind: changed
+          description: update lagoon-build-deploy to 0.26.4
+        - kind: changed
+          description: update ssh-portal to v0.34.0
+        - kind: added
+          description: add support for logs access via SSH
+    apiVersion: v2
+    created: "2024-04-02T05:27:48.040695527Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.26.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 44f183def87cfd37dbe2a439d02245a801a751473dc03ac9dbde1acfa11c1ad7
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.88.0/lagoon-remote-0.88.0.tgz
+    version: 0.88.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: remove insights-remote service if not enabled
         - kind: removed
           description: removed old kubernetes build deploy references
@@ -12205,6 +12300,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update Lagoon appVersion to v2.18.0
+    apiVersion: v2
+    appVersion: v2.18.0
+    created: "2024-04-02T05:27:48.150525356Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 646d4680fc39292e145bfbc44ca5c3d5ad5903f308d080174219e5e3e2f176be
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.54.0/lagoon-test-0.54.0.tgz
+    version: 0.54.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: add minio settings to api-data-watcher-pusher and make into a helm test job
         - kind: changed
           description: update lagoon appVersion to v2.17.0
@@ -13271,4 +13387,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2024-03-13T01:54:09.575783931Z"
+generated: "2024-04-02T05:27:48.151740426Z"
