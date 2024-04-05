@@ -324,7 +324,7 @@ keycloakDB:
       - /usr/share/container-scripts/mysql/readiness-probe.sh
 
 broker:
-  replicaCount: 3
+  replicaCount: 1
   image:
     repository: uselagoon/broker
     pullPolicy: Always
