@@ -27,7 +27,7 @@ version: 1.43.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.18.0
+appVersion: v2.18.1
 
 dependencies:
 - name: nats
@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: reduce default replicas for broker to 1
+    - kind: changed
+      description: update Lagoon appVersion to v2.18.1
