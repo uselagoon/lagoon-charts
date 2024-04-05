@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.42.0
+version: 1.43.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -41,22 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update Lagoon appVersion to v2.18.0
-    - kind: changed
-      description: remove unused legacy registry setting from core
-    - kind: changed
-      description: modify keycloak liveness and readiness endpoint
-    - kind: changed
-      description: added initcontainer to api to handle keycloak migrations
-    - kind: changed
-      description: updated insights-handler to v0.0.4
-    - kind: fixed
-      description: apiDB livenessProbe access denied
-    - kind: added
-      description: apiDB readinessProbe uses sql query
-    - kind: added
-      description: apiDB startupProbe waits for init completion
-    - kind: added
-      description: apiDB configurable terminationGracePeriodSeconds
-    - kind: added
-      description: keycloakDB aligns to apiDB
+      description: reduce default replicas for broker to 1
