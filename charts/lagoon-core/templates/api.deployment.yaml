@@ -175,6 +175,16 @@ spec:
         - name: S3_FILES_REGION
           value: {{ . | quote }}
         {{- end }}
+      {{- if .Values.sshTokenEndpoint }}
+        - name: SSH_TOKEN_ENDPOINT
+          value: {{ .Values.sshTokenEndpoint | quote }}
+      {{- end }}
+        - name: SSH_TOKEN_ENDPOINT_PORT
+          {{- if .Values.sshToken.enabled }}
+          value: {{ .Values.sshToken.service.ports.sshserver | quote }}
+          {{- else }}
+          value: {{ .Values.ssh.service.port | quote }}
+          {{- end }}
         - name: UI_URL
           {{- if .Values.lagoonUIURL }}
           value: {{ .Values.lagoonUIURL | quote }}
