@@ -27,7 +27,7 @@ version: 1.44.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.18.1
+appVersion: v2.18.2
 
 dependencies:
 - name: nats
@@ -43,4 +43,4 @@ annotations:
     - kind: changed
       description: add SSH_ENDPOINT vars to api service
     - kind: changed
-      description: update Lagoon appVersion to v2.18.1
+      description: update Lagoon appVersion to v2.18.2
