@@ -18,6 +18,8 @@ lagoonUIURL: http://ui:9101
 lagoonWebhookURL: http://webhook:11213
 defaultIngressClassName: nginx
 
+sshTokenEndpoint: ssh-token.example.com
+
 # used in ui
 # lagoonAPIURL: https://api.example.com/graphql
 # keycloakFrontEndURL: https://keycloak.example.com

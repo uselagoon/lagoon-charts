@@ -12,8 +12,14 @@
 # s3FilesSecretAccessKey:
 
 # These values are optional.
-
 # overwriteActiveStandbyTaskImage:
+
+# appspecific discovery.json settings
+# This should point to the publicly accessible ssh endpoint as a schema-less
+# URI (either domain or IP) for the ssh-token (or fallback ssh) service
+# e.g. ssh-token.example.com, ssh.example.com or 192.168.0.100
+# The port will be read from the sshToken (or ssh) port value
+# sshTokenEndpoint:
 
 # These values are optional depending on the services Lagoon is integrated with
 # in your environment.

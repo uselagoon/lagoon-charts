@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.43.0
+version: 1.44.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -41,6 +41,6 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: reduce default replicas for broker to 1
+      description: add SSH_ENDPOINT vars to api service
     - kind: changed
       description: update Lagoon appVersion to v2.18.1
