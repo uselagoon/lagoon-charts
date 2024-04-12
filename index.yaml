@@ -1280,6 +1280,37 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: add SSH_ENDPOINT vars to api service
+        - kind: changed
+          description: update Lagoon appVersion to v2.18.2
+    apiVersion: v2
+    appVersion: v2.18.2
+    created: "2024-04-12T05:58:48.504409132Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 71c7d624b64bdfe10457269fcd6099f56f1763f60518020ccd91fd258ada077f
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.44.0/lagoon-core-1.44.0.tgz
+    version: 1.44.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: reduce default replicas for broker to 1
         - kind: changed
           description: update Lagoon appVersion to v2.18.1
@@ -8039,6 +8070,42 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update storage-calculator to v0.5.3
+    apiVersion: v2
+    created: "2024-04-12T05:58:48.681276823Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.26.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 2a4dc61f6044029336c5cdd6cb666cf0cfb8f2b1e7115f27951d4487f5e5c718
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.88.1/lagoon-remote-0.88.1.tgz
+    version: 0.88.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update storage-calculator to v0.5.2
         - kind: changed
           description: added metrics to storage-calculator
@@ -12331,6 +12398,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update Lagoon appVersion to v2.18.2
+    apiVersion: v2
+    appVersion: v2.18.2
+    created: "2024-04-12T05:58:48.855913833Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 790dd3276a4be5191f6343c897885e7922f4948701e2f6b83a6d4d5c653406dc
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.56.0/lagoon-test-0.56.0.tgz
+    version: 0.56.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update Lagoon appVersion to v2.18.1
     apiVersion: v2
     appVersion: v2.18.1
@@ -13439,4 +13527,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-05T05:13:59.374401153Z"
+generated: "2024-04-12T05:58:48.857087407Z"
