@@ -17,5 +17,6 @@ spec:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
+      metrics-only: "true"
       {{- include "lagoon-logs-concentrator.selectorLabels" . | nindent 6 }}
 {{- end }}

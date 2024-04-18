@@ -46,6 +46,14 @@ service:
   # Annotations to add to the service
   annotations: {}
 
+metrics:
+  enabled: true
+  service:
+    type: ClusterIP
+    port: 24231
+    # annotations to add to the metrics service
+    annotations: {}
+
 serviceMonitor:
   enabled: true
 
