@@ -7087,6 +7087,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: use dedicated service for metrics
+    apiVersion: v2
+    created: "2024-05-10T08:31:04.434194463Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: 411be069cd81efaeb7a257703f7c3029fd800d3e60894e92c81c269192ceb643
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.48.0/lagoon-logs-concentrator-0.48.0.tgz
+    version: 0.48.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update uselagoon/logs-concentrator image to v3.2.0
     apiVersion: v2
     created: "2023-10-20T03:45:22.12124447Z"
@@ -13527,4 +13548,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-12T05:58:48.857087407Z"
+generated: "2024-05-10T08:31:04.435060522Z"
