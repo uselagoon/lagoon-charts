@@ -45,3 +45,9 @@ annotations:
       links:
         - name: ssh-portal releases
           url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+    - kind: changed
+      description: bump insights-remote from v0.0.9 to version v0.0.10
+      links:
+        - name: ssh-portal releases
+          url: https://github.com/uselagoon/insights-remote/releases/tag/v0.0.10
+          
