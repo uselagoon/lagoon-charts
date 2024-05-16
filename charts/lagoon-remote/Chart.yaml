@@ -50,4 +50,8 @@ annotations:
       links:
         - name: ssh-portal releases
           url: https://github.com/uselagoon/insights-remote/releases/tag/v0.0.10
-          
+    - kind: changed
+      description: bump remote-calculator from v0.5.3 to version v0.6.0
+      links:
+        - name: ssh-portal releases
+          url: https://github.com/uselagoon/storage-calculator/releases/tag/v0.6.0
