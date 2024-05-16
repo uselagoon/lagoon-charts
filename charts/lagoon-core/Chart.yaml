@@ -41,6 +41,11 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
+      description: bump lagoon-opensearch-sync to v0.8.0
+      links:
+        - name: lagoon-opensearch-sync v0.8.0 release
+          url: https://github.com/uselagoon/lagoon-opensearch-sync/releases/tag/v0.8.0
+    - kind: changed
       description: bump ssh-portal-api from v0.30.1 to version v0.36.0
       links:
         - name: ssh-portal-api releases
