@@ -55,3 +55,8 @@ annotations:
       links:
         - name: ssh-token releases
           url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+    - kind: changed
+      description: bump insights-handler from v0.0.4 to version v0.0.5
+      links:
+        - name: ssh-portal releases
+          url: https://github.com/uselagoon/insights-handler/releases/tag/v0.0.5

@@ -623,7 +623,7 @@ insightsHandler:
     repository: uselagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.4"
+    tag: "v0.0.5"
 
   podAnnotations: {}
 
