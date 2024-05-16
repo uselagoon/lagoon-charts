@@ -126,7 +126,7 @@ sshPortal:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.34.0"
+    tag: "v0.36.0"
 
   service:
     type: LoadBalancer

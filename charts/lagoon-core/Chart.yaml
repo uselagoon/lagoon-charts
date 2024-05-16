@@ -45,3 +45,13 @@ annotations:
       links:
         - name: lagoon-opensearch-sync v0.8.0 release
           url: https://github.com/uselagoon/lagoon-opensearch-sync/releases/tag/v0.8.0
+    - kind: changed
+      description: bump ssh-portal-api from v0.30.1 to version v0.36.0
+      links:
+        - name: ssh-portal-api releases
+          url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+    - kind: changed
+      description: bump ssh-token from v0.30.1 to version v0.36.0
+      links:
+        - name: ssh-token releases
+          url: https://github.com/uselagoon/lagoon-ssh-portal/releases
