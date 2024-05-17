@@ -59,13 +59,13 @@ serviceMonitor:
 
 resources:
   requests:
-    cpu: 250m
-    memory: 256Mi
+    cpu: "1"
+    memory: 2Gi
 
 autoscaling:
   enabled: true
   minReplicas: 2
-  maxReplicas: 4
+  maxReplicas: 8
   targetCPUUtilizationPercentage: 80
 
 nodeSelector: {}
