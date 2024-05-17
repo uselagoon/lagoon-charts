@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.81.1
+version: 0.82.0
 
 dependencies:
 - name: logging-operator
@@ -33,5 +33,5 @@ dependencies:
 annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
-    - kind: security
-      description: avoid test role and rolebinding being wrongly installed
+    - kind: changed
+      description: update uselagoon/logs-dispatcher from v3.4.0 to v3.6.0
