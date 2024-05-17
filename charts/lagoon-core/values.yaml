@@ -4,7 +4,6 @@
 # elasticsearchURL:
 # harborURL:
 # kibanaURL:
-# registry:
 # s3BAASSecretAccessKey:
 # s3BAASAccessKeyID:
 # s3FilesAccessKeyID:
@@ -13,8 +12,14 @@
 # s3FilesSecretAccessKey:
 
 # These values are optional.
-
 # overwriteActiveStandbyTaskImage:
+
+# appspecific discovery.json settings
+# This should point to the publicly accessible ssh endpoint as a schema-less
+# URI (either domain or IP) for the ssh-token (or fallback ssh) service
+# e.g. ssh-token.example.com, ssh.example.com or 192.168.0.100
+# The port will be read from the sshToken (or ssh) port value
+# sshTokenEndpoint:
 
 # These values are optional depending on the services Lagoon is integrated with
 # in your environment.
@@ -170,20 +175,28 @@ apiDB:
 
   storageSize: 128Gi
 
+  terminationGracePeriodSeconds: 30
+
   startupProbe:
     # 60*10s period = 10 minutes
     failureThreshold: 60
-    tcpSocket:
-      port: mariadb
+    exec:
+      command:
+      - test
+      - -f
+      - /tmp/mariadb-init-complete
 
   livenessProbe:
     exec:
       command:
       - mysqladmin
-      - --host=localhost
-      - --port=3306
       - --connect-timeout=4
       - ping
+
+  readinessProbe:
+    exec:
+      command:
+      - /usr/share/container-scripts/mysql/readiness-probe.sh
 
 apiRedis:
   image:
@@ -296,14 +309,28 @@ keycloakDB:
   additionalEnvs:
   #   FOO: Bar
 
+  terminationGracePeriodSeconds: 30
+
   startupProbe:
     # 60*10s period = 10 minutes
     failureThreshold: 60
     tcpSocket:
       port: mariadb
 
+  livenessProbe:
+    exec:
+      command:
+      - mysqladmin
+      - --connect-timeout=4
+      - ping
+
+  readinessProbe:
+    exec:
+      command:
+      - /usr/share/container-scripts/mysql/readiness-probe.sh
+
 broker:
-  replicaCount: 3
+  replicaCount: 1
   image:
     repository: uselagoon/broker
     pullPolicy: Always
@@ -596,7 +623,7 @@ insightsHandler:
     repository: uselagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: main
+    tag: "v0.0.4"
 
   podAnnotations: {}
 
@@ -620,7 +647,7 @@ insightsHandler:
     enabled: false
     image:
       repository: aquasec/trivy
-      tag: latest
+      tag: 0.48.0
     service:
       type: ClusterIP
       port: 4954

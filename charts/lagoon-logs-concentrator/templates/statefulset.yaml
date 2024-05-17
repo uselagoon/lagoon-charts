@@ -54,9 +54,11 @@ spec:
         - name: forward
           containerPort: 24224
           protocol: TCP
+        {{- if .Values.metrics.enabled }}
         - name: metrics
           containerPort: 24231
           protocol: TCP
+        {{- end }}
         livenessProbe:
           tcpSocket:
             port: forward

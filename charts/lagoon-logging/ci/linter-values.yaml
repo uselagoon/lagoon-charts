@@ -68,7 +68,10 @@ cdnLogsCollector:
   buffer:
     storageClassName: standard
     size: 1Gi
-  serviceType: ClusterIP
+  service:
+    type: ClusterIP
+    annotations:
+      sh.lagoon.chart.testKey: lagoonTestValue
   tls:
     caCert: |-
       -----BEGIN CERTIFICATE-----

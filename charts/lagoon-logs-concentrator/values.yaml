@@ -12,7 +12,7 @@ image:
   repository: uselagoon/logs-concentrator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is "latest".
-  tag: "v3.2.0"
+  tag: "v3.4.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -45,6 +45,14 @@ service:
   port: 24224
   # Annotations to add to the service
   annotations: {}
+
+metrics:
+  enabled: true
+  service:
+    type: ClusterIP
+    port: 24231
+    # annotations to add to the metrics service
+    annotations: {}
 
 serviceMonitor:
   enabled: true

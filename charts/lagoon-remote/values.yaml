@@ -106,13 +106,6 @@ dockerHost:
     effect: PreferNoSchedule
     operator: Exists
 
-# this account is used by the legacy Lagoon kubernetes build deploy system.
-kubernetesBuildDeploy:
-  serviceAccount:
-    # The name of the service account to use.
-    # If not set, a name is generated using the fullname template.
-    name:
-
 # sshCore creates a restricted, non-expiring ServiceAccount token for use by
 # lagoon-core.
 sshCore:
@@ -133,7 +126,7 @@ sshPortal:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.30.1"
+    tag: "v0.34.0"
 
   service:
     type: LoadBalancer
@@ -170,6 +163,10 @@ sshPortal:
     ed25519: ""
     rsa: ""
 
+  # Log access via SSH is disabled by default.
+  # Uncomment this line to enable log access via SSH.
+  # logAccessEnabled: true
+
 # This subchart is disabled by default until this build-deploy type is in
 # widespread use.
 lagoon-build-deploy:
@@ -187,11 +184,6 @@ lagoon-build-deploy:
   # sshPortalPort: ""
   # See the parent chart for the full range of values that can be passed here to control builds
   # https://github.com/uselagoon/lagoon-charts/blob/main/charts/lagoon-build-deploy/values.yaml
-
-# dioscuri is the operator which implements Lagoon active-standby.
-# This subchart is enabled by default as this is a core Lagoon feature.
-dioscuri:
-  enabled: true
 
 # dbaas-operator provisions database-as-a-service accounts for projects.
 # Example provider configuration can be found in the dbaas-operator values.yaml
@@ -227,7 +219,7 @@ insightsRemote:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.7"
+    tag: "v0.0.9"
 
   imagePullSecrets: []
   nameOverride: ""
@@ -369,8 +361,16 @@ storageCalculator:
     # template
     name:
 
+  metricsService:
+    type: ClusterIP
+    ports:
+      metrics: 9912
+
+  serviceMonitor:
+    enabled: true
+
   image:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.2.3
+    tag: v0.5.3
