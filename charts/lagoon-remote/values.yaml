@@ -126,7 +126,7 @@ sshPortal:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.34.0"
+    tag: "v0.36.0"
 
   service:
     type: LoadBalancer
@@ -219,7 +219,7 @@ insightsRemote:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.9"
+    tag: "v0.0.10"
 
   imagePullSecrets: []
   nameOverride: ""
@@ -373,4 +373,4 @@ storageCalculator:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.5.3
+    tag: v0.6.0
