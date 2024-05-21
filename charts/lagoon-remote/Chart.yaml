@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.88.1
+version: 0.89.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -41,4 +41,17 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update storage-calculator to v0.5.3
+      description: bump ssh-portal from v0.34.0 to version v0.36.0
+      links:
+        - name: ssh-portal releases
+          url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+    - kind: changed
+      description: bump insights-remote from v0.0.9 to version v0.0.10
+      links:
+        - name: ssh-portal releases
+          url: https://github.com/uselagoon/insights-remote/releases/tag/v0.0.10
+    - kind: changed
+      description: bump remote-calculator from v0.5.3 to version v0.6.0
+      links:
+        - name: ssh-portal releases
+          url: https://github.com/uselagoon/storage-calculator/releases/tag/v0.6.0

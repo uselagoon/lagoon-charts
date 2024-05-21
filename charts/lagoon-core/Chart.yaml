@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.44.0
+version: 1.45.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.18.2
+appVersion: v2.19.0
 
 dependencies:
 - name: nats
@@ -41,6 +41,27 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: add SSH_ENDPOINT vars to api service
+      description: bump lagoon-opensearch-sync to v0.8.0
+      links:
+        - name: lagoon-opensearch-sync v0.8.0 release
+          url: https://github.com/uselagoon/lagoon-opensearch-sync/releases/tag/v0.8.0
     - kind: changed
-      description: update Lagoon appVersion to v2.18.2
+      description: bump ssh-portal-api from v0.30.1 to version v0.36.0
+      links:
+        - name: ssh-portal-api releases
+          url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+    - kind: changed
+      description: bump ssh-token from v0.30.1 to version v0.36.0
+      links:
+        - name: ssh-token releases
+          url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+    - kind: changed
+      description: bump insights-handler from v0.0.4 to version v0.0.5
+      links:
+        - name: insights-handler release
+          url: https://github.com/uselagoon/insights-handler/releases/tag/v0.0.5
+    - kind: changed
+      description: update Lagoon appVersion to v2.19.0
+      links:
+        - name: lagoon release
+          url: https://github.com/uselagoon/lagoon/releases/tag/v2.19.0
