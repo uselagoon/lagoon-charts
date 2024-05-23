@@ -34,4 +34,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
     - kind: changed
-      description: update logging-operator from 4.2.3 to 4.6.0 and use oci registry
+      description: update logging-operator from 4.2.3 to 4.6.1 and use oci registry
