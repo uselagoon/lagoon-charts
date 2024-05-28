@@ -1,5 +1,9 @@
 Thank you for installing {{ .Chart.Name }}.
 
-Your release is named {{ .Release.Name }}.
+Your release is named {{ .Release.Name }} containing the logging-operator {{ .Chart.AppVersion }} release
 
 Your logs are now being sent to {{ coalesce .Values.forward.host }}:{{ .Values.forward.hostPort }}.
+
+Please ensure you install the updated CRDs manually after installing this release:
+
+helm show crds oci://ghcr.io/kube-logging/helm-charts/logging-operator --version {{ .Chart.AppVersion }} | kubectl apply -f -

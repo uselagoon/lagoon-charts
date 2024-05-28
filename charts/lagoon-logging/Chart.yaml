@@ -21,10 +21,14 @@ type: application
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.83.0
 
+# AppVersion is set here the same as the logging-operator chart version to
+# autopopulate the post-install CRD message.
+appVersion: 4.6.1
+
 dependencies:
 - name: logging-operator
   repository: oci://ghcr.io/kube-logging/helm-charts
-  version: ~4.6.0
+  version: 4.6.1
   condition: logging-operator.enabled
 
 # This section is used to collect a changelog for artifacthub.io
