@@ -16,11 +16,11 @@ kubeVersion: ">= 1.23.0-0"
 
 type: application
 
-version: 0.26.4
+version: 0.27.0
 
-appVersion: v0.15.5
+appVersion: v0.15.6
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: added legacy registry passthrough support
+      description: update remote-controller image to v0.15.6
