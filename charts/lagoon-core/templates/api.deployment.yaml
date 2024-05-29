@@ -30,6 +30,47 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml (coalesce .Values.api.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      initContainers:
+      - command:
+        - "sh"
+        - "-c"
+        - "node -r dotenv-extended/config dist/migrations/lagoon/migration.js"
+        image: "{{ .Values.api.image.repository }}:{{ coalesce .Values.api.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+        name: migrations
+        env:
+        - name: API_DB_HOST
+          value: {{ include "lagoon-core.apiDB.fullname" . }}
+        - name: API_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_PASSWORD
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_ADMIN_PASSWORD
+        - name: KEYCLOAK_ADMIN_USER
+          value: {{ .Values.keycloakAdminUser | quote }}
+        - name: KEYCLOAK_API_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KEYCLOAK_URL
+          {{- if .Values.keycloakFrontEndURL }}
+          value: {{ .Values.keycloakFrontEndURL }}
+          {{- else if .Values.keycloak.ingress.enabled }}
+          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}
+          {{- else }}
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
+          {{- end }}
+        - name: REDIS_HOST
+          value: {{ include "lagoon-core.apiRedis.fullname" . }}
+        envFrom:
+        - secretRef:
+            name: {{ include "lagoon-core.api.fullname" . }}
       containers:
       - name: api
         securityContext:
@@ -126,8 +167,6 @@ spec:
               key: RABBITMQ_USERNAME
         - name: REDIS_HOST
           value: {{ include "lagoon-core.apiRedis.fullname" . }}
-        - name: REGISTRY
-          value: {{ required "A valid .Values.registry required!" .Values.registry | quote }}
         - name: S3_FILES_BUCKET
           value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3FilesBucket | quote }}
         - name: S3_FILES_HOST
@@ -136,6 +175,16 @@ spec:
         - name: S3_FILES_REGION
           value: {{ . | quote }}
         {{- end }}
+      {{- if .Values.sshTokenEndpoint }}
+        - name: SSH_TOKEN_ENDPOINT
+          value: {{ .Values.sshTokenEndpoint | quote }}
+      {{- end }}
+        - name: SSH_TOKEN_ENDPOINT_PORT
+          {{- if .Values.sshToken.enabled }}
+          value: {{ .Values.sshToken.service.ports.sshserver | quote }}
+          {{- else }}
+          value: {{ .Values.ssh.service.port | quote }}
+          {{- end }}
         - name: UI_URL
           {{- if .Values.lagoonUIURL }}
           value: {{ .Values.lagoonUIURL | quote }}

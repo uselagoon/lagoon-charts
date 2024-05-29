@@ -6,7 +6,8 @@ metadata:
   labels:
     {{- include "lagoon-test.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": test-success
+    "helm.sh/hook": test
+    "helm.sh/hook-weight": "50"
 spec:
   serviceAccountName: {{ include "lagoon-test.serviceAccountName" . }}
   containers:

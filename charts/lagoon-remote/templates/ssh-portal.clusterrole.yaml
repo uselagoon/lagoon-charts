@@ -42,4 +42,19 @@ rules:
   - pods/exec
   verbs:
   - create
+{{- if .Values.sshPortal.logAccessEnabled }}
+# k8s.Logs
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - watch
+{{- end }}
 {{- end }}

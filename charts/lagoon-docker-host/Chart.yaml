@@ -16,10 +16,9 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.2.0
+version: 0.3.0
 
-appVersion: v3.3.0
-
+appVersion: v3.5.0
 
 # This section is used to collect a changelog for artifacthub.io
 # It should be started afresh for each release
@@ -27,4 +26,4 @@ appVersion: v3.3.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: require minimum Kubernetes 1.23
+      description: update docker-host from v3.3.0 to v3.5.0

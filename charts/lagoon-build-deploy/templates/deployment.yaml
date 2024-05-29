@@ -167,6 +167,9 @@ spec:
         {{- with .Values.timeoutForLongRunningTaskPods }}
         - "--timeout-longrunning-task-pod-cleanup={{ . }}"
         {{- end }}
+        {{- with .Values.unauthenticatedRegistry }}
+        - "--unauthenticated-registry={{ . }}"
+        {{- end }}
         {{- with .Values.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}

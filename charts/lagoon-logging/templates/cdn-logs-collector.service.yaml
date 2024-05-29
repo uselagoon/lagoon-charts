@@ -5,8 +5,12 @@ metadata:
   name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}
   labels:
     {{- include "lagoon-logging.cdnLogsCollector.labels" . | nindent 4 }}
+  {{- with .Values.cdnLogsCollector.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  type: {{ .Values.cdnLogsCollector.serviceType }}
+  type: {{ .Values.cdnLogsCollector.service.type }}
   selector:
     {{- include "lagoon-logging.cdnLogsCollector.selectorLabels" . | nindent 4 }}
   ports:

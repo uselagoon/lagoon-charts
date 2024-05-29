@@ -12,7 +12,7 @@ image:
   repository: uselagoon/logs-concentrator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is "latest".
-  tag: "v3.2.0"
+  tag: "v3.4.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -46,18 +46,26 @@ service:
   # Annotations to add to the service
   annotations: {}
 
+metrics:
+  enabled: true
+  service:
+    type: ClusterIP
+    port: 24231
+    # annotations to add to the metrics service
+    annotations: {}
+
 serviceMonitor:
   enabled: true
 
 resources:
   requests:
-    cpu: 250m
-    memory: 256Mi
+    cpu: "1"
+    memory: 2Gi
 
 autoscaling:
   enabled: true
   minReplicas: 2
-  maxReplicas: 4
+  maxReplicas: 8
   targetCPUUtilizationPercentage: 80
 
 nodeSelector: {}
