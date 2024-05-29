@@ -19,12 +19,16 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.82.0
+version: 0.83.0
+
+# AppVersion is set here the same as the logging-operator chart version to
+# autopopulate the post-install CRD message.
+appVersion: 4.6.1
 
 dependencies:
 - name: logging-operator
-  repository: https://kube-logging.github.io/helm-charts
-  version: ~4.2.0
+  repository: oci://ghcr.io/kube-logging/helm-charts
+  version: 4.6.1
   condition: logging-operator.enabled
 
 # This section is used to collect a changelog for artifacthub.io
@@ -34,4 +38,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
     - kind: changed
-      description: update uselagoon/logs-dispatcher from v3.4.0 to v3.6.0
+      description: update logging-operator from 4.2.3 to 4.6.1 and use oci registry
