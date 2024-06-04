@@ -4,21 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: databasemysqlproviders.crd.lagoon.sh
+  name: mongodbproviders.crd.lagoon.sh
 spec:
   group: crd.lagoon.sh
   names:
-    kind: DatabaseMySQLProvider
-    listKind: DatabaseMySQLProviderList
-    plural: databasemysqlproviders
-    singular: databasemysqlprovider
-  scope: Cluster
+    kind: MongoDBProvider
+    listKind: MongoDBProviderList
+    plural: mongodbproviders
+    singular: mongodbprovider
+  scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: DatabaseMySQLProvider is the Schema for the databasemysqlproviders
-          API
+        description: MongoDBProvider is the Schema for the mongodbproviders API
         properties:
           apiVersion:
             description: |-
@@ -38,27 +37,52 @@ spec:
           metadata:
             type: object
           spec:
-            description: DatabaseMySQLProviderSpec defines the desired state of DatabaseMySQLProvider
+            description: MongoDBProviderSpec defines the desired state of MongoDBProvider
             properties:
-              mysqlConnections:
-                description: MySQLConnections defines the connection to a MySQL database
+              connections:
+                description: Connections defines the connection to a relational database
                 items:
-                  description: MySQLConnection defines the connection to a MySQL database
                   properties:
+                    auth:
+                      description: Auth is the authentication mechanism for the MongoDB
+                        connection
+                      properties:
+                        mechanism:
+                          description: |-
+                            Mechanism is the authentication mechanism for the MongoDB connection
+                            https://www.mongodb.com/docs/drivers/go/current/fundamentals/auth/#std-label-golang-authentication-mechanisms
+                          enum:
+                          - SCRAM-SHA-1
+                          - SCRAM-SHA-256
+                          - MONGODB-CR
+                          - MongoDB-AWS
+                          - X509
+                          type: string
+                        source:
+                          description: Source is the source of the authentication
+                            mechanism for the MongoDB connection
+                          type: string
+                        tls:
+                          description: TLS is the flag to enable or disable TLS for
+                            the MongoDB connection
+                          type: boolean
+                      required:
+                      - mechanism
+                      type: object
                     enabled:
                       default: true
-                      description: Enabled is a flag to enable or disable the MySQL
+                      description: Enabled is a flag to enable or disable the relational
                         database
                       type: boolean
                     hostname:
-                      description: Hostname is the hostname of the MySQL database
+                      description: Hostname is the hostname of the relational database
                       type: string
                     name:
                       description: |-
-                        Name is the name of the MySQL database connection
+                        Name is the name of the MongoDB connection
                         it is used to identify the connection. Please use a unique name
-                        for each connection. This field will be used in the DatabaseRequest
-                        to reference the connection. The databasemysqlprovider controller will
+                        for each connection. This field will be used in the MongoDBProvider
+                        to reference the connection. The MongoDBProvider controller will
                         error if the name is not unique.
                       type: string
                     passwordSecretRef:
@@ -76,26 +100,26 @@ spec:
                       type: object
                       x-kubernetes-map-type: atomic
                     port:
-                      description: Port is the port of the MySQL database
+                      default: 27017
+                      description: Port is the port of the relational database
                       maximum: 65535
                       minimum: 1
                       type: integer
                     replicaHostnames:
                       description: ReplicaHostnames is the list of hostnames of the
-                        MySQL database replicas
+                        relational database replicas
                       items:
                         type: string
                       type: array
                     username:
-                      description: Username is the username of the MySQL database
+                      default: root
+                      description: Username is the username of the relational database
                       type: string
                   required:
-                  - enabled
+                  - auth
                   - hostname
                   - name
                   - passwordSecretRef
-                  - port
-                  - username
                   type: object
                 minItems: 1
                 type: array
@@ -110,12 +134,11 @@ spec:
                 - custom
                 type: string
             required:
-            - mysqlConnections
+            - connections
             - scope
             type: object
           status:
-            description: DatabaseMySQLProviderStatus defines the observed state of
-              DatabaseMySQLProvider
+            description: MongoDBProviderStatus defines the observed state of MongoDBProvider
             properties:
               conditions:
                 description: Conditions defines the status conditions
@@ -187,41 +210,41 @@ spec:
                   - type
                   type: object
                 type: array
-              mysqlConnectionStatus:
-                description: MySQLConnectionStatus provides the status of the MySQL
+              connectionStatus:
+                description: ConnectionStatus provides the status of the relational
                   database
                 items:
-                  description: MySQLConnectionStatus defines the status of a MySQL
-                    database connection
+                  description: ConnectionStatus defines the status of a  database
+                    connection, it can be either relational database or mongodb
                   properties:
+                    databaseVersion:
+                      description: DatabaseVersion is the version of the database
+                      type: string
                     enabled:
-                      description: Enabled is a flag to indicate whether a MySQL database
+                      description: Enabled is a flag to indicate whether a database
                         is enabled or not
                       type: boolean
                     hostname:
-                      description: Hostname is the hostname of the MySQL database
-                      type: string
-                    mysqlVersion:
-                      description: MySQLVersion is the version of the MySQL database
+                      description: Hostname is the hostname of the database
                       type: string
                     name:
                       description: |-
-                        Name is the name of the MySQL database connection
+                        Name is the name of the database connection
                         it is used to identify the connection. Please use a unique name
                         for each connection. This field will be used in the DatabaseRequest
-                        to reference the connection. The databasemysqlprovider controller will
-                        error if the name is not unique.
+                        to reference the connection. The relationaldatabaseprovider and mongodbprovider
+                        controllers will error if the name is not unique.
                       type: string
                     status:
-                      description: Status is the status of the MySQL database
+                      description: Status is the status of the database
                       enum:
                       - available
                       - unavailable
                       type: string
                   required:
+                  - databaseVersion
                   - enabled
                   - hostname
-                  - mysqlVersion
                   - name
                   - status
                   type: object
