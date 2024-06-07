@@ -241,6 +241,12 @@ install-lagoon-remote: install-lagoon-build-deploy install-lagoon-core install-m
 		--set "dbaas-operator.mariadbProviders.development.password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
 		--set "dbaas-operator.mariadbProviders.development.port=3306" \
 		--set "dbaas-operator.mariadbProviders.development.user=root" \
+		--set "dbaasController.mysqlProviders.development[0].name=development" \
+		--set "dbaasController.mysqlProviders.development[0].hostname=mariadb.mariadb.svc.cluster.local" \
+		--set "dbaasController.mysqlProviders.development[0].password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
+		--set "dbaasController.mysqlProviders.development[0].port=3306" \
+		--set "dbaasController.mysqlProviders.development[0].user=root" \
+		--set "dbaasController.mysqlProviders.development[0].enabled=true" \
 		--set "dbaas-operator.postgresqlProviders.development.environment=development" \
 		--set "dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
 		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')" \
