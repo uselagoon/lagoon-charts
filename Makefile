@@ -324,7 +324,7 @@ install-lagoon-remote: install-mariadb install-postgresql install-mongodb instal
 		--set "dbaasController.mysqlProviders.production[0].hostname=mariadb.mariadb.svc.cluster.local" \
 		--set "dbaasController.mysqlProviders.production[0].password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
 		--set "dbaasController.mysqlProviders.production[0].port=3306" \
-		--set "dbaasController.mysqlProviders.production[0].user=root" \
+		--set "dbaasController.mysqlProviders.production[0].username=root" \
 		--set "dbaasController.mysqlProviders.production[0].enabled=true" \
 		--set "dbaas-operator.postgresqlProviders.development.environment=development" \
 		--set "dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
