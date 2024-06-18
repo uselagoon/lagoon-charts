@@ -66,7 +66,8 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
         docker network create kind
-        export KIND_NODE_IP=$(docker run --network kind --rm alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p')
+        LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '. [0].IPAM.Config[0].Subnet' | tr -d '"') 
+        export KIND_NODE_IP=$(echo ${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $1,$2,$3,240}' OFS='.')
         envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml
 
     - name: Create kind cluster
@@ -87,7 +88,8 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
-        NODE_IP="$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')"
+        LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '. [0].IPAM.Config[0].Subnet' | tr -d '"')
+        NODE_IP=$(echo ${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $1,$2,$3,240}' OFS='.')
         echo Checking for NODE_IP "$NODE_IP"
         grep $NODE_IP test-suite.kind-config.yaml
 
@@ -104,6 +106,9 @@ jobs:
         helm repo add amazeeio https://amazeeio.github.io/charts/
         helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
         helm repo add nats https://nats-io.github.io/k8s/helm/charts/
+        helm repo add metallb https://metallb.github.io/metallb
+        helm repo add jetstack https://charts.jetstack.io
+        helm repo add jouve https://jouve.github.io/charts/
 
     - name: Install gojq
       if: |
