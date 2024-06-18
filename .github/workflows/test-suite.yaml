@@ -126,8 +126,8 @@ jobs:
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (needs-testing)
       if: |
-        (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing') && !contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (steps.list-changed.outputs.changed == 'true' && !contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (next-release)
