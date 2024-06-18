@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.90.0
+version: 0.91.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -41,6 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update docker-host from v3.3.0 to v3.5.0
-    - kind: changed
-      description: update lagoon-build-deploy from 0.26.4 to 0.27.0
+      description: update values for local development
