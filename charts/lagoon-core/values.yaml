@@ -225,6 +225,13 @@ apiRedis:
     type: ClusterIP
     port: 6379
 
+sshkeyHandler:
+  image:
+    repository: uselagoon/api-sidecar-handler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
 keycloak:
   # keycloak realm and email settings configuration
   realmSettings:
