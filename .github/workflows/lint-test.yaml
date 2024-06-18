@@ -93,20 +93,20 @@ jobs:
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
 
-    - name: Run chart-testing (install)
+    - name: Run chart-testing (install changed only)
       run: |
         ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
-      if: ${{ !contains(github.event.pull_request.labels.*.name, 'next-release') }}
+      if: ${{ !contains(github.event.pull_request.labels.*.name, 'next-release') && !contains(github.event.pull_request.labels.*.name, 'needs-testing') }}
 
-    - name: Run chart-testing (next-release)
+    - name: Run chart-testing (install changed next-release only)
       run: |
         yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' ./charts/lagoon-core/ci/linter-values.yaml ./charts/lagoon-core/ci/testlagoon-main-override.yaml
         ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
-      if: ${{ (contains(github.event.pull_request.labels.*.name, 'next-release')) }}
+      if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') }}
 
-    - name: Run chart-testing (next-release OR needs-testing)
+    - name: Run chart-testing (install all charts when required)
       run: ct install --config ./default.ct.yaml  --helm-extra-args "--timeout 30m" --all
-      if: ${{ (contains(fromJSON('["needs-testing", "next-release"]'), github.event.pull_request.labels.*.name)) }}
+      if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') || contains(github.event.pull_request.labels.*.name, 'needs-testing') }}
 
   artifacthub-changelog:
     runs-on: ubuntu-latest
