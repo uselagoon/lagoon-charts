@@ -7,7 +7,7 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.23.0-0"
+kubeVersion: ">= 1.25.0-0"
 
 type: application
 
@@ -32,3 +32,5 @@ annotations:
       description: prepare for Lagoon v2.20.0 release
     - kind: changed
       description: update values for local development
+    - kind: changed
+      description: bump minimum Kubernetes version to 1.25

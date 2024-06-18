@@ -12,7 +12,7 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.23.0-0"
+kubeVersion: ">= 1.25.0-0"
 
 type: application
 
@@ -24,3 +24,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update values for local development
+    - kind: changed
+      description: bump minimum Kubernetes version to 1.25
