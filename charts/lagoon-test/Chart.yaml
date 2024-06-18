@@ -30,3 +30,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: prepare for Lagoon v2.20.0 release
+    - kind: changed
+      description: update values for local development
