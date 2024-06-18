@@ -62,7 +62,8 @@ jobs:
     - name: Configure node IP in kind-config.yaml
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
         docker network create kind
         export KIND_NODE_IP=$(docker run --network kind --rm alpine ip -o addr show eth0 | sed -nE 's/.* ([0-9.]{7,})\/.*/\1/p')
@@ -72,7 +73,8 @@ jobs:
       uses: helm/kind-action@v1.10.0
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
       with:
         version: v0.22.0
         node_image: kindest/node:v1.28.7@sha256:9bc6c451a289cf96ad0bbaf33d416901de6fd632415b076ab05f5fa7e4f65c58
@@ -82,7 +84,8 @@ jobs:
     - name: Check node IP matches kind configuration
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
         NODE_IP="$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[0].address}')"
         echo Checking for NODE_IP "$NODE_IP"
@@ -91,7 +94,8 @@ jobs:
     - name: Add dependency chart repos
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
         helm repo add harbor https://helm.goharbor.io
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -104,7 +108,8 @@ jobs:
     - name: Install gojq
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
         cd /tmp
         curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.13/gojq_v0.12.13_linux_amd64.tar.gz
@@ -119,23 +124,32 @@ jobs:
         sudo cp /tmp/kubens /usr/local/bin/kubens
         sudo ln -s $(which kubectl) /usr/local/bin/kc
 
-    - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml
+    - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (needs-testing)
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
-      # run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing') && !contains(github.event.pull_request.labels.*.name, 'next-release'))
+      run: make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
 
+    - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (next-release)
+      if: |
+        (steps.list-changed.outputs.changed == 'true') &&
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+      run: |
+        yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' ./charts/lagoon-core/ci/linter-values.yaml ./charts/lagoon-core/ci/testlagoon-main-override.yaml
+        make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
+      
     - name: Free up some disk space
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: docker system prune -f -a --volumes
 
     - name: Run chart-testing (install) on lagoon-test
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
         ct lint --config ./test-suite-run.ct.yaml
         ct install --config ./test-suite-run.ct.yaml --helm-extra-args "--timeout 60m"
