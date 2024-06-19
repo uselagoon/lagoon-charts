@@ -22,7 +22,7 @@ spec:
       - name: broker-flag-enable
         args:
         - /enable-feature-flags.sh
-        image: testlagoon/broker:pr-3670
+        image: "{{ .Values.broker.image.repository }}:{{ coalesce .Values.broker.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.broker.image.pullPolicy }}
         command:
         - /bin/sh
