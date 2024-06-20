@@ -16,11 +16,11 @@ kubeVersion: ">= 1.23.0-0"
 
 type: application
 
-version: 0.27.0
+version: 0.28.0
 
 appVersion: v0.15.6
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller image to v0.15.6
+      description: update lagoonbuild and lagoontask crd with organization changes

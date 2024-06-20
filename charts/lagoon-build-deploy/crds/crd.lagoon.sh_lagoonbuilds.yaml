@@ -93,6 +93,13 @@ spec:
                     type: string
                   namespacePattern:
                     type: string
+                  organization:
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                    type: object
                   productionEnvironment:
                     type: string
                   projectIdling:
