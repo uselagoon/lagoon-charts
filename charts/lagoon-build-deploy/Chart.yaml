@@ -12,7 +12,7 @@ maintainers:
 - name: smlx
   email: scott.leggett@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.23.0-0"
+kubeVersion: ">= 1.25.0-0"
 
 type: application
 
@@ -23,4 +23,6 @@ appVersion: v0.15.6
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoonbuild and lagoontask crd with organization changes
+      description: update values for local development
+    - kind: changed
+      description: bump minimum Kubernetes version to 1.25

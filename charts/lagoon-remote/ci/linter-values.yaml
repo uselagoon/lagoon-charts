@@ -1,18 +1,18 @@
 global:
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
-  rabbitMQHostname: lagoon-core-broker
+  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc
 
 lagoon-build-deploy:
   enabled: true
   lagoonTargetName: ci-local-control-k8s
   taskSSHHost: lagoon-core-ssh.lagoon.svc
   taskSSHPort: 2020
-  taskAPIHost: http://lagoon-core-api.lagoon.svc:80
+  taskAPIHost: http://lagoon-core-api.lagoon-core.svc:80
   # remove on next release
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
-  rabbitMQHostname: lagoon-core-broker
+  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc
 
 dockerHost:
   image:
@@ -41,39 +41,39 @@ nats:
   #     lagoon-remote-nats-client: "true"
 
 natsConfig:
-  coreURL: "nats://ci-ssh-portal:ci-password@lagoon-core-nats-concentrator:7422"
+  coreURL: "nats://ci-ssh-portal:ci-password@lagoon-core-nats-concentrator.lagoon-core.svc:7422"
   tls:
     secretData:
       ca.crt: |
         -----BEGIN CERTIFICATE-----
-        MIIBgDCCASagAwIBAgIUe/jnFQ0sqoJKQP9CmguStIhyCNcwCgYIKoZIzj0EAwIw
-        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yMjAzMDMxNDU2MDBa
-        Fw0zMjAyMjkxNDU2MDBaMB4xHDAaBgNVBAMTE25hdHMtY2EuZXhhbXBsZS5jb20w
-        WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAT6ZjUtTIpBJSgGRyQIPdcFKBkt3h76
-        eyIdFVkR4L5NxVLwxyrj3ejbkA/KtbHfT+5+i1lpFyneUnCv8uJMGXXDo0IwQDAO
-        BgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUJnGYc+vw
-        zYXQvaFUImSZnEytUkkwCgYIKoZIzj0EAwIDSAAwRQIgET+GwxQ2TokxnPkNhgjb
-        zJ6PDtVHMNclAWSDebP9nnwCIQDrblreePb+pUBHvxFZNVFYBV4wF2gEkJC51tjw
-        a8aklQ==
+        MIIBgDCCASagAwIBAgIUUbG6sFBXxdA1wxjmlt/zkfpQTTwwCgYIKoZIzj0EAwIw
+        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yNDA0MTUwNDA4MDBa
+        Fw0zNDA0MTMwNDA4MDBaMB4xHDAaBgNVBAMTE25hdHMtY2EuZXhhbXBsZS5jb20w
+        WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATRF6Wjy5sm5quCKkqFBZERPcrCj2fL
+        xKjCNDJtwZijhR/DoHPImxnxXbcNuqXmFENDsleAXBb0YHTC6nauSCVmo0IwQDAO
+        BgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUPCFB/EwR
+        pk6xM9YSqzbLgchB6fQwCgYIKoZIzj0EAwIDSAAwRQIgCSCLQTN1K703YR/VXY+G
+        iYmI+nuDxvSE7s/u5hhmh+wCIQDXoxiQvQuokI06j6W1K5UgR6h9dUoKeTFQIqXp
+        uKPLhg==
         -----END CERTIFICATE-----
       client.crt: |
         -----BEGIN CERTIFICATE-----
-        MIIByDCCAW+gAwIBAgIUaBeYr4jOQfj1tZQsKmDqPtU9s8owCgYIKoZIzj0EAwIw
-        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yMjAzMDMxNDU2MDBa
-        Fw0zMjAyMjkxNDU2MDBaMBgxFjAUBgNVBAMTDWNpLXNzaC1wb3J0YWwwWTATBgcq
-        hkjOPQIBBggqhkjOPQMBBwNCAAQmoPrsEZpW2nNbuYVKwr0gBjls+wj/MMIY77OF
-        ImENLjh24BuZYIE65Ypwx9187st0eayx3AbxGxSwDHu3uqaFo4GQMIGNMA4GA1Ud
+        MIIByDCCAW+gAwIBAgIUJnuRfZT3Viio6HpYvGEehas9qWowCgYIKoZIzj0EAwIw
+        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yNDA0MTUwNDA5MDBa
+        Fw0zNDA0MTMwNDA5MDBaMBgxFjAUBgNVBAMTDWNpLXNzaC1wb3J0YWwwWTATBgcq
+        hkjOPQIBBggqhkjOPQMBBwNCAATlrIBuIQSN8Ngdpk+i2KFcieDLeuPQ+DmRQ0cY
+        jsFBYeeZdcV2s5Kb99tJGeg4QWImsINiFJ37LhkuoatWRcsvo4GQMIGNMA4GA1Ud
         DwEB/wQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMB0G
-        A1UdDgQWBBRe9ZzMq2SD84txo9aMQb8Rl5OfLTAfBgNVHSMEGDAWgBQmcZhz6/DN
-        hdC9oVQiZJmcTK1SSTAYBgNVHREEETAPgg1jaS1zc2gtcG9ydGFsMAoGCCqGSM49
-        BAMCA0cAMEQCIGeTmjVk5evv1+dpddecLRhZqb2Op6YBuSxtiibEmaAJAiAuRI6A
-        s+LwZcCJaL8Gf3W0NIh03fv7VOJ5AWRzYXzpdg==
+        A1UdDgQWBBQz4i828vqWC/S52FfdnIYIXHLIvTAfBgNVHSMEGDAWgBQ8IUH8TBGm
+        TrEz1hKrNsuByEHp9DAYBgNVHREEETAPgg1jaS1zc2gtcG9ydGFsMAoGCCqGSM49
+        BAMCA0cAMEQCIGaSyihjkNL2DiUg6nftAUb2jXl97Y38cb8R/srWZdaaAiAC9K6r
+        jzJR6clzzHTzidSigsyeoBmhv7L6643jfB02HQ==
         -----END CERTIFICATE-----
       client.key: |
         -----BEGIN EC PRIVATE KEY-----
-        MHcCAQEEIGVXWxCYIOynJpYWn95j19DDNDeMZU+xYOhGU8IN9hwmoAoGCCqGSM49
-        AwEHoUQDQgAEJqD67BGaVtpzW7mFSsK9IAY5bPsI/zDCGO+zhSJhDS44duAbmWCB
-        OuWKcMfdfO7LdHmssdwG8RsUsAx7t7qmhQ==
+        MHcCAQEEINvOV43X7WgqNmkg++wNfmU033hwBDpSG7iDWh6ErzCXoAoGCCqGSM49
+        AwEHoUQDQgAE5ayAbiEEjfDYHaZPotihXIngy3rj0Pg5kUNHGI7BQWHnmXXFdrOS
+        m/fbSRnoOEFiJrCDYhSd+y4ZLqGrVkXLLw==
         -----END EC PRIVATE KEY-----
 
 sshPortal:
