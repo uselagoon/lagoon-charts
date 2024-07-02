@@ -30,6 +30,30 @@ spec:
       securityContext:
         {{- toYaml (coalesce .Values.webhooks2tasks.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       containers:
+      - name: api-sidecar-handler
+        securityContext:
+          {{- toYaml .Values.webhooks2tasks.securityContext | nindent 10 }}
+        image: "{{ .Values.sshkeyHandler.image.repository }}:{{ coalesce .Values.sshkeyHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.sshkeyHandler.image.pullPolicy }}
+        ports:
+        - name: http-3333
+          containerPort: 3333
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: http-3333
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: http-3333
+        startupProbe:
+          httpGet:
+            path: /status
+            port: http-3333
+          failureThreshold: 60
+          periodSeconds: 10
+        resources:
+          {{- toYaml .Values.webhooks2tasks.resources | nindent 10 }}
       - name: webhooks2tasks
         securityContext:
           {{- toYaml .Values.webhooks2tasks.securityContext | nindent 10 }}
