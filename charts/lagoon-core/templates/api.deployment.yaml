@@ -75,8 +75,8 @@ spec:
       - name: api-sidecar-handler
         securityContext:
           {{- toYaml .Values.api.securityContext | nindent 10 }}
-        image: "{{ .Values.sshkeyHandler.image.repository }}:{{ coalesce .Values.sshkeyHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.sshkeyHandler.image.pullPolicy }}
+        image: "{{ .Values.apiSidecarHandler.image.repository }}:{{ coalesce .Values.apiSidecarHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.apiSidecarHandler.image.pullPolicy }}
         ports:
         - name: http-3333
           containerPort: 3333

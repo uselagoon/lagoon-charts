@@ -225,7 +225,7 @@ apiRedis:
     type: ClusterIP
     port: 6379
 
-sshkeyHandler:
+apiSidecarHandler:
   image:
     repository: uselagoon/api-sidecar-handler
     pullPolicy: Always

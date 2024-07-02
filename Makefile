@@ -250,7 +250,7 @@ install-lagoon-core: install-minio
 		--set autoIdler.enabled=false \
 		--set backupHandler.enabled=false \
 		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
-		--set sshkeyHandler.image.repository=$(IMAGE_REGISTRY)/api-sidecar-handler \
+		--set apiSidecarHandler.image.repository=$(IMAGE_REGISTRY)/api-sidecar-handler \
 		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \

@@ -49,7 +49,7 @@ apiRedis:
     requests:
       cpu: "10m"
 
-sshkeyHandler:
+apiSidecarHandler:
   image:
     repository: uselagoon/api-sidecar-handler
 
