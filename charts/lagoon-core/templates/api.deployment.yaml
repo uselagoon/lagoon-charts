@@ -77,21 +77,18 @@ spec:
           {{- toYaml .Values.api.securityContext | nindent 10 }}
         image: "{{ .Values.apiSidecarHandler.image.repository }}:{{ coalesce .Values.apiSidecarHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.apiSidecarHandler.image.pullPolicy }}
-        ports:
-        - name: http-3333
-          containerPort: 3333
         livenessProbe:
           httpGet:
             path: /status
-            port: http-3333
+            port: 3333
         readinessProbe:
           httpGet:
             path: /status
-            port: http-3333
+            port: 3333
         startupProbe:
           httpGet:
             path: /status
-            port: http-3333
+            port: 3333
           failureThreshold: 60
           periodSeconds: 10
         resources:
