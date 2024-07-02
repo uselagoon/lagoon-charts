@@ -12,6 +12,11 @@ apiRedis:
   image:
     repository: testlagoon/api-redis
 
+sshkeyHandler:
+  image:
+    repository: testlagoon/api-sidecar-handler
+    tag: pr-3662
+
 actionsHandler:
   image:
     repository: testlagoon/actions-handler

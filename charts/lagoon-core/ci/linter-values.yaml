@@ -49,6 +49,10 @@ apiRedis:
     requests:
       cpu: "10m"
 
+sshkeyHandler:
+  image:
+    repository: uselagoon/api-sidecar-handler
+
 actionsHandler:
   replicaCount: 1
   image:
