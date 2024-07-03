@@ -48,3 +48,8 @@ annotations:
       description: bump minimum Kubernetes version to 1.25
     - kind: changed
       description: added api-sidecar-handler container to api and webhooks2tasks
+    - kind: changed
+      description: update ssh-portal components to v0.37.0
+      links:
+        - name: ssh-portal release
+          url: https://github.com/uselagoon/lagoon-ssh-portal/releases/tag/v0.37.0
