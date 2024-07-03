@@ -72,6 +72,27 @@ spec:
         - secretRef:
             name: {{ include "lagoon-core.api.fullname" . }}
       containers:
+      - name: api-sidecar-handler
+        securityContext:
+          {{- toYaml .Values.api.securityContext | nindent 10 }}
+        image: "{{ .Values.apiSidecarHandler.image.repository }}:{{ coalesce .Values.apiSidecarHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.apiSidecarHandler.image.pullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 3333
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 3333
+        startupProbe:
+          httpGet:
+            path: /status
+            port: 3333
+          failureThreshold: 60
+          periodSeconds: 10
+        resources:
+          {{- toYaml .Values.api.resources | nindent 10 }}
       - name: api
         securityContext:
           {{- toYaml .Values.api.securityContext | nindent 10 }}

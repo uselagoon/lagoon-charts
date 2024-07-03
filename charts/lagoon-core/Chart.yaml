@@ -46,3 +46,5 @@ annotations:
       description: update values for local development
     - kind: changed
       description: bump minimum Kubernetes version to 1.25
+    - kind: changed
+      description: added api-sidecar-handler container to api and webhooks2tasks

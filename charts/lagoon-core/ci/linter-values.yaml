@@ -49,6 +49,10 @@ apiRedis:
     requests:
       cpu: "10m"
 
+apiSidecarHandler:
+  image:
+    repository: uselagoon/api-sidecar-handler
+
 actionsHandler:
   replicaCount: 1
   image:
@@ -216,8 +220,8 @@ natsService:
 natsConfig:
   users:
     lagoonRemote:
-    - user: ci-ssh-portal
-      password: ci-password
+      - user: ci-ssh-portal
+        password: ci-password
   tls:
     secretData:
       ca.crt: |

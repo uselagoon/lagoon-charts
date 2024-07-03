@@ -12,6 +12,10 @@ apiRedis:
   image:
     repository: testlagoon/api-redis
 
+apiSidecarHandler:
+  image:
+    repository: testlagoon/api-sidecar-handler
+
 actionsHandler:
   image:
     repository: testlagoon/actions-handler
