@@ -18,7 +18,7 @@ type: application
 
 version: 0.29.0
 
-appVersion: v0.15.6
+appVersion: v0.15.7
 
 annotations:
   artifacthub.io/changes: |
@@ -26,3 +26,5 @@ annotations:
       description: update values for local development
     - kind: changed
       description: bump minimum Kubernetes version to 1.25
+    - kind: changed
+      description: bump remote-controller to v0.15.7
