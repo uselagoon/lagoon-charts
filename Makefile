@@ -47,6 +47,9 @@ CLEAR_API_DATA = false
 DOCKER_NETWORK = kind
 LAGOON_SSH_PORTAL_LOADBALANCER =
 
+# Set to true to optionally install aergia and prometheus stack for local development
+INSTALL_AERGIA =
+
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
@@ -109,8 +112,47 @@ install-certmanager: install-metallb
 		jetstack/cert-manager
 	$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml
 
+.PHONY: install-prometheus
+install-prometheus:
+ifeq ($(INSTALL_AERGIA),true)
+	$(HELM) repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace kube-prometheus \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false \
+		--set prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues=false \
+		--version=58.0.0 \
+		kube-prometheus \
+		prometheus-community/kube-prometheus-stack
+endif
+
+.PHONY: install-aergia
+install-aergia: install-prometheus
+ifeq ($(INSTALL_AERGIA),true)
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace aergia \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set templates.enabled=false \
+		--set idling.enabled=true \
+		--set idling.serviceCron='*/5 * * * *' \
+		--set idling.cliCron='*/30 * * * *' \
+		--set idling.prometheusCheckInterval="10m" \
+		--set idling.podCheckInterval="5m" \
+		--set idling.prometheusEndpoint="http://kube-prometheus-kube-prome-prometheus.kube-prometheus.svc:9090" \
+		--set unidling.verifyRequests.enabled=true \
+		--version=0.6.1 \
+		aergia \
+		amazeeio/aergia
+endif
+
 .PHONY: install-ingress
-install-ingress: install-certmanager
+install-ingress: install-aergia install-certmanager
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -125,6 +167,9 @@ install-ingress: install-certmanager
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
+		$$([ $(INSTALL_AERGIA) ] && echo '--set controller.extraArgs.default-backend-service=aergia/aergia-backend') \
+		$$([ $(INSTALL_AERGIA) ] && echo '--set controller.metrics.enabled=true') \
+		$$([ $(INSTALL_AERGIA) ] && echo '--set controller.metrics.serviceMonitor.enabled=true') \
 		--version=4.9.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
