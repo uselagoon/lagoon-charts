@@ -27,7 +27,7 @@ version: 1.46.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.19.0
+appVersion: v2.20.0
 
 dependencies:
 - name: nats
@@ -41,8 +41,6 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: prepare for Lagoon v2.20.0 release
-    - kind: changed
       description: update values for local development
     - kind: changed
       description: bump minimum Kubernetes version to 1.25
@@ -53,3 +51,8 @@ annotations:
       links:
         - name: ssh-portal release
           url: https://github.com/uselagoon/lagoon-ssh-portal/releases/tag/v0.37.0
+    - kind: changed
+      description: update Lagoon appVersion to v2.20.0
+      links:
+        - name: lagoon v2.20.0 release notes
+          url: https://docs.lagoon.sh/releases/2.20.0/
