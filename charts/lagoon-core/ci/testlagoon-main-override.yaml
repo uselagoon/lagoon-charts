@@ -1,0 +1,65 @@
+imageTag: "main"
+
+api:
+  image:
+    repository: testlagoon/api
+
+apiDB:
+  image:
+    repository: testlagoon/api-db
+
+apiRedis:
+  image:
+    repository: testlagoon/api-redis
+
+apiSidecarHandler:
+  image:
+    repository: testlagoon/api-sidecar-handler
+
+actionsHandler:
+  image:
+    repository: testlagoon/actions-handler
+
+keycloak:
+  image:
+    repository: testlagoon/keycloak
+
+keycloakDB:
+  image:
+    repository: testlagoon/keycloak-db
+
+broker:
+  image:
+    repository: testlagoon/broker
+
+authServer:
+  image:
+    repository: testlagoon/auth-server
+
+webhooks2tasks:
+  image:
+    repository: testlagoon/webhooks2tasks
+
+webhookHandler:
+  image:
+    repository: testlagoon/webhook-handler
+
+backupHandler:
+  image:
+    repository: testlagoon/backup-handler
+
+logs2notifications:
+  image:
+    repository: testlagoon/logs2notifications
+
+ssh:
+  image:
+    repository: testlagoon/ssh
+
+controllerhandler:
+  image:
+    repository: testlagoon/controllerhandler
+
+workflows:
+  image:
+    repository: testlagoon/workflows

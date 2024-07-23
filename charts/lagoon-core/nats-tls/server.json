@@ -1,6 +1,7 @@
 {
   "hosts": [
-    "lagoon-core-nats-concentrator"
+    "lagoon-core-nats-concentrator",
+    "lagoon-core-nats-concentrator.lagoon-core.svc"
   ],
   "CN": "lagoon-core-nats-concentrator",
   "key": {

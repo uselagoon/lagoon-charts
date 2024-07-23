@@ -11,7 +11,7 @@ maintainers:
 - name: shreddedbacon
   email: ben.jackson@amazee.io
   url: https://amazee.io
-kubeVersion: ">= 1.23.0-0"
+kubeVersion: ">= 1.25.0-0"
 
 # Application charts are a collection of templates that can be packaged into
 # versioned archives to be deployed.
@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.45.0
+version: 1.46.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.19.0
+appVersion: v2.20.0
 
 dependencies:
 - name: nats
@@ -41,27 +41,18 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: bump lagoon-opensearch-sync to v0.8.0
-      links:
-        - name: lagoon-opensearch-sync v0.8.0 release
-          url: https://github.com/uselagoon/lagoon-opensearch-sync/releases/tag/v0.8.0
+      description: update values for local development
     - kind: changed
-      description: bump ssh-portal-api from v0.30.1 to version v0.36.0
-      links:
-        - name: ssh-portal-api releases
-          url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+      description: bump minimum Kubernetes version to 1.25
     - kind: changed
-      description: bump ssh-token from v0.30.1 to version v0.36.0
-      links:
-        - name: ssh-token releases
-          url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+      description: added api-sidecar-handler container to api and webhooks2tasks
     - kind: changed
-      description: bump insights-handler from v0.0.4 to version v0.0.5
+      description: update ssh-portal components to v0.37.0
       links:
-        - name: insights-handler release
-          url: https://github.com/uselagoon/insights-handler/releases/tag/v0.0.5
+        - name: ssh-portal release
+          url: https://github.com/uselagoon/lagoon-ssh-portal/releases/tag/v0.37.0
     - kind: changed
-      description: update Lagoon appVersion to v2.19.0
+      description: update Lagoon appVersion to v2.20.0
       links:
-        - name: lagoon release
-          url: https://github.com/uselagoon/lagoon/releases/tag/v2.19.0
+        - name: lagoon v2.20.0 release notes
+          url: https://docs.lagoon.sh/releases/2.20.0/

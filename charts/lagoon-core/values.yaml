@@ -225,6 +225,13 @@ apiRedis:
     type: ClusterIP
     port: 6379
 
+apiSidecarHandler:
+  image:
+    repository: uselagoon/api-sidecar-handler
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
 keycloak:
   # keycloak realm and email settings configuration
   realmSettings:
@@ -869,7 +876,7 @@ sshPortalAPI:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.36.0"
+    tag: "v0.37.0"
 
   podAnnotations: {}
 
@@ -942,7 +949,7 @@ sshToken:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-token
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.36.0"
+    tag: "v0.37.0"
 
   podAnnotations: {}
 
