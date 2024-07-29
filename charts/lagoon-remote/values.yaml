@@ -206,6 +206,12 @@ dbaasHTTPEndpoint: ""
 
 insightsRemote:
   enabled: false
+
+  # The following values control whether post-build insights scanning is enabled
+  enableBuildScanning: false
+  # If enabled, we deploy a particular image into the namespace, this can be overriden by the following
+  #buildScannerImage: 
+
   # sets insights configMaps to be removed after being processed
   burnAfterReading: true
 
