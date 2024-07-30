@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.92.0
+version: 0.93.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -40,12 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: update values for local development
-    - kind: changed
-      description: bump minimum Kubernetes version to 1.25
-    - kind: changed
-      description: update ssh-portal components to v0.37.0
-      links:
-        - name: ssh-portal release
-          url: https://github.com/uselagoon/lagoon-ssh-portal/releases/tag/v0.37.0
+    - kind: fixed
+      description: lagoon-remote-ssh-core scale permissions
