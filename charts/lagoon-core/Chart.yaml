@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.46.0
+version: 1.46.1
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -41,18 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update values for local development
-    - kind: changed
-      description: bump minimum Kubernetes version to 1.25
-    - kind: changed
-      description: added api-sidecar-handler container to api and webhooks2tasks
-    - kind: changed
-      description: update ssh-portal components to v0.37.0
-      links:
-        - name: ssh-portal release
-          url: https://github.com/uselagoon/lagoon-ssh-portal/releases/tag/v0.37.0
-    - kind: changed
-      description: update Lagoon appVersion to v2.20.0
-      links:
-        - name: lagoon v2.20.0 release notes
-          url: https://docs.lagoon.sh/releases/2.20.0/
+      description: add support for injecting hostkeys in core ssh service

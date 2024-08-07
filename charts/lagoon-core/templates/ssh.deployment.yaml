@@ -68,6 +68,42 @@ spec:
             port: ssh
         resources:
           {{- toYaml .Values.ssh.resources | nindent 10 }}
+        volumeMounts:
+        {{- with .Values.ssh.hostKeys.ecdsa }}
+        - name: {{ include "lagoon-core.ssh.fullname" $ }}
+          mountPath: "/etc/ssh/ssh_host_ecdsa_key"
+          subPath: ssh_host_ecdsa_key
+        {{- end }}
+        {{- with .Values.ssh.hostKeys.ed25519 }}
+        - name: {{ include "lagoon-core.ssh.fullname" $ }}
+          mountPath: "/etc/ssh/ssh_host_ed25519_key"
+          subPath: ssh_host_ed25519_key
+        {{- end }}
+        {{- with .Values.ssh.hostKeys.rsa }}
+        - name: {{ include "lagoon-core.ssh.fullname" $ }}
+          mountPath: "/etc/ssh/ssh_host_rsa_key"
+          subPath: ssh_host_rsa_key
+        {{- end }}
+      volumes:
+      {{- if or .Values.ssh.hostKeys.rsa .Values.ssh.hostKeys.ecdsa .Values.ssh.hostKeys.ed25519 }}
+      - secret:
+          defaultMode: 432
+          items:
+          {{- with .Values.ssh.hostKeys.rsa }}
+          - key: HOST_KEY_RSA
+            path: ssh_host_rsa_key
+          {{- end }}
+          {{- with .Values.ssh.hostKeys.ecdsa }}
+          - key: HOST_KEY_ECDSA
+            path: ssh_host_ecdsa_key
+          {{- end }}
+          {{- with .Values.ssh.hostKeys.ed25519 }}
+          - key: HOST_KEY_ED25519
+            path: ssh_host_ed25519_key
+          {{- end }}
+          secretName: {{ include "lagoon-core.ssh.fullname" . }}
+        name: {{ include "lagoon-core.ssh.fullname" . }}
+      {{- end }}
       {{- with .Values.ssh.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
