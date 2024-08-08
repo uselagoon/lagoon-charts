@@ -780,8 +780,11 @@ ssh:
 
   # host keys, PEM encoded
   hostKeys:
+    ecdsaPub: ""
     ecdsa: ""
+    ed25519Pub: ""
     ed25519: ""
+    rsaPub: ""
     rsa: ""
 
 workflows:
