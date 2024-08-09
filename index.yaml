@@ -1359,6 +1359,37 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: add support for injecting hostkeys in core ssh service
+        - kind: changed
+          description: update Lagoon appVersion to v2.20.1
+    apiVersion: v2
+    appVersion: v2.20.1
+    created: "2024-08-09T03:38:16.613471174Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~0.19.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 749d870266b98a191a05ec6393007564f433f193f0be697d13088934a0be9be2
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.47.0/lagoon-core-1.47.0.tgz
+    version: 1.47.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update values for local development
         - kind: changed
           description: bump minimum Kubernetes version to 1.25
@@ -12894,6 +12925,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update Lagoon appVersion to v2.20.1
+    apiVersion: v2
+    appVersion: v2.20.1
+    created: "2024-08-09T03:38:16.787700042Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 3d2f29ab0387e9d36e1d0a311fb373bfeb1d027e5f992ab9ea739cd9c1f55967
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.59.0/lagoon-test-0.59.0.tgz
+    version: 0.59.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update values for local development
         - kind: changed
           description: bump minimum Kubernetes version to 1.25
@@ -14069,4 +14121,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2024-07-30T23:29:38.872189047Z"
+generated: "2024-08-09T03:38:16.788760611Z"
