@@ -778,6 +778,15 @@ ssh:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+  # host keys, PEM encoded
+  hostKeys:
+    ecdsaPub: ""
+    ecdsa: ""
+    ed25519Pub: ""
+    ed25519: ""
+    rsaPub: ""
+    rsa: ""
+
 workflows:
   enabled: true
   replicaCount: 2
