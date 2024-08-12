@@ -9,3 +9,4 @@ lagoonTokenPort: 22
 lagoonAPIHost: http://lagoon-core-api.lagoon-core.svc:80
 extraArgs:
   - "--skip-tls-verify=true"
+  - "--cleanup-harbor-repository-on-delete" #remove images of deleted environments
