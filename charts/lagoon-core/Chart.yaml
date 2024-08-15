@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.47.0
+version: 1.47.1
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -41,6 +41,7 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: add support for injecting hostkeys in core ssh service
-    - kind: changed
-      description: update Lagoon appVersion to v2.20.1
+      description: update insights-handler to v0.0.6
+      links:
+        - name: insights-remote v0.0.6 release
+          url: https://github.com/uselagoon/insights-handler/releases/tag/v0.0.6
