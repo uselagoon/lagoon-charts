@@ -142,9 +142,9 @@ backupHandler:
       cpu: "10m"
 
 insightsHandler:
+  enabled: true
   image:
     repository: uselagoon/insights-handler
-    tag: main
 
 logs2notifications:
   replicaCount: 1
