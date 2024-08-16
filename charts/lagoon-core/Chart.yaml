@@ -45,3 +45,8 @@ annotations:
       links:
         - name: insights-remote v0.0.6 release
           url: https://github.com/uselagoon/insights-handler/releases/tag/v0.0.6
+    - kind: changed
+      description: update ssh-portal and ssh-token to v0.37.2
+      links:
+        - name: ssh-portal v0.37.2 release
+          url: https://github.com/uselagoon/lagoon-ssh-portal/releases/tag/v0.37.2
