@@ -51,6 +51,8 @@ dockerHost:
 
   pruneImagesSchedule: '22 1 * * *'
 
+  pruneDanglingSchedule: '22 1 * * *'
+
   removeExitedSchedule: '22 */4 * * *'
 
   updateImagesSchedule: '*/15 * * * *'

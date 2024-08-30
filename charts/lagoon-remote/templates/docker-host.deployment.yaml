@@ -71,8 +71,8 @@ spec:
           value: {{ .Values.dockerHost.removeExitedSchedule | quote }}
         - name: UPDATE_IMAGES_SCHEDULE
           value: {{ .Values.dockerHost.updateImagesSchedule | quote }}
-        - name: DANGLING_FILTER
-          value: {{ .Values.dockerHost.danglingFilter | quote }}
+        - name: PRUNE_DANGLING_SCHEDULE
+          value: {{ .Values.dockerHost.pruneDanglingSchedule | quote }}
         - name: LOG_LEVEL
           value: {{ .Values.dockerHost.logLevel | quote }}
       {{- range $key, $val := .Values.dockerHost.additionalEnvs }}
