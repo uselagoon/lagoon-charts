@@ -1,0 +1,63 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "lagoon-core.brokerFlagEnable.fullname" . }}
+  labels:
+    {{- include "lagoon-core.broker.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-weight": "-5"
+spec:
+  backoffLimit: 2
+  template:
+    metadata:
+      labels:
+        {{- include "lagoon-core.broker.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      securityContext:
+          {{- toYaml .Values.broker.securityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 120
+      containers:
+      - name: broker-flag-enable
+        args:
+        - /enable-feature-flags.sh
+        image: "{{ .Values.broker.image.repository }}:{{ coalesce .Values.broker.image.tag .Values.imageTag .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.broker.image.pullPolicy }}
+        command:
+        - /bin/sh
+        - -c
+        securityContext:
+          {{- toYaml .Values.broker.securityContext | nindent 10 }}
+        env:
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_USE_LONGNAME
+          value: "true"
+        # these variables are used by the /cluster-rabbit.sh entrypoint
+        - name: POD_NAMESPACE
+          value: {{ .Release.Namespace | quote }}
+        - name: SERVICE_NAME
+          value: {{ include "lagoon-core.broker.fullname" . }}
+      {{- range $key, $val := .Values.broker.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
+        resources:
+          {{- toYaml .Values.broker.resources | nindent 10 }}
+      {{- with .Values.broker.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.broker.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
