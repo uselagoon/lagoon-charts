@@ -250,6 +250,10 @@ consolidateServiceIndices: false
 # sent to a third-party service and not to a central elasticsearch.
 enableDefaultForwarding: true
 
+# Set this to "On" for the default behavior including kubernetes_namespace_name
+# labels. In router-logs this could be confusing, but may be useful for debug.
+fluentbitNamespaceLabels: "Off"
+
 # Set how many Fluentd log forwarder pods should be running
 fluentdReplicaCount: 3
 

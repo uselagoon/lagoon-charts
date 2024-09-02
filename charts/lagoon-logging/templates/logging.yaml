@@ -30,6 +30,8 @@ spec:
     # At the time of writing this just hits the metrics endpoint.
     # https://github.com/banzaicloud/logging-operator/blob/master/pkg/sdk/logging/api/v1beta1/logging_types.go#L452-L467
     livenessDefaultCheck: true
+    filterKubernetes:
+      namespace_labels: {{ default "Off" .Values.fluentbitNamespaceLabels | quote }}
   {{- if .Values.fluentbitPrivileged }}
     security:
       securityContext:
