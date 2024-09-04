@@ -58,6 +58,14 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KEYCLOAK_FRONTEND_URL
+          {{- if .Values.keycloakFrontEndURL }}
+          value: {{ .Values.keycloakFrontEndURL }}/auth
+          {{- else if .Values.keycloak.ingress.enabled }}
+          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}/auth
+          {{- else }}
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
+          {{- end }}
         - name: KEYCLOAK_URL
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
         - name: REDIS_HOST
@@ -147,6 +155,14 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KEYCLOAK_FRONTEND_URL
+          {{- if .Values.keycloakFrontEndURL }}
+          value: {{ .Values.keycloakFrontEndURL }}
+          {{- else if .Values.keycloak.ingress.enabled }}
+          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}
+          {{- else }}
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
+          {{- end }}
         - name: KEYCLOAK_URL
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
         - name: KIBANA_URL
