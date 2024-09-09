@@ -49,6 +49,16 @@ spec:
           {{- else }}
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
           {{- end }}
+        - name: KEYCLOAK_LAGOON_UI_CLIENT_REDIRECT_URIS
+          {{- if .Values.keycloakLagoonUIClientRedirectUris }}
+          value: {{ .Values.keycloakLagoonUIClientRedirectUris | quote }}
+          {{- else if .Values.lagoonUIURL }}
+          value: {{ .Values.lagoonUIURL }}/*
+          {{- else if .Values.ui.ingress.enabled }}
+          value: https://{{ index .Values.ui.ingress.hosts 0 "host" }}/*
+          {{- else }}
+          value: http://{{ include "lagoon-core.ui.fullname" . }}:{{ .Values.ui.service.port }}/*
+          {{- end }}
         {{- with .Values.keycloakAdminEmail }}
         - name: KEYCLOAK_ADMIN_EMAIL
           value: {{ . | quote }}
