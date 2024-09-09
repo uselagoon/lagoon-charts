@@ -67,6 +67,8 @@ k8upS3Endpoint: ""
 keycloakAdminUser: admin
 # this is required if email sending is to be enabled in keycloak
 # keycloakAdminEmail: admin@example.com
+# Override list of valid UI Redirect URIs
+# keycloakLagoonUIClientRedirectUris: https://ui.example.com/*,https://dev-ui.example.com/*
 
 buildDeployImage:
   edge:
