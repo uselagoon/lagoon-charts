@@ -52,3 +52,5 @@ annotations:
           url: https://github.com/uselagoon/lagoon-ssh-portal/releases/tag/v0.37.2
     - kind: changed
       description: add broker-flag-enable pre-upgrade job
+    - kind: changed
+      description: add KEYCLOAK_FRONTEND_URL variable to api deployment
