@@ -96,6 +96,11 @@ jobs:
         ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
       if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') }}
 
+    - name: Run chart-testing (upgrade changed next-release only)
+      run: |
+        ct install --upgrade --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
+      if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') }}
+
     - name: Run chart-testing (install all charts when required)
       run: ct install --config ./default.ct.yaml  --helm-extra-args "--timeout 30m" --all
       if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') || contains(github.event.pull_request.labels.*.name, 'needs-testing') }}
