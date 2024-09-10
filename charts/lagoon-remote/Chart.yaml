@@ -42,7 +42,6 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: remove docker-host connection test in CI
-  artifacthub.io/changes: |
     - kind: changed
       description: update insights-remote to v0.0.11
       links:
