@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.93.0
+version: 0.93.1
 
 dependencies:
 - name: lagoon-build-deploy
@@ -40,5 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: lagoon-remote-ssh-core scale permissions
+    - kind: changed
+      description: remove docker-host connection test in CI
