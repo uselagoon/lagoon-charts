@@ -16,7 +16,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.3.0
+version: 0.3.1
 
 appVersion: v3.5.0
 
@@ -26,4 +26,4 @@ appVersion: v3.5.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update docker-host from v3.3.0 to v3.5.0
+      description: configure network policy for CI
