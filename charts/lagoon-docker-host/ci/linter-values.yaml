@@ -1,2 +1,22 @@
 storage:
   size: 50Gi
+networkPolicy:
+  # Specifies whether the docker-host network policy should be enabled
+  enabled: true
+  # Specify the policy to apply, useful to change who can access the docker-host
+  # This default policy just replicates the existing docker-host
+  policy:
+    - namespaceSelector:
+        matchExpressions:
+        - key: lagoon.sh/environment
+          operator: Exists
+      podSelector:
+        matchExpressions:
+        - key: lagoon.sh/buildName
+          operator: Exists
+    - podSelector:
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: In
+          values:
+            - lagoon-docker-host
