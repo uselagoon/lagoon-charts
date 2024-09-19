@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.48.0
+version: 1.49.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -31,7 +31,7 @@ appVersion: v2.21.0
 
 dependencies:
 - name: nats
-  version: ~0.19.0
+  version: ~1.0.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
 
@@ -41,21 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update Lagoon appVersion to v2.21.0
-      links:
-        - name: lagoon-core v2.21.0 release
-          url: https://github.com/uselagoon/lagoon/releases/tag/v2.21.0
-    - kind: changed
-      description: update insights-handler to v0.0.6
-      links:
-        - name: insights-remote v0.0.6 release
-          url: https://github.com/uselagoon/insights-handler/releases/tag/v0.0.6
-    - kind: changed
-      description: update ssh-portal and ssh-token to v0.37.2
-      links:
-        - name: ssh-portal v0.37.2 release
-          url: https://github.com/uselagoon/lagoon-ssh-portal/releases/tag/v0.37.2
-    - kind: changed
-      description: add broker-flag-enable pre-upgrade job
-    - kind: changed
-      description: add KEYCLOAK_FRONTEND_URL variable to api deployment
+      description: update NATS chart dependency to v1.0.x
