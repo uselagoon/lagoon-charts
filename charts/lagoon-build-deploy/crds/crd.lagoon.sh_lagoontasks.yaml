@@ -15,7 +15,9 @@ spec:
     singular: lagoontask
   scope: Namespaced
   versions:
-  - name: v1beta1
+  - deprecated: true
+    deprecationWarning: use lagoontasks.crd.lagoon.sh/v1beta2
+    name: v1beta1
     schema:
       openAPIV3Schema:
         description: LagoonTask is the Schema for the lagoontasks API
@@ -167,6 +169,10 @@ spec:
                   properties:
                     lastTransitionTime:
                       type: string
+                    message:
+                      type: string
+                    reason:
+                      type: string
                     status:
                       type: string
                     type:
@@ -174,6 +180,8 @@ spec:
                       type: string
                   required:
                   - lastTransitionTime
+                  - message
+                  - reason
                   - status
                   - type
                   type: object
@@ -218,6 +226,32 @@ spec:
                         type: string
                       environmentId:
                         type: integer
+                      environmentServices:
+                        items:
+                          description: EnvironmentService  is based on the Lagoon
+                            API type.
+                          properties:
+                            containers:
+                              items:
+                                description: ServiceContainer  is based on the Lagoon
+                                  API type.
+                                properties:
+                                  name:
+                                    type: string
+                                type: object
+                              type: array
+                            created:
+                              type: string
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            updated:
+                              type: string
+                          type: object
+                        type: array
                       jobName:
                         type: string
                       jobStatus:
@@ -307,6 +341,32 @@ spec:
                         type: string
                       environmentId:
                         type: integer
+                      environmentServices:
+                        items:
+                          description: EnvironmentService  is based on the Lagoon
+                            API type.
+                          properties:
+                            containers:
+                              items:
+                                description: ServiceContainer  is based on the Lagoon
+                                  API type.
+                                properties:
+                                  name:
+                                    type: string
+                                type: object
+                              type: array
+                            created:
+                              type: string
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            updated:
+                              type: string
+                          type: object
+                        type: array
                       jobName:
                         type: string
                       jobStatus:
@@ -398,6 +458,32 @@ spec:
                         type: string
                       environmentId:
                         type: integer
+                      environmentServices:
+                        items:
+                          description: EnvironmentService  is based on the Lagoon
+                            API type.
+                          properties:
+                            containers:
+                              items:
+                                description: ServiceContainer  is based on the Lagoon
+                                  API type.
+                                properties:
+                                  name:
+                                    type: string
+                                type: object
+                              type: array
+                            created:
+                              type: string
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            updated:
+                              type: string
+                          type: object
+                        type: array
                       jobName:
                         type: string
                       jobStatus:
@@ -491,6 +577,32 @@ spec:
                         type: string
                       environmentId:
                         type: integer
+                      environmentServices:
+                        items:
+                          description: EnvironmentService  is based on the Lagoon
+                            API type.
+                          properties:
+                            containers:
+                              items:
+                                description: ServiceContainer  is based on the Lagoon
+                                  API type.
+                                properties:
+                                  name:
+                                    type: string
+                                type: object
+                              type: array
+                            created:
+                              type: string
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            type:
+                              type: string
+                            updated:
+                              type: string
+                          type: object
+                        type: array
                       jobName:
                         type: string
                       jobStatus:
@@ -555,7 +667,235 @@ spec:
             type: object
         type: object
     served: true
+    storage: false
+  - additionalPrinterColumns:
+    - description: Status of the LagoonTask
+      jsonPath: .status.phase
+      name: Status
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1beta2
+    schema:
+      openAPIV3Schema:
+        description: LagoonTask is the Schema for the lagoontasks API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: LagoonTaskSpec defines the desired state of LagoonTask
+            properties:
+              advancedTask:
+                description: LagoonAdvancedTaskInfo defines what an advanced task
+                  can use for the creation of the pod.
+                properties:
+                  JSONPayload:
+                    type: string
+                  deployerToken:
+                    type: boolean
+                  runnerImage:
+                    type: string
+                  sshKey:
+                    type: boolean
+                type: object
+              environment:
+                description: LagoonTaskEnvironment defines the lagoon environment
+                  information.
+                properties:
+                  environmentType:
+                    type: string
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  project:
+                    type: string
+                required:
+                - environmentType
+                - name
+                - project
+                type: object
+              key:
+                description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+                  Important: Run "make" to regenerate code after modifying this file'
+                type: string
+              misc:
+                description: LagoonMiscInfo defines the resource or backup information
+                  for a misc task.
+                properties:
+                  backup:
+                    description: LagoonMiscBackupInfo defines the information for
+                      a backup.
+                    properties:
+                      backupId:
+                        type: string
+                      id:
+                        type: string
+                      source:
+                        type: string
+                    required:
+                    - backupId
+                    - id
+                    - source
+                    type: object
+                  id:
+                    type: string
+                  miscResource:
+                    format: byte
+                    type: string
+                  name:
+                    type: string
+                required:
+                - id
+                type: object
+              project:
+                description: LagoonTaskProject defines the lagoon project information.
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  namespacePattern:
+                    type: string
+                  organization:
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                    type: object
+                  variables:
+                    description: Variables contains the project and environment variables
+                      from lagoon.
+                    properties:
+                      environment:
+                        format: byte
+                        type: string
+                      project:
+                        format: byte
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              task:
+                description: LagoonTaskInfo defines what a task can use to communicate
+                  with Lagoon via SSH/API.
+                properties:
+                  apiHost:
+                    type: string
+                  command:
+                    type: string
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  service:
+                    type: string
+                  sshHost:
+                    type: string
+                  sshPort:
+                    type: string
+                  taskName:
+                    type: string
+                required:
+                - id
+                type: object
+            type: object
+          status:
+            description: LagoonTaskStatus defines the observed state of LagoonTask
+            properties:
+              conditions:
+                description: They are an extension mechanism which allows tools and
+                  other controllers to collect summary information about resources
+                  without needing to understand resource-specific status details.
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource. --- This struct is intended for direct
+                    use as an array at the field path .status.conditions.  For example,
+                    \n \ttype FooStatus struct{ \t    // Represents the observations
+                    of a foo's current state. \t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\" \t    //
+                    +patchMergeKey=type \t    // +patchStrategy=merge \t    // +listType=map
+                    \t    // +listMapKey=type \t    Conditions []metav1.Condition
+                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
+                    protobuf:\"bytes,1,rep,name=conditions\"` \n \t    // other fields
+                    \t}"
+                  properties:
+                    lastTransitionTime:
+                      description: lastTransitionTime is the last time the condition
+                        transitioned from one status to another. This should be when
+                        the underlying condition changed.  If that is not known, then
+                        using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: message is a human readable message indicating
+                        details about the transition. This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: observedGeneration represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.conditions[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: reason contains a programmatic identifier indicating
+                        the reason for the condition's last transition. Producers
+                        of specific condition types may define expected values and
+                        meanings for this field, and whether the values are considered
+                        a guaranteed API. The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                        --- Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              phase:
+                type: string
+            type: object
+        type: object
+    served: true
     storage: true
+    subresources: {}
 status:
   acceptedNames:
     kind: ""

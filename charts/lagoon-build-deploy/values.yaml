@@ -168,7 +168,7 @@ image:
   repository: uselagoon/remote-controller
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: main-v1beta2
 
 imagePullSecrets: []
 
