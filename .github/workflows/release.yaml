@@ -21,7 +21,6 @@ jobs:
 
     - name: Add dependency chart repos
       run: |
-        helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
         helm repo add lagoon https://uselagoon.github.io/lagoon-charts/
         helm repo add amazeeio https://amazeeio.github.io/charts/
         helm repo add nats https://nats-io.github.io/k8s/helm/charts/
