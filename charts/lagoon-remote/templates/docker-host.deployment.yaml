@@ -67,12 +67,16 @@ spec:
           value: {{ .Values.dockerHost.pruneImagesUntil | quote }}
         - name: PRUNE_SCHEDULE
           value: {{ .Values.dockerHost.pruneImagesSchedule | quote }}
+        - name: PRUNE_BUILDER_CACHE_UNTIL
+          value: {{ .Values.dockerHost.pruneBuilderCacheUntil | quote }}
         - name: REMOVE_EXITED_SCHEDULE
           value: {{ .Values.dockerHost.removeExitedSchedule | quote }}
         - name: UPDATE_IMAGES_SCHEDULE
           value: {{ .Values.dockerHost.updateImagesSchedule | quote }}
         - name: PRUNE_DANGLING_SCHEDULE
           value: {{ .Values.dockerHost.pruneDanglingSchedule | quote }}
+        - name: PRUNE_BUILDER_CACHE_SCHEDULE
+          value: {{ .Values.dockerHost.pruneBuilderCacheSchedule | quote }}
         - name: LOG_LEVEL
           value: {{ .Values.dockerHost.logLevel | quote }}
       {{- range $key, $val := .Values.dockerHost.additionalEnvs }}

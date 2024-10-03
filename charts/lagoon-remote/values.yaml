@@ -44,12 +44,16 @@ dockerHost:
 
   pruneImagesUntil: 168h
 
+  pruneBuilderCacheUntil: 168h
+
   danglingFilter: true
 
   # Define the logging level for the docker-host | default: "info"
   logLevel: ""
 
   pruneImagesSchedule: '22 1 * * *'
+
+  pruneBuilderCacheSchedule: '22 1 * * *'
 
   pruneDanglingSchedule: '22 1 * * *'
 
