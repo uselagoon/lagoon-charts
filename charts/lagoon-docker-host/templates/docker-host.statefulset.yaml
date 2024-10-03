@@ -55,18 +55,33 @@ spec:
           value: {{ . | quote }}
         {{- end }}
         - name: DOCKER_HOST
-          value: localhost
+          value: {{ .Values.host | default "tcp://localhost:2375" }}
         - name: REGISTRY
           value: {{ .Values.registry | quote }}
-        - name: REPOSITORY_TO_UPDATE
-          value: {{ .Values.repositoryToUpdate | quote }}
+        - name: REGISTRY_MIRROR
+          value: {{ .Values.registryMirror | quote }}
+        - name: REPOSITORIES_TO_UPDATE
+          value: {{ join "|" .Values.repositoriesToUpdate | quote }}
         - name: PRUNE_IMAGES_UNTIL
           value: {{ .Values.pruneImagesUntil | quote }}
-        - name: CRONJOBS
-          value: |
-            22 1 * * * /lagoon/cronjob.sh "/prune-images.sh"
-            22 */4 * * * /lagoon/cronjob.sh "/remove-exited.sh"
-            */15 * * * * /lagoon/cronjob.sh "/update-images.sh"
+        - name: PRUNE_SCHEDULE
+          value: {{ .Values.pruneImagesSchedule | quote }}
+        - name: PRUNE_BUILDER_CACHE_UNTIL
+          value: {{ .Values.pruneBuilderCacheUntil | quote }}
+        - name: REMOVE_EXITED_SCHEDULE
+          value: {{ .Values.removeExitedSchedule | quote }}
+        - name: UPDATE_IMAGES_SCHEDULE
+          value: {{ .Values.updateImagesSchedule | quote }}
+        - name: PRUNE_DANGLING_SCHEDULE
+          value: {{ .Values.pruneDanglingSchedule | quote }}
+        - name: PRUNE_BUILDER_CACHE_SCHEDULE
+          value: {{ .Values.pruneBuilderCacheSchedule | quote }}
+        - name: LOG_LEVEL
+          value: {{ .Values.logLevel | quote }}
+      {{- range $key, $val := .Values.additionalEnvs }}
+      - name: {{ $key }}
+        value: {{ $val | quote }}
+      {{- end }}
         ports:
         - containerPort: 2375
           protocol: TCP

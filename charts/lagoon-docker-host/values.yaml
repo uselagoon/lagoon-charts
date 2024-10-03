@@ -5,14 +5,30 @@ global:
 image:
   repository: uselagoon/docker-host
   pullPolicy: Always
+  tag: "pr-25"
 
 name: docker-host
 
-pruneImagesUntil: 168h
+host: ""
+registryMirror: ""
+
+repositoriesToUpdate:
+  - "amazeeio/*:*"
+  - "*lagoon/*:*"
 
 # TODO: change this up once new docker-host is released
 registry: registry.lagoon.svc:5000
-repositoryToUpdate: amazeeio|lagoon
+
+# Define the logging level for the docker-host | default: "info"
+logLevel: ""
+pruneImagesUntil: 168h
+pruneBuilderCacheUntil: 168h
+danglingFilter: true
+pruneDanglingSchedule: '22 0 * * *'
+pruneImagesSchedule: '22 1 * * *'
+pruneBuilderCacheSchedule: '22 2 * * *'
+removeExitedSchedule: '22 */4 * * *'
+updateImagesSchedule: '*/15 * * * *'
 
 replicaCount: 1
 

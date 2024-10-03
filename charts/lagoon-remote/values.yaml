@@ -27,15 +27,29 @@ dockerHost:
     repository: uselagoon/docker-host
     pullPolicy: Always
     # Overrides the image tag whose default is "latest".
-    tag: "v3.5.0"
+    tag: "pr-25"
 
   name: docker-host
 
+  host: ""
+  registryMirror: ""
+
   registry: registry.lagoon.svc:5000
 
-  repositoryToUpdate: amazeeio|lagoon
+  repositoriesToUpdate:
+    - "amazeeio/*:*"
+    - "*lagoon/*:*"
 
+  # Define the logging level for the docker-host | default: "info"
+  logLevel: ""
   pruneImagesUntil: 168h
+  pruneBuilderCacheUntil: 168h
+  danglingFilter: true
+  pruneDanglingSchedule: '22 0 * * *'
+  pruneImagesSchedule: '22 1 * * *'
+  pruneBuilderCacheSchedule: '22 2 * * *'
+  removeExitedSchedule: '22 */4 * * *'
+  updateImagesSchedule: '*/15 * * * *'
 
   replicaCount: 1
 

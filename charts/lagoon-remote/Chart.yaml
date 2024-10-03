@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: changed docker-host to statefulset from deployment
+    - kind: changed
+      description: update docker-host to v3.6.0
