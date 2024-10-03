@@ -5,7 +5,6 @@ target-branch: main
 chart-dirs:
 - charts
 chart-repos:
-- banzaicloud-stable=https://kubernetes-charts.banzaicloud.com
 - lagoon=https://uselagoon.github.io/lagoon-charts/
 - amazeeio=https://amazeeio.github.io/charts/
 - nats=https://nats-io.github.io/k8s/helm/charts/
