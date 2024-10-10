@@ -41,21 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update Lagoon appVersion to v2.21.0
-      links:
-        - name: lagoon-core v2.21.0 release
-          url: https://github.com/uselagoon/lagoon/releases/tag/v2.21.0
-    - kind: changed
-      description: update insights-handler to v0.0.6
-      links:
-        - name: insights-remote v0.0.6 release
-          url: https://github.com/uselagoon/insights-handler/releases/tag/v0.0.6
-    - kind: changed
-      description: update ssh-portal and ssh-token to v0.37.2
-      links:
-        - name: ssh-portal v0.37.2 release
-          url: https://github.com/uselagoon/lagoon-ssh-portal/releases/tag/v0.37.2
-    - kind: changed
-      description: add broker-flag-enable pre-upgrade job
-    - kind: changed
-      description: add KEYCLOAK_FRONTEND_URL variable to api deployment
+      description: add KEYCLOAK_LAGOON_UI_OIDC_CLIENT_SECRET variable to keycloak and ui deployment

@@ -52,6 +52,11 @@ spec:
           {{- else }}
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
           {{- end }}
+        - name: KEYCLOAK_LAGOON_UI_OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_LAGOON_UI_OIDC_CLIENT_SECRET
         - name: WEBHOOK_URL
           {{- if .Values.lagoonWebhookURL }}
           value: {{ .Values.lagoonWebhookURL | quote }}
