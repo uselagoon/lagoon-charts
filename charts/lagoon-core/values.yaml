@@ -45,6 +45,7 @@
 # keycloakAdminPassword:
 # keycloakAPIClientSecret:
 # keycloakAuthServerClientSecret:
+# keycloakLagoonUIOIDCClientSecret:
 # keycloakDBPassword:
 # keycloakLagoonAdminPassword:
 # logsDBAdminPassword:
