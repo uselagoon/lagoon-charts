@@ -299,7 +299,9 @@ insightsRemote:
 # nats subchart is configured for use by lagoon-remote
 nats:
   enabled: false
-  # name override provides compatiblity for upgrading nats chart v0.x to v1.x
+  # nameOverride provides compatibility for upgrading nats chart versions.
+  # modifying or setting this in local values.yaml will completely recreate
+  # all the nats resources.
   nameOverride: nats1
   tlsCA:
     enabled: true
