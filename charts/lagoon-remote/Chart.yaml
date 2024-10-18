@@ -31,7 +31,7 @@ dependencies:
   repository: https://amazeeio.github.io/charts/
   condition: dbaas-operator.enabled
 - name: nats
-  version: ~1.0.0
+  version: ~1.2.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
 
@@ -41,4 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update NATS chart dependency to v1.0.x
+      description: update NATS chart dependency to v1.2.x
