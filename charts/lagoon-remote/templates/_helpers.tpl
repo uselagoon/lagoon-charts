@@ -193,6 +193,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
+Create a definition that matches the fully qualified app name for the nats
+subchart.
+*/}}
+{{- define "lagoon-remote.nats.fullname" -}}
+{{- include "lagoon-remote.fullname" . }}-{{ .Values.nats.nameOverride | default "nats" }}
+{{- end }}
+
+
+
+{{/*
 Create the name of the service account to use for sshPortal.
 */}}
 {{- define "lagoon-remote.sshPortal.serviceAccountName" -}}
