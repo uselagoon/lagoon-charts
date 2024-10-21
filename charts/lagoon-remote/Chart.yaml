@@ -41,6 +41,11 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
+      description: update ssh-portal to v0.41.2
+      links:
+        - name: lagoon-ssh-portal releases
+          url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+    - kind: changed
       description: changed docker-host to statefulset from deployment
     - kind: changed
       description: update NATS chart dependency to v1.2.x
