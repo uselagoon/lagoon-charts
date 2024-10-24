@@ -31,7 +31,7 @@ appVersion: v2.21.0
 
 dependencies:
 - name: nats
-  version: ~0.19.0
+  version: ~1.2.0
   repository: https://nats-io.github.io/k8s/helm/charts/
   condition: nats.enabled
 
@@ -45,3 +45,5 @@ annotations:
       links:
         - name: lagoon-ssh-portal releases
           url: https://github.com/uselagoon/lagoon-ssh-portal/releases
+    - kind: changed
+      description: update NATS chart dependency to v1.2.x
