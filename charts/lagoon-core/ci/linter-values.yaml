@@ -267,9 +267,10 @@ workflows:
 # enable nats cluster (and optionally natsbox debugger)
 nats:
   enabled: true
-  cluster:
-    name: lagoon-core-ci-example
-  # natsbox:
+  config:
+    cluster:
+      name: lagoon-core-ci-example
+  # natsBox:
   #   enabled: true
   #   # additional labels are required due to the network policy
   #   additionalLabels:
@@ -297,7 +298,7 @@ natsConfig:
         iYmI+nuDxvSE7s/u5hhmh+wCIQDXoxiQvQuokI06j6W1K5UgR6h9dUoKeTFQIqXp
         uKPLhg==
         -----END CERTIFICATE-----
-      server.crt: |
+      tls.crt: |
         -----BEGIN CERTIFICATE-----
         MIICGDCCAb6gAwIBAgIUJC6a9n2zJYl7nOZ2AutYhyjVmQswCgYIKoZIzj0EAwIw
         HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yNDA0MTUwNDA4MDBa
@@ -312,7 +313,7 @@ natsConfig:
         CaKsntUSiMDTZSYvEtLb+ZxOn71RnDYP4JUCIG6TZVFfMiYPZ0gGLMRMf666E3bB
         0U5vgRqQhghJPbpM
         -----END CERTIFICATE-----
-      server.key: |
+      tls.key: |
         -----BEGIN EC PRIVATE KEY-----
         MHcCAQEEIBqSIJXbR9H4WChftIW2QwJmGD+5QjlfwBCkspRBcsSHoAoGCCqGSM49
         AwEHoUQDQgAENf2wtlM9sSu330UXgZTkAOZBRkH2V6YZG7rB/7pTtO0yKQmIfr+l

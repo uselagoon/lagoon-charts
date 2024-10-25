@@ -13,3 +13,32 @@ spec:
       name: docker-daemon
   selector:
     {{- include "lagoon-docker-host.dockerHost.selectorLabels" . | nindent 4 }}
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 14400 # 4 hours
+{{- $name := include "lagoon-docker-host.dockerHost.fullname" . -}}
+{{- $labels := include "lagoon-docker-host.dockerHost.labels" .  -}}
+{{- $stype := .Values.service.type -}}
+{{- $sport := .Values.service.port -}}
+{{- $replicaCount := .Values.replicaCount | int -}}
+{{- range $index0 := until $replicaCount -}}
+{{- $index1 := $index0 | add1 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-host-{{ $index0 }}
+  labels:
+{{ $labels | indent 4 }}
+spec:
+  type: {{ $stype }}
+  ports:
+    - port: {{ $sport }}
+      targetPort: docker-daemon
+      protocol: TCP
+      name: docker-daemon
+  sessionAffinity: ClientIP
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ $name }}-{{ $index0 }}
+{{- end }}
