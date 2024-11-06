@@ -4,6 +4,56 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update controller to v0.20.1
+        - kind: added
+          description: add new lagoonbuild and lagoontask v1beta2 crd versions
+        - kind: changed
+          description: deprecate lagoonbuild and lagoontask v1beta1 crd versions
+      artifacthub.io/crds: |
+        - kind: LagoonBuild
+          version: v1beta2
+          name: lagoonbuild
+          displayName: LagoonBuild
+          description: This is the CRD used for managing LagoonBuilds
+        - kind: LagoonTask
+          version: v1beta2
+          name: lagoontask
+          displayName: LagoonTask
+          description: This is the CRD used for managing LagoonTasks
+        - kind: LagoonBuild
+          version: v1beta1
+          name: lagoonbuild
+          displayName: LagoonBuild
+          description: Deprecated: Use the newer v1beta2 resource
+        - kind: LagoonTask
+          version: v1beta1
+          name: lagoontask
+          displayName: LagoonTask
+          description: Deprecated: Use the newer v1beta2 resource
+    apiVersion: v2
+    appVersion: v0.20.1
+    created: "2024-11-06T03:57:37.320717385Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: 7fb523c78765ecf65f8fee82453ecbacc1cf4c79c0f6c371e353e305afcb0af3
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.30.0/lagoon-build-deploy-0.30.0.tgz
+    version: 0.30.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update values for local development
         - kind: changed
           description: bump minimum Kubernetes version to 1.25
@@ -14301,4 +14351,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2024-09-17T04:12:45.444141127Z"
+generated: "2024-11-06T03:57:37.321694586Z"
