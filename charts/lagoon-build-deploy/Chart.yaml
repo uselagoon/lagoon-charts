@@ -16,12 +16,14 @@ kubeVersion: ">= 1.25.0-0"
 
 type: application
 
-version: 0.30.0
+version: 0.30.1
 
 appVersion: v0.20.1
 
 annotations:
   artifacthub.io/changes: |
+    - kind: changed
+      description: republish with updated artifacthub crds
     - kind: changed
       description: update controller to v0.20.1
     - kind: added
@@ -43,9 +45,9 @@ annotations:
       version: v1beta1
       name: lagoonbuild
       displayName: LagoonBuild
-      description: Deprecated: Use the newer v1beta2 resource
+      description: Deprecated - Use the newer v1beta2 resource
     - kind: LagoonTask
       version: v1beta1
       name: lagoontask
       displayName: LagoonTask
-      description: Deprecated: Use the newer v1beta2 resource
+      description: Deprecated - Use the newer v1beta2 resource
