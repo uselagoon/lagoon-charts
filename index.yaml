@@ -76,12 +76,12 @@ entries:
           version: v1beta1
           name: lagoonbuild
           displayName: LagoonBuild
-          description: Deprecated: Use the newer v1beta2 resource
+          description: Deprecated - Use the newer v1beta2 resource
         - kind: LagoonTask
           version: v1beta1
           name: lagoontask
           displayName: LagoonTask
-          description: Deprecated: Use the newer v1beta2 resource
+          description: Deprecated - Use the newer v1beta2 resource
     apiVersion: v2
     appVersion: v0.20.1
     created: "2024-11-06T03:57:37.320717385Z"
