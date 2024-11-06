@@ -165,8 +165,8 @@ jobs:
       if: failure()
       run: |
         kubectl get pods -A --selector=app.kubernetes.io/name=lagoon-test
-        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/name=lagoon-test
-        kubectl logs --namespace=lagoon --prefix --timestamps --tail=-1 --all-containers --selector=app.kubernetes.io/name=lagoon-test
+        kubectl describe pods --namespace=lagoon-core --selector=app.kubernetes.io/name=lagoon-test
+        kubectl logs --namespace=lagoon-core --prefix --timestamps --tail=-1 --all-containers --selector=app.kubernetes.io/name=lagoon-test
 
     - name: Inspect lagoon-remote and lagoon-build-deploy pods
       if: failure()
@@ -179,8 +179,8 @@ jobs:
       if: failure()
       run: |
         kubectl get pods -A --selector=app.kubernetes.io/instance=lagoon-core
-        kubectl describe pods --namespace=lagoon --selector=app.kubernetes.io/instance=lagoon-core
-        kubectl logs --namespace=lagoon --prefix --timestamps --tail=-1  --all-containers --selector=app.kubernetes.io/instance=lagoon-core
+        kubectl describe pods --namespace=lagoon-core --selector=app.kubernetes.io/instance=lagoon-core
+        kubectl logs --namespace=lagoon-core --prefix --timestamps --tail=-1  --all-containers --selector=app.kubernetes.io/instance=lagoon-core
 
     - name: Inspect any remaining CI namespaces
       if: failure()

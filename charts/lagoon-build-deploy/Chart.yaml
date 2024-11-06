@@ -16,15 +16,36 @@ kubeVersion: ">= 1.25.0-0"
 
 type: application
 
-version: 0.29.0
+version: 0.30.0
 
-appVersion: v0.15.7
+appVersion: v0.20.1
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update values for local development
+      description: update controller to v0.20.1
+    - kind: added
+      description: add new lagoonbuild and lagoontask v1beta2 crd versions
     - kind: changed
-      description: bump minimum Kubernetes version to 1.25
-    - kind: changed
-      description: bump remote-controller to v0.15.7
+      description: deprecate lagoonbuild and lagoontask v1beta1 crd versions
+  artifacthub.io/crds: |
+    - kind: LagoonBuild
+      version: v1beta2
+      name: lagoonbuild
+      displayName: LagoonBuild
+      description: This is the CRD used for managing LagoonBuilds
+    - kind: LagoonTask
+      version: v1beta2
+      name: lagoontask
+      displayName: LagoonTask
+      description: This is the CRD used for managing LagoonTasks
+    - kind: LagoonBuild
+      version: v1beta1
+      name: lagoonbuild
+      displayName: LagoonBuild
+      description: Deprecated: Use the newer v1beta2 resource
+    - kind: LagoonTask
+      version: v1beta1
+      name: lagoontask
+      displayName: LagoonTask
+      description: Deprecated: Use the newer v1beta2 resource
