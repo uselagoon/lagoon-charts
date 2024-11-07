@@ -46,7 +46,7 @@ annotations:
         - name: lagoon-ssh-portal releases
           url: https://github.com/uselagoon/lagoon-ssh-portal/releases
     - kind: changed
-      description: update lagoon-build-deploy chart dependency to 0.30.0
+      description: update lagoon-build-deploy chart dependency to 0.30.2
     - kind: changed
       description: changed docker-host to statefulset from deployment
     - kind: changed
