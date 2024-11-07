@@ -23,12 +23,12 @@ version: 0.85.0
 
 # AppVersion is set here the same as the logging-operator chart version to
 # autopopulate the post-install CRD message.
-appVersion: 4.9.1
+appVersion: 4.10.0
 
 dependencies:
 - name: logging-operator
   repository: oci://ghcr.io/kube-logging/helm-charts
-  version: 4.9.1
+  version: 4.10.0
   condition: logging-operator.enabled
 
 # This section is used to collect a changelog for artifacthub.io
@@ -39,3 +39,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update uselagoon/logs-dispatcher from v3.7.0 to v3.8.0
+    - kind: changed
+      description: update logging-operator from 4.9.1 to 4.10.0

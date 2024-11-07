@@ -1,6 +1,6 @@
 dependencies:
 - name: logging-operator
   repository: oci://ghcr.io/kube-logging/helm-charts
-  version: 4.9.1
-digest: sha256:26b05aafbf9e1d92adfd10664ac225d8f07adc00e497369d563c4b12d445c108
-generated: "2024-09-02T11:31:43.731650736+10:00"
+  version: 4.10.0
+digest: sha256:dc96194b2cf7dfced2baae103138c3fa7ca2307db8e09f537813b428b5852542
+generated: "2024-11-08T08:30:35.651405515+11:00"
