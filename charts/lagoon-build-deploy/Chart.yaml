@@ -16,20 +16,14 @@ kubeVersion: ">= 1.25.0-0"
 
 type: application
 
-version: 0.30.1
+version: 0.30.2
 
-appVersion: v0.20.1
+appVersion: v0.20.2
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: republish with updated artifacthub crds
-    - kind: changed
-      description: update controller to v0.20.1
-    - kind: added
-      description: add new lagoonbuild and lagoontask v1beta2 crd versions
-    - kind: changed
-      description: deprecate lagoonbuild and lagoontask v1beta1 crd versions
+      description: update controller to v0.20.2
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
