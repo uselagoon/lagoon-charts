@@ -48,7 +48,6 @@ spec:
             - name: BUILD_SCANNER_IMAGE
               value: "{{ coalesce .Values.insightsRemote.buildScannerImage "docker.io/uselagoon/insights-scanner:latest" }}"
             {{- end }}
-            
             - name: RABBITMQ_ADDRESS
               value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
             - name: RABBITMQ_PASSWORD
