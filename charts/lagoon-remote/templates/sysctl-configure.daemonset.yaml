@@ -1,0 +1,53 @@
+{{- if .Values.sysctlConfigure.enabled -}}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "lagoon-remote.sysctlConfigure.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.sysctlConfigure.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-remote.sysctlConfigure.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      name: {{ include "lagoon-remote.sysctlConfigure.fullname" . }}
+      labels:
+        {{- include "lagoon-remote.sysctlConfigure.selectorLabels" . | nindent 8 }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: k8s.lagoon.sh/sysctl-configured
+                operator: DoesNotExist
+      serviceAccount: {{ include "lagoon-remote.sysctlConfigure.serviceAccountName" . }}
+      containers:
+      - name: sysctl
+        image: "{{ .Values.sysctlConfigure.image.repository }}:{{ .Values.sysctlConfigure.image.tag | default .Chart.AppVersion}}"
+        imagePullPolicy: {{ .Values.sysctlConfigure.image.pullPolicy }}
+        command:
+        env:
+        - name: THIS_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        command:
+        - sh
+        - -c
+        - |
+          set -xe
+          {{- $index := 0 }}
+          {{- range $sys, $value := .Values.sysctlConfigure.sysctl }}
+          CURRENT{{ $index }}=$(sysctl -n {{ $sys }})
+          if [ "{{ $value }}" -gt "$CURRENT{{ $index }}" ]; then
+            sysctl -w {{ $sys }}={{ $value }}
+          fi
+          {{- $index = add $index 1 }}
+          {{- end }}
+          kubectl label node "$THIS_NODE_NAME" k8s.lagoon.sh/sysctl-configured=$(date +%s)
+        securityContext:
+          runAsUser: 0
+          privileged: true
+{{- end }}
