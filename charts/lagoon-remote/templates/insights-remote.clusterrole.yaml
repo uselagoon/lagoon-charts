@@ -6,27 +6,64 @@ metadata:
   labels:
     {{- include "lagoon-remote.insightsRemote.labels" . | nindent 4 }}
 rules:
-  - verbs:
-      - '*'
-    apiGroups:
-      - ''
-    resources:
-      - configmaps
-      - secrets
-      - pods
-      - deployments
-  - verbs:
-      - '*'
-    apiGroups:
-      - 'apps'
-    resources:
-      - deployments
-  - verbs:
-      - get
-      - watch
-      - list
-    apiGroups:
-      - ''
-    resources:
-      - namespaces
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
   {{- end }}
