@@ -13,6 +13,14 @@ rules:
     resources:
       - configmaps
       - secrets
+      - pods
+      - deployments
+  - verbs:
+      - '*'
+    apiGroups:
+      - 'apps'
+    resources:
+      - deployments
   - verbs:
       - get
       - watch
