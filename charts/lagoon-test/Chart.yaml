@@ -30,4 +30,3 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update lagoon AppVersion to v2.22.0
-      
