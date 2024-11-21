@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "lagoon-remote.dockerHost.fullname" . }}
   namespace: {{ .Release.Namespace | quote }}
@@ -7,11 +7,10 @@ metadata:
     {{- include "lagoon-remote.dockerHost.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.dockerHost.replicaCount }}
+  serviceName: docker-host
   selector:
     matchLabels:
       {{- include "lagoon-remote.dockerHost.selectorLabels" . | nindent 6 }}
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -91,14 +90,6 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/docker
           name: docker-lib
-      volumes:
-      - name: docker-lib
-      {{- if .Values.dockerHost.storage.create }}
-        persistentVolumeClaim:
-          claimName: {{ include "lagoon-remote.dockerHost.fullname" . }}
-      {{- else }}
-        emptyDir: {}
-      {{- end -}}
       {{- with .Values.dockerHost.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -111,3 +102,15 @@ spec:
       tolerations:
         {{- toYaml . | nindent 6 }}
     {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: docker-lib
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.dockerHost.storage.size | quote }}
+      {{- with .Values.dockerHost.storage.className }}
+      storageClassName: {{ . | quote }}
+      {{- end }}

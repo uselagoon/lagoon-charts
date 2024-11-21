@@ -219,6 +219,8 @@ install-minio: install-ingress
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets='lagoon-files\,restores' \
+		--set ingress.enabled=true \
+		--set ingress.hostname=minio.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--version=13.6.2 \
 		minio \
 		bitnami/minio
@@ -255,11 +257,13 @@ install-lagoon-core: install-minio
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
 		--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications \
-		--set logs2notifications.email.disabled=true \
-		--set logs2notifications.microsoftteams.disabled=true \
-		--set logs2notifications.rocketchat.disabled=true \
-		--set logs2notifications.slack.disabled=true \
-		--set logs2notifications.webhooks.disabled=true \
+		--set logs2notifications.additionalEnvs.EMAIL_HOST="mailpit-smtp.mailpit.svc" \
+		--set logs2notifications.additionalEnvs.EMAIL_PORT="25" \
+		--set logs2notifications.logs2email.disabled=false \
+		--set logs2notifications.logs2microsoftteams.disabled=true \
+		--set logs2notifications.logs2rocketchat.disabled=true \
+		--set logs2notifications.logs2slack.disabled=true \
+		--set logs2notifications.logs2webhooks.disabled=true \
 		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
 		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
 		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
