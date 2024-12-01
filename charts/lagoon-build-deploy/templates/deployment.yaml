@@ -25,21 +25,6 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-      - name: kube-rbac-proxy
-        securityContext:
-          {{- toYaml .Values.kubeRBACProxy.securityContext | nindent 10 }}
-        image: "{{ .Values.kubeRBACProxy.image.repository }}:{{ .Values.kubeRBACProxy.image.tag }}"
-        imagePullPolicy: {{ .Values.kubeRBACProxy.image.pullPolicy }}
-        args:
-        - "--secure-listen-address=0.0.0.0:8443"
-        - "--upstream=http://127.0.0.1:8080/"
-        - "--logtostderr=true"
-        - "--v=10"
-        ports:
-        - containerPort: 8443
-          name: https
-        resources:
-          {{- toYaml .Values.kubeRBACProxy.resources | nindent 10 }}
       - name: manager
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
@@ -48,11 +33,11 @@ spec:
         command:
         - /manager
         ports:
-        - containerPort: 9912
-          name: metrics
+        - containerPort: 8443
+          name: https
         args:
-        - "--metrics-addr=127.0.0.1:8080"
-        - "--enable-leader-election=true"
+        - "--metrics-bind-address=:8443"
+        - "--leader-elect=true"
         {{- if .Values.harbor.enabled }}
         - "--enable-harbor=true"
         - "--harbor-password={{ .Values.harbor.adminPassword }}"
