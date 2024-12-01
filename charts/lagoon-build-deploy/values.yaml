@@ -168,7 +168,7 @@ image:
   repository: uselagoon/remote-controller
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: pr-272
 
 imagePullSecrets: []
 
@@ -196,14 +196,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-# this is a sidecar in the same pod as the lagoonBuildDeploy container
-kubeRBACProxy:
-  image:
-    repository: gcr.io/kubebuilder/kube-rbac-proxy
-    pullPolicy: IfNotPresent
-    tag: v0.4.1
-
-  securityContext: {}
-
-  resources: {}
