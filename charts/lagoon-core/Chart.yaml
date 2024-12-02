@@ -41,16 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon AppVersion to v2.22.0
-      links:
-        - name: lagoon releases
-          url: https://github.com/uselagoon/lagoon/releases/tag/v2.22.0
-    - kind: changed
-      description: update ssh-portal-api and ssh-token to v0.41.3
-      links:
-        - name: lagoon-ssh-portal releases
-          url: https://github.com/uselagoon/lagoon-ssh-portal/releases
-    - kind: changed
-      description: update NATS chart dependency to v1.2.x
-    - kind: changed
-      description: add KEYCLOAK_LAGOON_UI_OIDC_CLIENT_SECRET variable to keycloak and ui deployment
+      description: add KEYCLOAK_ADMIN_API_CLIENT_SECRET variable to keycloak and api deployment
