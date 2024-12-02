@@ -58,6 +58,11 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_ADMIN_API_CLIENT_SECRET
         - name: KEYCLOAK_FRONTEND_URL
           {{- if .Values.keycloakFrontEndURL }}
           value: {{ .Values.keycloakFrontEndURL }}/auth
@@ -155,6 +160,11 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_ADMIN_API_CLIENT_SECRET
         - name: KEYCLOAK_FRONTEND_URL
           {{- if .Values.keycloakFrontEndURL }}
           value: {{ .Values.keycloakFrontEndURL }}/auth
