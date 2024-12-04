@@ -8,7 +8,7 @@ metadata:
 spec:
   endpoints:
     - interval: {{ .Values.metrics.interval }}
-      port: metrics
+      port: https
   namespaceSelector:
     matchNames:
       - lagoon

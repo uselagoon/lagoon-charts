@@ -13,18 +13,3 @@ spec:
     name: https
   selector:
     {{- include "lagoon-build-deploy.selectorLabels" . | nindent 4 }}
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: {{ include "lagoon-build-deploy.fullname" . }}-metrics
-  labels:
-    {{- include "lagoon-build-deploy.labels" . | nindent 4 }}
-spec:
-  ports:
-  - name: metrics
-    protocol: TCP
-    port: 9912
-    targetPort: metrics
-  selector:
-    {{- include "lagoon-build-deploy.selectorLabels" . | nindent 4 }}
