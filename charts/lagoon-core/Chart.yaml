@@ -41,6 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: use correct secret checksum references for services
-    - kind: changed
-      description: update lagoon appVersion to 2.29.2
+      description: update lagoon backup schedule to support changing to k8up.io
