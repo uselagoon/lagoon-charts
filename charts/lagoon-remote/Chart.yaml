@@ -41,4 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon-build-deploy chart dependency to 0.30.3
+      description: update dbaas-operator chart dependency to 0.3.1
