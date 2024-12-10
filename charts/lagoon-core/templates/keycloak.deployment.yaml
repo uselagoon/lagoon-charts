@@ -53,10 +53,12 @@ spec:
         - name: KEYCLOAK_ADMIN_EMAIL
           value: {{ . | quote }}
         {{- end }}
+        - name: DB_VENDOR
+          value: {{ .Values.keycloakDB.vendor }}
         - name: LAGOON_DB_HOST
           value: {{ include "lagoon-core.apiDB.fullname" . }}
         - name: LAGOON_DB_VENDOR
-          value: mariadb
+          value: {{ .Values.apiDB.vendor }}
         - name: LAGOON_DB_USER
           value: api
         - name: LAGOON_DB_DATABASE

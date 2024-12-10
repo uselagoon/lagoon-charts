@@ -46,6 +46,7 @@ OPENSEARCH_INTEGRATION_ENABLED = false
 CLEAR_API_DATA = false
 DOCKER_NETWORK = kind
 LAGOON_SSH_PORTAL_LOADBALANCER =
+CORE_DATABASE_VENDOR = mariadb
 
 TIMEOUT = 30m
 HELM = helm
@@ -247,6 +248,7 @@ install-lagoon-core: install-minio
 		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler  \
 		--set api.image.repository=$(IMAGE_REGISTRY)/api \
 		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
+		--set apiDB.vendor=$(CORE_DATABASE_VENDOR) \
 		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
 		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
 		--set autoIdler.enabled=false \
@@ -256,6 +258,7 @@ install-lagoon-core: install-minio
 		--set insightsHandler.enabled=false \
 		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
 		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
+		--set keycloakDB.vendor=$(CORE_DATABASE_VENDOR) \
 		--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications \
 		--set logs2notifications.additionalEnvs.EMAIL_HOST="mailpit-smtp.mailpit.svc" \
 		--set logs2notifications.additionalEnvs.EMAIL_PORT="25" \
