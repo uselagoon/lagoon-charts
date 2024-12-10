@@ -149,6 +149,7 @@ api:
     # targetMemoryUtilizationPercentage: 80
 
 apiDB:
+  vendor: mariadb
   image:
     repository: uselagoon/api-db
     pullPolicy: Always
@@ -186,7 +187,7 @@ apiDB:
       command:
       - test
       - -f
-      - /tmp/mariadb-init-complete
+      - /tmp/startup-init-complete
 
   livenessProbe:
     exec:
@@ -291,6 +292,7 @@ keycloak:
     #      - chart-example.local
 
 keycloakDB:
+  vendor: mariadb
   replicaCount: 1
   image:
     repository: uselagoon/keycloak-db

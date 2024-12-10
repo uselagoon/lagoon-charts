@@ -34,7 +34,7 @@ spec:
         image: "{{ .Values.apiDB.image.repository }}:{{ coalesce .Values.apiDB.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.apiDB.image.pullPolicy }}
         env:
-        - name: MARIADB_PASSWORD
+        - name: API_DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
