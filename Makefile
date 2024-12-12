@@ -23,8 +23,8 @@ OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY =
 # If set, sets the lagoon-build-deploy chart .Value.rootless=true.
 BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS =
 # Control the feature flags on the lagoon-build-deploy chart. Valid values: `enabled` or `disabled`.
-LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD =
-LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY =
+LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD = enabled
+LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY = enabled
 LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO = enabled
 # Set to `true` to use the Calico CNI plugin instead of the default kindnet. This
 # is useful for testing network policies.
@@ -69,6 +69,14 @@ INSTALL_MAILPIT = false
 INSTALL_MARIADB_PROVIDER = true
 INSTALL_POSTGRES_PROVIDER = true
 INSTALL_MONGODB_PROVIDER = true
+
+# install k8up v1 (backup.appuio.ch/v1alpah1) and v2 (k8up.io/v1)
+# specifify which version the remote controller should start with
+# currently lagoon supports both versions, but may one day only support k8up v2
+# this can be used to verify upgrades
+# by default this will not be install in charts testing, but uselagoon/lagoon can consume it for local development
+INSTALL_K8UP = false
+BUILD_DEPLOY_CONTROLLER_K8UP_VERSION = v2
 
 TIMEOUT = 30m
 HELM = helm
@@ -249,7 +257,6 @@ install-mongodb:
 		mongodb \
 		bitnami/mongodb
 
-
 .PHONY: install-minio
 install-minio: install-ingress
 	$(HELM) upgrade \
@@ -262,9 +269,55 @@ install-minio: install-ingress
 		--set defaultBuckets='lagoon-files\,restores' \
 		--set ingress.enabled=true \
 		--set ingress.hostname=minio.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set apiIngress.enabled=true \
+		--set apiIngress.hostname=minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--version=13.6.2 \
 		minio \
 		bitnami/minio
+
+.PHONY: install-k8upv1
+install-k8upv1:
+	$(KUBECTL) create -f https://github.com/vshn/k8up/releases/download/v1.2.0/k8up-crd.yaml || \
+		$(KUBECTL) replace -f https://github.com/vshn/k8up/releases/download/v1.2.0/k8up-crd.yaml
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace k8upv1 \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set k8up.envVars[0].name=BACKUP_GLOBALS3ENDPOINT,k8up.envVars[0].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[1].name=BACKUP_GLOBALRESTORES3ENDPOINT,k8up.envVars[1].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[2].name=BACKUP_GLOBALSTATSURL,k8up.envVars[2].value=http://lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[3].name=BACKUP_GLOBALACCESSKEYID,k8up.envVars[3].value=lagoonFilesAccessKey \
+		--set k8up.envVars[4].name=BACKUP_GLOBALSECRETACCESSKEY,k8up.envVars[4].value=lagoonFilesSecretKey \
+		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
+		--set k8up.envVars[6].name=BACKUP_GLOBALRESTORES3ACCESSKEYID,k8up.envVars[6].value=lagoonFilesAccessKey \
+		--set k8up.envVars[7].name=BACKUP_GLOBALRESTORES3SECRETACCESSKEY,k8up.envVars[7].value=lagoonFilesSecretKey \
+		--version=1.1.0 \
+		k8upv1 \
+		appuio/k8up
+
+.PHONY: install-k8upv2
+install-k8upv2:
+	$(KUBECTL) create -f https://github.com/k8up-io/k8up/releases/download/k8up-4.8.2/k8up-crd.yaml || \
+		$(KUBECTL) replace -f https://github.com/k8up-io/k8up/releases/download/k8up-4.8.2/k8up-crd.yaml
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace k8upv2 \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set k8up.envVars[0].name=BACKUP_GLOBALS3ENDPOINT,k8up.envVars[0].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[1].name=BACKUP_GLOBALRESTORES3ENDPOINT,k8up.envVars[1].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[2].name=BACKUP_GLOBALSTATSURL,k8up.envVars[2].value=http://lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[3].name=BACKUP_GLOBALACCESSKEYID,k8up.envVars[3].value=lagoonFilesAccessKey \
+		--set k8up.envVars[4].name=BACKUP_GLOBALSECRETACCESSKEY,k8up.envVars[4].value=lagoonFilesSecretKey \
+		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
+		--set k8up.envVars[6].name=BACKUP_GLOBALRESTORES3ACCESSKEYID,k8up.envVars[6].value=lagoonFilesAccessKey \
+		--set k8up.envVars[7].name=BACKUP_GLOBALRESTORES3SECRETACCESSKEY,k8up.envVars[7].value=lagoonFilesSecretKey \
+		--version=4.8.2 \
+		k8upv2 \
+		k8up/k8up
 
 
 .PHONY: install-lagoon-dependencies
@@ -283,6 +336,10 @@ install-lagoon-dependencies: install-postgresql
 endif
 ifeq ($(INSTALL_MONGODB_PROVIDER),true)
 install-lagoon-dependencies: install-mongodb
+endif
+# install k8up versions for backup upgrade path verifications if requested
+ifeq ($(INSTALL_K8UP),true)
+install-lagoon-dependencies: install-k8upv1 install-k8upv2
 endif
 
 # this installs lagoon-core, lagoon-remote, and lagoon-build-deploy, and if dependencies required will install them too
@@ -324,7 +381,10 @@ endif
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server') \
 		--set autoIdler.enabled=false \
-		--set backupHandler.enabled=false \
+		--set backupHandler.enabled=$(INSTALL_K8UP) \
+		--set backupHandler.ingress.enabled=true \
+		--set backupHandler.ingress.hosts[0].host="lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set backupHandler.ingress.hosts[0].paths[0]="/" \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set broker.image.repository=$(IMAGE_REGISTRY)/broker') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiSidecarHandler.image.repository=$(IMAGE_REGISTRY)/api-sidecar-handler') \
 		--set insightsHandler.enabled=false \
@@ -341,10 +401,12 @@ endif
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks') \
+		--set s3BAASAccessKeyID=lagoonFilesAccessKey \
+		--set s3BAASSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
 		--set s3FilesSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesBucket=lagoon-files \
-		--set s3FilesHost=http://minio.minio.svc:9000 \
+		--set s3FilesHost=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--set api.ingress.enabled=true \
 		--set api.ingress.hosts[0].host="lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set api.ingress.hosts[0].paths[0]="/" \
@@ -463,6 +525,11 @@ endif
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenHost=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenPort=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.spec.ports[0].port}')") \
 		--set "QoSMaxBuilds=5" \
+		$$([ $(BUILD_DEPLOY_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
+			echo "--set extraArgs={--skip-tls-verify=true,--lagoon-feature-flag-support-k8upv2}" || \
+			echo "--set extraArgs={--skip-tls-verify=true}") \
+		$$([ $(BUILD_DEPLOY_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
+			echo "--set extraEnvs[0].name=LAGOON_FEATURE_FLAG_DEFAULT_K8UP_V2,extraEnvs[0].value=enabled") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.enabled=true") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminPassword=Harbor12345") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminUser=admin") \
