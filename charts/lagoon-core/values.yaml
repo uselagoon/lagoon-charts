@@ -44,6 +44,7 @@
 # jwtSecret:
 # keycloakAdminPassword:
 # keycloakAPIClientSecret:
+# keycloakAdminAPIClientSecret:
 # keycloakAuthServerClientSecret:
 # keycloakLagoonUIOIDCClientSecret:
 # keycloakDBPassword:
