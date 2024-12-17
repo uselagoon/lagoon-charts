@@ -104,6 +104,18 @@ jobs:
       run: ct install --config ./default.ct.yaml  --helm-extra-args "--timeout 30m" --all
       if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') || contains(github.event.pull_request.labels.*.name, 'needs-testing') }}
 
+  linter-artifacthub:
+    runs-on: ubuntu-latest
+    container:
+      image: artifacthub/ah
+      options: --user root
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run ah lint
+        working-directory: ./charts/
+        run: ah lint
+
   artifacthub-changelog:
     runs-on: ubuntu-latest
     steps:

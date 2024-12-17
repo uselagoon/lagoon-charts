@@ -11,3 +11,4 @@ chart-repos:
 - kube-logging=https://kube-logging.github.io/helm-charts
 excluded-charts:
 - lagoon-test
+check-version-increment: false
