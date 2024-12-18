@@ -44,3 +44,5 @@ annotations:
       description: update dbaas-operator chart dependency to 0.3.1
     - kind: added
       description: daemonset to manage node sysctl changes
+    - kind: changed
+      description: update uselagoon/lagoon-ssh-portal/ssh-portal from v0.41.3 to v0.41.4
