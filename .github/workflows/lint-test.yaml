@@ -117,6 +117,7 @@ jobs:
         run: ah lint
 
   artifacthub-changelog:
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'automated-dependencies') }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
