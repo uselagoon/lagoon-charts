@@ -196,14 +196,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-# this is a sidecar in the same pod as the lagoonBuildDeploy container
-kubeRBACProxy:
-  image:
-    repository: gcr.io/kubebuilder/kube-rbac-proxy
-    pullPolicy: IfNotPresent
-    tag: v0.4.1
-
-  securityContext: {}
-
-  resources: {}
