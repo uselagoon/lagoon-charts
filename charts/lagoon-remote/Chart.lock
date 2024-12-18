@@ -1,12 +1,12 @@
 dependencies:
 - name: lagoon-build-deploy
   repository: https://uselagoon.github.io/lagoon-charts/
-  version: 0.30.3
+  version: 0.31.0
 - name: dbaas-operator
   repository: https://amazeeio.github.io/charts/
   version: 0.3.1
 - name: nats
   repository: https://nats-io.github.io/k8s/helm/charts/
-  version: 1.2.6
-digest: sha256:ab9e60f2db483076396e667ae914b934d435091a6798865d39f8abce93ba353e
-generated: "2024-12-10T09:55:32.7354587+11:00"
+  version: 1.2.8
+digest: sha256:9814199e2380bbb6f3bb972a0c961b6078a22a363b9ab2b72a1817358690497c
+generated: "2024-12-18T23:16:59.119513362Z"
