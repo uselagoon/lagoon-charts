@@ -42,6 +42,10 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update dbaas-operator chart dependency to 0.3.1
+    - kind: changed
+      description: update build-deploy chart dependency to 0.31.0
+    - kind: changed
+      description: update NATS chart dependency to 1.2.8
     - kind: added
       description: daemonset to manage node sysctl changes
     - kind: changed
