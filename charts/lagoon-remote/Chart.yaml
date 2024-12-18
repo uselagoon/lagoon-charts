@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update dbaas-operator chart dependency to 0.3.1
+    - kind: added
+      description: daemonset to manage node sysctl changes
