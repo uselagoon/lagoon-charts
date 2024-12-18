@@ -10,8 +10,9 @@ spec:
   type: {{ .Values.storageCalculator.metricsService.type }}
   ports:
   - port: {{ .Values.storageCalculator.metricsService.ports.metrics }}
-    targetPort: metrics
-    name: metrics
+    targetPort: https
+    protocol: TCP
+    name: https
   selector:
     {{- include "lagoon-remote.storageCalculator.selectorLabels" . | nindent 4 }}
 {{- end }}

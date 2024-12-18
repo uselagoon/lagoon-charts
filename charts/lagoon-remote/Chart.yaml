@@ -46,3 +46,5 @@ annotations:
       description: daemonset to manage node sysctl changes
     - kind: changed
       description: update uselagoon/lagoon-ssh-portal/ssh-portal from v0.41.3 to v0.41.4
+    - kind: changed
+      description: update storage-calculator to v0.7.0 and adjust metrics endpoint

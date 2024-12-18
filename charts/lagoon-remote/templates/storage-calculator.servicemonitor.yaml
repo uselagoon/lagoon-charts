@@ -7,7 +7,7 @@ metadata:
     {{- include "lagoon-remote.storageCalculator.labels" . | nindent 4 }}
 spec:
   endpoints:
-  - port: metrics
+  - port: https
   namespaceSelector:
     matchNames:
     - {{ .Release.Namespace }}
