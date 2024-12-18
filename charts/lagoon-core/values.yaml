@@ -1038,7 +1038,7 @@ sshToken:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-token
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.41.3"
+    tag: "v0.41.4"
 
   podAnnotations: {}
 
