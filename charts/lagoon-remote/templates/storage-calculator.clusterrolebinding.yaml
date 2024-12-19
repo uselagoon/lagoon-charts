@@ -1,14 +1,14 @@
 {{- if .Values.storageCalculator.enabled -}}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
-  name: {{ include "lagoon-remote.storageCalculator.fullname" . }}-leader-election
+  name: {{ include "lagoon-remote.storageCalculator.fullname" . }}
   labels:
     {{- include "lagoon-remote.storageCalculator.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: {{ include "lagoon-remote.storageCalculator.fullname" . }}-leader-election
+  kind: ClusterRole
+  name: {{ include "lagoon-remote.storageCalculator.fullname" . }}
 subjects:
 - kind: ServiceAccount
   name: {{ include "lagoon-remote.storageCalculator.serviceAccountName" . }}

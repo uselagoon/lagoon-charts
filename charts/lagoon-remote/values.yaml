@@ -126,7 +126,7 @@ sshPortal:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.41.3"
+    tag: "v0.41.4"
 
   service:
     type: LoadBalancer
@@ -439,7 +439,7 @@ storageCalculator:
   metricsService:
     type: ClusterIP
     ports:
-      metrics: 9912
+      metrics: 8443
 
   serviceMonitor:
     enabled: true
@@ -448,4 +448,26 @@ storageCalculator:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.6.0
+    tag: v0.7.0
+
+# sysctlConfigure is used  to configure sysctl options on nodes for use by elasticsearch/opensearch pods used in lagoon
+# https://github.com/uselagoon/lagoon/issues/2588
+# the elasticsearch/opensearch templates in the `build-deploy-tool` currently run a privileged init container
+# https://github.com/uselagoon/build-deploy-tool/blob/d2508efa74871cabe4c477e44bbe87e339d99f5d/internal/servicetypes/opensearch.go#L75-L96
+# which will be removed in a future release
+sysctlConfigure:
+  enabled: false
+  serviceAccount:
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name:
+
+  # this is only used for the max_map_count, but could support more
+  sysctl:
+    vm.max_map_count: 262144
+
+  image:
+    repository: alpine/k8s
+    pullPolicy: IfNotPresent
+    tag: 1.25.3
