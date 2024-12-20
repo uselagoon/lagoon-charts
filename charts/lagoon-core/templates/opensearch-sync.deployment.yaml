@@ -1,4 +1,8 @@
 {{- if .Values.opensearchSync.enabled -}}
+{{- $opensearchURL := coalesce .Values.opensearchURL .Values.elasticsearchURL }}
+{{- $dashboardsURL := coalesce .Values.dashboardsURL .Values.kibanaURL }}
+{{- $opensearchAdminPassword := coalesce .Values.opensearchAdminPassword .Values.logsDBAdminPassword }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -60,14 +64,11 @@ spec:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_LAGOON_OPENSEARCH_SYNC_CLIENT_SECRET
         - name: OPENSEARCH_BASE_URL
-          value: {{ required "A valid .Values.elasticsearchURL required!" .Values.elasticsearchURL | quote }}
+          value: {{ required "A valid .Values.opensearchURL or fallback .Values.elasticsearchURL required!" $opensearchURL | quote }}
         - name: OPENSEARCH_DASHBOARDS_BASE_URL
-          value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
+          value: {{ required "A valid .Values.dashboardsURL or fallback .Values.kibanaURL required!" $dashboardsURL | quote }}
         - name: OPENSEARCH_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.api.fullname" . }}
-              key: LOGSDB_ADMIN_PASSWORD
+          value: {{ required "A valid .Values.opensearchAdminPassword or fallback .Values.logsDBAdminPassword required!" $opensearchAdminPassword | quote }}
         - name: OPENSEARCH_CA_CERTIFICATE
           valueFrom:
             secretKeyRef:
