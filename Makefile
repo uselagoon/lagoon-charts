@@ -189,6 +189,8 @@ install-registry: install-ingress
 		--timeout $(TIMEOUT) \
 		--set ingress.enabled=true \
 		--set-string ingress.annotations.kubernetes\\.io/tls-acme=true \
+		--set ingress.tls[0].secretName=registry-docker-registry-tls \
+		--set ingress.tls[0].hosts[0]=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--set "ingress.hosts[0]=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set ingress.path="/" \
 		--set persistence.enabled=true \
