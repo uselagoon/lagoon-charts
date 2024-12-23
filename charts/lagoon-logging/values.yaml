@@ -81,7 +81,7 @@ openshiftHaproxyLogsCollector:
     repository: fluent/fluent-bit
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart version.
-    tag: "1.6-debug"
+    tag: "3.2-debug"
 
   podAnnotations: {}
 
