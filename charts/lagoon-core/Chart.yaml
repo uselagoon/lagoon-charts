@@ -46,3 +46,5 @@ annotations:
       description: update ssh-portal-api & ssh-token image to v0.42.0
     - kind: changed
       description: update lagoon-opensearch-sync image to v0.8.3
+    - kind: changed
+      description: update ssh-portal-api and ssh-token options
