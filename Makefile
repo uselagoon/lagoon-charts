@@ -3,6 +3,9 @@ TESTS = [api]
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
 IMAGE_TAG =
+# UI_IMAGE_TAG controls the tag used for the ui image in lagoon-core
+UI_IMAGE_TAG =
+UI_IMAGE_REPO =
 # IMAGE_REGISTRY controls the registry used for container images in the
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
@@ -415,6 +418,8 @@ endif
 		--set ui.ingress.enabled=true \
 		--set ui.ingress.hosts[0].host="lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set ui.ingress.hosts[0].paths[0]="/" \
+		$$([ $(UI_IMAGE_REPO) ] && echo '--set ui.image.repository=$(UI_IMAGE_REPO)') \
+		$$([ $(UI_IMAGE_TAG) ] && echo '--set ui.image.tag=$(UI_IMAGE_TAG)') \
 		--set keycloak.ingress.enabled=true \
 		--set keycloak.ingress.hosts[0].host="lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set keycloak.ingress.hosts[0].paths[0]="/" \
