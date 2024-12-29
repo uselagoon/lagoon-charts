@@ -969,6 +969,9 @@ sshPortalAPI:
     # Overrides the image tag whose default is the chart appVersion.
     tag: "v0.42.0"
 
+  command:
+    - /ssh-portal-api
+
   podAnnotations: {}
 
   securityContext: {}
@@ -1041,6 +1044,9 @@ sshToken:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: "v0.42.0"
+
+  command:
+    - /ssh-token
 
   podAnnotations: {}
 
