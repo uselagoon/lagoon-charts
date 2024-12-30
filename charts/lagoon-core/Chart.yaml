@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.49.0
+version: 1.50.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.22.0
+appVersion: v2.23.0
 
 dependencies:
 - name: nats
@@ -40,6 +40,8 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
+    - kind: changed
+      description: update lagoon-core appVersion to v2.23.0
     - kind: changed
       description: add KEYCLOAK_ADMIN_API_CLIENT_SECRET variable to keycloak and api deployment
     - kind: changed
