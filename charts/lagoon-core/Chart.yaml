@@ -48,3 +48,5 @@ annotations:
       description: update uselagoon/lagoon-ssh-portal/ssh-token from v0.41.3 to v0.41.4
     - kind: changed
       description: update uselagoon/lagoon-opensearch-sync from v0.8.0 to v0.8.1
+    - kind: changed
+      description: update ssh-portal-api and ssh-token options
