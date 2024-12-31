@@ -8,6 +8,7 @@
    ],
    "dependencyDashboard":true,
    "platformCommit":"disabled",
+   "rebaseWhen":"conflicted",
    "prHourlyLimit":0,
    "labels":[
       "automated-dependencies"
