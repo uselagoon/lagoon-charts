@@ -11,12 +11,6 @@ localGit:
   image:
     repository: ${imageRegistry}/local-git
 
-localAPIDataWatcherPusher:
-  image:
-    repository: ${imageRegistry}/local-api-data-watcher-pusher
-  additonalEnvs:
-    CLEAR_API_DATA: ${clearApiData}
-
 tests:
   image:
     repository: ${imageRegistry}/tests
