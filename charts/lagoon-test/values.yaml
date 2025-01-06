@@ -111,23 +111,6 @@ localGit:
 
   affinity: {}
 
-localAPIDataWatcherPusher:
-
-  image:
-    repository: uselagoon/local-api-data-watcher-pusher
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  additionalEnvs:
-  #   CLEAR_API_DATA: true
-
-  podSecurityContext: {}
-
-  securityContext: {}
-
-  resources: {}
-
 tests:
 
   image:

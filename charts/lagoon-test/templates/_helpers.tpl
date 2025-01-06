@@ -88,33 +88,3 @@ app.kubernetes.io/name: {{ include "lagoon-test.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-test.localGit.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-
-
-{{/*
-Create a default fully qualified app name for local-api-data-watcher-pusher.
-*/}}
-{{- define "lagoon-test.localAPIDataWatcherPusher.fullname" -}}
-{{- include "lagoon-test.fullname" . }}-local-api-data-watcher-pusher
-{{- end }}
-
-{{/*
-Common labels local-api-data-watcher-pusher.
-*/}}
-{{- define "lagoon-test.localAPIDataWatcherPusher.labels" -}}
-helm.sh/chart: {{ include "lagoon-test.chart" . }}
-{{ include "lagoon-test.localAPIDataWatcherPusher.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels local-api-data-watcher-pusher.
-*/}}
-{{- define "lagoon-test.localAPIDataWatcherPusher.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-test.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-test.localAPIDataWatcherPusher.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
