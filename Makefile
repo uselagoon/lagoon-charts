@@ -322,6 +322,99 @@ install-k8upv2:
 		k8up/k8up
 
 
+# helm repo add legacy-dbaas-operator https://raw.githubusercontent.com/amazeeio/dbaas-operator/main/charts
+.PHONY: install-legacy-dbaas
+install-legacy-dbaas:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace dbaas-operator \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set enableMariaDBProviders=true \
+		--set enableMongoDBProviders=true \
+		--set enablePostreSQLProviders=true \
+		--version=0.3.1 \
+		dbaas-operator \
+		legacy-dbaas-operator/dbaas-operator
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace dbaas-operator \
+		--wait \
+		--timeout $(TIMEOUT) \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.development.environment=development') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.development.hostname=mariadb.mariadb.svc.cluster.local') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.development.readReplicaHostnames[0]=mariadb.mariadb.svc.cluster.local') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.development.password='$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.development.port=3306') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.development.user=root') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.production.environment=production') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.production.hostname=mariadb.mariadb.svc.cluster.local') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.production.readReplicaHostnames[0]=mariadb.mariadb.svc.cluster.local') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.production.password='$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.production.port=3306') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set providers.production.user=root') \
+		--version=0.1.3 \
+		mariadbprovider \
+		legacy-dbaas-operator/mariadbprovider
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace dbaas-operator \
+		--wait \
+		--timeout $(TIMEOUT) \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.development.environment=development') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.development.hostname=postgresql.postgresql.svc.cluster.local') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.development.password='$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')'') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.development.port=5432') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.development.user=postgres') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.production.environment=production') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.production.hostname=postgresql.postgresql.svc.cluster.local') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.production.password='$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')'') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.production.port=5432') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set providers.production.user=postgres') \
+		--version=0.1.1 \
+		postgresqlprovider \
+		legacy-dbaas-operator/postgresqlprovider
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace dbaas-operator \
+		--wait \
+		--timeout $(TIMEOUT) \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.development.environment=development') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.development.hostname=mongodb.mongodb.svc.cluster.local') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.development.password='$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.development.port=27017') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.development.user=root') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.development.auth.mechanism=SCRAM-SHA-1') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.development.auth.source=admin') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.development.auth.tls=false') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.production.environment=production') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.production.hostname=mongodb.mongodb.svc.cluster.local') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.production.password='$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.production.port=27017') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.production.user=root') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.production.auth.mechanism=SCRAM-SHA-1') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.production.auth.source=admin') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set providers.production.auth.tls=false') \
+		--version=0.1.2 \
+		mongodbprovider \
+		legacy-dbaas-operator/mongodbprovider
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace dbaas-operator \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set enableMariaDBProviders=true \
+		--set enableMongoDBProviders=true \
+		--set enablePostreSQLProviders=true \
+		--version=0.3.2 \
+		dbaas-operator \
+		https://github.com/amazeeio/dbaas-operator/raw/b3416bba4d1db0784e47bae954912b62e9b9245c/charts/dbaas-operator-0.3.2.tgz
+
 .PHONY: install-lagoon-dependencies
 # this will install all the Lagoon dependencies prior to anything related to Lagoon being installed
 # this allows for only Lagoon core, remote, or the build-deploy chart to be installed or upgraded without having
@@ -343,6 +436,7 @@ endif
 ifeq ($(INSTALL_K8UP),true)
 install-lagoon-dependencies: install-k8upv1 install-k8upv2
 endif
+install-lagoon-dependencies: install-legacy-dbaas
 
 # this installs lagoon-core, lagoon-remote, and lagoon-build-deploy, and if dependencies required will install them too
 .PHONY: install-lagoon
@@ -454,43 +548,9 @@ endif
 		$$([ $(INSTALL_STABLE_REMOTE) = true ] && [ $(STABLE_REMOTE_CHART_VERSION) ] && echo '--version=$(STABLE_REMOTE_CHART_VERSION)') \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-remote-$(STABLE_REMOTE_CHART_VERSION)/charts/lagoon-remote/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-remote/ci/linter-values.yaml'; fi) \
 		--set "lagoon-build-deploy.enabled=false" \
+		--set "dbaas-operator.enabled=false" \
+		--set "dbaasHTTPEndpoint=dbaas-operator-http.dbaas-operator.svc.cluster.local" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.environment=development') \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local') \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.password='$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.port=3306') \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.user=root') \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.environment=production') \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.hostname=mariadb.mariadb.svc.cluster.local') \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.password='$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.port=3306') \
-		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.user=root') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.environment=development') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.password='$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')'') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.port=5432') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.user=postgres') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.environment=production') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.hostname=postgresql.postgresql.svc.cluster.local') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.password='$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')'') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.port=5432') \
-		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.user=postgres') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.environment=development') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.hostname=mongodb.mongodb.svc.cluster.local') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.password='$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')'') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.port=27017') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.user=root') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.auth.mechanism=SCRAM-SHA-1') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.auth.source=admin') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.auth.tls=false') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.environment=production') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.hostname=mongodb.mongodb.svc.cluster.local') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.password='$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')'') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.port=27017') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.user=root') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.auth.mechanism=SCRAM-SHA-1') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.auth.source=admin') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.auth.tls=false') \
 		--set "sshCore.enabled=true" \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set mxoutHost=mailpit-smtp.mailpit.svc.cluster.local') \
 		$$([ $(IMAGE_TAG) ] && [ $(INSTALL_STABLE_REMOTE) != true ] && echo '--set imageTag=$(IMAGE_TAG)') \
