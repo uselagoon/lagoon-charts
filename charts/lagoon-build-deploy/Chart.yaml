@@ -16,14 +16,14 @@ kubeVersion: ">= 1.25.0-0"
 
 type: application
 
-version: 0.31.0
+version: 0.31.1
 
 appVersion: v0.21.0
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update controller to v0.21.0
+      description: fix servicemonitor for lagoon build metrics
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
