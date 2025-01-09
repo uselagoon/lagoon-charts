@@ -8954,6 +8954,42 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update storage-calculator metrics role
+    apiVersion: v2
+    created: "2025-01-09T23:38:46.067679333Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.31.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.2.0
+    description: A Helm chart to run a lagoon-remote
+    digest: b2a90bbcf474fb272181aa058ff38d7d638161ebbdbc63261216983f3daf007c
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.96.2/lagoon-remote-0.96.2.tgz
+    version: 0.96.2
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update build-deploy chart dependency to 0.31.1
         - kind: changed
           description: update storage-calculator to metrics servicemonitor
@@ -14949,4 +14985,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-09T22:22:17.336355373Z"
+generated: "2025-01-09T23:38:46.069339987Z"
