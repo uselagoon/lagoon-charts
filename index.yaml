@@ -4,6 +4,52 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: fix servicemonitor for lagoon build metrics
+      artifacthub.io/crds: |
+        - kind: LagoonBuild
+          version: v1beta2
+          name: lagoonbuild
+          displayName: LagoonBuild
+          description: This is the CRD used for managing LagoonBuilds
+        - kind: LagoonTask
+          version: v1beta2
+          name: lagoontask
+          displayName: LagoonTask
+          description: This is the CRD used for managing LagoonTasks
+        - kind: LagoonBuild
+          version: v1beta1
+          name: lagoonbuild
+          displayName: LagoonBuild
+          description: Deprecated - Use the newer v1beta2 resource
+        - kind: LagoonTask
+          version: v1beta1
+          name: lagoontask
+          displayName: LagoonTask
+          description: Deprecated - Use the newer v1beta2 resource
+    apiVersion: v2
+    appVersion: v0.21.0
+    created: "2025-01-09T21:46:32.608318884Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: 46cc860b48c4ce3c6ef031ec3e47ad7fbd611444f2202a959ac6f80a34197d80
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.31.1/lagoon-build-deploy-0.31.1.tgz
+    version: 0.31.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update controller to v0.21.0
       artifacthub.io/crds: |
         - kind: LagoonBuild
@@ -14865,4 +14911,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2024-12-31T02:52:28.004342481Z"
+generated: "2025-01-09T21:46:32.609345464Z"
