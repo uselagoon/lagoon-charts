@@ -16,14 +16,14 @@ kubeVersion: ">= 1.25.0-0"
 
 type: application
 
-version: 0.31.1
+version: 0.32.0
 
 appVersion: v0.21.0
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: fix servicemonitor for lagoon build metrics
+      description: move harbor credentials into secret
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
