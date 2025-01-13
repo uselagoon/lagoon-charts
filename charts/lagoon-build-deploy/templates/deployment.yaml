@@ -40,8 +40,6 @@ spec:
         - "--leader-elect=true"
         {{- if .Values.harbor.enabled }}
         - "--enable-harbor=true"
-        - "--harbor-password={{ .Values.harbor.adminPassword }}"
-        - "--harbor-username={{ .Values.harbor.adminUser }}"
         - "--harbor-url={{ .Values.harbor.host }}"
         - "--harbor-api={{ .Values.harbor.host }}/api"
         {{- if .Values.harbor.rotationCron }}
@@ -253,6 +251,18 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-build-deploy.fullname" . }}
               key: RABBITMQ_USERNAME
+        {{- if .Values.harbor.enabled }}
+        - name: HARBOR_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-build-deploy.fullname" . }}
+              key: HARBOR_PASSWORD
+        - name: HARBOR_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-build-deploy.fullname" . }}
+              key: HARBOR_USERNAME
+        {{- end }}
         - name: NAMESPACE_PREFIX
           value: {{ .Values.namespacePrefix | quote }}
         - name: CONTROLLER_NAMESPACE
