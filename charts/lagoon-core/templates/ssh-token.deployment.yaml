@@ -32,10 +32,18 @@ spec:
         image: "{{ .Values.sshToken.image.repository }}:{{ coalesce .Values.sshToken.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.sshToken.image.pullPolicy }}
         command:
-        - "/ssh-token"
+        {{- .Values.sshToken.command | toYaml | nindent 8 }}
+        {{- if .Values.sshToken.args }}
+        args:
+        {{- .Values.sshToken.args | toYaml | nindent 8 }}
+        {{- end }}
         env:
         {{- if .Values.sshToken.debug }}
         - name: DEBUG
+          value: "true"
+        {{- end }}
+        {{- if .Values.sshToken.insecureTLS }}
+        - name: KEYCLOAK_INSECURE_TLS
           value: "true"
         {{- end }}
         {{- if .Values.blockDeveloperSSH }}
