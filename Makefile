@@ -46,6 +46,7 @@ OPENSEARCH_INTEGRATION_ENABLED = false
 CLEAR_API_DATA = false
 DOCKER_NETWORK = kind
 LAGOON_SSH_PORTAL_LOADBALANCER =
+CORE_DATABASE_VENDOR = mariadb
 
 # install lagoon dependencies by default with the install-lagoon target
 INSTALL_LAGOON_DEPENDENCIES = true
@@ -380,6 +381,7 @@ endif
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set api.image.repository=$(IMAGE_REGISTRY)/api') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db') \
+		--set apiDB.vendor=$(CORE_DATABASE_VENDOR) \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server') \
 		--set autoIdler.enabled=false \
@@ -392,6 +394,7 @@ endif
 		--set insightsHandler.enabled=false \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db') \
+		--set keycloakDB.vendor=$(CORE_DATABASE_VENDOR) \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set logs2notifications.additionalEnvs.EMAIL_HOST=mailpit-smtp.mailpit.svc') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set logs2notifications.additionalEnvs.EMAIL_PORT="25"') \
