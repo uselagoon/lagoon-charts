@@ -63,7 +63,8 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+        (contains(github.event.pull_request.labels.*.name, 'current-release'))
       run: |
         docker network create kind
         LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '. [0].IPAM.Config[0].Subnet' | tr -d '"') 
@@ -75,7 +76,8 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+        (contains(github.event.pull_request.labels.*.name, 'current-release'))
       with:
         version: v0.24.0
         node_image: kindest/node:v1.30.4@sha256:976ea815844d5fa93be213437e3ff5754cd599b040946b5cca43ca45c2047114
@@ -86,7 +88,8 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+        (contains(github.event.pull_request.labels.*.name, 'current-release'))
       run: |
         LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '. [0].IPAM.Config[0].Subnet' | tr -d '"')
         NODE_IP=$(echo ${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $1,$2,$3,240}' OFS='.')
@@ -97,7 +100,8 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+        (contains(github.event.pull_request.labels.*.name, 'current-release'))
       run: |
         helm repo add harbor https://helm.goharbor.io
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
@@ -114,7 +118,8 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+        (contains(github.event.pull_request.labels.*.name, 'current-release'))
       run: |
         cd /tmp
         curl -sSLO https://github.com/itchyny/gojq/releases/download/v0.12.16/gojq_v0.12.16_linux_amd64.tar.gz
@@ -129,18 +134,27 @@ jobs:
         sudo cp /tmp/kubens /usr/local/bin/kubens
         sudo ln -s $(which kubectl) /usr/local/bin/kc
 
+    # - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (needs-testing)
+    #   if: |
+    #     (steps.list-changed.outputs.changed == 'true' && !contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+    #     (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+    #   run: |
+    #     make install-lagoon
+    #     make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
+
+    # - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (next-release)
+    #   if: |
+    #     (steps.list-changed.outputs.changed == 'true') &&
+    #     (contains(github.event.pull_request.labels.*.name, 'next-release'))
+    #   run: |
+    #     yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' ./charts/lagoon-core/ci/linter-values.yaml ./charts/lagoon-core/ci/testlagoon-main-override.yaml
+    #     make install-lagoon IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
+    #     make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
+
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (needs-testing)
       if: |
-        (steps.list-changed.outputs.changed == 'true' && !contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+        (steps.list-changed.outputs.changed == 'true' && !contains(github.event.pull_request.labels.*.name, 'current-release')) ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
-      run: |
-        make install-lagoon
-        make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
-
-    - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (next-release)
-      if: |
-        (steps.list-changed.outputs.changed == 'true') &&
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
         yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' ./charts/lagoon-core/ci/linter-values.yaml ./charts/lagoon-core/ci/testlagoon-main-override.yaml
         make install-lagoon IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
@@ -150,14 +164,16 @@ jobs:
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+        (contains(github.event.pull_request.labels.*.name, 'current-release'))
       run: docker system prune -f -a --volumes
 
     - name: Run chart-testing (install) on lagoon-test
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (contains(github.event.pull_request.labels.*.name, 'next-release')) ||
+        (contains(github.event.pull_request.labels.*.name, 'current-release'))
       run: |
         ct lint --config ./test-suite-run.ct.yaml
         ct install --config ./test-suite-run.ct.yaml --helm-extra-args "--timeout 60m"
