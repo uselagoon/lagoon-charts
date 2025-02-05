@@ -157,7 +157,7 @@ install-certmanager: generate-ca install-metallb
 		cert-manager \
 		jetstack/cert-manager
 	$(KUBECTL) -n cert-manager delete secret lagoon-test-secret || echo "lagoon-test-secret doesn't exist, ignoring"
-	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/lagoontest.crt --from-file=tls.key=certs/lagoontest.key --from-file=ca.crt=certs/lagoontest.crt 
+	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem
 	$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml
 
 .PHONY: install-ingress
@@ -352,10 +352,10 @@ install-k8upv2:
 .PHONY: generate-ca
 generate-ca:
 	@ mkdir -p certs && \
-	openssl x509 -enddate -noout -in certs/lagoontest.crt > /dev/null 2>&1 || \
-	(openssl genrsa -out certs/lagoontest.key 2048 && \
-	openssl req -x509 -new -nodes -key certs/lagoontest.key \
-		-sha256 -days 3560 -out certs/lagoontest.crt -addext keyUsage=critical,digitalSignature,keyEncipherment,keyCertSign \
+	openssl x509 -enddate -noout -in certs/rootCA.pem > /dev/null 2>&1 || \
+	(openssl genrsa -out certs/rootCA-key.pem 2048 && \
+	openssl req -x509 -new -nodes -key certs/rootCA-key.pem \
+		-sha256 -days 3560 -out certs/rootCA.pem -addext keyUsage=critical,digitalSignature,keyEncipherment,keyCertSign \
 		-subj '/CN=lagoon.test')
 
 .PHONY: install-lagoon-dependencies
