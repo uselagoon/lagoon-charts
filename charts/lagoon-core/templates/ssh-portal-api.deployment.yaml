@@ -37,10 +37,18 @@ spec:
         image: "{{ .Values.sshPortalAPI.image.repository }}:{{ coalesce .Values.sshPortalAPI.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.sshPortalAPI.image.pullPolicy }}
         command:
-        - "/ssh-portal-api"
+        {{- .Values.sshPortalAPI.command | toYaml | nindent 8 }}
+        {{- if .Values.sshPortalAPI.args }}
+        args:
+        {{- .Values.sshPortalAPI.args | toYaml | nindent 8 }}
+        {{- end }}
         env:
         {{- if .Values.sshPortalAPI.debug }}
         - name: DEBUG
+          value: "true"
+        {{- end }}
+        {{- if .Values.sshPortalAPI.insecureTLS }}
+        - name: KEYCLOAK_INSECURE_TLS
           value: "true"
         {{- end }}
         {{- if .Values.blockDeveloperSSH }}

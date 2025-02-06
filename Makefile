@@ -3,6 +3,29 @@ TESTS = [api]
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
 IMAGE_TAG =
+
+# UI_IMAGE_REPO and UI_IMAGE_TAG are an easy way to override the UI image used
+# only works for installations where INSTALL_STABLE_CORE=false
+# UI_IMAGE_REPO = uselagoon/ui
+# UI_IMAGE_TAG = latest
+
+# SSHPORTALAPI_IMAGE_REPO and SSHPORTALAPI_IMAGE_TAG are an easy way to override the ssh portal api image used in the local stack lagoon-core
+# only works for installations where INSTALL_STABLE_CORE=false
+# SSHPORTALAPI_IMAGE_REPO =
+# SSHPORTALAPI_IMAGE_TAG =
+
+# SSHTOKEN_IMAGE_REPO and SSHTOKEN_IMAGE_TAG are an easy way to override the ssh token image used in the local stack lagoon-core
+# only works for installations where INSTALL_STABLE_CORE=false
+# SSHTOKEN_IMAGE_REPO =
+# SSHTOKEN_IMAGE_TAG =
+
+# SSHPORTAL_IMAGE_REPO and SSHPORTAL_IMAGE_TAG are an easy way to override the ssh portal image used in the local stack lagoon-remote
+# only works for installations where INSTALL_STABLE_REMOTE=false
+# SSHPORTAL_IMAGE_REPO =
+# SSHPORTAL_IMAGE_TAG =
+
+LAGOON_CORE_USE_HTTPS = true
+
 # IMAGE_REGISTRY controls the registry used for container images in the
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
@@ -114,12 +137,12 @@ install-metallb:
 		metallb \
 		metallb/metallb && \
 	$$(envsubst < test-suite.metallb-pool.yaml.tpl > test-suite.metallb-pool.yaml) && \
-	$(KUBECTL) apply -f test-suite.metallb-pool.yaml \
+	$(KUBECTL) apply -f test-suite.metallb-pool.yaml
 
 # cert-manager is used to allow self-signed certificates to be generated automatically by ingress in the same way lets-encrypt would
 # this allows for the registry and other services to use certificates
 .PHONY: install-certmanager
-install-certmanager: install-metallb
+install-certmanager: generate-ca install-metallb
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -133,6 +156,8 @@ install-certmanager: install-metallb
 		--version=v1.11.0 \
 		cert-manager \
 		jetstack/cert-manager
+	$(KUBECTL) -n cert-manager delete secret lagoon-test-secret || echo "lagoon-test-secret doesn't exist, ignoring"
+	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem
 	$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml
 
 .PHONY: install-ingress
@@ -322,6 +347,16 @@ install-k8upv2:
 		k8upv2 \
 		k8up/k8up
 
+# generate-ca will generate a CA certificate that will be used to issue certificates
+# this CA certificate can be loaded into a web browser so that certificates don't present warnings
+.PHONY: generate-ca
+generate-ca:
+	@ mkdir -p certs && \
+	openssl x509 -enddate -noout -in certs/rootCA.pem > /dev/null 2>&1 || \
+	(openssl genrsa -out certs/rootCA-key.pem 2048 && \
+	openssl req -x509 -new -nodes -key certs/rootCA-key.pem \
+		-sha256 -days 3560 -out certs/rootCA.pem -addext keyUsage=critical,digitalSignature,keyEncipherment,keyCertSign \
+		-subj '/CN=lagoon.test')
 
 .PHONY: install-lagoon-dependencies
 # this will install all the Lagoon dependencies prior to anything related to Lagoon being installed
@@ -374,9 +409,9 @@ endif
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set buildDeployImage.default.image=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(DISABLE_CORE_HARBOR) ] && echo '--set api.additionalEnvs.DISABLE_CORE_HARBOR=$(DISABLE_CORE_HARBOR)') \
 		$$([ $(OPENSEARCH_INTEGRATION_ENABLED) ] && echo '--set api.additionalEnvs.OPENSEARCH_INTEGRATION_ENABLED=$(OPENSEARCH_INTEGRATION_ENABLED)') \
-		--set "keycloakFrontEndURL=http://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
-		--set "lagoonUIURL=http://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "keycloakFrontEndURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "lagoonAPIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
+		--set "lagoonUIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set "lagoonWebhookURL=http://lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set api.image.repository=$(IMAGE_REGISTRY)/api') \
@@ -415,18 +450,41 @@ endif
 		--set api.ingress.enabled=true \
 		--set api.ingress.hosts[0].host="lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set api.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set api.ingress.tls[0].hosts[0]=lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set api.ingress.tls[0].secretName=api-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string api.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string api.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		--set ui.ingress.enabled=true \
 		--set ui.ingress.hosts[0].host="lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set ui.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set ui.ingress.tls[0].hosts[0]=lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set ui.ingress.tls[0].secretName=ui-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string ui.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string ui.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_REPO) ] && echo '--set ui.image.repository=$(UI_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_TAG) ] && echo '--set ui.image.tag=$(UI_IMAGE_TAG)') \
 		--set keycloak.ingress.enabled=true \
 		--set keycloak.ingress.hosts[0].host="lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set keycloak.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set keycloak.ingress.tls[0].hosts[0]=lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set keycloak.ingress.tls[0].secretName=keycloak-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string keycloak.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string keycloak.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		--set webhookHandler.ingress.enabled=true \
 		--set webhookHandler.ingress.hosts[0].host="lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set webhookHandler.ingress.hosts[0].paths[0]="/" \
+		--set-string webhookHandler.ingress.annotations.kubernetes\\.io/tls-acme=true \
 		--set broker.ingress.enabled=true \
 		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set broker.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set broker.ingress.tls[0].hosts[0]=lagoon-broker.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set broker.ingress.tls[0].secretName=broker-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_REPO) ] && echo '--set sshPortalAPI.image.repository=$(SSHPORTALAPI_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_TAG) ] && echo '--set sshPortalAPI.image.tag=$(SSHPORTALAPI_IMAGE_TAG)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_REPO) ] && echo '--set sshToken.image.repository=$(SSHTOKEN_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_TAG) ] && echo '--set sshToken.image.tag=$(SSHTOKEN_IMAGE_TAG)') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set workflows.image.repository=$(IMAGE_REGISTRY)/workflows') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.enabled=true') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.settings.host=mailpit-smtp.mailpit.svc') \
@@ -499,6 +557,8 @@ endif
 		$$([ $(IMAGE_TAG) ] && [ $(INSTALL_STABLE_REMOTE) != true ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set sshPortal.service.type=LoadBalancer') \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set sshPortal.service.ports.sshserver=2222') \
+		$$([ $(INSTALL_STABLE_REMOTE) != true ] && [ $(SSHPORTAL_IMAGE_REPO) ] && echo '--set sshPortal.image.repository=$(SSHPORTAL_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_REMOTE) != true ] && [ $(SSHPORTAL_IMAGE_TAG) ] && echo '--set sshPortal.image.tag=$(SSHPORTAL_IMAGE_TAG)') \
 		lagoon-remote \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo 'lagoon/lagoon-remote'; else echo './charts/lagoon-remote'; fi)
 
@@ -605,9 +665,9 @@ install-test-cluster: install-ingress install-registry install-bulk-storageclass
 .PHONY: get-admin-creds
 get-admin-creds:
 	@echo "\nLagoon UI URL: " \
-	&& echo "http://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 	&& echo "Lagoon API URL: " \
-	&& echo "http://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
+	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
 	&& echo "Lagoon API admin legacy token: \n$$(docker run \
 		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon-core lagoon-core-secrets -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
 		-e JWTAUDIENCE=api.dev \
@@ -615,7 +675,7 @@ get-admin-creds:
 		uselagoon/tests \
 		python3 /ansible/tasks/api/admin_token.py)" \
 	&& echo "Keycloak admin URL: " \
-	&& echo "http://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/auth" \
+	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/auth" \
 	&& echo "Keycloak admin password: " \
 	&& $(KUBECTL) get secret -n lagoon-core lagoon-core-keycloak -o jsonpath="{.data.KEYCLOAK_ADMIN_PASSWORD}" | base64 --decode \
 	&& echo "\n"
