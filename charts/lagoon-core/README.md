@@ -166,6 +166,84 @@ Lagoon uses S3 compatible storage for it, it can be configured via these helm va
 - `s3FilesAccessKeyID` - AccessKey for the S3 Bucket
 - `s3FilesSecretAccessKey` - AccessKey Secret for the S3 Bucket
 
+## Broker
+
+### Securing Broker
+
+The broker supports connections via TLS, to enable it you first need to configure the certificate for the broker itself.
+
+In the values for `broker`, there are the following options. When configuring the certificates for the server, uncomment the `secretData` section to provision the secret from values, otherwise pre-create the secret with the required certificate information (see Broker Public CA)
+```
+broker:
+  tls:
+    enabled: false
+    secretName: lagoon-core-broker-tls
+    # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
+    verify: verify_none
+    failIfNoPeerCert: false
+    # secretData:
+    #   ca.crt: |
+    #     ...
+    #   tls.crt: |
+    #     ...
+    #   tls.key: |
+    #     ...
+```
+
+Additionally, to enable the exposed tls enabled port, you have to set `broker.service.amqpsExternal.enabled: true` in your values, if you're using this method of exposing broker.
+
+Ideally this will be a valid public TLS certificate. You can also use a private certificate authority.
+
+##### Broker Public CA
+
+For example, if using `cert-manager`, use something like this:
+```
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lagoon-core-broker
+spec:
+  secretName: lagoon-core-broker-tls
+  dnsNames:
+  - broker.lagoon.example.com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+```
+Note that since Broker uses a `LoadBalancer` service (not an `Ingress`) HTTP-01 solver cannot be used.
+
+##### Broker Private CA
+
+You can generate a valid CA and server certificate using `cfssl` and the configuration files in the `broker-tls/` directory.
+
+Edit the files:
+* For `ca-csr.json` select a CA hostname.
+* For `server.json` set the CN/SAN to the server hostname. This has to be the hostname used by the client to connect to the server.
+
+Generate the certificates:
+```
+# CA
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
+rm ca.csr
+
+# Server
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server server.json | cfssljson -bare server
+rm server.csr
+```
+
+Install the certificates in the `lagoon-core` cluster:
+```
+kubectl create secret generic lagoon-core-broker-tls \
+  --from-file=tls.crt=server.pem \
+  --from-file=tls.key=server-key.pem \
+  --from-file=ca.crt=ca.pem
+```
+
+For `lagoon-remote` or the `lagoon-build-deploy`, this can be used to create the secret for the CA certificate for the remote to use.
+```
+kubectl create secret generic lagoon-remote-broker-tls --from-file=ca.crt=ca.pem
+```
+
 ## NATS
 
 This section only applies if using NATS for ssh-portal support.
