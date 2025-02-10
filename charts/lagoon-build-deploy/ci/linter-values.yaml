@@ -1,6 +1,6 @@
 rabbitMQUsername: lagoon
 rabbitMQPassword: ci
-rabbitMQHostname: lagoon-core-broker.lagoon-core.svc
+rabbitMQHostname: lagoon-core-broker.lagoon-core.svc:5671
 lagoonTargetName: ci-local-control-k8s
 sshPortalHost: lagoon-remote-ssh-portal.lagoon.svc
 sshPortalPort: 22
@@ -9,3 +9,40 @@ lagoonTokenPort: 22
 lagoonAPIHost: http://lagoon-core-api.lagoon-core.svc:80
 extraArgs:
   - "--skip-tls-verify=true"
+amqp:
+  tls:
+    secretData:
+      ca.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIBgzCCASqgAwIBAgIUW02z87Rcotu3NfrhhTu2/NwP4bowCgYIKoZIzj0EAwIw
+        IDEeMBwGA1UEAxMVYnJva2VyLWNhLmV4YW1wbGUuY29tMB4XDTI1MDIxMTAwMjEw
+        MFoXDTM1MDIwOTAwMjEwMFowIDEeMBwGA1UEAxMVYnJva2VyLWNhLmV4YW1wbGUu
+        Y29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEsbClCaHFE8aoTA4a+GA8zrI3
+        6ExBeE8gnf0C+hdDxTBkga8MrOMPI3yB9TdA7115SQ4mL30QkEkb20bvsMRXhKNC
+        MEAwDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFHSU
+        GS+kUMICtHSuyX4bRP0vqt+RMAoGCCqGSM49BAMCA0cAMEQCIFeJ76F4Ts93PL8A
+        9kmacM2i2mHOHn5IBGU2xUPKiUQrAiBJ9UOk/SHA6Dfpvl3c9cDazRPwbypydRys
+        HpUD5zUYRg==
+        -----END CERTIFICATE-----
+      tls.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIB2TCCAX+gAwIBAgIUDbWf70mZryK9j/y7bDMxXqQQynAwCgYIKoZIzj0EAwIw
+        IDEeMBwGA1UEAxMVYnJva2VyLWNhLmV4YW1wbGUuY29tMB4XDTI1MDIxMTAwMjIw
+        MFoXDTM1MDIwOTAwMjIwMFowHzEdMBsGA1UEAxMUY2ktbG9jYWwtY29udHJvbC1r
+        OHMwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAT5YEI6UE+ZExQYf8Z4Vik87YpH
+        kIb+k19GwF17kXCbfzzf6GCZV8KDj1z+4aoss+0KxCp14kqXUWqfbgyNkv8Io4GX
+        MIGUMA4GA1UdDwEB/wQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDAjAMBgNVHRMB
+        Af8EAjAAMB0GA1UdDgQWBBSb9n4931KyXGFDpxGr+MAGjjaJSTAfBgNVHSMEGDAW
+        gBR0lBkvpFDCArR0rsl+G0T9L6rfkTAfBgNVHREEGDAWghRjaS1sb2NhbC1jb250
+        cm9sLWs4czAKBggqhkjOPQQDAgNIADBFAiEAnBOr6QdSbH3/irJGj7LYSMhnd8lO
+        +NETqiR/O2ELan4CIAcC8BKhkRMtPCFY/kge6FAslK1txEBacEYcKvln76pD
+        -----END CERTIFICATE-----
+      tls.key: |
+        -----BEGIN EC PRIVATE KEY-----
+        MHcCAQEEICEZfAV/KTK9P8ZyUEXIuqJErxIc7YIYatHYa7jgPJevoAoGCCqGSM49
+        AwEHoUQDQgAE+WBCOlBPmRMUGH/GeFYpPO2KR5CG/pNfRsBde5Fwm3883+hgmVfC
+        g49c/uGqLLPtCsQqdeJKl1Fqn24MjZL/CA==
+        -----END EC PRIVATE KEY-----
+
+image:
+  tag: "rabbit-tls"
