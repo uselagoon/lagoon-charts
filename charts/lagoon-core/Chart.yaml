@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: Lagoon Workflows subsystem removed
+    - kind: changed
+      description: tls support for rabbitmq

@@ -236,6 +236,18 @@ logging-operator:
 # enabling this.
 lagoonLogs:
   enabled: false
+  broker:
+    # enable if providing a custom CA for broker connections
+    tlsCA:
+      enabled: false
+      secretName: lagoon-logging-broker-tls
+      # secretData:
+      #   ca.crt: |
+      #     ...
+    tls:
+      enabled: false
+      # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
+      verifyPeer: true
 
 forward:
   verifyConnectionAtStartup: true
