@@ -63,16 +63,32 @@ spec:
       {{- end }}
         ports:
         - name: epmd
-          containerPort: 4396
+          containerPort: {{ .Values.broker.service.ports.epmd }}
         - name: amqp
-          containerPort: 5672
+          containerPort: {{ .Values.broker.service.ports.amqp }}
+        - name: amqps
+          containerPort: {{ .Values.broker.service.ports.amqps }}
         - name: http
-          containerPort: 15672
+          containerPort: {{ .Values.broker.service.ports.http }}
         - name: metrics
-          containerPort: 15692
+          containerPort: {{ .Values.broker.service.ports.metrics }}
         volumeMounts:
         - name: {{ include "lagoon-core.broker.fullname" . }}-data
           mountPath: /var/lib/rabbitmq
+        {{- if .Values.broker.tls.enabled }}
+        - mountPath: /ca.crt
+          name: {{ include "lagoon-core.broker.fullname" . }}-tls
+          subPath: ca.crt
+        - mountPath: /tls.crt
+          name: {{ include "lagoon-core.broker.fullname" . }}-tls
+          subPath: tls.crt
+        - mountPath: /tls.key
+          name: {{ include "lagoon-core.broker.fullname" . }}-tls
+          subPath: tls.key
+        - mountPath: /etc/rabbitmq/conf.d/15-tls.conf
+          name: {{ include "lagoon-core.broker.fullname" . }}-tls-conf
+          subPath: tls.conf
+        {{- end }}
         livenessProbe:
           tcpSocket:
             port: amqp
@@ -89,6 +105,18 @@ spec:
       - name: {{ include "lagoon-core.broker.fullname" . }}-data
         persistentVolumeClaim:
           claimName: {{ include "lagoon-core.broker.fullname" . }}-data
+      {{- if .Values.broker.tls.enabled }}
+      - name: {{ include "lagoon-core.broker.fullname" . }}-tls
+        secret:
+          secretName: {{ .Values.broker.tls.secretName }}
+      - name: {{ include "lagoon-core.broker.fullname" . }}-tls-conf
+        secret:
+          secretName: {{ include "lagoon-core.broker.fullname" . }}-tls-conf
+          defaultMode: 511
+          items:
+          - key: tls.conf
+            path: tls.conf
+      {{- end }}
       {{- with .Values.broker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
