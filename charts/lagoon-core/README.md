@@ -166,6 +166,58 @@ Lagoon uses S3 compatible storage for it, it can be configured via these helm va
 - `s3FilesAccessKeyID` - AccessKey for the S3 Bucket
 - `s3FilesSecretAccessKey` - AccessKey Secret for the S3 Bucket
 
+## Broker
+
+### Securing Broker
+
+The broker supports connections via TLS, to enable it you first need to configure the certificate for the broker itself.
+
+In the values for `broker`, there are the following options. When configuring the certificates for the server, uncomment the `secretData` section
+```
+broker:
+  tls:
+    # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
+    verify: verify_peer
+    failIfNoPeerCert: true
+    secretData:
+      ca.crt: |
+        ...
+      tls.crt: |
+        ...
+      tls.key: |
+        ...
+```
+
+Additionally, to enable the exposed tls enabled port, you have to set `broker.service.amqpsExternal.enabled: true` in your values, if you're using this method of exposing broker.
+
+Ideally this will be a valid public TLS certificate. You can also use a private certificate authority.
+
+Clients will need client certificates generated too, and they will need to be added to the clients in the appropriate charts.
+
+##### Private CA
+
+You can generate a valid CA, leafnode server, and leafnode client certificate using `cfssl` and the configuration files in the `broker-tls/` directory.
+
+Edit the files:
+* For `ca-csr.json` select a CA hostname.
+* For `server.json` set the CN/SAN to the server hostname. This has to be the hostname used by the client to connect to the server.
+* For `client.json` set the CN/SAN to the client leafnode username.
+
+Generate the certificates:
+```
+# CA
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
+rm ca.csr
+
+# Server
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server server.json | cfssljson -bare server
+rm server.csr
+
+# Client
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client client.json | cfssljson -bare client
+rm client.csr
+```
+
 ## NATS
 
 This section only applies if using NATS for ssh-portal support.

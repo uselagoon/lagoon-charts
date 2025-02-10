@@ -196,3 +196,15 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+amqp:
+  tls:
+    # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
+    verifyPeer: true
+    # secretData:
+    #   ca.crt: |
+    #     ...
+    #   tls.crt: |
+    #     ...
+    #   tls.key: |
+    #     ...

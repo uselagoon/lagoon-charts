@@ -236,6 +236,16 @@ logging-operator:
 # enabling this.
 lagoonLogs:
   enabled: false
+  tls:
+    # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
+    verifyPeer: true
+    # secretData:
+    #   ca.crt: |
+    #     ...
+    #   tls.crt: |
+    #     ...
+    #   tls.key: |
+    #     ...
 
 forward:
   verifyConnectionAtStartup: true
@@ -348,6 +358,15 @@ keepIngressNginxController: false
 #   rabbitMQHost: secureuser
 #   rabbitMQUser: secureuser
 #   rabbitMQPassword: secureuser
+#   tls:
+#     verify: true
+#     # secretData:
+#     #   ca.crt: |
+#     #     ...
+#     #   tls.crt: |
+#     #     ...
+#     #   tls.key: |
+#     #     ...
 
 # Optional namespace selection. Logs will _only_ be collected from these
 # namespaces. You probably don't want to configure this, except for debugging.
