@@ -44,3 +44,5 @@ annotations:
       description: update storage-calculator metrics role
     - kind: changed
       description: update ssh-portal image to v0.42.0
+    - kind: fixed
+      description: fix storage-calculator role
