@@ -5,8 +5,19 @@ metadata:
   name: {{ include "lagoon-core.sshToken.fullname" . }}
   labels:
     {{- include "lagoon-core.sshToken.labels" . | nindent 4 }}
+  {{- with .Values.sshToken.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.sshToken.service.type }}
+  {{- with .Values.sshToken.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}  
+  {{- with .Values.sshToken.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
   ports:
   - port: {{ .Values.sshToken.service.ports.sshserver }}
     targetPort: sshserver

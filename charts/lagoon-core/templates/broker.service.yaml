@@ -51,8 +51,19 @@ metadata:
   name: {{ include "lagoon-core.broker.fullname" . }}-amqp-ext
   labels:
     {{- include "lagoon-core.broker.labels" . | nindent 4 }}
+  {{- with .Values.broker.service.amqpExternal.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.broker.service.amqpExternal.type }}
+  {{- with .Values.broker.service.amqpExternal.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .Values.broker.service.amqpExternal.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
   ports:
   - port: {{ .Values.broker.service.amqpExternal.port }}
     targetPort: amqp

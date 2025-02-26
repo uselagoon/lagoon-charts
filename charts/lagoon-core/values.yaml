@@ -359,6 +359,9 @@ broker:
       enabled: false
       type: LoadBalancer
       port: 5672
+      annotations: {}
+      # externalTrafficPolicy: ""
+      # loadBalancerSourceRanges: []
 
   serviceMonitor:
     enabled: true
@@ -774,6 +777,8 @@ ssh:
     type: ClusterIP
     port: 2020
     annotations: {}
+    # externalTrafficPolicy: ""
+    # loadBalancerSourceRanges: []
 
   autoscaling:
     enabled: false
@@ -1072,6 +1077,9 @@ sshToken:
 
   service:
     type: LoadBalancer
+    annotations: {}
+    # externalTrafficPolicy: ""
+    # loadBalancerSourceRanges: []
     ports:
       sshserver: 22
 

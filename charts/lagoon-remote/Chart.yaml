@@ -46,3 +46,5 @@ annotations:
       description: update ssh-portal image to v0.42.0
     - kind: fixed
       description: fix storage-calculator role
+    - kind: changed
+      description: ssh-portal service configuration options
