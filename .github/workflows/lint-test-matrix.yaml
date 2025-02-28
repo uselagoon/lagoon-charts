@@ -35,6 +35,22 @@ jobs:
           echo "$changed"
         fi
 
+    - name: Get labels
+      id: get-labels
+      run: |
+        NEEDS_TESTING="$(gh api repos/$OWNER/$REPO_NAME/pulls/$PULL_REQUEST_NUMBER --jq '.labels.[].name | select(.=="needs-testing")')"
+        NEXT_RELEASE="$(gh api repos/$OWNER/$REPO_NAME/pulls/$PULL_REQUEST_NUMBER --jq '.labels.[].name | select(.=="next-release")')"
+        echo "$NEEDS_TESTING"
+        echo "$NEXT_RELEASE"
+        echo "needsTesting=$NEEDS_TESTING" >> $GITHUB_OUTPUT
+        echo "nextRelease=$NEXT_RELEASE" >> $GITHUB_OUTPUT
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OWNER: ${{ github.repository_owner }}
+        REPO_NAME: ${{ github.event.repository.name }}
+        PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+
     - name: Run chart-testing (lint)
       run: ct lint --config ./default.ct.yaml
 
@@ -45,8 +61,8 @@ jobs:
         node_image: kindest/node:${{ matrix.kindest_node_version }}
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (steps.get-labels.outputs.needsTesting == 'needs-testing') ||
+        (steps.get-labels.outputs.nextRelease == 'next-release')
 
     - name: Install lagoon test certificates
       run: |
@@ -61,14 +77,14 @@ jobs:
     - name: Run chart-testing (install changed only)
       run: |
         ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m" --namespace lagoon-${{ github.event.pull_request.number }}
-      if: ${{ !contains(github.event.pull_request.labels.*.name, 'next-release') && !contains(github.event.pull_request.labels.*.name, 'needs-testing') }}
+      if: ${{ !steps.get-labels.outputs.nextRelease == 'next-release' && !steps.get-labels.outputs.needsTesting == 'needs-testing' }}
 
     - name: Run chart-testing (install changed next-release only)
       run: |
         yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' ./charts/lagoon-core/ci/linter-values.yaml ./charts/lagoon-core/ci/testlagoon-main-override.yaml
         ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m" --namespace lagoon-${{ github.event.pull_request.number }}
-      if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') }}
+      if: ${{ steps.get-labels.outputs.nextRelease == 'next-release' }}
 
     - name: Run chart-testing (install all charts when required)
       run: ct install --config ./default.ct.yaml  --helm-extra-args "--timeout 30m" --all --namespace lagoon-${{ github.event.pull_request.number }}
-      if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') || contains(github.event.pull_request.labels.*.name, 'needs-testing') }}
+      if: ${{ steps.get-labels.outputs.nextRelease == 'next-release' || steps.get-labels.outputs.needsTesting == 'needs-testing' }}
