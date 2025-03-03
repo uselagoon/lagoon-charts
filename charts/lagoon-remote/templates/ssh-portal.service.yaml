@@ -11,6 +11,13 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.sshPortal.service.type }}
+  {{- with .Values.sshPortal.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}  
+  {{- with .Values.sshPortal.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
   ports:
   - port: {{ .Values.sshPortal.service.ports.sshserver }}
     targetPort: sshserver

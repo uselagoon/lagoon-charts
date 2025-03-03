@@ -133,6 +133,8 @@ sshPortal:
     ports:
       sshserver: 22
     annotations: {}
+    # externalTrafficPolicy: ""
+    # loadBalancerSourceRanges: []
 
   metricsService:
     type: ClusterIP
