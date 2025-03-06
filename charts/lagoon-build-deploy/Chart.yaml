@@ -24,6 +24,8 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: removal of deprecated v1beta1 crd version
+    - kind: changed
+      description: update remote-controller to v0.22.0
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
