@@ -4,6 +4,44 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: removal of deprecated v1beta1 crd version
+        - kind: changed
+          description: update remote-controller to v0.22.0
+      artifacthub.io/crds: |
+        - kind: LagoonBuild
+          version: v1beta2
+          name: lagoonbuild
+          displayName: LagoonBuild
+          description: This is the CRD used for managing LagoonBuilds
+        - kind: LagoonTask
+          version: v1beta2
+          name: lagoontask
+          displayName: LagoonTask
+          description: This is the CRD used for managing LagoonTasks
+    apiVersion: v2
+    appVersion: v0.22.0
+    created: "2025-03-07T06:08:17.626877689Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: 817f58d5aba7eba2dd5af19d2367a8c68c34a0044f71e9cd7bc9f8b03cb93cad
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.32.0/lagoon-build-deploy-0.32.0.tgz
+    version: 0.32.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: fix servicemonitor for lagoon build metrics
       artifacthub.io/crds: |
         - kind: LagoonBuild
@@ -14985,4 +15023,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-01-09T23:38:46.069339987Z"
+generated: "2025-03-07T06:08:17.860963765Z"
