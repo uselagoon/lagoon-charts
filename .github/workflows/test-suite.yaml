@@ -139,7 +139,6 @@ jobs:
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (next-release)
       if: |
-        (steps.list-changed.outputs.changed == 'true') &&
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
         yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' ./charts/lagoon-core/ci/linter-values.yaml ./charts/lagoon-core/ci/testlagoon-main-override.yaml
