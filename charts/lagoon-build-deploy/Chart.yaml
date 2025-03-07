@@ -16,16 +16,14 @@ kubeVersion: ">= 1.25.0-0"
 
 type: application
 
-version: 0.32.0
+version: 0.33.0
 
 appVersion: v0.22.0
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: removal of deprecated v1beta1 crd version
-    - kind: changed
-      description: update remote-controller to v0.22.0
+      description: re-add deprecated v1beta1 crd version in unserved state
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
