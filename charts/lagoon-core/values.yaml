@@ -353,15 +353,25 @@ broker:
     ports:
       epmd: 4369
       amqp: 5672
+      amqps: 5671
       http: 15672
       metrics: 15692
     amqpExternal:
+      # amqpExternal is used to enable or disable the port on the external facing service.
+      # if used in conjunction with amqpsExternal, you will get both ports
+      # if used alone it will only be this port
       enabled: false
       type: LoadBalancer
       port: 5672
       annotations: {}
       # externalTrafficPolicy: ""
       # loadBalancerSourceRanges: []
+    amqpsExternal:
+      # amqpsExternal is used to enable or disable the TLS port on the external facing service.
+      # if used in conjunction with amqpExternal, you will get both ports
+      # the type is only consumed from amqpExternal, changing the type of the external loadbalancer should be done there
+      enabled: false
+      port: 5671
 
   serviceMonitor:
     enabled: true
@@ -411,6 +421,18 @@ broker:
     failureThreshold: 60
     tcpSocket:
       port: amqp
+
+  tls:
+    # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
+    verify: verify_peer
+    failIfNoPeerCert: true
+    # secretData:
+    #   ca.crt: |
+    #     ...
+    #   tls.crt: |
+    #     ...
+    #   tls.key: |
+    #     ...
 
 authServer:
   replicaCount: 2

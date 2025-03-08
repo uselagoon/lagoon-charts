@@ -1,0 +1,10 @@
+{
+  "hosts": [
+    "ci-local-control-k8s"
+  ],
+  "CN": "ci-local-control-k8s",
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  }
+}

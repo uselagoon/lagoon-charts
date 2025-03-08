@@ -100,6 +100,40 @@ broker:
   resources:
     requests:
       cpu: "10m"
+  tls:
+    secretData:
+      ca.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIBgzCCASqgAwIBAgIUW02z87Rcotu3NfrhhTu2/NwP4bowCgYIKoZIzj0EAwIw
+        IDEeMBwGA1UEAxMVYnJva2VyLWNhLmV4YW1wbGUuY29tMB4XDTI1MDIxMTAwMjEw
+        MFoXDTM1MDIwOTAwMjEwMFowIDEeMBwGA1UEAxMVYnJva2VyLWNhLmV4YW1wbGUu
+        Y29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEsbClCaHFE8aoTA4a+GA8zrI3
+        6ExBeE8gnf0C+hdDxTBkga8MrOMPI3yB9TdA7115SQ4mL30QkEkb20bvsMRXhKNC
+        MEAwDgYDVR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFHSU
+        GS+kUMICtHSuyX4bRP0vqt+RMAoGCCqGSM49BAMCA0cAMEQCIFeJ76F4Ts93PL8A
+        9kmacM2i2mHOHn5IBGU2xUPKiUQrAiBJ9UOk/SHA6Dfpvl3c9cDazRPwbypydRys
+        HpUD5zUYRg==
+        -----END CERTIFICATE-----
+      tls.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIIB+TCCAZ+gAwIBAgIUAya5IFehLfZqweTEH570kbxhMyYwCgYIKoZIzj0EAwIw
+        IDEeMBwGA1UEAxMVYnJva2VyLWNhLmV4YW1wbGUuY29tMB4XDTI1MDIxMTAwMjEw
+        MFoXDTM1MDIwOTAwMjEwMFowHTEbMBkGA1UEAxMSbGFnb29uLWNvcmUtYnJva2Vy
+        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEkdAfcIwBNRBJhxMDQhDIaqrWHUto
+        19IQgcdEgrikih9yQl2cJNvepztKBRfcinHaQgbTnf/vnxCZyTQ5fzCp0KOBuTCB
+        tjAOBgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDAYDVR0TAQH/
+        BAIwADAdBgNVHQ4EFgQUxKjvIHisTYfMCCVlf1WwV8FBn4gwHwYDVR0jBBgwFoAU
+        dJQZL6RQwgK0dK7JfhtE/S+q35EwQQYDVR0RBDowOIISbGFnb29uLWNvcmUtYnJv
+        a2VygiJsYWdvb24tY29yZS1icm9rZXIubGFnb29uLWNvcmUuc3ZjMAoGCCqGSM49
+        BAMCA0gAMEUCIQD+0wveZTwYVcCrSmxdLyCVg3rv1mgX6zIYUb+ACllMzwIgYQ3Q
+        emnvPaJxI9RhHZo8htqC3ljuhQ1lgXrjScEWM/4=
+        -----END CERTIFICATE-----
+      tls.key: |
+        -----BEGIN EC PRIVATE KEY-----
+        MHcCAQEEIHioktcYuADFDDQq5Ke8NoEtDsFPRshZwwgz+rwK91ddoAoGCCqGSM49
+        AwEHoUQDQgAEkdAfcIwBNRBJhxMDQhDIaqrWHUto19IQgcdEgrikih9yQl2cJNve
+        pztKBRfcinHaQgbTnf/vnxCZyTQ5fzCp0A==
+        -----END EC PRIVATE KEY-----
 
 authServer:
   replicaCount: 1
