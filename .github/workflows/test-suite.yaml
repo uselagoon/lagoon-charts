@@ -134,7 +134,7 @@ jobs:
         (steps.list-changed.outputs.changed == 'true' && !contains(github.event.pull_request.labels.*.name, 'next-release')) ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
       run: |
-        make install-lagoon
+        make kind/seed-data
         make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}]
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (next-release)
@@ -142,7 +142,7 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
         yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' ./charts/lagoon-core/ci/linter-values.yaml ./charts/lagoon-core/ci/testlagoon-main-override.yaml
-        make install-lagoon IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
+        make kind/seed-data IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
         make -j8 -O fill-test-ci-values TESTS=[${{ matrix.test }}] IMAGE_REGISTRY=testlagoon IMAGE_TAG=main OVERRIDE_BUILD_DEPLOY_DIND_IMAGE=uselagoon/build-deploy-image:main OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE=testlagoon/task-activestandby:main
       
     - name: Free up some disk space

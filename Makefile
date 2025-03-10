@@ -702,3 +702,41 @@ port-forwards: pf-keycloak pf-api pf-ssh pf-ui
 .PHONY: run-tests
 run-tests:
 	$(HELM) test --namespace lagoon-core --timeout 30m lagoon-test
+
+# kind/seed-data is a way to seed a lagoon-core
+# CORE_APP_VERSION_OR_TREEISH = heads/main
+CORE_APP_VERSION_OR_TREEISH = heads/remove-data-watcher-pusher
+
+.PHONY: kind/seed-data
+kind/seed-data: install-lagoon
+ifeq (,$(subst ",,$(CORE_APP_VERSION_OR_TREEISH)))
+	$(eval CORE_APP_VERSION_OR_TREEISH = tags/$(shell $(HELM) search repo lagoon/lagoon-core -o json | $(JQ) -r '.[]|.app_version'))
+endif
+	@echo "Loading API seed data" && \
+	export LAGOON_LEGACY_ADMIN=$$(docker run \
+		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon-core lagoon-core-secrets -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
+		-e JWTAUDIENCE=api.dev \
+		-e JWTUSER=localadmin \
+		uselagoon/tests \
+		python3 /ansible/tasks/api/admin_token.py) && \
+	export SSH_PORTAL_HOST="$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
+	export SSH_PORTAL_PORT="$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.spec.ports[0].port}')" && \
+	export CONSOLE_URL="https://kubernetes.default.svc/" && \
+	export KUBERNETES_TOKEN="$$($(KUBECTL) get secret -n lagoon lagoon-remote-ssh-core-token -o jsonpath="{.data.token}" | base64 --decode)" && \
+	export ROUTER_PATTERN="\$${project}.\$${environment}.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
+	curl -sSLo /tmp/seed.gql https://raw.githubusercontent.com/uselagoon/lagoon/refs/$(CORE_APP_VERSION_OR_TREEISH)/local-dev/seed-data/00-populate-kubernetes.gql && \
+	export SEED_DATA=$$(envsubst < /tmp/seed.gql | sed 's/"/\\"/g' | sed 's/\\n/\\\\n/g' | awk -F'\n' '{if(NR == 1) {printf $$0} else {printf "\\n"$$0}}') && \
+	export SEED_DATA_JSON="{\"query\": \"$$SEED_DATA\"}" && \
+    wget --quiet --header "Content-Type: application/json" --header "Authorization: bearer $${LAGOON_LEGACY_ADMIN}" "http://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" --post-data "$$SEED_DATA_JSON" --content-on-error -O - && \
+	echo "Loading API seed users" && \
+	curl -sSLo /tmp/seed-users.sh https://raw.githubusercontent.com/uselagoon/lagoon/refs/$(CORE_APP_VERSION_OR_TREEISH)/local-dev/seed-data/seed-users.sh && \
+	cat /tmp/seed-users.sh \
+		| $(KUBECTL) -n lagoon-core  exec -i $$($(KUBECTL) -n lagoon-core get pods \
+		-l app.kubernetes.io/component=lagoon-core-keycloak -o json | $(JQ) -r '.items[0].metadata.name') -- sh -c "cat > /tmp/seed-users.sh" && \
+	$(KUBECTL) -n lagoon-core exec -it $$($(KUBECTL) -n lagoon-core get pods -l app.kubernetes.io/component=lagoon-core-keycloak -o json | $(JQ) -r '.items[0].metadata.name') -- bash '/tmp/seed-users.sh' \
+	&& echo "You will be able to log in with these seed user email addresses and the passwords will be the same as the email address" \
+	&& echo "eg. maintainer@example.com has the password maintainer@example.com" \
+	&& echo "" \
+	&& echo "If you want to create an example SSO identity provider and example user, run make k3d/example-sso" \
+	&& echo "If you want to configure simple webauthn browswer flow, run make k3d/configure-webauthn" \
+	&& echo ""

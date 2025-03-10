@@ -29,4 +29,4 @@ appVersion: v2.23.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon-core appVersion to v2.23.0
+      description: removed api-data-watcher-pusher
