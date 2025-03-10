@@ -41,7 +41,7 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller to 0.33.0
+      description: update lagoon-build-deploy to 0.33.0
     - kind: changed
       description: update storage-calculator metrics role
     - kind: changed
