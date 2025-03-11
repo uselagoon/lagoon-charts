@@ -50,3 +50,7 @@ annotations:
       description: fix storage-calculator role
     - kind: changed
       description: ssh-portal service configuration options
+    - kind: changed
+      description: update storage-calculator to v0.8.0
+    - kind: changed
+      description: update insights-remote to v0.0.12
