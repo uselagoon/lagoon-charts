@@ -221,7 +221,7 @@ insightsRemote:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.11"
+    tag: "v0.0.12"
 
   imagePullSecrets: []
   nameOverride: ""
@@ -450,7 +450,7 @@ storageCalculator:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.7.0
+    tag: v0.8.0
 
 # sysctlConfigure is used  to configure sysctl options on nodes for use by elasticsearch/opensearch pods used in lagoon
 # https://github.com/uselagoon/lagoon/issues/2588
