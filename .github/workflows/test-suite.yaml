@@ -30,7 +30,6 @@ jobs:
         ## - node
         ## - python
         ## - ssh-legacy
-        ## - workflows
 
     steps:
     # Continue after getting a shell via: `touch continue`
