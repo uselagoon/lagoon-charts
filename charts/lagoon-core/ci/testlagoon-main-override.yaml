@@ -59,7 +59,3 @@ ssh:
 controllerhandler:
   image:
     repository: testlagoon/controllerhandler
-
-workflows:
-  image:
-    repository: testlagoon/workflows
