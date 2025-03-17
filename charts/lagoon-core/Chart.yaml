@@ -41,18 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon appVersion to v2.24.0
-    - kind: changed
-      description: initial support for changing the database vendor
-    - kind: changed
-      description: update ssh-portal-api & ssh-token image to v0.42.0
-    - kind: changed
-      description: update lagoon-opensearch-sync image to v0.8.3
-    - kind: changed
-      description: update ssh-portal-api and ssh-token options
-    - kind: changed
-      description: ssh, ssh-token and broker service configuration options
-    - kind: changed
-      description: update nats to v1.2.11
-    - kind: changed
       description: Lagoon Workflows subsystem removed

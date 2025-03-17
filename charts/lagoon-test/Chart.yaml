@@ -29,8 +29,4 @@ appVersion: v2.24.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon-core appVersion to v2.23.0
-    - kind: changed
-      description: update lagoon appVersion to v2.24.0
-    - kind: changed
       description: Lagoon Workflows subsystem removed
