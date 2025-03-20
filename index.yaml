@@ -9068,6 +9068,42 @@ entries:
   lagoon-remote:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: fix storage-calculator role for secret requests
+    apiVersion: v2
+    created: "2025-03-20T22:01:46.299693033Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.33.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.2.0
+    description: A Helm chart to run a lagoon-remote
+    digest: db25981bc6d5eb50e6b58e7cfb3dcf32373ea5f00cc1897b8a22db70975f879a
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.97.1/lagoon-remote-0.97.1.tgz
+    version: 0.97.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: update lagoon-build-deploy to 0.33.0
         - kind: changed
@@ -15171,4 +15207,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-03-14T04:00:45.142197543Z"
+generated: "2025-03-20T22:01:46.300535997Z"
