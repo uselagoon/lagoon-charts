@@ -155,7 +155,7 @@ install-certmanager: generate-ca install-metallb
 		--set ingressShim.defaultIssuerGroup=cert-manager.io \
 		--version=v1.12.6 \
 		cert-manager \
-		ejetstack/cert-manager
+		jetstack/cert-manager
 	$(KUBECTL) -n cert-manager delete secret lagoon-test-secret || echo "lagoon-test-secret doesn't exist, ignoring"
 	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem
 	$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml

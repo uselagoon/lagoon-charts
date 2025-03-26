@@ -82,7 +82,8 @@ jobs:
         kubectl_version: v1.31.6
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
 
     - name: Run chart-testing (install changed only)
       run: |

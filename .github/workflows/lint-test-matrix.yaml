@@ -45,7 +45,8 @@ jobs:
         node_image: kindest/node:${{ matrix.kindest_node_version }}
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
 
     - name: Run chart-testing (install changed only)
       run: |
