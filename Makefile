@@ -133,7 +133,7 @@ install-metallb:
 		--namespace metallb-system  \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--version=v0.13.12 \
+		--version=v0.14.9 \
 		metallb \
 		metallb/metallb && \
 	$$(envsubst < test-suite.metallb-pool.yaml.tpl > test-suite.metallb-pool.yaml) && \
@@ -153,9 +153,9 @@ install-certmanager: generate-ca install-metallb
 		--set ingressShim.defaultIssuerName=lagoon-testing-issuer \
 		--set ingressShim.defaultIssuerKind=ClusterIssuer \
 		--set ingressShim.defaultIssuerGroup=cert-manager.io \
-		--version=v1.11.0 \
+		--version=v1.12.6 \
 		cert-manager \
-		jetstack/cert-manager
+		ejetstack/cert-manager
 	$(KUBECTL) -n cert-manager delete secret lagoon-test-secret || echo "lagoon-test-secret doesn't exist, ignoring"
 	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem
 	$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml
@@ -176,7 +176,7 @@ install-ingress: install-certmanager
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.9.1 \
+		--version=4.12.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -200,7 +200,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.14.3 \
+		--version=1.16.2 \
 		registry \
 		harbor/harbor
 else
@@ -343,7 +343,7 @@ install-k8upv2:
 		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
 		--set k8up.envVars[6].name=BACKUP_GLOBALRESTORES3ACCESSKEYID,k8up.envVars[6].value=lagoonFilesAccessKey \
 		--set k8up.envVars[7].name=BACKUP_GLOBALRESTORES3SECRETACCESSKEY,k8up.envVars[7].value=lagoonFilesSecretKey \
-		--version=4.8.2 \
+		--version=4.8.4 \
 		k8upv2 \
 		k8up/k8up
 
