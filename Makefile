@@ -424,6 +424,7 @@ endif
 		--set backupHandler.ingress.enabled=true \
 		--set backupHandler.ingress.hosts[0].host="lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set backupHandler.ingress.hosts[0].paths[0]="/" \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set backupHandler.image.repository=$(IMAGE_REGISTRY)/backup-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set broker.image.repository=$(IMAGE_REGISTRY)/broker') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiSidecarHandler.image.repository=$(IMAGE_REGISTRY)/api-sidecar-handler') \
 		--set insightsHandler.enabled=false \
