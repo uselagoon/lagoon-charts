@@ -172,6 +172,7 @@ install-ingress: install-certmanager
 		--set controller.service.type=LoadBalancer \
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
+		--set controller.config.annotations-risk-level=Critical \
 		--set controller.config.proxy-body-size=0 \
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
