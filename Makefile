@@ -169,6 +169,7 @@ install-ingress: install-certmanager
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set controller.allowSnippetAnnotations=true \
+		--set controller.enableAnnotationValidations=false \
 		--set controller.service.type=LoadBalancer \
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
