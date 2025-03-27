@@ -3,7 +3,7 @@ apiVersion: kind.x-k8s.io/v1alpha4
 name: chart-testing
 nodes:
 - role: control-plane
-  image: kindest/node:v1.31.6@sha256:28b7cbb993dfe093c76641a0c95807637213c9109b761f1d422c2400e22b8e87
+  image: kindest/node:v1.31.4@sha256:2cb39f7295fe7eafee0842b1052a599a4fb0f8bcf3f83d96c7f4864c357c6c30
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.configs."registry.${KIND_NODE_IP}.nip.io".tls]
