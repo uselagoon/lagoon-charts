@@ -327,10 +327,12 @@ install-k8upv1:
 		k8upv1 \
 		appuio/k8up
 
+# renovate: datasource=github-releases depName=k8up-io/k8up
+K8UPV2_VERSION ?= 4.8.4
 .PHONY: install-k8upv2
 install-k8upv2:
-	$(KUBECTL) create -f https://github.com/k8up-io/k8up/releases/download/k8up-4.8.2/k8up-crd.yaml || \
-		$(KUBECTL) replace -f https://github.com/k8up-io/k8up/releases/download/k8up-4.8.2/k8up-crd.yaml
+	$(KUBECTL) create -f https://github.com/k8up-io/k8up/releases/download/k8up-$(K8UPV2_VERSION)/k8up-crd.yaml || \
+		$(KUBECTL) replace -f https://github.com/k8up-io/k8up/releases/download/k8up-$(K8UPV2_VERSION)/k8up-crd.yaml
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -345,7 +347,7 @@ install-k8upv2:
 		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
 		--set k8up.envVars[6].name=BACKUP_GLOBALRESTORES3ACCESSKEYID,k8up.envVars[6].value=lagoonFilesAccessKey \
 		--set k8up.envVars[7].name=BACKUP_GLOBALRESTORES3SECRETACCESSKEY,k8up.envVars[7].value=lagoonFilesSecretKey \
-		--version=4.8.4 \
+		--version=$(K8UPV2_VERSION) \
 		k8upv2 \
 		k8up/k8up
 
