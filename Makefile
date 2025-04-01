@@ -588,7 +588,6 @@ endif
 		$$([ $(INSTALL_STABLE_BUILDDEPLOY) = true ] && [ $(STABLE_BUILDDEPLOY_CHART_VERSION) ] && echo '--version=$(STABLE_BUILDDEPLOY_CHART_VERSION)') \
 		$$(if [ $(INSTALL_STABLE_BUILDDEPLOY) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-build-deploy-$(STABLE_BUILDDEPLOY_CHART_VERSION)/charts/lagoon-build-deploy/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-build-deploy/ci/linter-values.yaml'; fi) \
 		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon-core get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
-		--set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc" \
 		--set "lagoonFeatureFlagEnableQoS=true" \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set sshPortalHost=$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.status.loadBalancer.ingress[0].ip}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set sshPortalPort=$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.spec.ports[0].port}')") \
@@ -605,9 +604,9 @@ endif
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminUser=admin") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.host=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = true ] && echo --set "unauthenticatedRegistry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ ! $(INSTALL_STABLE_BUILDDEPLOY) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && [ ! $(INSTALL_STABLE_BUILDDEPLOY) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && [ ! $(INSTALL_STABLE_BUILDDEPLOY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
 		$$([ $(BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set rootlessBuildPods=true') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoonFeatureFlagDefaultIsolationNetworkPolicy=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
