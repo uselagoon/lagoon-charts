@@ -133,7 +133,7 @@ install-metallb:
 		--namespace metallb-system  \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--version=v0.13.12 \
+		--version=v0.14.9 \
 		metallb \
 		metallb/metallb && \
 	$$(envsubst < test-suite.metallb-pool.yaml.tpl > test-suite.metallb-pool.yaml) && \
@@ -153,7 +153,7 @@ install-certmanager: generate-ca install-metallb
 		--set ingressShim.defaultIssuerName=lagoon-testing-issuer \
 		--set ingressShim.defaultIssuerKind=ClusterIssuer \
 		--set ingressShim.defaultIssuerGroup=cert-manager.io \
-		--version=v1.11.0 \
+		--version=v1.12.6 \
 		cert-manager \
 		jetstack/cert-manager
 	$(KUBECTL) -n cert-manager delete secret lagoon-test-secret || echo "lagoon-test-secret doesn't exist, ignoring"
@@ -169,14 +169,16 @@ install-ingress: install-certmanager
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set controller.allowSnippetAnnotations=true \
+		--set controller.enableAnnotationValidations=false \
 		--set controller.service.type=LoadBalancer \
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
+		--set controller.config.annotations-risk-level=Critical \
 		--set controller.config.proxy-body-size=0 \
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.9.1 \
+		--version=4.12.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 
@@ -200,7 +202,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.14.3 \
+		--version=1.16.2 \
 		registry \
 		harbor/harbor
 else
@@ -325,10 +327,12 @@ install-k8upv1:
 		k8upv1 \
 		appuio/k8up
 
+# renovate: datasource=github-releases depName=k8up-io/k8up
+K8UPV2_VERSION ?= 4.8.4
 .PHONY: install-k8upv2
 install-k8upv2:
-	$(KUBECTL) create -f https://github.com/k8up-io/k8up/releases/download/k8up-4.8.2/k8up-crd.yaml || \
-		$(KUBECTL) replace -f https://github.com/k8up-io/k8up/releases/download/k8up-4.8.2/k8up-crd.yaml
+	$(KUBECTL) create -f https://github.com/k8up-io/k8up/releases/download/k8up-$(K8UPV2_VERSION)/k8up-crd.yaml || \
+		$(KUBECTL) replace -f https://github.com/k8up-io/k8up/releases/download/k8up-$(K8UPV2_VERSION)/k8up-crd.yaml
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -343,7 +347,7 @@ install-k8upv2:
 		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
 		--set k8up.envVars[6].name=BACKUP_GLOBALRESTORES3ACCESSKEYID,k8up.envVars[6].value=lagoonFilesAccessKey \
 		--set k8up.envVars[7].name=BACKUP_GLOBALRESTORES3SECRETACCESSKEY,k8up.envVars[7].value=lagoonFilesSecretKey \
-		--version=4.8.2 \
+		--version=$(K8UPV2_VERSION) \
 		k8upv2 \
 		k8up/k8up
 
