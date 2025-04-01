@@ -94,6 +94,12 @@ INSTALL_MARIADB_PROVIDER = true
 INSTALL_POSTGRES_PROVIDER = true
 INSTALL_MONGODB_PROVIDER = true
 
+LOGS2SLACK_DISABLED = false
+LOGS2EMAIL_DISABLED = false
+LOGS2ROCKETCHAT_DISABLED = true
+LOGS2EMAIL_DISABLED = true
+LOGS2MICROSOFTTEAMS_DISABLED = true
+
 # install k8up v1 (backup.appuio.ch/v1alpah1) and v2 (k8up.io/v1)
 # specifify which version the remote controller should start with
 # currently lagoon supports both versions, but may one day only support k8up v2
@@ -438,11 +444,11 @@ endif
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set logs2notifications.additionalEnvs.EMAIL_HOST=mailpit-smtp.mailpit.svc') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set logs2notifications.additionalEnvs.EMAIL_PORT="25"') \
-		--set logs2notifications.logs2email.disabled=false \
-		--set logs2notifications.logs2microsoftteams.disabled=true \
-		--set logs2notifications.logs2rocketchat.disabled=true \
-		--set logs2notifications.logs2slack.disabled=true \
-		--set logs2notifications.logs2webhooks.disabled=true \
+		--set logs2notifications.logs2email.disabled=$(LOGS2EMAIL_DISABLED) \
+		--set logs2notifications.logs2microsoftteams.disabled=$(LOGS2MICROSOFTTEAMS_DISABLED) \
+		--set logs2notifications.logs2rocketchat.disabled=$(LOGS2ROCKETCHAT_DISABLED) \
+		--set logs2notifications.logs2slack.disabled=$(LOGS2SLACK_DISABLED) \
+		--set logs2notifications.logs2webhooks.disabled=$(LOGS2WEBHOOKS_DISABLED) \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks') \
