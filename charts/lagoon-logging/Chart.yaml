@@ -39,3 +39,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update logging-operator from 4.10.0 to 4.11.4
+    - kind: changed
+      description: update uselagoon/logs-dispatcher image from v3.8.0 to v3.9.0
