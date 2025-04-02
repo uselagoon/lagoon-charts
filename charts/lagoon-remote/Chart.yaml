@@ -40,5 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: fix storage-calculator role for secret requests
+    - kind: added
+      description: dedicated label to docker-host services
