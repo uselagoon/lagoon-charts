@@ -74,7 +74,9 @@ data:
       password "#{ENV['LOGSDB_ADMIN_PASSWORD']}"
       # endpoint error handling
       reconnect_on_error true
-      reload_on_failure true
+      # never reload - always use the configured host only
+      reload_on_failure false
+      reload_connections false
       request_timeout 600s
       slow_flush_log_threshold 300s
       log_es_400_reason true
