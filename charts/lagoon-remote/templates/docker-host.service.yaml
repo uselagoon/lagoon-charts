@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: docker-host
   labels:
+    dockerhost.lagoon.sh/dedicated: "false"
     {{- include "lagoon-remote.dockerHost.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.dockerHost.service.type }}
@@ -30,6 +31,7 @@ kind: Service
 metadata:
   name: docker-host-{{ $index0 }}
   labels:
+    dockerhost.lagoon.sh/dedicated: "true"
 {{ $labels | indent 4 }}
 spec:
   type: {{ $stype }}
