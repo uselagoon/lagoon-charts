@@ -435,7 +435,10 @@ nats:
 natsConfig:
   # coreURL format tls://<username>:<password>@<host>:7422
   coreURL: ""
-  tls: {}
+  # use this if you're only providing the ca certificate to nats.
+  # this can be used if you've got lagoon-core leafnode tls verify disabled
+  tls:
+    caOnly: false
     # If the lagoon-remote-nats-tls secret should be created by the
     # lagoon-remote chart, certificate values can be specified directly in
     # secretData. Configuring TLS this way also allows specifying a custom

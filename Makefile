@@ -441,19 +441,21 @@ endif
 install-lagoon: install-lagoon-core install-lagoon-remote install-lagoon-build-deploy
 
 # this is only used by lint tests at the moment
-.PHONY: install-broker-certs
-install-broker-certs: install-lagoon-core-broker-certs install-lagoon-remote-broker-certs
+.PHONY: install-lagoon-certs
+install-lagoon-certs: install-lagoon-core-certs install-lagoon-remote-certs
 
 # this should not need to be changed in regular instances, only used by lint tests at the moment
 CORE_NAMESPACE = lagoon-core
-.PHONY: install-lagoon-core-broker-certs
-install-lagoon-core-broker-certs:
+.PHONY: install-lagoon-core-certs
+install-lagoon-core-certs:
 # create the namespace if it doesn't exist so we can request a certificate from our local testing CA for the broker
 	$(KUBECTL) create namespace $(CORE_NAMESPACE) 2>/dev/null || true
-	$(KUBECTL) -n $(CORE_NAMESPACE) apply -f broker-core-certificate-request.yaml
+	$(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/broker-core-certificate-request.yaml
+	$(KUBECTL) create namespace $(CORE_NAMESPACE) 2>/dev/null || true
+	$(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/nats-core-certificate-request.yaml
 
 .PHONY: install-lagoon-core
-install-lagoon-core: install-lagoon-core-broker-certs
+install-lagoon-core: install-lagoon-core-certs
 ifneq ($(INSTALL_STABLE_CORE),true)
 	$(HELM) dependency build ./charts/lagoon-core/
 else
@@ -461,6 +463,7 @@ ifeq (,$(subst ",,$(STABLE_CORE_CHART_VERSION)))
 	$(eval STABLE_CORE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-core -o json | $(JQ) -r '.[]|.version'))
 endif
 endif
+	$(KUBECTL) create namespace lagoon-core 2>/dev/null || true
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -569,15 +572,17 @@ endif
 
 # this should not need to be changed in regular instances, only used by lint tests at the moment
 REMOTE_NAMESPACE = lagoon
-.PHONY: install-lagoon-remote-broker-certs
-install-lagoon-remote-broker-certs:
+.PHONY: install-lagoon-remote-certs
+install-lagoon-remote-certs:
 # create the namespace if it doesn't exist and add the CA certificate for the remote to use where required
 	$(KUBECTL) create namespace $(REMOTE_NAMESPACE) 2>/dev/null || true
 	$(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-broker-tls 2>/dev/null || true
 	$(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-broker-tls --from-file=ca.crt=certs/rootCA.pem
+	$(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-nats-tls 2>/dev/null || true
+	$(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-nats-tls --from-file=ca.crt=certs/rootCA.pem
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-lagoon-remote-broker-certs
+install-lagoon-remote: install-lagoon-remote-certs
 ifneq ($(INSTALL_STABLE_REMOTE),true)
 	$(HELM) dependency build ./charts/lagoon-remote/
 else
@@ -585,6 +590,7 @@ ifeq (,$(subst ",,$(STABLE_REMOTE_CHART_VERSION)))
 	$(eval STABLE_REMOTE_CHART_VERSION := $(shell $(HELM) search repo lagoon/lagoon-remote -o json | $(JQ) -r '.[]|.version'))
 endif
 endif
+	$(KUBECTL) create namespace lagoon 2>/dev/null || true
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \

@@ -288,6 +288,11 @@ nats:
   config:
     cluster:
       name: lagoon-core-ci-example
+    leafnodes:
+      tls:
+        merge:
+          # don't require mTLS in tests
+          verify: false
   # natsBox:
   #   enabled: true
   #   # additional labels are required due to the network policy
@@ -302,38 +307,3 @@ natsConfig:
     lagoonRemote:
       - user: ci-ssh-portal
         password: ci-password
-  tls:
-    secretData:
-      ca.crt: |
-        -----BEGIN CERTIFICATE-----
-        MIIBgDCCASagAwIBAgIUUbG6sFBXxdA1wxjmlt/zkfpQTTwwCgYIKoZIzj0EAwIw
-        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yNDA0MTUwNDA4MDBa
-        Fw0zNDA0MTMwNDA4MDBaMB4xHDAaBgNVBAMTE25hdHMtY2EuZXhhbXBsZS5jb20w
-        WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATRF6Wjy5sm5quCKkqFBZERPcrCj2fL
-        xKjCNDJtwZijhR/DoHPImxnxXbcNuqXmFENDsleAXBb0YHTC6nauSCVmo0IwQDAO
-        BgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUPCFB/EwR
-        pk6xM9YSqzbLgchB6fQwCgYIKoZIzj0EAwIDSAAwRQIgCSCLQTN1K703YR/VXY+G
-        iYmI+nuDxvSE7s/u5hhmh+wCIQDXoxiQvQuokI06j6W1K5UgR6h9dUoKeTFQIqXp
-        uKPLhg==
-        -----END CERTIFICATE-----
-      tls.crt: |
-        -----BEGIN CERTIFICATE-----
-        MIICGDCCAb6gAwIBAgIUJC6a9n2zJYl7nOZ2AutYhyjVmQswCgYIKoZIzj0EAwIw
-        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yNDA0MTUwNDA4MDBa
-        Fw0zNDA0MTMwNDA4MDBaMCgxJjAkBgNVBAMTHWxhZ29vbi1jb3JlLW5hdHMtY29u
-        Y2VudHJhdG9yMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAENf2wtlM9sSu330UX
-        gZTkAOZBRkH2V6YZG7rB/7pTtO0yKQmIfr+lK1mz+rBGD+GIUJQH5tOh6ufSx8ca
-        ut1bfaOBzzCBzDAOBgNVHQ8BAf8EBAMCBaAwEwYDVR0lBAwwCgYIKwYBBQUHAwEw
-        DAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUtH0LRNOWRz/mKPbaC5CbmWstAKEwHwYD
-        VR0jBBgwFoAUPCFB/EwRpk6xM9YSqzbLgchB6fQwVwYDVR0RBFAwToIdbGFnb29u
-        LWNvcmUtbmF0cy1jb25jZW50cmF0b3KCLWxhZ29vbi1jb3JlLW5hdHMtY29uY2Vu
-        dHJhdG9yLmxhZ29vbi1jb3JlLnN2YzAKBggqhkjOPQQDAgNIADBFAiEA/K5i1Ywq
-        CaKsntUSiMDTZSYvEtLb+ZxOn71RnDYP4JUCIG6TZVFfMiYPZ0gGLMRMf666E3bB
-        0U5vgRqQhghJPbpM
-        -----END CERTIFICATE-----
-      tls.key: |
-        -----BEGIN EC PRIVATE KEY-----
-        MHcCAQEEIBqSIJXbR9H4WChftIW2QwJmGD+5QjlfwBCkspRBcsSHoAoGCCqGSM49
-        AwEHoUQDQgAENf2wtlM9sSu330UXgZTkAOZBRkH2V6YZG7rB/7pTtO0yKQmIfr+l
-        K1mz+rBGD+GIUJQH5tOh6ufSx8caut1bfQ==
-        -----END EC PRIVATE KEY-----
