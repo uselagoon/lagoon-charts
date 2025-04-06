@@ -48,11 +48,11 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
 
-    - name: Install broker certificates
+    - name: Install lagoon test certificates
       run: |
         helm repo add jetstack https://charts.jetstack.io
         make INSTALL_CERTMANAGER_METALLB=false install-certmanager
-        make install-broker-certs CORE_NAMESPACE=lagoon-${{ github.event.pull_request.number }} REMOTE_NAMESPACE=lagoon-${{ github.event.pull_request.number }}
+        make install-lagoon-certs CORE_NAMESPACE=lagoon-${{ github.event.pull_request.number }} REMOTE_NAMESPACE=lagoon-${{ github.event.pull_request.number }}
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
