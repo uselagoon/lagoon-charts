@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.97.0
+version: 0.97.1
 
 dependencies:
 - name: lagoon-build-deploy
@@ -40,19 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: update lagoon-build-deploy to 0.33.0
-    - kind: changed
-      description: update storage-calculator metrics role
-    - kind: changed
-      description: update ssh-portal image to v0.42.0
-    - kind: fixed
-      description: fix storage-calculator role
-    - kind: changed
-      description: ssh-portal service configuration options
-    - kind: changed
-      description: update storage-calculator to v0.8.0
-    - kind: changed
-      description: update insights-remote to v0.0.12
-    - kind: changed
-      description: update nats to v1.2.11
+    - kind: added
+      description: dedicated label to docker-host services
