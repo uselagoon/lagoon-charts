@@ -10,18 +10,18 @@ jobs:
       fail-fast: false
       matrix:
         test:
-        - active-standby-kubernetes
-        - api
-        - deploytarget
-        - features-kubernetes
-        - features-kubernetes-2
-        - features-variables
+        # - active-standby-kubernetes
+        # - api
+        # - deploytarget
+        # - features-kubernetes
+        # - features-kubernetes-2
+        # - features-variables
         - services
-        - tasks
+        # - tasks
         ## Re-enable any of these tests in your branch for specific testing
         ## - bitbucket
         ## - bulk-deployment
-        ## - drush
+        - drush
         ## - generic
         ## - github
         ## - gitlab
@@ -29,8 +29,9 @@ jobs:
         ## - nginx
         ## - node
         ## - python
-        ## - ssh-legacy
-        ## - workflows
+        - ssh-legacy
+        # - workflows
+        - all-tasks-combined
 
     steps:
     # Continue after getting a shell via: `touch continue`
