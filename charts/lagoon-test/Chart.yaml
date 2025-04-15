@@ -32,4 +32,3 @@ annotations:
       description: update lagoon appVersion to v2.24.1
     - kind: changed
       description: Lagoon Workflows subsystem removed
-    
