@@ -22,5 +22,12 @@ data:
       routing_key   ""
       queue         "lagoon-logs:logs-dispatcher"
       durable       true
+      {{- if .Values.lagoonLogs.broker.tls.enabled }}
+      tls true
+      {{- if .Values.lagoonLogs.broker.tlsCA.enabled }}
+      tls_ca_certificates ["/lagoon-ca.crt"]
+      {{- end }}
+      verify_peer {{ .Values.lagoonLogs.tls.verifyPeer }}
+      {{- end }}
     </source>
 {{- end }}

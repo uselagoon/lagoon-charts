@@ -38,6 +38,9 @@ spec:
         args:
         - "--metrics-bind-address=:8443"
         - "--leader-elect=true"
+        {{- if .Values.amqp.tls.enabled }}
+        - "--rabbitmq-tls"
+        {{- end }}
         {{- if .Values.harbor.enabled }}
         - "--enable-harbor=true"
         - "--harbor-url={{ .Values.harbor.host }}"
@@ -241,6 +244,12 @@ spec:
           value: {{ .Values.pendingMessageCron | quote }}
         - name: RABBITMQ_HOSTNAME
           value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
+        {{- if .Values.amqp.tlsCA.enabled }}
+        - name: RABBITMQ_CACERT
+          value: "/ca.crt"
+        {{- end }}
+        - name: RABBITMQ_VERIFY
+          value: {{ .Values.amqp.tls.verifyPeer | quote }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -269,8 +278,20 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        volumeMounts:
+        {{- if .Values.amqp.tlsCA.enabled }}
+        - mountPath: /ca.crt
+          name: {{ include "lagoon-build-deploy.fullname" . }}-amqp-tls
+          subPath: ca.crt
+        {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+      volumes:
+      {{- if .Values.amqp.tlsCA.enabled }}
+      - name: {{ include "lagoon-build-deploy.fullname" . }}-amqp-tls
+        secret:
+          secretName: {{ .Values.amqp.tlsCA.secretName }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

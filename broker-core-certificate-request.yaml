@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: lagoon-core-broker
+spec:
+  secretName: lagoon-core-broker-tls
+  isCA: false
+  usages:
+    - server auth
+    - client auth
+  commonName: "lagoon-core-broker"
+  dnsNames:
+    - "lagoon-core-broker"
+    - "lagoon-core-broker.lagoon-core.svc"
+  issuerRef:
+    kind: ClusterIssuer
+    name: lagoon-testing-issuer
