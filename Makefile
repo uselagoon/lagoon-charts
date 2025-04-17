@@ -496,7 +496,6 @@ endif
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_TAG) ] && echo '--set sshPortalAPI.image.tag=$(SSHPORTALAPI_IMAGE_TAG)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_REPO) ] && echo '--set sshToken.image.repository=$(SSHTOKEN_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_TAG) ] && echo '--set sshToken.image.tag=$(SSHTOKEN_IMAGE_TAG)') \
-		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set workflows.image.repository=$(IMAGE_REGISTRY)/workflows') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.enabled=true') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.settings.host=mailpit-smtp.mailpit.svc') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.settings.port=25') \

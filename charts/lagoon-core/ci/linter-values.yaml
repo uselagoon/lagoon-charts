@@ -277,10 +277,6 @@ controllerhandler:
 
 imageTag: ""
 
-workflows:
-  replicaCount: 1
-  image:
-    repository: uselagoon/workflows
 
 # enable nats cluster (and optionally natsbox debugger)
 nats:

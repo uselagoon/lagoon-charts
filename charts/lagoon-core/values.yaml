@@ -796,34 +796,6 @@ ssh:
     rsaPub: ""
     rsa: ""
 
-workflows:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/workflows
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources:
-    requests:
-      memory: "16Mi"
-      cpu: "10m"
-
-  additionalEnvs:
-  #   FOO: Bar
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
 # nats subchart is configured for use by lagoon-core
 nats:
   enabled: false
