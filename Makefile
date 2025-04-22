@@ -118,6 +118,9 @@ LOGS2MICROSOFTTEAMS_DISABLED = true
 INSTALL_K8UP = false
 BUILD_DEPLOY_CONTROLLER_K8UP_VERSION = v2
 
+# optionally install aergia for local testing
+INSTALL_AERGIA = false
+
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
@@ -179,6 +182,30 @@ install-certmanager: generate-ca
 	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem
 	$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml
 
+ifeq ($(INSTALL_AERGIA),true)
+.PHONY: install-aergia
+install-aergia:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace aergia \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set templates.enabled=false \
+		--set idling.enabled=true \
+		--set idling.serviceCron="5 * * * *" \
+		--set idling.podCheckInterval=30m \
+		--set servicemonitor.enabled=false \
+		--set metrics.enabled=false \
+		--set unidling.verifyRequests.enabled=false \
+		--version=0.7.2 \
+		aergia \
+		amazeeio/aergia
+
+# install aergia before installing ingress-nginx
+install-ingress: install-aergia
+endif
+
 .PHONY: install-ingress
 install-ingress: install-certmanager
 	$(HELM) upgrade \
@@ -197,6 +224,8 @@ install-ingress: install-certmanager
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
+		--set controller.addHeaders.X-Lagoon="remote>ingress-nginx>$$namespace:$$service_name" \
+		$$([ $(INSTALL_AERGIA) = true ] && echo '--set controller.extraArgs.default-backend-service=aergia/aergia-backend') \
 		--version=4.12.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
