@@ -1,6 +1,20 @@
 {{- if .Values.insightsRemote.enabled -}}
 
 {{- $rabbitMQHostname := coalesce .Values.global.rabbitMQHostname .Values.insightsRemote.rabbitMQHostname }}
+{{- $rabbitMQTLSSecretName := coalesce .Values.global.broker.tlsCA.secretName .Values.insightsRemote.broker.tlsCA.secretName }}
+
+{{- $rabbitMQTLSEnabled := .Values.insightsRemote.broker.tls.enabled }}
+{{- if .Values.global.broker.tls.enabled }}
+{{- $rabbitMQTLSEnabled = .Values.global.broker.tls.enabled }}
+{{- end }}
+{{- $rabbitMQTLSCAEnabled := .Values.insightsRemote.broker.tlsCA.enabled }}
+{{- if .Values.global.broker.tlsCA.enabled }}
+{{- $rabbitMQTLSCAEnabled = .Values.global.broker.tlsCA.enabled }}
+{{- end }}
+{{- $rabbitMQTLSVerifyPeer := .Values.insightsRemote.broker.tls.verifyPeer | quote }}
+{{- if .Values.global.broker.tls.verifyPeer }}
+{{- $rabbitMQTLSVerifyPeer = .Values.global.broker.tlsCA.verifyPeer | quote }}
+{{- end }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -38,12 +52,22 @@ spec:
           image: "{{ .Values.insightsRemote.image.repository }}:{{ coalesce .Values.insightsRemote.image.tag .Values.imageTag "latest" }}"
           imagePullPolicy: {{ .Values.insightsRemote.image.pullPolicy }}
           env:
-            {{- if .Values.insightsRemote.burnAfterReading }}
+          {{- if .Values.insightsRemote.burnAfterReading }}
             - name: BURN_AFTER_READING
               value: "TRUE"
-            {{- end }}
+          {{- end }}
+          {{- if $rabbitMQTLSEnabled }}
+            - name: RABBITMQ_ENABLED
+              value: "TRUE"
+          {{- end }}
             - name: RABBITMQ_ADDRESS
               value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
+          {{- if $rabbitMQTLSCAEnabled }}
+            - name: RABBITMQ_CACERT
+              value: "/ca.crt"
+          {{- end }}
+            - name: RABBITMQ_VERIFY
+              value: {{ $rabbitMQTLSVerifyPeer | quote }}
             - name: RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -59,12 +83,24 @@ spec:
                 secretKeyRef:
                   name: {{ include "lagoon-remote.insightsRemote.fullname" . }}
                   key: INSIGHTS_TOKEN_SECRET
+          volumeMounts:
+          {{- if $rabbitMQTLSCAEnabled }}
+            - mountPath: /ca.crt
+              name: {{ include "lagoon-remote.insightsRemote.fullname" . }}-amqp-tls
+              subPath: ca.crt
+          {{- end }}
           resources:
             {{- toYaml .Values.insightsRemote.resources | nindent 12 }}
           ports:
             - name: insights-ws
               containerPort: 8888
-              protocol: TCP            
+              protocol: TCP
+      volumes:
+      {{- if $rabbitMQTLSCAEnabled }}
+        - name: {{ include "lagoon-remote.insightsRemote.fullname" . }}-amqp-tls
+          secret:
+            secretName: {{ $rabbitMQTLSSecretName }}
+      {{- end }}
       {{- with .Values.insightsRemote.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

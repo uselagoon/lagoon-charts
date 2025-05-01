@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: added
       description: dedicated label to docker-host services
+    - kind: changed
+      description: tls support for rabbitmq

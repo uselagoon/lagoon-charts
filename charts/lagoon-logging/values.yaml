@@ -246,7 +246,6 @@ lagoonLogs:
       #     ...
     tls:
       enabled: false
-      # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
       verifyPeer: true
 
 forward:

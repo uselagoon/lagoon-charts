@@ -1,6 +1,20 @@
 {{- if .Values.storageCalculator.enabled -}}
 
 {{- $rabbitMQHostname := coalesce .Values.global.rabbitMQHostname .Values.storageCalculator.rabbitMQHostname }}
+{{- $rabbitMQTLSSecretName := coalesce .Values.global.broker.tlsCA.secretName .Values.storageCalculator.broker.tlsCA.secretName }}
+
+{{- $rabbitMQTLSEnabled := .Values.storageCalculator.broker.tls.enabled }}
+{{- if .Values.global.broker.tls.enabled }}
+{{- $rabbitMQTLSEnabled = .Values.global.broker.tls.enabled }}
+{{- end }}
+{{- $rabbitMQTLSCAEnabled := .Values.storageCalculator.broker.tlsCA.enabled }}
+{{- if .Values.global.broker.tlsCA.enabled }}
+{{- $rabbitMQTLSCAEnabled = .Values.global.broker.tlsCA.enabled }}
+{{- end }}
+{{- $rabbitMQTLSVerifyPeer := .Values.storageCalculator.broker.tls.verifyPeer | quote }}
+{{- if .Values.global.broker.tls.verifyPeer }}
+{{- $rabbitMQTLSVerifyPeer = .Values.global.broker.tlsCA.verifyPeer | quote }}
+{{- end }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -38,6 +52,9 @@ spec:
         - "--metrics-bind-address=:8443"
         - "--leader-elect=true"
         - "--prometheus-metrics=true"
+        {{- if $rabbitMQTLSEnabled }}
+        - "--rabbitmq-tls"
+        {{- end }}
         {{- with .Values.storageCalculator.extraArgs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -59,6 +76,12 @@ spec:
         {{- end }}
         - name: RABBITMQ_HOSTNAME
           value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
+        {{- if $rabbitMQTLSCAEnabled }}
+        - name: RABBITMQ_CACERT
+          value: "/ca.crt"
+        {{- end }}
+        - name: RABBITMQ_VERIFY
+          value: {{ $rabbitMQTLSVerifyPeer | quote }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -69,8 +92,20 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-remote.storageCalculator.fullname" . }}
               key: RABBITMQ_USERNAME
+        volumeMounts:
+        {{- if $rabbitMQTLSCAEnabled }}
+        - mountPath: /ca.crt
+          name: {{ include "lagoon-remote.storageCalculator.fullname" . }}-amqp-tls
+          subPath: ca.crt
+        {{- end }}
         resources:
           {{- toYaml .Values.storageCalculator.resources | nindent 10 }}
+      volumes:
+      {{- if $rabbitMQTLSCAEnabled }}
+      - name: {{ include "lagoon-remote.storageCalculator.fullname" . }}-amqp-tls
+        secret:
+          secretName: {{ $rabbitMQTLSSecretName }}
+      {{- end }}
       {{- with .Values.storageCalculator.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

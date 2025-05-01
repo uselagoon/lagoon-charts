@@ -197,15 +197,20 @@ tolerations: []
 
 affinity: {}
 
-amqp:
+broker:
   # enable if providing a custom CA for broker connections
   tlsCA:
     enabled: false
-    secretName: lagoon-remote-broker-tls
+    # if lagoon-build-deploy chart is installed as part of lagoon-remote
+    # then this secret name could be defined by the "global" configs for lagoon-remote instead of here.
+    # if this chart and lagoon-remote are installed in isolation, but in the same namespace
+    # then you can use the same secret that lagoon-remote may be using if lagoon-remote is also configured
+    # to use the "global" settings for broker by setting the secretName manually to "lagoon-remote-broker-tls".
+    # in other cases, you may need to create this secret manually if not defining the CA in values.
+    secretName: lagoon-remote-build-deploy-broker-tls
     # secretData:
     #   ca.crt: |
     #     ...
   tls:
     enabled: false
-    # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
     verifyPeer: true
