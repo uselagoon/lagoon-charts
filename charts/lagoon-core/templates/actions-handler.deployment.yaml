@@ -61,6 +61,14 @@ spec:
               key: JWTSECRET
         - name: GRAPHQL_ENDPOINT
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
+        - name: S3_FILES_BUCKET
+          value: {{ required "A valid .Values.s3FilesBucket required!" .Values.s3FilesBucket | quote }}
+        - name: S3_FILES_HOST
+          value: {{ required "A valid .Values.s3FilesHost required!" .Values.s3FilesHost | quote }}
+        {{- with .Values.s3FilesRegion }}
+        - name: S3_FILES_REGION
+          value: {{ . | quote }}
+        {{- end }}
       {{- range $key, $val := .Values.actionsHandler.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
