@@ -227,6 +227,9 @@ insightsRemote:
   nameOverride: ""
   fullnameOverride: ""
 
+  # add extra environment variables if required
+  extraEnvs:
+
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
