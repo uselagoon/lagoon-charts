@@ -661,7 +661,7 @@ insightsHandler:
     enabled: false
     image:
       repository: aquasec/trivy
-      tag: 0.48.0
+      tag: 0.62.1
     service:
       type: ClusterIP
       port: 4954
