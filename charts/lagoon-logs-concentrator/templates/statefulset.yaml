@@ -59,12 +59,18 @@ spec:
           containerPort: 24231
           protocol: TCP
         {{- end }}
+        {{- with .Values.startupProbe }}
+        startupProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.livenessProbe }}
         livenessProbe:
-          tcpSocket:
-            port: forward
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.readinessProbe }}
         readinessProbe:
-          tcpSocket:
-            port: forward
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         envFrom:
         - secretRef:
             name: {{ include "lagoon-logs-concentrator.fullname" . }}-env

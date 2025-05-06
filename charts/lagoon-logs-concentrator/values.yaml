@@ -62,6 +62,17 @@ resources:
     cpu: "1"
     memory: 2Gi
 
+startupProbe:
+  failureThreshold: 10
+  tcpSocket:
+    port: forward
+livenessProbe:
+  tcpSocket:
+    port: forward
+readinessProbe:
+  tcpSocket:
+    port: forward
+
 autoscaling:
   enabled: true
   minReplicas: 2
