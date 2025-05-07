@@ -589,39 +589,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
---- WORKFLOWS ---
-*/}}
-{{/*
-Create a default fully qualified app name for workflows.
-*/}}
-{{- define "lagoon-core.workflows.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-workflows
-{{- end }}
-
-{{/*
-Common labels workflows
-*/}}
-{{- define "lagoon-core.workflows.labels" -}}
-helm.sh/chart: {{ include "lagoon-core.chart" . }}
-{{ include "lagoon-core.workflows.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels workflows
-*/}}
-{{- define "lagoon-core.workflows.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-core.workflows.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-
-
-{{/*
 Create a definition that matches the fully qualified app name for the nats
 subchart.
 */}}
