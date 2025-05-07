@@ -353,15 +353,25 @@ broker:
     ports:
       epmd: 4369
       amqp: 5672
+      amqps: 5671
       http: 15672
       metrics: 15692
     amqpExternal:
+      # amqpExternal is used to enable or disable the port on the external facing service.
+      # if used in conjunction with amqpsExternal, you will get both ports
+      # if used alone it will only be this port
       enabled: false
       type: LoadBalancer
       port: 5672
       annotations: {}
       # externalTrafficPolicy: ""
       # loadBalancerSourceRanges: []
+    amqpsExternal:
+      # amqpsExternal is used to enable or disable the TLS port on the external facing service.
+      # if used in conjunction with amqpExternal, you will get both ports
+      # the type is only consumed from amqpExternal, changing the type of the external loadbalancer should be done there
+      enabled: false
+      port: 5671
 
   serviceMonitor:
     enabled: true
@@ -411,6 +421,26 @@ broker:
     failureThreshold: 60
     tcpSocket:
       port: amqp
+
+  tls:
+    enabled: false
+    secretName: lagoon-core-broker-tls
+    # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
+    verify: verify_none
+    failIfNoPeerCert: false
+    # If the lagoon-core-broker-tls secret should be created by the lagoon-core
+    # chart, certificate values can be specified directly in secretData.
+    # secretData:
+    #   ca.crt: |
+    #     ...
+    #   tls.crt: |
+    #     ...
+    #   tls.key: |
+    #     ...
+    #
+    # If the TLS secret is created outside the lagoon-core chart, it should be
+    # named lagoon-core-broker-tls. This secret should contain fields ca.crt, tls.crt and
+    # tls.key, and the certificate should be issued by a public authority.
 
 authServer:
   replicaCount: 2

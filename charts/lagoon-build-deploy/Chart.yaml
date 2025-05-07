@@ -24,6 +24,8 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: move harbor credentials into secret
+    - kind: changed
+      description: tls support for rabbitmq
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2

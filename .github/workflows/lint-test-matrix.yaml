@@ -48,17 +48,27 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
 
+    - name: Install broker certificates
+      run: |
+        helm repo add jetstack https://charts.jetstack.io
+        make INSTALL_CERTMANAGER_METALLB=false install-certmanager
+        make install-broker-certs CORE_NAMESPACE=lagoon-${{ github.event.pull_request.number }} REMOTE_NAMESPACE=lagoon-${{ github.event.pull_request.number }}
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+
     - name: Run chart-testing (install changed only)
       run: |
-        ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
+        ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m" --namespace lagoon-${{ github.event.pull_request.number }}
       if: ${{ !contains(github.event.pull_request.labels.*.name, 'next-release') && !contains(github.event.pull_request.labels.*.name, 'needs-testing') }}
 
     - name: Run chart-testing (install changed next-release only)
       run: |
         yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' ./charts/lagoon-core/ci/linter-values.yaml ./charts/lagoon-core/ci/testlagoon-main-override.yaml
-        ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
+        ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m" --namespace lagoon-${{ github.event.pull_request.number }}
       if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') }}
 
     - name: Run chart-testing (install all charts when required)
-      run: ct install --config ./default.ct.yaml  --helm-extra-args "--timeout 30m" --all
+      run: ct install --config ./default.ct.yaml  --helm-extra-args "--timeout 30m" --all --namespace lagoon-${{ github.event.pull_request.number }}
       if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') || contains(github.event.pull_request.labels.*.name, 'needs-testing') }}

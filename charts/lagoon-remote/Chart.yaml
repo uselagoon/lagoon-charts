@@ -44,3 +44,5 @@ annotations:
       description: dedicated label to docker-host services
     - kind: added
       description: added extraEnvs to insights remote values
+    - kind: changed
+      description: tls support for rabbitmq

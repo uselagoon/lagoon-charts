@@ -1,7 +1,13 @@
 global:
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
-  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc
+  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc:5671
+  broker:
+    tls:
+      enabled: true
+    tlsCA:
+      enabled: true
+      secretName: lagoon-remote-broker-tls
 
 lagoon-build-deploy:
   enabled: true
@@ -12,7 +18,7 @@ lagoon-build-deploy:
   # remove on next release
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
-  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc
+  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc:5671
 
 dockerHost:
   image:

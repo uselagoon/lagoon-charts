@@ -7,6 +7,18 @@ global:
   rabbitMQUsername: ""
   rabbitMQPassword: ""
   rabbitMQHostname: ""
+  broker:
+    # enable if providing a custom CA for broker connections
+    tlsCA:
+      enabled: false
+      secretName: lagoon-remote-broker-tls
+      # secretData:
+      #   ca.crt: |
+      #     ...
+    tls:
+      enabled: false
+      # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
+      verifyPeer: true
 
 imagePullSecrets: []
 
@@ -299,6 +311,19 @@ insightsRemote:
     type: ClusterIP
     port: 80
 
+  broker:
+    # enable if providing a custom CA for broker connections
+    tlsCA:
+      enabled: false
+      # if you're definining configuration using the "global" broker settings, this secretName
+      # will not be used
+      secretName: lagoon-remote-insights-broker-tls
+      # secretData:
+      #   ca.crt: |
+      #     ...
+    tls:
+      enabled: false
+      verifyPeer: true
 
 # the nats chart is a subchart which is configured for use by lagoon-remote
 # nats subchart is configured for use by lagoon-remote
@@ -454,6 +479,20 @@ storageCalculator:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: v0.8.0
+
+  broker:
+    # enable if providing a custom CA for broker connections
+    tlsCA:
+      enabled: false
+      # if you're definining configuration using the "global" broker settings, this secretName
+      # will not be used
+      secretName: lagoon-remote-storage-broker-tls
+      # secretData:
+      #   ca.crt: |
+      #     ...
+    tls:
+      enabled: false
+      verifyPeer: true
 
 # sysctlConfigure is used  to configure sysctl options on nodes for use by elasticsearch/opensearch pods used in lagoon
 # https://github.com/uselagoon/lagoon/issues/2588
