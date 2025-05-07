@@ -38,6 +38,10 @@ spec:
           image: "{{ .Values.insightsRemote.image.repository }}:{{ coalesce .Values.insightsRemote.image.tag .Values.imageTag "latest" }}"
           imagePullPolicy: {{ .Values.insightsRemote.image.pullPolicy }}
           env:
+            {{- range $name, $value := .Values.insightsRemote.extraEnvs }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
             {{- if .Values.insightsRemote.burnAfterReading }}
             - name: BURN_AFTER_READING
               value: "TRUE"
