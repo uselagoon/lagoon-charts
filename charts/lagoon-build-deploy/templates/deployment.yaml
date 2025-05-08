@@ -263,7 +263,7 @@ spec:
           value: "/ca.crt"
         {{- end }}
         - name: RABBITMQ_VERIFY
-          value: {{ $rabbitMQTLSVerifyPeer | quote }}
+          value: {{ $rabbitMQTLSVerifyPeer }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
