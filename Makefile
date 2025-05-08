@@ -88,6 +88,12 @@ STABLE_CORE_CHART_VERSION =
 STABLE_REMOTE_CHART_VERSION = 
 STABLE_BUILDDEPLOY_CHART_VERSION = 
 
+# verions of core before this version didn't use tls on the broker by default
+# setting this ensures that when the lagoon-build-deploy chart is installed with the stable flag
+# that if the core version is one that didn't have broker tls enabled in stable
+# that it will disable the broker tls settings in lagoon-build-deploy
+STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS = 1.52.0
+
 INSTALL_UNAUTHENTICATED_REGISTRY = false
 
 # don't install mailpit in charts ci
@@ -608,6 +614,9 @@ install-lagoon-build-deploy:
 ifneq ($(INSTALL_STABLE_BUILDDEPLOY),true)
 	$(HELM) dependency build ./charts/lagoon-build-deploy/
 else
+ifeq (,$(subst ",,$(STABLE_CORE_CHART_VERSION)))
+	$(eval STABLE_CORE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-core -o json | $(JQ) -r '.[]|.version'))
+endif
 ifeq (,$(subst ",,$(STABLE_BUILDDEPLOY_CHART_VERSION)))
 	$(eval STABLE_BUILDDEPLOY_CHART_VERSION := $(shell $(HELM) search repo lagoon/lagoon-build-deploy -o json | $(JQ) -r '.[]|.version'))
 endif
@@ -627,6 +636,8 @@ endif
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenHost=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenPort=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.spec.ports[0].port}')") \
 		--set "QoSMaxBuilds=5" \
+		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell expr $(STABLE_CORE_CHART_VERSION) \<= $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS)) = 1 ] && echo --set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc") \
+		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell expr $(STABLE_CORE_CHART_VERSION) \<= $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS)) = 1 ] && echo --set "broker.tls.enabled=false") \
 		$$([ $(BUILD_DEPLOY_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
 			echo "--set extraArgs={--skip-tls-verify=true,--lagoon-feature-flag-support-k8upv2}" || \
 			echo "--set extraArgs={--skip-tls-verify=true}") \
