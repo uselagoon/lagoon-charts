@@ -52,4 +52,3 @@ annotations:
       description: update uselagoon/docker-host to v3.6.0
     - kind: changed
       description: update uselagoon/insights-remote to v0.0.13
-
