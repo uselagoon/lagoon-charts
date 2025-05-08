@@ -42,3 +42,9 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: Lagoon Workflows subsystem removed
+    - kind: changed
+      description: tls support for rabbitmq
+    - kind: changed
+      description: update uselagoon/insights-handler to v0.0.7
+    - kind: changed
+      description: update aquasec/trivy to v0.62.1

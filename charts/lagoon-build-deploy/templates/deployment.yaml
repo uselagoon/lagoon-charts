@@ -1,4 +1,18 @@
 {{- $rabbitMQHostname := coalesce (.Values.global).rabbitMQHostname .Values.rabbitMQHostname }}
+{{- $rabbitMQTLSSecretName := coalesce (.Values.global.broker).tlsCA.secretName .Values.broker.tlsCA.secretName }}
+
+{{- $rabbitMQTLSEnabled := .Values.broker.tls.enabled }}
+{{- if (.Values.global.broker).tls.enabled }}
+{{- $rabbitMQTLSEnabled = (.Values.global.broker).tls.enabled }}
+{{- end }}
+{{- $rabbitMQTLSCAEnabled := .Values.broker.tlsCA.enabled }}
+{{- if (.Values.global.broker).tlsCA.enabled }}
+{{- $rabbitMQTLSCAEnabled = (.Values.global.broker).tlsCA.enabled }}
+{{- end }}
+{{- $rabbitMQTLSVerifyPeer := .Values.broker.tls.verifyPeer | quote }}
+{{- if (.Values.global.broker).tls.verifyPeer }}
+{{- $rabbitMQTLSVerifyPeer = (.Values.global.broker).tls.verifyPeer | quote }}
+{{- end }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -38,6 +52,9 @@ spec:
         args:
         - "--metrics-bind-address=:8443"
         - "--leader-elect=true"
+        {{- if $rabbitMQTLSEnabled }}
+        - "--rabbitmq-tls"
+        {{- end }}
         {{- if .Values.harbor.enabled }}
         - "--enable-harbor=true"
         - "--harbor-url={{ .Values.harbor.host }}"
@@ -241,6 +258,12 @@ spec:
           value: {{ .Values.pendingMessageCron | quote }}
         - name: RABBITMQ_HOSTNAME
           value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
+        {{- if $rabbitMQTLSCAEnabled }}
+        - name: RABBITMQ_CACERT
+          value: "/ca.crt"
+        {{- end }}
+        - name: RABBITMQ_VERIFY
+          value: {{ $rabbitMQTLSVerifyPeer }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -269,8 +292,20 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        volumeMounts:
+        {{- if $rabbitMQTLSCAEnabled }}
+        - mountPath: /ca.crt
+          name: {{ include "lagoon-build-deploy.fullname" . }}-amqp-tls
+          subPath: ca.crt
+        {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+      volumes:
+      {{- if $rabbitMQTLSCAEnabled }}
+      - name: {{ include "lagoon-build-deploy.fullname" . }}-amqp-tls
+        secret:
+          secretName: {{ $rabbitMQTLSSecretName }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

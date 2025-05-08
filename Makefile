@@ -71,6 +71,10 @@ DOCKER_NETWORK = kind
 LAGOON_SSH_PORTAL_LOADBALANCER =
 CORE_DATABASE_VENDOR = mariadb
 
+# this should not need to be changed in regular instances, only used by lint tests at the moment
+# it is used to stop metallb from being installed when certmanager is installed for the tests
+INSTALL_CERTMANAGER_METALLB = true
+
 # install lagoon dependencies by default with the install-lagoon target
 INSTALL_LAGOON_DEPENDENCIES = true
 
@@ -83,6 +87,12 @@ INSTALL_STABLE_BUILDDEPLOY = false
 STABLE_CORE_CHART_VERSION = 
 STABLE_REMOTE_CHART_VERSION = 
 STABLE_BUILDDEPLOY_CHART_VERSION = 
+
+# verions of core before this version didn't use tls on the broker by default
+# setting this ensures that when the lagoon-build-deploy chart is installed with the stable flag
+# that if the core version is one that didn't have broker tls enabled in stable
+# that it will disable the broker tls settings in lagoon-build-deploy
+STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS = 1.52.0
 
 INSTALL_UNAUTHENTICATED_REGISTRY = false
 
@@ -148,7 +158,10 @@ install-metallb:
 # cert-manager is used to allow self-signed certificates to be generated automatically by ingress in the same way lets-encrypt would
 # this allows for the registry and other services to use certificates
 .PHONY: install-certmanager
-install-certmanager: generate-ca install-metallb
+ifeq ($(INSTALL_CERTMANAGER_METALLB),true)
+install-certmanager: install-metallb
+endif
+install-certmanager: generate-ca
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -397,8 +410,20 @@ install-lagoon: install-lagoon-dependencies
 endif
 install-lagoon: install-lagoon-core install-lagoon-remote install-lagoon-build-deploy
 
+# this is only used by lint tests at the moment
+.PHONY: install-broker-certs
+install-broker-certs: install-lagoon-core-broker-certs install-lagoon-remote-broker-certs
+
+# this should not need to be changed in regular instances, only used by lint tests at the moment
+CORE_NAMESPACE = lagoon-core
+.PHONY: install-lagoon-core-broker-certs
+install-lagoon-core-broker-certs:
+# create the namespace if it doesn't exist so we can request a certificate from our local testing CA for the broker
+	$(KUBECTL) create namespace $(CORE_NAMESPACE) 2>/dev/null || true
+	$(KUBECTL) -n $(CORE_NAMESPACE) apply -f broker-core-certificate-request.yaml
+
 .PHONY: install-lagoon-core
-install-lagoon-core:
+install-lagoon-core: install-lagoon-core-broker-certs
 ifneq ($(INSTALL_STABLE_CORE),true)
 	$(HELM) dependency build ./charts/lagoon-core/
 else
@@ -507,8 +532,17 @@ endif
 		$$(if [ $(INSTALL_STABLE_CORE) = true ]; then echo 'lagoon/lagoon-core'; else echo './charts/lagoon-core'; fi)
 	$(KUBECTL) -n lagoon-core patch deployment lagoon-core-api -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","env":[{"name":"SSH_TOKEN_ENDPOINT","value":"lagoon-token.'$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')'.nip.io"}]}]}}}}'
 
+# this should not need to be changed in regular instances, only used by lint tests at the moment
+REMOTE_NAMESPACE = lagoon
+.PHONY: install-lagoon-remote-broker-certs
+install-lagoon-remote-broker-certs:
+# create the namespace if it doesn't exist and add the CA certificate for the remote to use where required
+	$(KUBECTL) create namespace $(REMOTE_NAMESPACE) 2>/dev/null || true
+	$(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-broker-tls 2>/dev/null || true
+	$(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-broker-tls --from-file=ca.crt=certs/rootCA.pem
+
 .PHONY: install-lagoon-remote
-install-lagoon-remote:
+install-lagoon-remote: install-lagoon-remote-broker-certs
 ifneq ($(INSTALL_STABLE_REMOTE),true)
 	$(HELM) dependency build ./charts/lagoon-remote/
 else
@@ -580,6 +614,9 @@ install-lagoon-build-deploy:
 ifneq ($(INSTALL_STABLE_BUILDDEPLOY),true)
 	$(HELM) dependency build ./charts/lagoon-build-deploy/
 else
+ifeq (,$(subst ",,$(STABLE_CORE_CHART_VERSION)))
+	$(eval STABLE_CORE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-core -o json | $(JQ) -r '.[]|.version'))
+endif
 ifeq (,$(subst ",,$(STABLE_BUILDDEPLOY_CHART_VERSION)))
 	$(eval STABLE_BUILDDEPLOY_CHART_VERSION := $(shell $(HELM) search repo lagoon/lagoon-build-deploy -o json | $(JQ) -r '.[]|.version'))
 endif
@@ -593,13 +630,14 @@ endif
 		$$([ $(INSTALL_STABLE_BUILDDEPLOY) = true ] && [ $(STABLE_BUILDDEPLOY_CHART_VERSION) ] && echo '--version=$(STABLE_BUILDDEPLOY_CHART_VERSION)') \
 		$$(if [ $(INSTALL_STABLE_BUILDDEPLOY) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-build-deploy-$(STABLE_BUILDDEPLOY_CHART_VERSION)/charts/lagoon-build-deploy/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-build-deploy/ci/linter-values.yaml'; fi) \
 		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon-core get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
-		--set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc" \
 		--set "lagoonFeatureFlagEnableQoS=true" \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set sshPortalHost=$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.status.loadBalancer.ingress[0].ip}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set sshPortalPort=$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.spec.ports[0].port}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenHost=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenPort=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.spec.ports[0].port}')") \
 		--set "QoSMaxBuilds=5" \
+		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell expr $(STABLE_CORE_CHART_VERSION) \<= $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS)) = 1 ] && echo --set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc") \
+		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell expr $(STABLE_CORE_CHART_VERSION) \<= $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS)) = 1 ] && echo --set "broker.tls.enabled=false") \
 		$$([ $(BUILD_DEPLOY_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
 			echo "--set extraArgs={--skip-tls-verify=true,--lagoon-feature-flag-support-k8upv2}" || \
 			echo "--set extraArgs={--skip-tls-verify=true}") \
@@ -610,9 +648,9 @@ endif
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminUser=admin") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.host=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = true ] && echo --set "unauthenticatedRegistry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ ! $(INSTALL_STABLE_BUILDDEPLOY) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && [ ! $(INSTALL_STABLE_BUILDDEPLOY) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && [ ! $(INSTALL_STABLE_BUILDDEPLOY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
 		$$([ $(BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set rootlessBuildPods=true') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoonFeatureFlagDefaultIsolationNetworkPolicy=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \

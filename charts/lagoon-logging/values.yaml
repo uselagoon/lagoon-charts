@@ -236,6 +236,17 @@ logging-operator:
 # enabling this.
 lagoonLogs:
   enabled: false
+  broker:
+    # enable if providing a custom CA for broker connections
+    tlsCA:
+      enabled: false
+      secretName: lagoon-logging-broker-tls
+      # secretData:
+      #   ca.crt: |
+      #     ...
+    tls:
+      enabled: false
+      verifyPeer: true
 
 forward:
   verifyConnectionAtStartup: true

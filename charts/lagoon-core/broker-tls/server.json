@@ -1,0 +1,11 @@
+{
+  "hosts": [
+    "lagoon-core-broker",
+    "lagoon-core-broker.lagoon-core.svc"
+  ],
+  "CN": "lagoon-core-broker",
+  "key": {
+    "algo": "ecdsa",
+    "size": 256
+  }
+}

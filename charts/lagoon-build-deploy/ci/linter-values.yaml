@@ -1,6 +1,6 @@
 rabbitMQUsername: lagoon
 rabbitMQPassword: ci
-rabbitMQHostname: lagoon-core-broker.lagoon-core.svc
+rabbitMQHostname: lagoon-core-broker.lagoon-core.svc:5671
 lagoonTargetName: ci-local-control-k8s
 sshPortalHost: lagoon-remote-ssh-portal.lagoon.svc
 sshPortalPort: 22
@@ -9,3 +9,9 @@ lagoonTokenPort: 22
 lagoonAPIHost: http://lagoon-core-api.lagoon-core.svc:80
 extraArgs:
   - "--skip-tls-verify=true"
+broker:
+  tls:
+    enabled: true
+  tlsCA:
+    enabled: true
+    secretName: lagoon-remote-broker-tls

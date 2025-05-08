@@ -94,6 +94,11 @@ spec:
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
         {{- end }}
+        {{- if .Values.lagoonLogs.broker.tlsCA.enabled }}
+        - mountPath: /lagoon-ca.crt
+          name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-lagoon-broker-tls
+          subPath: ca.crt
+        {{- end }}
         env:
         - name: K8S_NODE_NAME
           valueFrom:
@@ -143,6 +148,11 @@ spec:
           defaultMode: 420
           secretName: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
         name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
+      {{- end }}
+      {{- if .Values.lagoonLogs.broker.tlsCA.enabled }}
+      - name: {{ include "lagoon-build-deploy.fullname" . }}-lagoon-broker-tls
+        secret:
+          secretName: {{ .Values.lagoonLogs.broker.tlsCA.secretName }}
       {{- end }}
   volumeClaimTemplates:
   - metadata:
