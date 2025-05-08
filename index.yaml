@@ -8171,6 +8171,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: make probes configurable
+    apiVersion: v2
+    created: "2025-05-08T05:35:21.994761814Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: 8cb9e99b7589e79bdb4922cc74930dec2c63042ecb6f8ce34b5459e6c5fb2ef6
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.53.0/lagoon-logs-concentrator-0.53.0.tgz
+    version: 0.53.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update uselagoon/logs-concentrator image from v3.6.0 to v3.7.0
         - kind: changed
           description: enforce use of configured hostname for fluentd output
@@ -15422,4 +15443,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-08T00:39:58.707575025Z"
+generated: "2025-05-08T05:35:22.215429785Z"
