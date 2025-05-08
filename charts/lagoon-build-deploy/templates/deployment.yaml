@@ -9,9 +9,9 @@
 {{- if (.Values.global.broker).tlsCA.enabled }}
 {{- $rabbitMQTLSCAEnabled = (.Values.global.broker).tlsCA.enabled }}
 {{- end }}
-{{- $rabbitMQTLSVerifyPeer := .Values.broker.tls.verifyPeer }}
+{{- $rabbitMQTLSVerifyPeer := .Values.broker.tls.verifyPeer | quote }}
 {{- if (.Values.global.broker).tls.verifyPeer }}
-{{- $rabbitMQTLSVerifyPeer = (.Values.global.broker).tlsCA.verifyPeer }}
+{{- $rabbitMQTLSVerifyPeer = (.Values.global.broker).tls.verifyPeer | quote }}
 {{- end }}
 
 apiVersion: apps/v1

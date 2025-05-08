@@ -16,18 +16,14 @@ kubeVersion: ">= 1.25.0-0"
 
 type: application
 
-version: 0.34.0
+version: 0.34.1
 
 appVersion: v0.23.0
 
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: move harbor credentials into secret
-    - kind: changed
-      description: tls support for rabbitmq
-    - kind: changed
-      description: update remote-controller to v0.23.0
+    - kind: fixed
+      description: fix verifypeer reference with quotes
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
