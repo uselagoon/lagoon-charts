@@ -39,7 +39,7 @@ dockerHost:
     repository: uselagoon/docker-host
     pullPolicy: Always
     # Overrides the image tag whose default is "latest".
-    tag: "v3.5.0"
+    tag: "v3.6.0"
 
   name: docker-host
 
@@ -233,7 +233,7 @@ insightsRemote:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.12"
+    tag: "v0.0.13"
 
   imagePullSecrets: []
   nameOverride: ""

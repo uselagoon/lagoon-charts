@@ -667,7 +667,7 @@ insightsHandler:
     repository: uselagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.6"
+    tag: "v0.0.7"
 
   podAnnotations: {}
 
@@ -691,7 +691,7 @@ insightsHandler:
     enabled: false
     image:
       repository: aquasec/trivy
-      tag: 0.48.0
+      tag: 0.62.1
     service:
       type: ClusterIP
       port: 4954
