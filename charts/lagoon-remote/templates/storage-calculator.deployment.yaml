@@ -13,7 +13,7 @@
 {{- end }}
 {{- $rabbitMQTLSVerifyPeer := .Values.storageCalculator.broker.tls.verifyPeer | quote }}
 {{- if .Values.global.broker.tls.verifyPeer }}
-{{- $rabbitMQTLSVerifyPeer = .Values.global.broker.tlsCA.verifyPeer | quote }}
+{{- $rabbitMQTLSVerifyPeer = .Values.global.broker.tls.verifyPeer | quote }}
 {{- end }}
 
 apiVersion: apps/v1
@@ -81,7 +81,7 @@ spec:
           value: "/ca.crt"
         {{- end }}
         - name: RABBITMQ_VERIFY
-          value: {{ $rabbitMQTLSVerifyPeer | quote }}
+          value: {{ $rabbitMQTLSVerifyPeer }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
