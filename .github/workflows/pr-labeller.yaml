@@ -3,10 +3,6 @@ name: Label PR by Folder
 on:
   pull_request:
     types: [opened, synchronize]
-  workflow_dispatch:  # Optional manual trigger
-  push:
-    paths:
-      - '.github/workflows/pr-labeller.yaml'
 
 permissions:
   contents: read
