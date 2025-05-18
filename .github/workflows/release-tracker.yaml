@@ -1,0 +1,136 @@
+name: Scheduled PR Summary to Release Tracker
+
+on:
+  pull_request:
+    types: [closed]
+  schedule:
+    - cron: '0 2 * * *'  # Every day at 02:00 UTC
+  workflow_dispatch:  # Optional manual trigger
+  push:
+    paths:
+      - '.github/workflows/release-tracker.yaml'
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+jobs:
+  summarize-prs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install PyGithub
+
+      - name: Find tracker issue and generate summary
+        id: generate-summary
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          python <<EOF
+          import re
+          import os
+          from github import Github
+          from collections import defaultdict
+
+          # --- Config ---
+          g = Github(os.environ['GITHUB_TOKEN'])
+          repo = g.get_repo(os.environ['REPO'])
+          # Regular expression to match tags with a specific prefix and semantic versioning format (e.g., "prefix-v1.2.3")
+          tag_pattern = re.compile(r'^(?P<prefix>[a-zA-Z0-9_-]+)-v(?P<version>\d+\.\d+\.\d+)$')
+
+          # --- Step 1: Collect latest tag per prefix ---
+          latest_tags = {}
+          for tag in repo.get_tags():
+              match = tag_pattern.match(tag.name)
+              if not match:
+                  continue
+              prefix = match.group("prefix")
+              tag_date = tag.commit.commit.committer.date
+              if prefix not in latest_tags or tag_date > latest_tags[prefix][1]:
+                  latest_tags[prefix] = (tag, tag_date)
+
+          print("Latest tags per prefix:")
+          for prefix, (tag, tag_date) in latest_tags.items():
+              print(f"{prefix}: {tag.name} (date: {tag_date})")
+
+          closed_prs = repo.get_pulls(state='closed', sort='updated', direction='desc')
+          merged_prs = [pr for pr in closed_prs if pr.merged_at]
+
+          # --- Step 3: Group PRs by prefix (based on label and date) ---
+          prefix_groups = defaultdict(list)
+
+          for prefix, (tag, since_date) in latest_tags.items():
+              for pr in merged_prs:
+                  if pr.merged_at <= since_date:
+                      continue
+                  label_names = [label.name for label in pr.labels]
+                  if prefix in label_names:
+                      prefix_groups[prefix].append(pr)
+
+          print("\nPRs grouped by prefix:")
+          for prefix, prs in prefix_groups.items():
+              print(f"{prefix}: {[pr.number for pr in prs]}")
+
+          # --- Step 4: Format summary output ---
+          output = "# PRs merged since latest release(s):\n\n"
+          for prefix in sorted(prefix_groups.keys()):
+              tag_name = latest_tags[prefix][0].name
+              output += f"## {prefix} - since [{tag_name}](https://github.com/{repo.full_name}/releases/tag/{tag_name})\n"
+              for pr in prefix_groups[prefix]:
+                  output += f"- #{pr.number}\n"
+              output += "\n"
+
+          # Write output
+          with open("pr-summary.md", "w") as f:
+              f.write(output)
+
+          # Find the most recent open issue labeled 'release-tracker'
+          release_tracker_label = None
+          for label in repo.get_labels():
+              if label.name == "release-tracker":
+                  release_tracker_label = label
+                  break
+          if not release_tracker_label:
+              raise Exception("Label 'release-tracker' not found in repository.")
+
+          issues = repo.get_issues(state='open', labels=[release_tracker_label])
+          issues = list(issues)
+          if len(issues) == 0:
+              raise Exception("No open issue labeled 'release-tracker' found.")
+          issue = issues[0]
+          issue_number = issue.number
+
+          # Get the first comment ID in the issue (if any)
+          comments = issue.get_comments()
+          first_comment_id = comments[0].id if comments.totalCount > 0 else ""
+
+          # Export first comment ID to environment
+          if 'GITHUB_ENV' in os.environ:
+              with open(os.environ['GITHUB_ENV'], "a") as f:
+                  f.write(f"ISSUE_NUMBER={issue_number}\n")
+                  f.write(f"FIRST_COMMENT_ID={first_comment_id}\n")
+
+          with open("pr-summary.md", "r") as f:
+            print(f"This will be written to https://github.com/{repo.full_name}/issues/{issue_number}#issuecomment-{first_comment_id}")
+            print(f.read())
+          EOF
+      - name: Comment on release tracker issue
+        # This action posts the generated PR summary as a comment on the release tracker issue
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ env.ISSUE_NUMBER }}
+          comment-id: ${{ env.FIRST_COMMENT_ID }}
+          body-path: 'pr-summary.md'
+          edit-mode: replace  # Replace the existing comment with the new summary

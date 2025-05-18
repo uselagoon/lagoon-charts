@@ -1,0 +1,85 @@
+name: Label PR by Folder
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  workflow_dispatch:  # Optional manual trigger
+  push:
+    paths:
+      - '.github/workflows/pr-labeller.yaml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label-by-folder:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46.0.5
+        with:
+          separator: "|"
+
+      - name: Label PR based on folders
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const changedFiles = "${{ steps.changed-files.outputs.all_changed_files }}".split("|");
+            const folderLabels = new Set();
+
+            for (const file of changedFiles) {
+              // Match files inside the 'charts' folder (e.g., "charts/foo/something.yaml" → "foo")
+              const match = file.match(/^charts\/([^\/]+)/);
+              if (match) {
+                const subfolder = match[1]; // subfolder inside 'charts'
+                folderLabels.add(subfolder);
+              }
+            }
+
+            if (folderLabels.size === 0) {
+              console.log("No folder-based labels required for this PR.");
+              return;
+            }
+
+            const labelsToAdd = [...folderLabels];
+            console.log(`Adding the following folder-based labels to the PR: ${labelsToAdd.join(", ")}`);
+
+            for (const label of labelsToAdd) {
+              try {
+              // Try to create the label (ignore error if it already exists)
+              await github.rest.issues.createLabel({
+                ...context.repo,
+                name: label,
+                color: "BFD4F2",
+                description: `PRs that touch the '${label}' folder`,
+              });
+              console.log(`Created label: ${label}`);
+              } catch (error) {
+              if (error.status === 422) {
+                // Label already exists
+                console.log(`Label '${label}' already exists.`);
+              } else {
+                console.error(`Failed to create label '${label}':`, error);
+                throw error;
+              }
+              }
+            }
+
+            try {
+              await github.rest.issues.addLabels({
+                ...context.repo,
+                issue_number: prNumber,
+                labels: labelsToAdd,
+              });
+            } catch (error) {
+              console.error(`Failed to add labels to PR #${prNumber}:`, error);
+              throw error; // Rethrow the error to ensure the workflow fails if this is critical
+            }
