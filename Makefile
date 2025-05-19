@@ -127,8 +127,8 @@ JQ = jq
 fill-test-ci-values:
 	export ingressIP="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" \
 		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon-core get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
-		&& export routeSuffixHTTP="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		&& export routeSuffixHTTPS="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		&& export routeSuffixHTTP="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
+		&& export routeSuffixHTTPS="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		&& export token="$$($(KUBECTL) -n lagoon get secret lagoon-remote-ssh-core-token -o json | $(JQ) -r '.data.token | @base64d')" \
 		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
 		&& export webhookHandler="lagoon-core-webhook-handler" \
@@ -215,8 +215,8 @@ install-registry: install-ingress
 		--set expose.tls.secret.secretName=harbor-ingress \
 		--set expose.ingress.className=nginx \
 		--set-string expose.ingress.annotations.kubernetes\\.io/tls-acme=true \
-		--set "expose.ingress.hosts.core=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		--set "externalURL=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "expose.ingress.hosts.core=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
+		--set "externalURL=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		--set chartmuseum.enabled=false \
 		--set clair.enabled=false \
 		--set notary.enabled=false \
@@ -237,8 +237,8 @@ install-registry: install-ingress
 		--set ingress.enabled=true \
 		--set-string ingress.annotations.kubernetes\\.io/tls-acme=true \
 		--set ingress.tls[0].secretName=registry-docker-registry-tls \
-		--set ingress.tls[0].hosts[0]=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
-		--set "ingress.hosts[0]=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set ingress.tls[0].hosts[0]=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
+		--set "ingress.hosts[0]=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		--set ingress.path="/" \
 		--set persistence.enabled=true \
 		--version=2.2.3 \
@@ -256,7 +256,7 @@ install-mailpit:
 		--timeout $(TIMEOUT) \
 		--set ingress.enabled=true \
 		--set-string ingress.annotations.kubernetes\\.io/tls-acme=true \
-		--set "ingress.hostname=mailpit.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "ingress.hostname=mailpit.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		--version=0.18.6 \
 		mailpit \
 		jouve/mailpit
@@ -317,9 +317,9 @@ install-minio: install-ingress
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
 		--set defaultBuckets='lagoon-files\,restores' \
 		--set ingress.enabled=true \
-		--set ingress.hostname=minio.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set ingress.hostname=minio.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
 		--set apiIngress.enabled=true \
-		--set apiIngress.hostname=minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set apiIngress.hostname=minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
 		--version=13.6.2 \
 		minio \
 		bitnami/minio
@@ -334,9 +334,9 @@ install-k8upv1:
 		--namespace k8upv1 \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set k8up.envVars[0].name=BACKUP_GLOBALS3ENDPOINT,k8up.envVars[0].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
-		--set k8up.envVars[1].name=BACKUP_GLOBALRESTORES3ENDPOINT,k8up.envVars[1].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
-		--set k8up.envVars[2].name=BACKUP_GLOBALSTATSURL,k8up.envVars[2].value=http://lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[0].name=BACKUP_GLOBALS3ENDPOINT,k8up.envVars[0].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
+		--set k8up.envVars[1].name=BACKUP_GLOBALRESTORES3ENDPOINT,k8up.envVars[1].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
+		--set k8up.envVars[2].name=BACKUP_GLOBALSTATSURL,k8up.envVars[2].value=http://lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
 		--set k8up.envVars[3].name=BACKUP_GLOBALACCESSKEYID,k8up.envVars[3].value=lagoonFilesAccessKey \
 		--set k8up.envVars[4].name=BACKUP_GLOBALSECRETACCESSKEY,k8up.envVars[4].value=lagoonFilesSecretKey \
 		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
@@ -358,9 +358,9 @@ install-k8upv2:
 		--namespace k8upv2 \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set k8up.envVars[0].name=BACKUP_GLOBALS3ENDPOINT,k8up.envVars[0].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
-		--set k8up.envVars[1].name=BACKUP_GLOBALRESTORES3ENDPOINT,k8up.envVars[1].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
-		--set k8up.envVars[2].name=BACKUP_GLOBALSTATSURL,k8up.envVars[2].value=http://lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[0].name=BACKUP_GLOBALS3ENDPOINT,k8up.envVars[0].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
+		--set k8up.envVars[1].name=BACKUP_GLOBALRESTORES3ENDPOINT,k8up.envVars[1].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
+		--set k8up.envVars[2].name=BACKUP_GLOBALSTATSURL,k8up.envVars[2].value=http://lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
 		--set k8up.envVars[3].name=BACKUP_GLOBALACCESSKEYID,k8up.envVars[3].value=lagoonFilesAccessKey \
 		--set k8up.envVars[4].name=BACKUP_GLOBALSECRETACCESSKEY,k8up.envVars[4].value=lagoonFilesSecretKey \
 		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
@@ -444,10 +444,10 @@ endif
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set buildDeployImage.default.image=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(DISABLE_CORE_HARBOR) ] && echo '--set api.additionalEnvs.DISABLE_CORE_HARBOR=$(DISABLE_CORE_HARBOR)') \
 		$$([ $(OPENSEARCH_INTEGRATION_ENABLED) ] && echo '--set api.additionalEnvs.OPENSEARCH_INTEGRATION_ENABLED=$(OPENSEARCH_INTEGRATION_ENABLED)') \
-		--set "keycloakFrontEndURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		--set "lagoonAPIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
-		--set "lagoonUIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		--set "lagoonWebhookURL=http://lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "keycloakFrontEndURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
+		--set "lagoonAPIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io/graphql" \
+		--set "lagoonUIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
+		--set "lagoonWebhookURL=http://lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set api.image.repository=$(IMAGE_REGISTRY)/api') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db') \
@@ -457,7 +457,7 @@ endif
 		--set autoIdler.enabled=false \
 		--set backupHandler.enabled=$(INSTALL_K8UP) \
 		--set backupHandler.ingress.enabled=true \
-		--set backupHandler.ingress.hosts[0].host="lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set backupHandler.ingress.hosts[0].host="lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		--set backupHandler.ingress.hosts[0].paths[0]="/" \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set backupHandler.image.repository=$(IMAGE_REGISTRY)/backup-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set broker.image.repository=$(IMAGE_REGISTRY)/broker') \
@@ -482,38 +482,38 @@ endif
 		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
 		--set s3FilesSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesBucket=lagoon-files \
-		--set s3FilesHost=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set s3FilesHost=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io \
 		--set api.ingress.enabled=true \
-		--set api.ingress.hosts[0].host="lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set api.ingress.hosts[0].host="lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		--set api.ingress.hosts[0].paths[0]="/" \
-		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set api.ingress.tls[0].hosts[0]=lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set api.ingress.tls[0].hosts[0]=lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io") \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set api.ingress.tls[0].secretName=api-tls') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string api.ingress.annotations.kubernetes\\.io/tls-acme=true') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string api.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		--set ui.ingress.enabled=true \
-		--set ui.ingress.hosts[0].host="lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set ui.ingress.hosts[0].host="lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		--set ui.ingress.hosts[0].paths[0]="/" \
-		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set ui.ingress.tls[0].hosts[0]=lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set ui.ingress.tls[0].hosts[0]=lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io") \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set ui.ingress.tls[0].secretName=ui-tls') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string ui.ingress.annotations.kubernetes\\.io/tls-acme=true') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string ui.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_REPO) ] && echo '--set ui.image.repository=$(UI_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_TAG) ] && echo '--set ui.image.tag=$(UI_IMAGE_TAG)') \
 		--set keycloak.ingress.enabled=true \
-		--set keycloak.ingress.hosts[0].host="lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set keycloak.ingress.hosts[0].host="lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		--set keycloak.ingress.hosts[0].paths[0]="/" \
-		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set keycloak.ingress.tls[0].hosts[0]=lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set keycloak.ingress.tls[0].hosts[0]=lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io") \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set keycloak.ingress.tls[0].secretName=keycloak-tls') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string keycloak.ingress.annotations.kubernetes\\.io/tls-acme=true') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string keycloak.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		--set webhookHandler.ingress.enabled=true \
-		--set webhookHandler.ingress.hosts[0].host="lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set webhookHandler.ingress.hosts[0].host="lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		--set webhookHandler.ingress.hosts[0].paths[0]="/" \
 		--set-string webhookHandler.ingress.annotations.kubernetes\\.io/tls-acme=true \
 		--set broker.ingress.enabled=true \
-		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		--set broker.ingress.hosts[0].paths[0]="/" \
-		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set broker.ingress.tls[0].hosts[0]=lagoon-broker.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set broker.ingress.tls[0].hosts[0]=lagoon-broker.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io") \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set broker.ingress.tls[0].secretName=broker-tls') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.kubernetes\\.io/tls-acme=true') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
@@ -530,7 +530,7 @@ endif
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set ssh.service.port=2020') \
 		lagoon-core \
 		$$(if [ $(INSTALL_STABLE_CORE) = true ]; then echo 'lagoon/lagoon-core'; else echo './charts/lagoon-core'; fi)
-	$(KUBECTL) -n lagoon-core patch deployment lagoon-core-api -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","env":[{"name":"SSH_TOKEN_ENDPOINT","value":"lagoon-token.'$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')'.nip.io"}]}]}}}}'
+	$(KUBECTL) -n lagoon-core patch deployment lagoon-core-api -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","env":[{"name":"SSH_TOKEN_ENDPOINT","value":"lagoon-token.'$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')'.sslip.io"}]}]}}}}'
 
 # this should not need to be changed in regular instances, only used by lint tests at the moment
 REMOTE_NAMESPACE = lagoon
@@ -559,7 +559,7 @@ endif
 		$$([ $(INSTALL_STABLE_REMOTE) = true ] && [ $(STABLE_REMOTE_CHART_VERSION) ] && echo '--version=$(STABLE_REMOTE_CHART_VERSION)') \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-remote-$(STABLE_REMOTE_CHART_VERSION)/charts/lagoon-remote/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-remote/ci/linter-values.yaml'; fi) \
 		--set "lagoon-build-deploy.enabled=false" \
-		--set "dockerHost.registry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "dockerHost.registry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.environment=development') \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local') \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.password='$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
@@ -646,8 +646,8 @@ endif
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.enabled=true") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminPassword=Harbor12345") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminUser=admin") \
-		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.host=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
-		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = true ] && echo --set "unauthenticatedRegistry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.host=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io") \
+		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = true ] && echo --set "unauthenticatedRegistry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io") \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
@@ -713,9 +713,9 @@ install-test-cluster: install-ingress install-registry install-bulk-storageclass
 .PHONY: get-admin-creds
 get-admin-creds:
 	@echo "\nLagoon UI URL: " \
-	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io" \
 	&& echo "Lagoon API URL: " \
-	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
+	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io/graphql" \
 	&& echo "Lagoon API admin legacy token: \n$$(docker run \
 		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon-core lagoon-core-secrets -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
 		-e JWTAUDIENCE=api.dev \
@@ -723,7 +723,7 @@ get-admin-creds:
 		uselagoon/tests \
 		python3 /ansible/tasks/api/admin_token.py)" \
 	&& echo "Keycloak admin URL: " \
-	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/auth" \
+	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').sslip.io/auth" \
 	&& echo "Keycloak admin password: " \
 	&& $(KUBECTL) get secret -n lagoon-core lagoon-core-keycloak -o jsonpath="{.data.KEYCLOAK_ADMIN_PASSWORD}" | base64 --decode \
 	&& echo "\n"

@@ -141,7 +141,7 @@ harbor:
   # the following are REQUIRED values if harbor is enabled
   adminPassword: Harbor12345
   adminUser: admin
-  host: http://registry.172.16.0.1.nip.io
+  host: http://registry.172.16.0.1.sslip.io
   # rotationCron: 0 1 * * *
 
   # the expiration length of new robot credentials
