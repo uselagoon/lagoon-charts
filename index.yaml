@@ -9350,6 +9350,42 @@ entries:
   lagoon-remote:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: insights-remote broker tls flag
+    apiVersion: v2
+    created: "2025-05-21T01:57:09.893330354Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.34.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.2.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 70174ee3ef4ba2ea4aca4578d4c21c9b2f270118c40442c2f3bf6af9218fde57
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.98.1/lagoon-remote-0.98.1.tgz
+    version: 0.98.1
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: this change intentionally left blank
         - kind: added
@@ -15581,4 +15617,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-08T21:00:36.037540413Z"
+generated: "2025-05-21T01:57:09.894256209Z"
