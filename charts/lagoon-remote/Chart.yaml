@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.98.0
+version: 0.98.1
 
 dependencies:
 - name: lagoon-build-deploy
@@ -40,17 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: this change intentionally left blank
-    - kind: added
-      description: dedicated label to docker-host services
-    - kind: added
-      description: added extraEnvs to insights remote values
-    - kind: changed
-      description: tls support for rabbitmq
-    - kind: changed
-      description: update lagoon-build-deploy subchart to v0.34.2
-    - kind: changed
-      description: update uselagoon/docker-host to v3.6.0
-    - kind: changed
-      description: update uselagoon/insights-remote to v0.0.13
+    - kind: fixed
+      description: insights-remote broker tls flag
