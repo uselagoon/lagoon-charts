@@ -61,7 +61,7 @@ spec:
               value: "TRUE"
           {{- end }}
           {{- if $rabbitMQTLSEnabled }}
-            - name: RABBITMQ_ENABLED
+            - name: RABBITMQ_TLS
               value: "TRUE"
           {{- end }}
             - name: RABBITMQ_ADDRESS
