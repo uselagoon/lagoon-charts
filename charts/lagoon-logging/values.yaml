@@ -137,6 +137,11 @@ cdnLogsCollector:
 
   affinity: {}
 
+  metrics:
+    enabled: true
+    annotations: {}
+    type: # TBD
+
   serviceMonitor:
     enabled: true
 
