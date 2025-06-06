@@ -224,8 +224,26 @@ install-aergia:
 install-ingress: install-aergia
 endif
 
+.PHONY: install-gatewayapi
+install-gatewayapi:
+	$(KUBECTL) apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace nginx-gateway \
+		--set nginxGateway.gwAPIExperimentalFeatures.enable=true \
+		ngf oci://ghcr.io/nginx/charts/nginx-gateway-fabric
+	$(KUBECTL) -n nginx-gateway apply -f ci/gateway-api/cluster-gateway.yaml
+	$(KUBECTL) create namespace example1 || true
+	sleep 10
+	export GATEWAY_SERVICE=$$($(KUBECTL) -n nginx-gateway get services gateway-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}') && \
+		envsubst < ci/gateway-api/example1.yaml.tpl > ci/gateway-api/example1.yaml&& \
+		envsubst < ci/gateway-api/cluster-gateway-cert.yaml.tpl > ci/gateway-api/cluster-gateway-cert.yaml
+	$(KUBECTL) -n nginx-gateway apply -f ci/gateway-api/cluster-gateway-cert.yaml
+	$(KUBECTL) -n example1 apply -f ci/gateway-api/example1.yaml
+
 .PHONY: install-ingress
-install-ingress: install-certmanager
+install-ingress: install-certmanager install-gatewayapi
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \

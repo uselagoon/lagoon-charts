@@ -2,3 +2,5 @@
 /test-suite.kind-config.calico.yaml
 certs/
 ci/default-ingress-certificate-request.yaml
+ci/gateway-api/example1.yaml
+ci/gateway-api/cluster-gateway-cert.yaml
