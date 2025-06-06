@@ -28,7 +28,7 @@ appVersion: 4.11.4
 dependencies:
 - name: logging-operator
   repository: oci://ghcr.io/kube-logging/helm-charts
-  version: 4.11.4
+  version: 5.4.0
   condition: logging-operator.enabled
 
 # This section is used to collect a changelog for artifacthub.io
