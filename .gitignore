@@ -4,3 +4,5 @@ certs/
 ci/default-ingress-certificate-request.yaml
 local-dev/
 kubeconfig.*
+ci/gateway-api/example1.yaml
+ci/gateway-api/cluster-gateway-cert.yaml
