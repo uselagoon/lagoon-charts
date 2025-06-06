@@ -201,11 +201,14 @@ install-certmanager: generate-ca
 		--namespace cert-manager \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set installCRDs=true \
+		--set crds.enabled=true \
+		--set config.apiVersion="controller.config.cert-manager.io/v1alpha1" \
+		--set config.kind="ControllerConfiguration" \
+		--set config.enableGatewayAPI=true \
 		--set ingressShim.defaultIssuerName=lagoon-testing-issuer \
 		--set ingressShim.defaultIssuerKind=ClusterIssuer \
 		--set ingressShim.defaultIssuerGroup=cert-manager.io \
-		--version=v1.12.6 \
+		--version=v1.18.2 \
 		cert-manager \
 		jetstack/cert-manager
 	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem || true
@@ -237,8 +240,26 @@ install-aergia:
 install-ingress: install-aergia
 endif
 
+.PHONY: install-gatewayapi
+install-gatewayapi:
+	$(KUBECTL) apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace nginx-gateway \
+		--set nginxGateway.gwAPIExperimentalFeatures.enable=true \
+		ngf oci://ghcr.io/nginx/charts/nginx-gateway-fabric
+	$(KUBECTL) -n nginx-gateway apply -f ci/gateway-api/cluster-gateway.yaml
+	$(KUBECTL) create namespace example1 || true
+	sleep 10
+	export GATEWAY_SERVICE=$$($(KUBECTL) -n nginx-gateway get services gateway-nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}') && \
+		envsubst < ci/gateway-api/example1.yaml.tpl > ci/gateway-api/example1.yaml&& \
+		envsubst < ci/gateway-api/cluster-gateway-cert.yaml.tpl > ci/gateway-api/cluster-gateway-cert.yaml
+	$(KUBECTL) -n nginx-gateway apply -f ci/gateway-api/cluster-gateway-cert.yaml
+	$(KUBECTL) -n example1 apply -f ci/gateway-api/example1.yaml
+
 .PHONY: install-ingress
-install-ingress: install-certmanager
+install-ingress: install-certmanager install-gatewayapi
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
