@@ -139,8 +139,10 @@ cdnLogsCollector:
 
   metrics:
     enabled: true
-    annotations: {}
-    type: # TBD
+    service:
+      type: ClusterIP
+      port: 24231
+      annotations: {}
 
   serviceMonitor:
     enabled: true

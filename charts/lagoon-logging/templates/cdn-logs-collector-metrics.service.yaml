@@ -14,7 +14,7 @@ spec:
   selector:
     {{- include "lagoon-logging.cdnLogsCollector.selectorLabels" . | nindent 4 }}
   ports:
-  - port: 24231
+  - port: {{ .Values.cdnLogsCollector.metrics.service.port }}
     name: metrics
     protocol: TCP
     targetPort: metrics
