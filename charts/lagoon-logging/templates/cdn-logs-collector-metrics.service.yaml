@@ -5,7 +5,7 @@ metadata:
   name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-metrics
   labels:
     {{- include "lagoon-logging.cdnLogsCollector.labels" . | nindent 4 }}
-  {{- with .Values.cdnLogsCollector.metrics.annotations }}
+  {{- with .Values.cdnLogsCollector.metrics.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
