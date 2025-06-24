@@ -19,9 +19,9 @@ spec:
           {{- toYaml .Values.broker.securityContext | nindent 8 }}
       terminationGracePeriodSeconds: 120
       containers:
-      - name: broker-flag-enable
+      - name: broker-job
         args:
-        - /enable-feature-flags.sh
+        - /broker-job.sh
         image: "{{ .Values.broker.image.repository }}:{{ coalesce .Values.broker.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.broker.image.pullPolicy }}
         command:

@@ -241,10 +241,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Create a default fully qualified app name for broker-flag-enable job.
+Create a default fully qualified app name for broker-bootstrap job.
 */}}
 {{- define "lagoon-core.brokerFlagEnable.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-broker-flag-enable
+{{- include "lagoon-core.fullname" . }}-broker-bootstrap
 {{- end }}
 
 
