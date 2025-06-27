@@ -3,6 +3,42 @@ entries:
   lagoon-build-deploy:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: update remote-controller to v0.24.0
+      artifacthub.io/crds: |
+        - kind: LagoonBuild
+          version: v1beta2
+          name: lagoonbuild
+          displayName: LagoonBuild
+          description: This is the CRD used for managing LagoonBuilds
+        - kind: LagoonTask
+          version: v1beta2
+          name: lagoontask
+          displayName: LagoonTask
+          description: This is the CRD used for managing LagoonTasks
+    apiVersion: v2
+    appVersion: v0.24.0
+    created: "2025-06-27T04:13:15.487029826Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: 6b9acfd2fb4b0704b06eec31c816ffbb902beed46dd87ced7f100d1e52a504be
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.35.0/lagoon-build-deploy-0.35.0.tgz
+    version: 0.35.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: fix verifypeer reference with quotes (again)
       artifacthub.io/crds: |
@@ -15617,4 +15653,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-21T01:57:09.894256209Z"
+generated: "2025-06-27T04:13:15.673979409Z"
