@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update lagoon appVersion to 2.26.0
+    - kind: changed
+      description: update insights-handler to v0.0.8
