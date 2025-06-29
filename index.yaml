@@ -1867,6 +1867,37 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update lagoon appVersion to 2.26.0
+        - kind: changed
+          description: update insights-handler to v0.0.8
+    apiVersion: v2
+    appVersion: v2.26.0
+    created: "2025-06-29T22:18:11.109623099Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.2.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 49803855e93f4d186cf9173b14e6bd87ed5cf710515d63bd07231ffd1723341c
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.54.0/lagoon-core-1.54.0.tgz
+    version: 1.54.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon appVersion to 2.25.0
         - kind: changed
           description: Lagoon Workflows subsystem removed
@@ -9386,6 +9417,42 @@ entries:
   lagoon-remote:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: update build-deploy dependency to 0.35.0
+    apiVersion: v2
+    created: "2025-06-29T22:18:11.354535807Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.35.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.2.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 00de64cb2a971a60e61f8608c8c8b444aec5eaafff180a6a0466fda9f2c3eff0
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: michael@amazee.com
+      name: schnitzel
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.99.0/lagoon-remote-0.99.0.tgz
+    version: 0.99.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: insights-remote broker tls flag
     apiVersion: v2
@@ -14329,6 +14396,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update lagoon appVersion to 2.26.0
+    apiVersion: v2
+    appVersion: v2.26.0
+    created: "2025-06-29T22:18:11.550533677Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 9cd8e005627d4b38f0cb5bee3a37913679a850f957338358ebd93596de1c5867
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.66.0/lagoon-test-0.66.0.tgz
+    version: 0.66.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon appVersion to 2.25.0
         - kind: changed
           description: Lagoon Workflows subsystem removed
@@ -15653,4 +15741,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-06-27T04:13:15.673979409Z"
+generated: "2025-06-29T22:18:11.552399051Z"
