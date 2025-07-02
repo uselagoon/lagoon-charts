@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.53.0
+version: 1.54.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.25.0
+appVersion: v2.26.0
 
 dependencies:
 - name: nats
@@ -41,12 +41,6 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon appVersion to 2.25.0
+      description: update lagoon appVersion to 2.26.0
     - kind: changed
-      description: Lagoon Workflows subsystem removed
-    - kind: changed
-      description: tls support for rabbitmq
-    - kind: changed
-      description: update uselagoon/insights-handler to v0.0.7
-    - kind: changed
-      description: update aquasec/trivy to v0.62.1
+      description: update insights-handler to v0.0.8
