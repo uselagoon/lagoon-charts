@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.87.0
+version: 0.87.1
 
 # AppVersion is set here the same as the logging-operator chart version to
 # autopopulate the post-install CRD message.
@@ -35,9 +35,7 @@ dependencies:
 # It should be started afresh for each release
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
-  artifacthub.io/containsSecurityUpdates: "true"
+  artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
     - kind: changed
-      description: this change intentionally left blank
-    - kind: changed
-      description: tls support for rabbitmq
+      description: expose cdn-logs-collector metrics

@@ -137,6 +137,13 @@ cdnLogsCollector:
 
   affinity: {}
 
+  metrics:
+    enabled: true
+    service:
+      type: ClusterIP
+      port: 24231
+      annotations: {}
+
   serviceMonitor:
     enabled: true
 
