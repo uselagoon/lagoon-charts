@@ -71,6 +71,10 @@ keycloakAdminUser: admin
 # keycloakAdminEmail: admin@example.com
 
 buildDeployImage:
+  default:
+    # when updating this chart, ensure that if there are any changes made to the build-deploy-tool repository
+    # and a new image tag is released, that this image tag is updated to reference the new image version
+    image: uselagoon/build-deploy-image:core-v2.26.0
   edge:
     enabled: false
 
@@ -553,8 +557,9 @@ ui:
   image:
     repository: uselagoon/ui
     pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    # when updating this chart, ensure that if there are any changes made to the lagoon-ui repository
+    # and a new image tag is released, that this image tag is updated to reference the new image version
+    tag: "core-v2.26.1"
 
   podAnnotations: {}
 
