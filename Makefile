@@ -99,6 +99,9 @@ INSTALL_UNAUTHENTICATED_REGISTRY = false
 # don't install mailpit in charts ci
 INSTALL_MAILPIT = false
 
+# don't install prometheus in charts ci
+INSTALL_PROMETHEUS = false
+
 # install dbaas providers by default
 INSTALL_MARIADB_PROVIDER = true
 INSTALL_POSTGRES_PROVIDER = true
@@ -175,9 +178,10 @@ install-certmanager: generate-ca
 		--version=v1.12.6 \
 		cert-manager \
 		jetstack/cert-manager
-	$(KUBECTL) -n cert-manager delete secret lagoon-test-secret || echo "lagoon-test-secret doesn't exist, ignoring"
-	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem
-	$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml
+	if [ ! $$($(KUBECTL) -n cert-manager get secret lagoon-test-secret 2>/dev/null || false) ]; then \
+		$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem; \
+		$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml; \
+	fi
 
 .PHONY: install-ingress
 install-ingress: install-certmanager
@@ -245,6 +249,29 @@ install-registry: install-ingress
 		registry \
 		twuni/docker-registry
 endif
+
+.PHONY: install-prometheus
+install-prometheus:
+	@$(KUBECTL) create namespace kube-prometheus 2>/dev/null || true
+	@$(KUBECTL) --namespace kube-prometheus apply -f ci/grafana-dashboards/ssh-portal.yaml
+	@$(KUBECTL) --namespace kube-prometheus apply -f ci/grafana-dashboards/keycloak-troubleshoot.yaml
+	@$(KUBECTL) --namespace kube-prometheus apply -f ci/grafana-dashboards/keycloak-capacity.yaml
+	@$(HELM) upgrade \
+		--install --create-namespace \
+		--namespace kube-prometheus \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--version 75.9.0 \
+		--set grafana.ingress.enabled=true \
+		--set grafana.sidecar.dashboards.enabled=true \
+		--set grafana.ingress.hosts[0]="grafana.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set grafana.ingress.tls[0].hosts[0]="grafana.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set grafana.ingress.tls[0].secretName=grafana-tls \
+		--set-string grafana.ingress.annotations.kubernetes\\.io/tls-acme=true \
+		--set-string grafana.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false \
+		--set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false \
+		--set prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues=false \
+		kube-prometheus prometheus-community/kube-prometheus-stack
 
 .PHONY: install-mailpit
 install-mailpit:
@@ -389,6 +416,9 @@ install-lagoon-dependencies: install-registry install-minio install-bulk-storage
 ifeq ($(INSTALL_MAILPIT),true)
 install-lagoon-dependencies: install-mailpit
 endif
+ifeq ($(INSTALL_PROMETHEUS),true)
+install-lagoon-dependencies: install-prometheus
+endif
 ifeq ($(INSTALL_MARIADB_PROVIDER),true)
 install-lagoon-dependencies: install-mariadb
 endif
@@ -469,6 +499,10 @@ endif
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set logs2notifications.additionalEnvs.EMAIL_HOST=mailpit-smtp.mailpit.svc') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set logs2notifications.additionalEnvs.EMAIL_PORT=25') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set keycloak.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshPortalAPI.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshToken.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set broker.serviceMonitor.enabled=true') \
 		--set logs2notifications.logs2email.disabled=$(LOGS2EMAIL_DISABLED) \
 		--set logs2notifications.logs2microsoftteams.disabled=$(LOGS2MICROSOFTTEAMS_DISABLED) \
 		--set logs2notifications.logs2rocketchat.disabled=$(LOGS2ROCKETCHAT_DISABLED) \
@@ -603,6 +637,7 @@ endif
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set sshPortal.service.ports.sshserver=2222') \
 		$$([ $(INSTALL_STABLE_REMOTE) != true ] && [ $(SSHPORTAL_IMAGE_REPO) ] && echo '--set sshPortal.image.repository=$(SSHPORTAL_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_REMOTE) != true ] && [ $(SSHPORTAL_IMAGE_TAG) ] && echo '--set sshPortal.image.tag=$(SSHPORTAL_IMAGE_TAG)') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshPortal.serviceMonitor.enabled=true') \
 		lagoon-remote \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo 'lagoon/lagoon-remote'; else echo './charts/lagoon-remote'; fi)
 
