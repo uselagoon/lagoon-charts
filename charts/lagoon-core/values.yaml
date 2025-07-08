@@ -295,6 +295,11 @@ keycloak:
     #    hosts:
     #      - chart-example.local
 
+  serviceMonitor:
+    metrics:
+      port: 9000
+    enabled: true
+
 keycloakDB:
   vendor: mariadb
   replicaCount: 1

@@ -68,6 +68,12 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
+      {{- if .Values.keycloak.serviceMonitor.enabled }}
+        - name: KC_METRICS_ENABLED
+          value: "true"
+        - name: KC_EVENT_METRICS_USER_ENABLED
+          value: "true"
+      {{- end }}
       {{- range $key, $val := .Values.keycloak.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
@@ -78,6 +84,10 @@ spec:
         ports:
         - name: http-8080
           containerPort: 8080
+        {{- if .Values.keycloak.serviceMonitor.enabled }}
+        - name: metrics
+          containerPort: {{ .Values.keycloak.serviceMonitor.metrics.port }}
+        {{- end }}
         livenessProbe:
           httpGet:
             path: /auth
