@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.54.1
+version: 1.54.2
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -41,8 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon appVersion to 2.26.1
-    - kind: changed
-      description: update lagoon ui to 2.26.1
-    - kind: changed
-      description: kept build-deploy-image at 2.26.0
+      description: update ssh-portal-api and ssh-token to v0.43.0
