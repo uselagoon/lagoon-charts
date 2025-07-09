@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.54.0
+version: 1.54.1
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.26.0
+appVersion: v2.26.1
 
 dependencies:
 - name: nats
@@ -41,6 +41,8 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon appVersion to 2.26.0
+      description: update lagoon appVersion to 2.26.1
     - kind: changed
-      description: update insights-handler to v0.0.8
+      description: update lagoon ui to 2.26.1
+    - kind: changed
+      description: kept build-deploy-image at 2.26.0
