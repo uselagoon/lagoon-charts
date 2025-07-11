@@ -1,0 +1,18 @@
+{{- if .Values.keycloak.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lagoon-core.keycloak.fullname" . }}
+  labels:
+    {{- include "lagoon-core.keycloak.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  - port: metrics
+    path: /auth/metrics
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.keycloak.selectorLabels" . | nindent 6 }}
+{{- end }}

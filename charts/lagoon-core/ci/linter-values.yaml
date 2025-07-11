@@ -83,6 +83,8 @@ keycloak:
   ingress:
     annotations:
       nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+  serviceMonitor:
+    enabled: false
 
 keycloakDB:
   image:

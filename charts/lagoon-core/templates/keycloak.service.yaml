@@ -10,5 +10,8 @@ spec:
   - port: {{ .Values.keycloak.service.port }}
     targetPort: http-8080
     name: http-8080
+  - port: {{ .Values.keycloak.serviceMonitor.metrics.port }}
+    targetPort: metrics
+    name: metrics
   selector:
     {{- include "lagoon-core.keycloak.selectorLabels" . | nindent 4 }}
