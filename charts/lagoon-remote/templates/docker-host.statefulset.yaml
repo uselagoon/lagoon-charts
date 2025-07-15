@@ -32,9 +32,15 @@ spec:
         image: "{{ .Values.dockerHost.image.repository }}:{{ coalesce .Values.dockerHost.image.tag .Values.imageTag "latest" }}"
         imagePullPolicy: {{ .Values.dockerHost.image.pullPolicy }}
         env:
-        {{- range $name, $value := .Values.dockerHost.extraEnvs }}
+        {{- range .Values.dockerHost.extraEnvs }}
         - name: {{ .name }}
-          value: {{ .value | quote }}
+          {{- with .value }}
+          value: {{ . | quote }}
+          {{- end }}
+          {{- with .valueFrom }}
+          valueFrom:
+          {{- toYaml . | nindent 8 }}
+          {{- end}}
         {{- end }}
         {{- with .Values.dockerHost.httpProxy }}
         - name: HTTP_PROXY

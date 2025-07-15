@@ -52,9 +52,15 @@ spec:
           image: "{{ .Values.insightsRemote.image.repository }}:{{ coalesce .Values.insightsRemote.image.tag .Values.imageTag "latest" }}"
           imagePullPolicy: {{ .Values.insightsRemote.image.pullPolicy }}
           env:
-          {{- range $name, $value := .Values.insightsRemote.extraEnvs }}
-            - name: {{ .name }}
-              value: {{ .value | quote }}
+          {{- range .Values.dockerHost.extraEnvs }}
+          - name: {{ .name }}
+            {{- with .value }}
+            value: {{ . | quote }}
+            {{- end }}
+            {{- with .valueFrom }}
+            valueFrom:
+            {{- toYaml . | nindent 8 }}
+            {{- end}}
           {{- end }}
           {{- if .Values.insightsRemote.burnAfterReading }}
             - name: BURN_AFTER_READING
