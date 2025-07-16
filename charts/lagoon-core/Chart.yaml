@@ -42,5 +42,7 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: add support for s3 files bucket to actions-handler
+    - kind: changed
+      description: add servicemonitor for keycloak
     - kind: fixed
       description: support for s3 files bucket to actions-handler
