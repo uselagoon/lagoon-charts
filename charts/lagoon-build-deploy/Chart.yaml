@@ -16,14 +16,14 @@ kubeVersion: ">= 1.25.0-0"
 
 type: application
 
-version: 0.36.0
+version: 0.35.0
 
 appVersion: v0.24.0
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: allow valueFrom for environment variables
+      description: update remote-controller to v0.24.0
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
