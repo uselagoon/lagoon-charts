@@ -59,6 +59,16 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
+        - name: S3_FILES_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}
+              key: S3_FILES_ACCESS_KEY_ID
+        - name: S3_FILES_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.api.fullname" . }}
+              key: S3_FILES_SECRET_ACCESS_KEY
         - name: GRAPHQL_ENDPOINT
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
         - name: S3_FILES_BUCKET
