@@ -62,15 +62,8 @@ spec:
         - containerPort: 8443
           name: https
         env:
-        {{- range .Values.storageCalculator.extraEnvs }}
-        - name: {{ .name }}
-          {{- with .value }}
-          value: {{ . | quote }}
-          {{- end }}
-          {{- with .valueFrom }}
-          valueFrom:
-          {{- toYaml . | nindent 8 }}
-          {{- end}}
+        {{- with .Values.extraEnvs }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- with .Values.storageCalculator.cronjob }}
         - name: CALCULATOR_CRON

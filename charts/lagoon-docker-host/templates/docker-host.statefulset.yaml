@@ -32,15 +32,8 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-        {{- range .Values.extraEnvs }}
-        - name: {{ .name }}
-          {{- with .value }}
-          value: {{ . | quote }}
-          {{- end }}
-          {{- with .valueFrom }}
-          valueFrom:
-          {{- toYaml . | nindent 8 }}
-          {{- end}}
+        {{- with .Values.extraEnvs }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- with .Values.httpProxy }}
         - name: HTTP_PROXY
