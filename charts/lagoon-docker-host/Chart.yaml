@@ -26,4 +26,4 @@ appVersion: v3.5.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: changed docker-host to statefulset from deployment
+      description: pass extraEnvs directly from values
