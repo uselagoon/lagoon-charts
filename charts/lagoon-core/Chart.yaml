@@ -41,4 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update ssh-portal-api and ssh-token to v0.43.0
+      description: add support for s3 files bucket to actions-handler
