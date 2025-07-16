@@ -1,0 +1,48 @@
+{{- if and .Values.initialUserEmail .Values.initialUserPassword }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "lagoon-core-seeding"
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: seed-core-job
+          image: "uselagoon/tests"
+          command: ["/bin/sh", "-c"]
+          args: 
+            - |
+              export LEGACY_TOKEN=$(python3 /ansible/tasks/api/admin_token.py)
+              cat <<'PY' > /tmp/seed-core.py
+{{ .Files.Get "files/seed-core.py" | indent 14 }}
+              PY
+              python3 /tmp/seed-core.py || true
+          env:
+          - name: INITIAL_USER_EMAIL
+            value: "{{ .Values.initialUserEmail }}"
+          - name: INITIAL_USER_PASSWORD
+            value: "{{ .Values.initialUserPassword }}"
+          - name: INITIAL_ORGANIZATION_NAME
+            value: "{{ .Values.initialOrganizationName }}"
+          - name: JWTAUDIENCE
+            value: "api.dev"
+          - name: JWTUSER
+            value: "localadmin"
+          - name: JWTSECRET
+            valueFrom:
+              secretKeyRef:
+                name: lagoon-core-secrets
+                key: JWTSECRET
+          - name: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: lagoon-core-keycloak
+                key: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+          - name: KEYCLOAK_FRONTEND_URL
+            value: "{{ .Values.keycloakFrontEndURL }}"
+          - name: LAGOON_API_URL
+            value: "{{ .Values.lagoonAPIURL }}"
+{{- end }}
