@@ -451,7 +451,6 @@ install-lagoon-core-certs:
 # create the namespace if it doesn't exist so we can request a certificate from our local testing CA for the broker
 	$(KUBECTL) create namespace $(CORE_NAMESPACE) 2>/dev/null || true
 	$(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/broker-core-certificate-request.yaml
-	$(KUBECTL) create namespace $(CORE_NAMESPACE) 2>/dev/null || true
 	$(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/nats-core-certificate-request.yaml
 
 .PHONY: install-lagoon-core
