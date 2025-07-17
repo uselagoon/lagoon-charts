@@ -121,10 +121,15 @@ LOGS2MICROSOFTTEAMS_DISABLED = true
 INSTALL_K8UP = false
 REMOTE_CONTROLLER_K8UP_VERSION = v2
 
+# optionally install aergia for local testing
+INSTALL_AERGIA = false
+
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
 JQ = jq
+
+PROMETHEUS_VERSION = 75.9.0
 
 .PHONY: fill-test-ci-values
 fill-test-ci-values:
@@ -157,6 +162,9 @@ install-metallb:
 		metallb/metallb && \
 	$$(envsubst < test-suite.metallb-pool.yaml.tpl > test-suite.metallb-pool.yaml) && \
 	$(KUBECTL) apply -f test-suite.metallb-pool.yaml
+ifeq ($(INSTALL_PROMETHEUS),true)
+	$(HELM) show crds prometheus-community/kube-prometheus-stack --version $(PROMETHEUS_VERSION) | $(KUBECTL) create -f - || true
+endif
 
 # cert-manager is used to allow self-signed certificates to be generated automatically by ingress in the same way lets-encrypt would
 # this allows for the registry and other services to use certificates
@@ -183,6 +191,32 @@ install-certmanager: generate-ca
 		$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml; \
 	fi
 
+ifeq ($(INSTALL_AERGIA),true)
+.PHONY: install-aergia
+install-aergia:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace aergia \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set templates.enabled=false \
+		--set idling.enabled=true \
+		--set idling.serviceCron="0\,15\,30\,45 * * * *" \
+		--set idling.podCheckInterval=5m \
+		--set idling.prometheusCheckInterval=5m \
+		--set idling.prometheusEndpoint="http://kube-prometheus-kube-prome-prometheus.kube-prometheus.svc:9090" \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set servicemonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.enabled=true') \
+		--set unidling.verifyRequests.enabled=false \
+		--version=0.7.2 \
+		aergia \
+		amazeeio/aergia
+
+# install aergia before installing ingress-nginx
+install-ingress: install-aergia
+endif
+
 .PHONY: install-ingress
 install-ingress: install-certmanager
 	$(HELM) upgrade \
@@ -201,6 +235,11 @@ install-ingress: install-certmanager
 		--set controller.config.hsts="false" \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
+		--set controller.addHeaders.X-Lagoon="remote>ingress-nginx>$$namespace:$$service_name" \
+		$$([ $(INSTALL_AERGIA) = true ] && echo '--set controller.extraArgs.default-backend-service=aergia/aergia-backend') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.serviceMonitor.additionalLabels.release=kube-prometheus') \
 		--version=4.12.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
@@ -261,7 +300,7 @@ install-prometheus:
 		--namespace kube-prometheus \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--version 75.9.0 \
+		--version $(PROMETHEUS_VERSION) \
 		--set grafana.ingress.enabled=true \
 		--set grafana.sidecar.dashboards.enabled=true \
 		--set grafana.ingress.hosts[0]="grafana.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
