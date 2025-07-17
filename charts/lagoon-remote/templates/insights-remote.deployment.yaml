@@ -52,8 +52,8 @@ spec:
           image: "{{ .Values.insightsRemote.image.repository }}:{{ coalesce .Values.insightsRemote.image.tag .Values.imageTag "latest" }}"
           imagePullPolicy: {{ .Values.insightsRemote.image.pullPolicy }}
           env:
-          {{- with .Values.extraEnvs }}
-          {{- toYaml . | nindent 10 }}
+          {{- with .Values.insightsRemote.extraEnvs }}
+          {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- if .Values.insightsRemote.burnAfterReading }}
             - name: BURN_AFTER_READING
