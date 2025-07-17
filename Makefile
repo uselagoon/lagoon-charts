@@ -129,6 +129,8 @@ HELM = helm
 KUBECTL = kubectl
 JQ = jq
 
+PROMETHEUS_VERSION = 75.9.0
+
 .PHONY: fill-test-ci-values
 fill-test-ci-values:
 	export ingressIP="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" \
@@ -160,6 +162,9 @@ install-metallb:
 		metallb/metallb && \
 	$$(envsubst < test-suite.metallb-pool.yaml.tpl > test-suite.metallb-pool.yaml) && \
 	$(KUBECTL) apply -f test-suite.metallb-pool.yaml
+ifeq ($(INSTALL_PROMETHEUS),true)
+	$(HELM) show crds prometheus-community/kube-prometheus-stack --version $(PROMETHEUS_VERSION) | $(KUBECTL) create -f - || true
+endif
 
 # cert-manager is used to allow self-signed certificates to be generated automatically by ingress in the same way lets-encrypt would
 # this allows for the registry and other services to use certificates
@@ -290,7 +295,7 @@ install-prometheus:
 		--namespace kube-prometheus \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--version 75.9.0 \
+		--version $(PROMETHEUS_VERSION) \
 		--set grafana.ingress.enabled=true \
 		--set grafana.sidecar.dashboards.enabled=true \
 		--set grafana.ingress.hosts[0]="grafana.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
