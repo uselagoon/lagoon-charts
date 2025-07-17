@@ -174,9 +174,8 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
-        {{- range $name, $value := .Values.extraEnvs }}
-        - name: {{ .name }}
-          value: {{ .value | quote }}
+        {{- with .Values.extraEnvs }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: LAGOON_TARGET_NAME
           value: {{ required "A valid .Values.lagoonTargetName required!" .Values.lagoonTargetName | quote }}

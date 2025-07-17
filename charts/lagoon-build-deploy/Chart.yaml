@@ -23,7 +23,7 @@ appVersion: v0.24.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller to v0.24.0
+      description: pass extraEnvs directly from values
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
