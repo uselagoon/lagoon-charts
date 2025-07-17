@@ -41,4 +41,6 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
+      description: change nats tls certificate secret to allow for setting only the ca certificate
+    - kind: changed
       description: pass extraEnvs directly from values

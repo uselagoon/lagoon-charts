@@ -85,11 +85,11 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
 
-    - name: Install broker certificates
+    - name: Install lagoon test certificates
       run: |
         helm repo add jetstack https://charts.jetstack.io
         make INSTALL_CERTMANAGER_METALLB=false install-certmanager
-        make install-broker-certs CORE_NAMESPACE=lagoon-${{ github.event.pull_request.number }} REMOTE_NAMESPACE=lagoon-${{ github.event.pull_request.number }}
+        make install-lagoon-certs CORE_NAMESPACE=lagoon-${{ github.event.pull_request.number }} REMOTE_NAMESPACE=lagoon-${{ github.event.pull_request.number }}
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
@@ -145,7 +145,7 @@ jobs:
 
     - name: Run artifacthub.io changelog check
       run: |
-        for chartyaml in $(git diff --name-only origin/main | awk -F/ '/^charts\// { printf "%s/%s/%s\n",$1,$2,"Chart.yaml" }' | sort -u); do
+        for chartyaml in $(git diff --name-only origin/main -- ':(exclude)*/ci/linter-values.yaml' | awk -F/ '/^charts\// { printf "%s/%s/%s\n",$1,$2,"Chart.yaml" }' | sort -u); do
           if diff <(gojq -r --yaml-input '.annotations."artifacthub.io/changes"' <(git show HEAD:$chartyaml)) <(gojq -r --yaml-input '.annotations."artifacthub.io/changes"' <(git show origin/main:$chartyaml)); then
             echo "$chartyaml artifacthub.io changelog needs an update!"
             exit 1
