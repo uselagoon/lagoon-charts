@@ -202,8 +202,10 @@ install-aergia:
 		--timeout $(TIMEOUT) \
 		--set templates.enabled=false \
 		--set idling.enabled=true \
-		--set idling.serviceCron="5 * * * *" \
-		--set idling.podCheckInterval=30m \
+		--set idling.serviceCron="0\,15\,30\,45 * * * *" \
+		--set idling.podCheckInterval=5m \
+		--set idling.prometheusCheckInterval=5m \
+		--set idling.prometheusEndpoint="http://kube-prometheus-kube-prome-prometheus.kube-prometheus.svc:9090" \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set servicemonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.enabled=true') \
 		--set unidling.verifyRequests.enabled=false \
@@ -235,6 +237,9 @@ install-ingress: install-certmanager
 		--set controller.ingressClassResource.default=true \
 		--set controller.addHeaders.X-Lagoon="remote>ingress-nginx>$$namespace:$$service_name" \
 		$$([ $(INSTALL_AERGIA) = true ] && echo '--set controller.extraArgs.default-backend-service=aergia/aergia-backend') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.serviceMonitor.additionalLabels.release=kube-prometheus') \
 		--version=4.12.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
