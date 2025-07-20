@@ -94,6 +94,10 @@ STABLE_BUILDDEPLOY_CHART_VERSION =
 # that it will disable the broker tls settings in lagoon-build-deploy
 STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS = 1.52.0
 
+# versions of core before this version had the nats tls certs defined in the linter values
+STABLE_CORE_CHART_VERSION_PRE_NATS_TLS = 1.54.2
+STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS = 0.99.1
+
 INSTALL_UNAUTHENTICATED_REGISTRY = false
 
 # don't install mailpit in charts ci
@@ -186,10 +190,8 @@ install-certmanager: generate-ca
 		--version=v1.12.6 \
 		cert-manager \
 		jetstack/cert-manager
-	if [ ! $$($(KUBECTL) -n cert-manager get secret lagoon-test-secret 2>/dev/null || false) ]; then \
-		$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem; \
-		$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml; \
-	fi
+	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem || true
+	$(KUBECTL) create -f test-suite.certmanager-issuer-ss.yaml || true
 
 ifeq ($(INSTALL_AERGIA),true)
 .PHONY: install-aergia
@@ -488,9 +490,15 @@ CORE_NAMESPACE = lagoon-core
 .PHONY: install-lagoon-core-certs
 install-lagoon-core-certs:
 # create the namespace if it doesn't exist so we can request a certificate from our local testing CA for the broker
-	$(KUBECTL) create namespace $(CORE_NAMESPACE) 2>/dev/null || true
-	$(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/broker-core-certificate-request.yaml
-	$(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/nats-core-certificate-request.yaml
+	@$(KUBECTL) create namespace $(CORE_NAMESPACE) 2>/dev/null || true
+	@$(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/broker-core-certificate-request.yaml
+ifeq ($(INSTALL_STABLE_CORE),true)
+ifeq (,$(subst ",,$(STABLE_CORE_CHART_VERSION)))
+	$(eval STABLE_CORE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-core -o json | $(JQ) -r '.[]|.version'))
+endif
+endif
+	@[ $(INSTALL_STABLE_CORE) = false ] || [ $(shell expr $(STABLE_CORE_CHART_VERSION) \> $(STABLE_CORE_CHART_VERSION_PRE_NATS_TLS)) = 1 ] \
+		&& $(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/nats-core-certificate-request.yaml || true
 
 .PHONY: install-lagoon-core
 install-lagoon-core: install-lagoon-core-certs
@@ -613,11 +621,18 @@ REMOTE_NAMESPACE = lagoon
 .PHONY: install-lagoon-remote-certs
 install-lagoon-remote-certs:
 # create the namespace if it doesn't exist and add the CA certificate for the remote to use where required
-	$(KUBECTL) create namespace $(REMOTE_NAMESPACE) 2>/dev/null || true
-	$(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-broker-tls 2>/dev/null || true
-	$(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-broker-tls --from-file=ca.crt=certs/rootCA.pem
-	$(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-nats-tls 2>/dev/null || true
-	$(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-nats-tls --from-file=ca.crt=certs/rootCA.pem
+	@$(KUBECTL) create namespace $(REMOTE_NAMESPACE) 2>/dev/null || true
+	@$(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-broker-tls 2>/dev/null || true
+	@$(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-broker-tls --from-file=ca.crt=certs/rootCA.pem
+ifeq ($(INSTALL_STABLE_REMOTE),true)
+ifeq (,$(subst ",,$(STABLE_REMOTE_CHART_VERSION)))
+	$(eval STABLE_REMOTE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-remote -o json | $(JQ) -r '.[]|.version'))
+endif
+endif
+	@[ $(INSTALL_STABLE_REMOTE) = false ] || [ $(shell expr $(STABLE_REMOTE_CHART_VERSION) \> $(STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS)) = 1 ] \
+		&& $(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-nats-tls 2>/dev/null || true
+	@[ $(INSTALL_STABLE_REMOTE) = false ] || [ $(shell expr $(STABLE_REMOTE_CHART_VERSION) \> $(STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS)) = 1 ] \
+		&& $(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-nats-tls --from-file=ca.crt=certs/rootCA.pem || true
 
 .PHONY: install-lagoon-remote
 install-lagoon-remote: install-lagoon-remote-certs
@@ -625,7 +640,7 @@ ifneq ($(INSTALL_STABLE_REMOTE),true)
 	$(HELM) dependency build ./charts/lagoon-remote/
 else
 ifeq (,$(subst ",,$(STABLE_REMOTE_CHART_VERSION)))
-	$(eval STABLE_REMOTE_CHART_VERSION := $(shell $(HELM) search repo lagoon/lagoon-remote -o json | $(JQ) -r '.[]|.version'))
+	$(eval STABLE_REMOTE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-remote -o json | $(JQ) -r '.[]|.version'))
 endif
 endif
 	$(KUBECTL) create namespace lagoon 2>/dev/null || true
@@ -685,6 +700,9 @@ endif
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshPortal.serviceMonitor.enabled=true') \
 		lagoon-remote \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo 'lagoon/lagoon-remote'; else echo './charts/lagoon-remote'; fi)
+	# rerun the remote certs installation as a workaround for the way the localstack used to seed the nats certs from helm
+	# they are installed as a secret directly since STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS
+	$(MAKE) install-lagoon-remote-certs
 
 # The following target should only be called as a dependency of lagoon-remote
 # Do not install without lagoon-core
