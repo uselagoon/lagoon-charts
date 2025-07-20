@@ -294,9 +294,9 @@ endif
 .PHONY: install-prometheus
 install-prometheus:
 	@$(KUBECTL) create namespace kube-prometheus 2>/dev/null || true
-	@$(KUBECTL) --namespace kube-prometheus apply -f ci/grafana-dashboards/ssh-portal.yaml
-	@$(KUBECTL) --namespace kube-prometheus apply -f ci/grafana-dashboards/keycloak-troubleshoot.yaml
-	@$(KUBECTL) --namespace kube-prometheus apply -f ci/grafana-dashboards/keycloak-capacity.yaml
+	@for dashboard in $(shell ls ci/grafana-dashboards); do \
+		$(KUBECTL) --namespace kube-prometheus apply -f ci/grafana-dashboards/$$dashboard; \
+	done
 	@$(HELM) upgrade \
 		--install --create-namespace \
 		--namespace kube-prometheus \
