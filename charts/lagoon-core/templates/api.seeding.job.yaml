@@ -1,25 +1,32 @@
-{{- if and .Values.initialUserEmail .Values.initialUserPassword }}
+{{- if or (and .Values.initialUserEmail .Values.initialUserPassword) .Values.initialOrganizationName }}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "lagoon-core-seeding"
+  name: {{ include "lagoon-core.apiSeeding.fullname" . }}
   annotations:
     "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-4"
 spec:
+  backoffLimit: 2
   template:
+    metadata:
+      labels:
+        {{- include "lagoon-core.api.selectorLabels" . | nindent 8 }}
     spec:
       restartPolicy: Never
+      securityContext:
+          {{- toYaml .Values.api.securityContext | nindent 8 }}
       containers:
-        - name: seed-core-job
-          image: "uselagoon/tests"
+        - name: api-seeding
+          image: {{ .Values.api.image.repository }}:{{ coalesce .Values.api.image.tag .Values.imageTag .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
           command: ["/bin/sh", "-c"]
           args: 
             - |
-              export LEGACY_TOKEN=$(python3 /ansible/tasks/api/admin_token.py)
-              cat <<'PY' > /tmp/seed-core.py
-{{ .Files.Get "files/seed-core.py" | indent 14 }}
-              PY
-              python3 /tmp/seed-core.py || true
+              cat <<'JS' > /app/seed-core.js
+{{ .Files.Get "files/seed-core.js" | indent 14 }}
+              JS
+              node /app/seed-core.js || true
           env:
           - name: INITIAL_USER_EMAIL
             value: "{{ .Values.initialUserEmail }}"
@@ -34,12 +41,12 @@ spec:
           - name: JWTSECRET
             valueFrom:
               secretKeyRef:
-                name: lagoon-core-secrets
+                name: {{ include "lagoon-core.fullname" . }}-secrets
                 key: JWTSECRET
           - name: KEYCLOAK_ADMIN_API_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
-                name: lagoon-core-keycloak
+                name: {{ include "lagoon-core.keycloak.fullname" . }}
                 key: KEYCLOAK_ADMIN_API_CLIENT_SECRET
           - name: KEYCLOAK_FRONTEND_URL
             value: "{{ .Values.keycloakFrontEndURL }}"
