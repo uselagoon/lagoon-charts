@@ -1,3 +1,4 @@
 /test-suite.kind-config.yaml
 /test-suite.kind-config.calico.yaml
 certs/
+ci/default-ingress-certificate-request.yaml
