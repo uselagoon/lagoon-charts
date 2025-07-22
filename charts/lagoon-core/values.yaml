@@ -61,8 +61,8 @@
 
 
 # Set these values to automatically create an initial user or an initialOrganization
-# upon install of the Lagoon Core helm chart. Either 'initialOrganizationName' or both 
-# 'initialUserEmail' and 'initialUserPassword' must be set to trigger this feature. 
+# upon install of the Lagoon Core helm chart. Either 'initialOrganizationName' or both
+# 'initialUserEmail' and 'initialUserPassword' must be set to trigger this feature.
 # The script that is run assumes that both keycloakFrontEndURL and lagoonAPIURL are set correctly.
 
 # initialUserEmail: user@example.com
