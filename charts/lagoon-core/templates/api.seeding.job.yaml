@@ -1,4 +1,4 @@
-{{- if or (and .Values.initialUserEmail .Values.initialUserPassword) .Values.initialOrganizationName }}
+{{- if or (and .Values.lagoonSeedUsername .Values.lagoonSeedPassword) .Values.lagoonSeedOrganization }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -29,11 +29,11 @@ spec:
               node /app/seed-core.js || true
           env:
           - name: INITIAL_USER_EMAIL
-            value: "{{ .Values.initialUserEmail }}"
+            value: "{{ .Values.lagoonSeedUsername }}"
           - name: INITIAL_USER_PASSWORD
-            value: "{{ .Values.initialUserPassword }}"
+            value: "{{ .Values.lagoonSeedPassword }}"
           - name: INITIAL_ORGANIZATION_NAME
-            value: "{{ .Values.initialOrganizationName }}"
+            value: "{{ .Values.lagoonSeedOrganization }}"
           - name: JWTAUDIENCE
             value: "api.dev"
           - name: JWTUSER

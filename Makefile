@@ -117,6 +117,11 @@ LOGS2ROCKETCHAT_DISABLED = true
 LOGS2EMAIL_DISABLED = false
 LOGS2MICROSOFTTEAMS_DISABLED = true
 
+# set these to seed the lagoon-core installation with an initial user or org
+LAGOON_SEED_USERNAME = 
+LAGOON_SEED_PASSWORD = 
+LAGOON_SEED_ORGANIZATION = 
+
 # install k8up v1 (backup.appuio.ch/v1alpah1) and v2 (k8up.io/v1)
 # specifify which version the remote controller should start with
 # currently lagoon supports both versions, but may one day only support k8up v2
@@ -605,6 +610,9 @@ endif
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set broker.ingress.tls[0].secretName=broker-tls') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.kubernetes\\.io/tls-acme=true') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
+		$$([ $(LAGOON_SEED_USERNAME) ] && echo '--set lagoonSeedUsername=$(LAGOON_SEED_USERNAME)') \
+        $$([ $(LAGOON_SEED_PASSWORD) ] && echo '--set lagoonSeedPassword=$(LAGOON_SEED_PASSWORD)') \
+        $$([ $(LAGOON_SEED_ORGANIZATION) ] && echo '--set lagoonSeedOrganization=$(LAGOON_SEED_ORGANIZATION)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_REPO) ] && echo '--set sshPortalAPI.image.repository=$(SSHPORTALAPI_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_TAG) ] && echo '--set sshPortalAPI.image.tag=$(SSHPORTALAPI_IMAGE_TAG)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_REPO) ] && echo '--set sshToken.image.repository=$(SSHTOKEN_IMAGE_REPO)') \
