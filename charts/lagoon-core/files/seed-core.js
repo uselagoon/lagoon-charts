@@ -1,5 +1,5 @@
-import axios from "axios";
-import jwt from "jsonwebtoken";
+const axios = require("axios");
+const jwt = require("jsonwebtoken");
 
 const {
   INITIAL_USER_EMAIL,
@@ -72,45 +72,6 @@ async function seedOrg() {
     }
 
     console.log(`Created org with id ${orgId}`);
-
-    const configureOrgGraphql = `
-mutation LagoonCoreConfigOrg {
-    CreateGroup: addGroup(input: {
-        name: "${INITIAL_ORGANIZATION_NAME}-group"
-    }) {
-        id
-    }
-
-    AddUserToGroup: addUserToGroup(input: {
-        user: { email: "${INITIAL_USER_EMAIL}" }
-        group: { name: "${INITIAL_ORGANIZATION_NAME}-group" }
-        role: OWNER
-    }) {
-        name
-    }
-
-    AddGroupToOrg: addExistingGroupToOrganization(input: {
-        name: "${INITIAL_ORGANIZATION_NAME}-group"
-        organization: ${orgId}
-    }) {
-        id
-    }
-
-    AddUserToOrg: addAdminToOrganization(input: {
-        user: { email: "${INITIAL_USER_EMAIL}" }
-        organization: { id: ${orgId} }
-        role: OWNER
-    }) {
-        id
-    }
-}
-`;
-    if (INITIAL_USER_EMAIL && INITIAL_USER_PASSWORD) {
-      const configureResponse = await axios.post(lagoonApiUrl, { query: configureOrgGraphql }, { headers });
-      console.log(configureResponse.data);
-    }
-
-
   } catch (err) {
     console.error("Error seeding organization:", err.response?.data || err.message);
   }
