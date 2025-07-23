@@ -234,10 +234,11 @@ install-ingress: install-certmanager
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.annotations-risk-level=Critical \
 		--set controller.config.proxy-body-size=0 \
-		--set controller.config.hsts="false" \
+		--set controller.config.hsts=false \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
 		--set controller.addHeaders.X-Lagoon="remote>ingress-nginx>$$namespace:$$service_name" \
+		--set controller.extraArgs.default-ssl-certificate=ingress-nginx/default-ingress-certificate-tls \
 		$$([ $(INSTALL_AERGIA) = true ] && echo '--set controller.extraArgs.default-backend-service=aergia/aergia-backend') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.serviceMonitor.enabled=true') \
@@ -245,6 +246,9 @@ install-ingress: install-certmanager
 		--version=4.12.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
+	export INGRESS_IP="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
+		$$(envsubst < ci/default-ingress-certificate-request.yaml.tpl > ci/default-ingress-certificate-request.yaml)
+	$(KUBECTL) --namespace ingress-nginx create -f ci/default-ingress-certificate-request.yaml || true
 
 .PHONY: install-registry
 ifeq ($(INSTALL_UNAUTHENTICATED_REGISTRY),false)
