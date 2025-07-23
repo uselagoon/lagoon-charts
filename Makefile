@@ -611,8 +611,8 @@ endif
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.kubernetes\\.io/tls-acme=true') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		$$([ $(LAGOON_SEED_USERNAME) ] && echo '--set lagoonSeedUsername=$(LAGOON_SEED_USERNAME)') \
-        $$([ $(LAGOON_SEED_PASSWORD) ] && echo '--set lagoonSeedPassword=$(LAGOON_SEED_PASSWORD)') \
-        $$([ $(LAGOON_SEED_ORGANIZATION) ] && echo '--set lagoonSeedOrganization=$(LAGOON_SEED_ORGANIZATION)') \
+		$$([ $(LAGOON_SEED_PASSWORD) ] && echo '--set lagoonSeedPassword=$(LAGOON_SEED_PASSWORD)') \
+		$$([ $(LAGOON_SEED_ORGANIZATION) ] && echo '--set lagoonSeedOrganization=$(LAGOON_SEED_ORGANIZATION)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_REPO) ] && echo '--set sshPortalAPI.image.repository=$(SSHPORTALAPI_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_TAG) ] && echo '--set sshPortalAPI.image.tag=$(SSHPORTALAPI_IMAGE_TAG)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_REPO) ] && echo '--set sshToken.image.repository=$(SSHTOKEN_IMAGE_REPO)') \
