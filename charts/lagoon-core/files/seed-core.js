@@ -62,7 +62,6 @@ async function seedOrg() {
   try {
     const response = await axios.post(lagoonApiUrl, { query: seedOrgGql }, { headers });
     const body = response.data;
-    console.log(body);
 
     const orgId = body?.data?.CreateOrganization?.id;
     if (!orgId) {
@@ -88,8 +87,6 @@ async function seedUser() {
 
   try {
     const response = await axios.post(lagoonApiUrl, { query: seedUserGql }, { headers });
-    console.log(response.data);
-
     const keycloakUrl = `${KEYCLOAK_FRONTEND_URL}/auth`.replace("https://", "http://");
     console.log(`Setting user password in keycloak at ${keycloakUrl}`);
 
