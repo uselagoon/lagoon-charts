@@ -46,3 +46,5 @@ annotations:
       description: add servicemonitor for keycloak
     - kind: fixed
       description: support for s3 files bucket to actions-handler
+    - kind: added
+      description: add support for setting seed user or organization upon initial install

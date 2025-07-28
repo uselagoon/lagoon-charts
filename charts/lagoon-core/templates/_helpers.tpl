@@ -82,6 +82,12 @@ Create a default fully qualified app name for api-migratedb-job.
 {{- include "lagoon-core.fullname" . }}-api-migratedb
 {{- end }}
 
+{{/*
+Create a default fully qualified app name for api-seeding-job.
+*/}}
+{{- define "lagoon-core.apiSeeding.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-api-seeding
+{{- end }}
 
 {{/*
 Create a default fully qualified app name for api-db.
