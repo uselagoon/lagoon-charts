@@ -789,11 +789,7 @@ install-bulk-storageclass:
 
 .PHONY: create-kind-cluster
 create-kind-cluster:
-	docker network inspect kind >/dev/null || docker network create kind \
-		&& LAGOON_KIND_CIDR_BLOCK=$$(docker network inspect kind | $(JQ) '.[].Containers[].IPv4Address' | tr -d '"') \
-		&& export KIND_NODE_IP=$$(echo $${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $$1,$$2,$$3,240}' OFS='.') \
-		&& envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml \
-		&& envsubst < test-suite.kind-config.calico.yaml.tpl > test-suite.kind-config.calico.yaml
+	docker network inspect kind >/dev/null || docker network create kind
 ifeq ($(USE_CALICO_CNI),true)
 	kind create cluster --wait=60s --config=test-suite.kind-config.calico.yaml \
 		&& $(KUBECTL) create -f ./ci/calico/tigera-operator.yaml --context kind-chart-testing \
@@ -882,19 +878,12 @@ ifneq ($(KIND_VERSION), $(shell ./local-dev/kind version 2>/dev/null | sed -nE '
 endif
 endif
 
+# this creates a local kind cluster
 .PHONY: kind/create-cluster
 kind/create-cluster: local-dev/kind
 	docker network inspect $(DOCKER_NETWORK) >/dev/null || docker network create $(DOCKER_NETWORK) \
 		&& export KIND_EXPERIMENTAL_DOCKER_NETWORK=$(DOCKER_NETWORK) \
  		&& $(KIND) create cluster --wait=60s --name=$(KIND_CLUSTER) --config=test-suite.kind-config.yaml
-
-.PHONY: kind/set-kubeconfig
-kind/set-kubeconfig:
-	export KIND_CLUSTER=$(KIND_CLUSTER) && \
-	$(KIND) export kubeconfig --name=$(KIND_CLUSTER)
-
-.PHONY: set-registry
-kind/set-registry: local-dev/kind
 	LAGOON_KIND_CIDR_BLOCK=$$(docker network inspect $(DOCKER_NETWORK) | $(JQ) '.[].Containers[].IPv4Address' | tr -d '"') \
 		&& export KIND_NODE_IP=$$(echo $${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $$1,$$2,$$3,240}' OFS='.') \
 		&& envsubst < test-suite.registry.toml.tpl > test-suite.registry.toml \
@@ -904,18 +893,25 @@ kind/set-registry: local-dev/kind
 			cat test-suite.registry.toml | docker exec -i "$$node" cp /dev/stdin "$${REGISTRY_DIR}/hosts.toml"; \
 		done
 
+# install lagoon will create the cluster and then install lagoon only
 .PHONY: kind/install-lagoon
-kind/install-lagoon: kind/set-registry kind/create-cluster
+kind/install-lagoon: kind/create-cluster
 	export KIND_CLUSTER=$(KIND_CLUSTER) && \
 	$(KIND) export kubeconfig --name=$(KIND_CLUSTER) && \
 	kubectl get nodes && kubectl get pods -A && \
 	$(MAKE) install-lagoon
 
+# this will create cluster, install lagoon, and then run tests
 .PHONY: kind/test
 kind/test: kind/install-lagoon
+	$(MAKE) kind/re-test
+
+# this will re-run tests
+.PHONY: kind/re-test
+kind/re-test:
 	export KIND_CLUSTER=$(KIND_CLUSTER) && \
 	$(KIND) get kubeconfig --name=$(KIND_CLUSTER) > ./kubeconfig.kind && \
-	$(MAKE) -O fill-test-ci-values TESTS=[nginx] && \
+	$(MAKE) -O fill-test-ci-values TESTS=$(TESTS) && \
 	docker run --rm --network host --name ct \
 		--volume "$$(pwd)/test-suite-run.ct.yaml:/etc/ct/ct.yaml" \
 		--volume "$$(pwd):/workdir" \
@@ -924,6 +920,13 @@ kind/test: kind/install-lagoon
 		"quay.io/helmpack/chart-testing:$(CHART_TESTING_VERSION)" \
 		ct install --helm-extra-args "--timeout 60m"
 
+# get kubeconfig for local usage
+.PHONY: kind/set-kubeconfig
+kind/set-kubeconfig:
+	export KIND_CLUSTER=$(KIND_CLUSTER) && \
+	$(KIND) export kubeconfig --name=$(KIND_CLUSTER)
+
+# tears down the kind cluster
 .PHONY: kind/clean
 kind/clean:
 	$(KIND) delete cluster --name=$(KIND_CLUSTER) && docker network rm $(DOCKER_NETWORK)

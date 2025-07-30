@@ -76,7 +76,16 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
-        make kind/set-registry
+        LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '.[].Containers[].IPv4Address' | tr -d '"')
+        export KIND_NODE_IP=$(echo ${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $1,$2,$3,240}' OFS='.')
+        envsubst < test-suite.registry.toml.tpl > test-suite.registry.toml
+        export REGISTRY_DIR="/etc/containerd/certs.d/registry.${KIND_NODE_IP}.nip.io"
+        for node in $(kind get nodes --name chart-testing); do
+          echo fixing node $node
+          docker exec "$node" mkdir -p "${REGISTRY_DIR}"
+          cat test-suite.registry.toml
+          cat test-suite.registry.toml | docker exec -i "$node" cp /dev/stdin "${REGISTRY_DIR}/hosts.toml"
+        done
 
     - name: Check node IP matches kind configuration
       if: |

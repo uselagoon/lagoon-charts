@@ -1,4 +1,3 @@
-/test-suite.kind-config.calico.yaml
 /test-suite.metallb-pool.yaml
 /test-suite.registry.toml
 certs/
