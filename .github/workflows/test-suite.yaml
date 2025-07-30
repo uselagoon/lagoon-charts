@@ -76,9 +76,9 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
       with:
-        version: v0.26.0
-        node_image: kindest/node:v1.31.4@sha256:2cb39f7295fe7eafee0842b1052a599a4fb0f8bcf3f83d96c7f4864c357c6c30
-        kubectl_version: v1.31.4
+        version: v0.27.0
+        node_image: kindest/node:v1.32.2@sha256:f226345927d7e348497136874b6d207e0b32cc52154ad8323129352923a3142f
+        kubectl_version: v1.32.2
         config: test-suite.kind-config.yaml
 
     - name: Check node IP matches kind configuration
