@@ -58,17 +58,6 @@ jobs:
           echo "$changed"
         fi
 
-    - name: Configure node IP in kind-config.yaml
-      if: |
-        (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
-      run: |
-        docker network create kind
-        LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '. [0].IPAM.Config[0].Subnet' | tr -d '"') 
-        export KIND_NODE_IP=$(echo ${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $1,$2,$3,240}' OFS='.')
-        envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml
-
     - name: Create kind cluster
       uses: helm/kind-action@a1b0e391336a6ee6713a0583f8c6240d70863de3 # v1.12.0
       if: |
@@ -76,10 +65,27 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
       with:
-        version: v0.26.0
-        node_image: kindest/node:v1.31.4@sha256:2cb39f7295fe7eafee0842b1052a599a4fb0f8bcf3f83d96c7f4864c357c6c30
-        kubectl_version: v1.31.4
+        version: v0.27.0
+        node_image: kindest/node:v1.32.2@sha256:f226345927d7e348497136874b6d207e0b32cc52154ad8323129352923a3142f
+        kubectl_version: v1.32.2
         config: test-suite.kind-config.yaml
+
+    - name: Configure registry for containerd
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
+        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+      run: |
+        LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '.[].Containers[].IPv4Address' | tr -d '"')
+        export KIND_NODE_IP=$(echo ${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $1,$2,$3,240}' OFS='.')
+        envsubst < test-suite.registry.toml.tpl > test-suite.registry.toml
+        export REGISTRY_DIR="/etc/containerd/certs.d/registry.${KIND_NODE_IP}.nip.io"
+        for node in $(kind get nodes --name chart-testing); do
+          echo fixing node $node
+          docker exec "$node" mkdir -p "${REGISTRY_DIR}"
+          cat test-suite.registry.toml
+          cat test-suite.registry.toml | docker exec -i "$node" cp /dev/stdin "${REGISTRY_DIR}/hosts.toml"
+        done
 
     - name: Check node IP matches kind configuration
       if: |
@@ -87,10 +93,10 @@ jobs:
         (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
         (contains(github.event.pull_request.labels.*.name, 'next-release'))
       run: |
-        LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '. [0].IPAM.Config[0].Subnet' | tr -d '"')
+        LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '.[].Containers[].IPv4Address' | tr -d '"')
         NODE_IP=$(echo ${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $1,$2,$3,240}' OFS='.')
         echo Checking for NODE_IP "$NODE_IP"
-        grep $NODE_IP test-suite.kind-config.yaml
+        grep $NODE_IP test-suite.registry.toml
 
     - name: Add dependency chart repos
       if: |
