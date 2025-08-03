@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.54.2
+version: 1.55.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.26.1
+appVersion: v2.27.0
 
 dependencies:
 - name: nats
@@ -48,3 +48,5 @@ annotations:
       description: support for s3 files bucket to actions-handler
     - kind: added
       description: add support for setting seed user or organization upon initial install
+    - kind: changed
+      description: update lagoon appVersion to 2.27.0
