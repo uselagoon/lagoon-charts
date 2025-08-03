@@ -45,4 +45,6 @@ annotations:
     - kind: changed
       description: pass extraEnvs directly from values
     - kind: changed
-      description: update lgaoon-build-deploy chart to v0.36.0
+      description: update lagoon-build-deploy chart to v0.36.0
+    - kind: changed
+      description: update storage calculator to v0.8.1
