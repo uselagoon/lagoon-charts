@@ -481,7 +481,7 @@ storageCalculator:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.8.0
+    tag: v0.8.1
 
   broker:
     # enable if providing a custom CA for broker connections
