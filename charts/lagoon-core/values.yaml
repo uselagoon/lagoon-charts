@@ -85,7 +85,7 @@ buildDeployImage:
   default:
     # when updating this chart, ensure that if there are any changes made to the build-deploy-tool repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    image: uselagoon/build-deploy-image:core-v2.26.0
+    image: uselagoon/build-deploy-image:core-v2.27.0
   edge:
     enabled: false
 
@@ -575,7 +575,7 @@ ui:
     pullPolicy: Always
     # when updating this chart, ensure that if there are any changes made to the lagoon-ui repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    tag: "core-v2.26.1"
+    tag: "core-v2.27.0"
 
   podAnnotations: {}
 
