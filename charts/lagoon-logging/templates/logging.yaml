@@ -7,6 +7,14 @@ metadata:
 spec:
   enableRecreateWorkloadOnImmutableFieldChange: true
   fluentd:
+  {{- with .Values.fluentdImage }}
+    image:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with .Values.fluentdConfigHotReloadImage }}
+    configReloaderImage:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
     security:
       podSecurityContext:
         runAsUser: 100
@@ -32,6 +40,15 @@ spec:
     livenessDefaultCheck: true
     filterKubernetes:
       namespace_labels: {{ default "Off" .Values.fluentbitNamespaceLabels | quote }}
+  {{- with .Values.fluentbitImage }}
+    image:
+    {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with .Values.fluentbitConfigHotReloadImage }}
+    configHotReload:
+      image:
+      {{- toYaml . | nindent 8 }}
+  {{- end }}
   {{- if .Values.fluentbitPrivileged }}
     security:
       securityContext:
