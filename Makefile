@@ -506,7 +506,7 @@ ifeq (,$(subst ",,$(STABLE_CORE_CHART_VERSION)))
 	$(eval STABLE_CORE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-core -o json | $(JQ) -r '.[]|.version'))
 endif
 endif
-	@[ $(INSTALL_STABLE_CORE) = false ] || [ $(shell expr $(STABLE_CORE_CHART_VERSION) \> $(STABLE_CORE_CHART_VERSION_PRE_NATS_TLS)) = 1 ] \
+	@[ $(INSTALL_STABLE_CORE) = false ] || [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_NATS_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) > triple($$target))) | length') = 1 ] \
 		&& $(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/nats-core-certificate-request.yaml || true
 
 .PHONY: install-lagoon-core
@@ -641,9 +641,9 @@ ifeq (,$(subst ",,$(STABLE_REMOTE_CHART_VERSION)))
 	$(eval STABLE_REMOTE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-remote -o json | $(JQ) -r '.[]|.version'))
 endif
 endif
-	@[ $(INSTALL_STABLE_REMOTE) = false ] || [ $(shell expr $(STABLE_REMOTE_CHART_VERSION) \> $(STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS)) = 1 ] \
+	@[ $(INSTALL_STABLE_REMOTE) = false ] || [ $(shell echo "[{\"version\":\"$(STABLE_REMOTE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) > triple($$target))) | length') = 1 ] \
 		&& $(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-nats-tls 2>/dev/null || true
-	@[ $(INSTALL_STABLE_REMOTE) = false ] || [ $(shell expr $(STABLE_REMOTE_CHART_VERSION) \> $(STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS)) = 1 ] \
+	@[ $(INSTALL_STABLE_REMOTE) = false ] || [ $(shell echo "[{\"version\":\"$(STABLE_REMOTE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) > triple($$target))) | length') = 1 ] \
 		&& $(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-nats-tls --from-file=ca.crt=certs/rootCA.pem || true
 
 .PHONY: install-lagoon-remote
@@ -746,8 +746,8 @@ endif
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenHost=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenPort=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.spec.ports[0].port}')") \
 		--set "QoSMaxBuilds=5" \
-		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell expr $(STABLE_CORE_CHART_VERSION) \<= $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS)) = 1 ] && echo --set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc") \
-		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell expr $(STABLE_CORE_CHART_VERSION) \<= $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS)) = 1 ] && echo --set "broker.tls.enabled=false") \
+		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc") \
+		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "broker.tls.enabled=false") \
 		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
 			echo "--set extraArgs={--skip-tls-verify=true,--cleanup-harbor-repository-on-delete,--lagoon-feature-flag-support-k8upv2}" || \
 			echo "--set extraArgs={--skip-tls-verify=true,--cleanup-harbor-repository-on-delete}") \
