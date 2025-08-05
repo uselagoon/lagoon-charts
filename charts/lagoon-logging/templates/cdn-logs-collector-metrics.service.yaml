@@ -1,4 +1,4 @@
-{{- if .Values.cdnLogsCollector.metrics.enabled -}}
+{{- if and .Values.cdnLogsCollector.enabled .Values.cdnLogsCollector.metrics.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
