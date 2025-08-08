@@ -5952,6 +5952,34 @@ entries:
   lagoon-logging:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: allow configuration of container images used by the logging operator
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.11.4
+    created: "2025-08-08T07:28:01.3903684Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: oci://ghcr.io/kube-logging/helm-charts
+      version: 4.11.4
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 6c7228e247ed7b31d7c94c5666f1425b2371c88ca806ed00628e63c0cea31b65
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.88.0/lagoon-logging-0.88.0.tgz
+    version: 0.88.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: only expose cdn-logs-collector metrics when component is enabled
       artifacthub.io/containsSecurityUpdates: "false"
@@ -16035,4 +16063,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-08-05T13:38:44.1914038Z"
+generated: "2025-08-08T07:28:01.391254605Z"
