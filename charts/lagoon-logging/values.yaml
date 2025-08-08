@@ -9,6 +9,21 @@ fullnameOverride: ""
 # on the service level, if not set it falls back to chart appVersion.
 imageTag: ""
 
+# Optionally reconfigure the container images to be used by the logging operator
+# logging-operator:
+#   image:
+#     repository: ghcr.io/kube-logging/logging-operator
+# fluentdImage:
+#   repository: ghcr.io/kube-logging/fluentd
+#   tag: v0.1.0
+# fluentbitImage:
+#   repository: docker.io/fluent/fluent-bit
+# fluentdConfigHotReloadImage:
+#   repository: ghcr.io/kube-logging/config-reloader
+#   pullPolicy: Always
+# fluentbitConfigHotReloadImage:
+#   repository: ghcr.io/kube-logging/config-reloader
+
 logsDispatcher:
 
   name: logs-dispatcher

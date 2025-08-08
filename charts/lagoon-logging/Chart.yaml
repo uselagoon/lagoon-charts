@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.87.2
+version: 0.88.0
 
 # AppVersion is set here the same as the logging-operator chart version to
 # autopopulate the post-install CRD message.
@@ -37,5 +37,5 @@ dependencies:
 annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
-    - kind: fixed
-      description: only expose cdn-logs-collector metrics when component is enabled
+    - kind: added
+      description: allow configuration of container images used by the logging operator
