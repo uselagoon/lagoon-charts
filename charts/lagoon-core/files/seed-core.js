@@ -50,6 +50,25 @@ mutation LagoonCoreSeedOrg {
 }
 `;
 
+async function waitForKeycloak(url, timeout = 600000, interval = 2000) {
+  const start = Date.now();
+
+  while (Date.now() - start < timeout) {
+    try {
+      const response = await axios.get(url);
+      if (response.status === 200) {
+        console.log("Connected to keycloak");
+        return;
+      }
+    } catch (err) {
+      console.log(`waiting for keycloak at ${url}...`);
+    }
+    await new Promise(resolve => setTimeout(resolve, interval));
+  }
+
+  throw new Error(`Timed out waiting for Keycloak at ${url}`);
+}
+
 async function seedOrg() {
   console.log("Seeding Lagoon core with initial organization");
 
@@ -88,6 +107,8 @@ async function seedUser() {
   try {
     const response = await axios.post(lagoonApiUrl, { query: seedUserGql }, { headers });
     const keycloakUrl = `${KEYCLOAK_FRONTEND_URL}/auth`.replace("https://", "http://");
+
+    await waitForKeycloak(keycloakUrl + "/admin/master/console");
     console.log(`Setting user password in keycloak at ${keycloakUrl}`);
 
     const data = new URLSearchParams({
