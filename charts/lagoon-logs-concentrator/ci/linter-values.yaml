@@ -2,6 +2,7 @@
 opensearchHost: "logs-db-service.opensearch.svc.cluster.local"
 opensearchAdminUser: "admin"
 opensearchAdminPassword: "securepass"
+mTLS: true
 tls:
   caCert: |-
     -----BEGIN CERTIFICATE-----
