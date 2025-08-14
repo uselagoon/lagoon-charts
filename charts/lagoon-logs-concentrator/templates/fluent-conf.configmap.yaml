@@ -105,6 +105,6 @@ data:
       verify_os_version_at_startup false
 {{- end }}
 {{- if .Values.opensearchCACert }}
-      ca_file /fluentd/es-tls/ca.crt
+      ca_file /fluentd/os-tls/ca.crt
 {{- end }}
     </match>
