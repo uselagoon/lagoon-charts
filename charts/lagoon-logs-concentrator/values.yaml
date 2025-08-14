@@ -98,6 +98,8 @@ opensearchTLSVerify: true
 # in the README.
 opensearchAdminUser: "admin"
 
+mTLS: true
+
 # Sample data shown below.
 # opensearchHost: "logs-db-service.opensearch.svc.cluster.local"
 # opensearchAdminPassword: "securepass"

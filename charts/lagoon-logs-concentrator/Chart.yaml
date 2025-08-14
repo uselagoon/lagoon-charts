@@ -26,5 +26,5 @@ version: 0.53.0
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: make probes configurable
+    - kind: added
+      description: allow usage of cert from public CA

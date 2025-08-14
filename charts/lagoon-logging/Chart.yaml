@@ -38,4 +38,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
     - kind: added
-      description: allow configuration of container images used by the logging operator
+      description: allow usage of cert from public CA

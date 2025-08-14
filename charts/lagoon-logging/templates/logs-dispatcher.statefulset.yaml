@@ -90,7 +90,7 @@ spec:
         {{- end }}
         - mountPath: /fluentd/buffer/
           name: buffer
-        {{- if .Values.enableDefaultForwarding }}
+        {{- if and .Values.enableDefaultForwarding .Values.forward.mTLS }}
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
         {{- end }}
@@ -143,7 +143,7 @@ spec:
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-source-lagoon
         name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-source-lagoon
       {{- end }}
-      {{- if .Values.enableDefaultForwarding }}
+      {{- if and .Values.enableDefaultForwarding .Values.forward.mTLS }}
       - secret:
           defaultMode: 420
           secretName: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls

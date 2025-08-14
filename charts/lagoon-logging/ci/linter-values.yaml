@@ -7,6 +7,7 @@ forward:
   sharedKey: lintShared
   selfHostname: linthost
   verifyConnectionAtStartup: false
+  mTLS: true
 
 clusterName: lintcluster
 
