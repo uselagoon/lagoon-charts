@@ -661,7 +661,6 @@ endif
 		--set logs2notifications.logs2webhooks.disabled=$(LOGS2WEBHOOKS_DISABLED) \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler') \
-		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks') \
 		--set s3BAASAccessKeyID=lagoonFilesAccessKey \
 		--set s3BAASSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
