@@ -47,6 +47,11 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_USERNAME
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-secrets
+              key: JWTSECRET
       {{- range $key, $val := .Values.webhookHandler.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
