@@ -35,7 +35,7 @@ spec:
         image: "{{ .Values.webhookHandler.image.repository }}:{{ coalesce .Values.webhookHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.webhookHandler.image.pullPolicy }}
         env:
-        - name: RABBITMQ_HOST
+        - name: RABBITMQ_ADDRESS
           value: {{ include "lagoon-core.broker.fullname" . }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
@@ -47,6 +47,13 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_USERNAME
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-secrets
+              key: JWTSECRET
+        - name: GRAPHQL_ENDPOINT
+          value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
       {{- range $key, $val := .Values.webhookHandler.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}

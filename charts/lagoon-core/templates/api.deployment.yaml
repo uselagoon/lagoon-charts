@@ -79,6 +79,33 @@ spec:
           {{- toYaml .Values.api.securityContext | nindent 10 }}
         image: "{{ .Values.apiSidecarHandler.image.repository }}:{{ coalesce .Values.apiSidecarHandler.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.apiSidecarHandler.image.pullPolicy }}
+        env:
+        - name: JWTSECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-secrets
+              key: JWTSECRET
+        - name: LAGOON_VERSION
+          value: {{ .Chart.AppVersion | replace "-" "." }}
+        - name: RABBITMQ_HOST
+          value: {{ include "lagoon-core.broker.fullname" . }}
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.broker.fullname" . }}
+              key: RABBITMQ_USERNAME
+      {{- range $key, $val := .Values.api.sidecar.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
+        envFrom:
+        - secretRef:
+            name: {{ include "lagoon-core.api.fullname" . }}
         livenessProbe:
           httpGet:
             path: /status
