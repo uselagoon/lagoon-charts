@@ -168,6 +168,8 @@ api:
 
   additionalEnvs:
   #   FOO: Bar
+  sidecar:
+    additionalEnvs:
 
   autoscaling:
     enabled: false
@@ -491,34 +493,6 @@ authServer:
     type: ClusterIP
     port: 80
     annotations: {}
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources:
-    requests:
-      memory: "64Mi"
-      cpu: "50m"
-
-  additionalEnvs:
-  #   FOO: Bar
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
-webhooks2tasks:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/webhooks2tasks
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
 
   podAnnotations: {}
 

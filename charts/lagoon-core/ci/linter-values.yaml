@@ -113,14 +113,6 @@ authServer:
     requests:
       cpu: "10m"
 
-webhooks2tasks:
-  replicaCount: 1
-  image:
-    repository: uselagoon/webhooks2tasks
-  resources:
-    requests:
-      cpu: "10m"
-
 webhookHandler:
   replicaCount: 1
   image:
