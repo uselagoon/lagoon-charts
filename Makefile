@@ -664,6 +664,7 @@ endif
 		--timeout $(TIMEOUT) \
 		$$([ $(INSTALL_STABLE_REMOTE) = true ] && [ $(STABLE_REMOTE_CHART_VERSION) ] && echo '--version=$(STABLE_REMOTE_CHART_VERSION)') \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-remote-$(STABLE_REMOTE_CHART_VERSION)/charts/lagoon-remote/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-remote/ci/linter-values.yaml'; fi) \
+		--set "global.rabbitMQPassword=$$($(KUBECTL) -n lagoon-core get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		--set "lagoon-build-deploy.enabled=false" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.environment=development') \
