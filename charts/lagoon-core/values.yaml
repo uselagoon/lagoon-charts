@@ -155,6 +155,8 @@ api:
 
   additionalEnvs:
   #   FOO: Bar
+  sidecar:
+    additionalEnvs:
 
   autoscaling:
     enabled: false
