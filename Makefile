@@ -24,6 +24,11 @@ IMAGE_TAG =
 # SSHPORTAL_IMAGE_REPO =
 # SSHPORTAL_IMAGE_TAG =
 
+# The two variables below are an easy way to override the insights-handler image used in the local stack lagoon-core 
+# only works for installations where ENABLE_INSIGHTS=true and INSTALL_STABLE_CORE=false
+#INSIGHTS_HANDLER_IMAGE_REPO = 
+#INSIGHTS_HANDLER_IMAGE_TAG = 
+
 LAGOON_CORE_USE_HTTPS = true
 
 # IMAGE_REGISTRY controls the registry used for container images in the
@@ -132,6 +137,9 @@ REMOTE_CONTROLLER_K8UP_VERSION = v2
 
 # optionally install aergia for local testing
 INSTALL_AERGIA = false
+
+# optionally enable Lagoon Insights
+ENABLE_INSIGHTS = false
 
 TIMEOUT = 30m
 HELM = helm
@@ -551,7 +559,7 @@ endif
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set backupHandler.image.repository=$(IMAGE_REGISTRY)/backup-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set broker.image.repository=$(IMAGE_REGISTRY)/broker') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiSidecarHandler.image.repository=$(IMAGE_REGISTRY)/api-sidecar-handler') \
-		--set insightsHandler.enabled=false \
+		$$([ $(ENABLE_INSIGHTS) != true ] && echo '--set insightsHandler.enabled=false') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db') \
 		--set keycloakDB.vendor=$(CORE_DATABASE_VENDOR) \
@@ -617,6 +625,8 @@ endif
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_TAG) ] && echo '--set sshPortalAPI.image.tag=$(SSHPORTALAPI_IMAGE_TAG)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_REPO) ] && echo '--set sshToken.image.repository=$(SSHTOKEN_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_TAG) ] && echo '--set sshToken.image.tag=$(SSHTOKEN_IMAGE_TAG)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(INSIGHTS_HANDLER_IMAGE_REPO) ] && echo '--set insightsHandler.image.repository=$(INSIGHTS_HANDLER_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(INSIGHTS_HANDLER_IMAGE_TAG) ] && echo '--set insightsHandler.image.tag=$(INSIGHTS_HANDLER_IMAGE_TAG)') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.enabled=true') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.settings.host=mailpit-smtp.mailpit.svc') \
 		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.settings.port=25') \
@@ -666,6 +676,7 @@ endif
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-remote-$(STABLE_REMOTE_CHART_VERSION)/charts/lagoon-remote/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-remote/ci/linter-values.yaml'; fi) \
 		--set "lagoon-build-deploy.enabled=false" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "global.rabbitMQPassword=$$($(KUBECTL) -n lagoon-core get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.environment=development') \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local') \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.password='$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
@@ -765,6 +776,7 @@ endif
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoonFeatureFlagDefaultIsolationNetworkPolicy=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO) ] && echo '--set lagoonFeatureFlagDefaultRWX2RWO=$(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO)') \
+		$$([ $(ENABLE_INSIGHTS) = true ] && echo '--set lagoonFeatureFlagDefaultInsights=enabled') \
 		lagoon-build-deploy \
 		$$(if [ $(INSTALL_STABLE_BUILDDEPLOY) = true ]; then echo 'lagoon/lagoon-build-deploy'; else echo './charts/lagoon-build-deploy'; fi)
 ifeq ($(INSTALL_STABLE_BUILDDEPLOY),true)
