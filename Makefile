@@ -488,7 +488,11 @@ install-lagoon-dependencies: install-mongodb
 endif
 # install k8up versions for backup upgrade path verifications if requested
 ifeq ($(INSTALL_K8UP),true)
+ifeq ($(REMOTE_CONTROLLER_K8UP_VERSION), v1)
 install-lagoon-dependencies: install-k8upv1 install-k8upv2
+else
+install-lagoon-dependencies: install-k8upv2
+endif 
 endif
 
 # this installs lagoon-core, lagoon-remote, and lagoon-build-deploy, and if dependencies required will install them too
