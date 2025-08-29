@@ -1037,6 +1037,21 @@ sshPortalAPI:
 
 opensearchSync:
   enabled: false
+  externalSecrets:
+    # If externalSecrets is enabled, the chart will not template a secret.
+    # Instead, secrets with the given names and keys must be created externally.
+    enabled: false
+    references:
+    - key: API_DB_PASSWORD
+      name: lagoon-core-api-db-external
+    - key: KEYCLOAK_LAGOON_OPENSEARCH_SYNC_CLIENT_SECRET
+      name: lagoon-core-keycloak-external
+      envVar: KEYCLOAK_CLIENT_SECRET
+    - key: LOGSDB_ADMIN_PASSWORD
+      name: lagoon-core-api-external
+      envVar: OPENSEARCH_ADMIN_PASSWORD
+    - key: OPENSEARCH_CA_CERTIFICATE
+      name: lagoon-core-opensearch-sync-external
   image:
     repository: ghcr.io/uselagoon/lagoon-opensearch-sync
     pullPolicy: IfNotPresent
