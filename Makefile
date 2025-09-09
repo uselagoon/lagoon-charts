@@ -348,7 +348,6 @@ install-mailpit:
 
 .PHONY: install-mariadb
 install-mariadb:
-	# root password is required on upgrade if the chart is already installed
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -356,9 +355,9 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=12.2.9 \
+		--version=0.2.1 \
 		mariadb \
-		bitnami/mariadb
+		oci://registry-1.docker.io/cloudpirates/mariadb
 
 .PHONY: install-postgresql
 install-postgresql:
@@ -371,11 +370,11 @@ install-postgresql:
 		--namespace postgresql \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set image.tag="14.15.0-debian-12-r1" \
+		--set image.tag="14.15-alpine3.20" \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')) \
-		--version=16.2.3 \
+		--version=0.2.2 \
 		postgresql \
-		bitnami/postgresql
+		oci://registry-1.docker.io/cloudpirates/postgres
 
 .PHONY: install-mongodb
 install-mongodb:
@@ -386,10 +385,9 @@ install-mongodb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
-		--set tls.enabled=false \
-		--version=12.1.31 \
+		--version=0.1.6 \
 		mongodb \
-		bitnami/mongodb
+		oci://registry-1.docker.io/cloudpirates/mongodb
 
 .PHONY: install-minio
 install-minio: install-ingress
@@ -400,14 +398,18 @@ install-minio: install-ingress
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
-		--set defaultBuckets='lagoon-files\,restores' \
+		--set consoleIngress.enabled=true \
+		--set consoleIngress.hosts[0].host=minio.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set consoleIngress.hosts[0].paths[0].path="/" \
+		--set consoleIngress.hosts[0].paths[0].pathType=Prefix \
 		--set ingress.enabled=true \
-		--set ingress.hostname=minio.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
-		--set apiIngress.enabled=true \
-		--set apiIngress.hostname=minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
-		--version=13.6.2 \
+		--set ingress.hosts[0].host=minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set ingress.hosts[0].paths[0].path="/" \
+		--set ingress.hosts[0].paths[0].pathType=Prefix \
+		--version=0.2.0 \
 		minio \
-		bitnami/minio
+		oci://registry-1.docker.io/cloudpirates/minio
+	$(KUBECTL) -n minio exec -it $$($(KUBECTL) -n minio  get pod -l app.kubernetes.io/name=minio -o jsonpath="{.items[0].metadata.name}") -- sh -c 'mc alias set local http://localhost:9000 lagoonFilesAccessKey lagoonFilesSecretKey && mc mb local/lagoon-files && mc mb local/restores' || true
 
 .PHONY: install-k8upv1
 install-k8upv1:
@@ -705,7 +707,7 @@ endif
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.hostname=mongodb.mongodb.svc.cluster.local') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.password='$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')'') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.port=27017') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.user=root') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.user=admin') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.auth.mechanism=SCRAM-SHA-1') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.auth.source=admin') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.auth.tls=false') \
@@ -713,7 +715,7 @@ endif
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.hostname=mongodb.mongodb.svc.cluster.local') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.password='$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')'') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.port=27017') \
-		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.user=root') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.user=admin') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.auth.mechanism=SCRAM-SHA-1') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.auth.source=admin') \
 		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.auth.tls=false') \
