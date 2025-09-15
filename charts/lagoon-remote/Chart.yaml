@@ -41,12 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: change nats tls certificate secret to allow for setting only the ca certificate
-    - kind: changed
-      description: pass extraEnvs directly from values
-    - kind: changed
-      description: update lagoon-build-deploy chart to v0.36.0
-    - kind: changed
-      description: update storage calculator to v0.8.1
-    - kind: changed
-      description: bump chart version for release
+      description: update storage calculator to v0.8.2
