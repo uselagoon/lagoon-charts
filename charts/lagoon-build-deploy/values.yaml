@@ -75,6 +75,24 @@ extraEnvs:
 # lagoonBackupDefaultWeeklyRetention: 5
 # lagoonBackupDefaultMonthlyRetention: 12
 
+# the following values can be used to configure QoS settings
+# QoS is now enabled by default for builds only, it cannot be disabled. the settings below can be used to change the behavior
+# previous values for lagoonFeatureFlagEnableQoS, QoSMaxBuilds, and QoSDefault are deprecated, and will be removed in a future release
+# you should change to the following configuration methods
+qos: {}
+  # the default qos priority value to apply if one is not provided
+  # defaultBuildPriority: 5
+  # the total number of builds during the container build phase that can run at any one time
+  # maxBuilds: 20
+  # the total number of builds that can run at any one time. defaults to maxBuilds if not provided or less than maxBuilds
+  # totalBuilds: 0
+  # flag to enable this controller with QoS for tasks
+  # enableTaskQoS: false
+  # the total number of tasks that can run at any one time
+  # qosMaxTasks: 200
+  # the total number of tasks that can run at any one time
+  # qosMaxNamespaceTasks: 20
+
 # it is also possible to allow the controller to purge harbor of the associated repositories
 # when an environment is deleted, this can be enabled by setting the following to true
 # if the remote is sharing a harbor with another remote, and migrations are taking place then enabling
