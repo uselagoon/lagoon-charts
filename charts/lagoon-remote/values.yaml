@@ -39,7 +39,7 @@ dockerHost:
     repository: uselagoon/docker-host
     pullPolicy: Always
     # Overrides the image tag whose default is "latest".
-    tag: "v3.6.0"
+    tag: "v3.6.1"
 
   name: docker-host
 
@@ -138,7 +138,7 @@ sshPortal:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.43.0"
+    tag: "v0.43.1"
 
   service:
     type: LoadBalancer
@@ -481,7 +481,7 @@ storageCalculator:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.8.1
+    tag: v0.8.2
 
   broker:
     # enable if providing a custom CA for broker connections
