@@ -44,3 +44,9 @@ annotations:
       description: fix chart seeding not waiting for keycloak to be ready
     - kind: changed
       description: update nats subchart to v1.3.14
+    - kind: changed
+      description: update ssh-portal-api and ssh-token services to v0.43.1
+    - kind: changed
+      description: update opensearch-sync to v0.9.1
+    - kind: changed
+      description: update insights-handler to v0.0.9

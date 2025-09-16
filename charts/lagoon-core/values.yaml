@@ -688,7 +688,7 @@ insightsHandler:
     repository: uselagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.8"
+    tag: "v0.0.9"
 
   podAnnotations: {}
 
@@ -995,7 +995,7 @@ sshPortalAPI:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.43.0"
+    tag: "v0.43.1"
 
   command:
     - /ssh-portal-api
@@ -1041,7 +1041,7 @@ opensearchSync:
     repository: ghcr.io/uselagoon/lagoon-opensearch-sync
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.8.3"
+    tag: "v0.9.1"
 
   # debug logging toggle
   debug: false
@@ -1071,7 +1071,7 @@ sshToken:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-token
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.43.0"
+    tag: "v0.43.1"
 
   command:
     - /ssh-token
