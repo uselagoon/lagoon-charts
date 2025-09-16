@@ -44,7 +44,12 @@ jobs:
         fetch-depth: "0"
 
     - name: Set up chart-testing dependencies
-      run: sudo apt-get -y install python3-wheel
+      run: |
+        for i in $(seq 1 10); do
+          sudo apt-get -y install python3-wheel && break
+          echo "dpkg lock is held, retrying in 10 seconds..."
+          sleep 10
+        done
 
     - name: Set up chart-testing
       uses: helm/chart-testing-action@0d28d3144d3a25ea2cc349d6e59901c4ff469b3b # v2.7.0
