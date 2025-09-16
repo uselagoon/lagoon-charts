@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: fixed
       description: fix chart seeding not waiting for keycloak to be ready
+    - kind: changed
+      description: update nats subchart to v1.3.14
