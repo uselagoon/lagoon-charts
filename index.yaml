@@ -4,6 +4,44 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update remote-controller to v0.26.0
+        - kind: changed
+          description: add new qos configuration, deprecated older values
+      artifacthub.io/crds: |
+        - kind: LagoonBuild
+          version: v1beta2
+          name: lagoonbuild
+          displayName: LagoonBuild
+          description: This is the CRD used for managing LagoonBuilds
+        - kind: LagoonTask
+          version: v1beta2
+          name: lagoontask
+          displayName: LagoonTask
+          description: This is the CRD used for managing LagoonTasks
+    apiVersion: v2
+    appVersion: v0.26.0
+    created: "2025-09-17T05:15:00.385857931Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: a2f7180f3bea28a98460afd8b9579dd7943ea05af37b1dec7d75d325f77dda6e
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.37.0/lagoon-build-deploy-0.37.0.tgz
+    version: 0.37.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: pass extraEnvs directly from values
         - kind: changed
           description: update remote-controller to v0.25.0
@@ -16112,4 +16150,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-08-21T12:57:07.591498742Z"
+generated: "2025-09-17T05:15:00.756786685Z"
