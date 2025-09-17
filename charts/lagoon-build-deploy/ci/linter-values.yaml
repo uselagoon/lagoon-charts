@@ -7,11 +7,6 @@ sshPortalPort: 22
 lagoonTokenHost: lagoon-core-token.lagoon-core.svc
 lagoonTokenPort: 22
 lagoonAPIHost: http://lagoon-core-api.lagoon-core.svc:80
-extraArgs:
-  - "--skip-tls-verify=true"
 broker:
   tls:
     enabled: true
-  tlsCA:
-    enabled: true
-    secretName: lagoon-remote-broker-tls
