@@ -90,7 +90,7 @@ qos: {}
   # enableTaskQoS: false
   # the total number of tasks that can run at any one time
   # qosMaxTasks: 200
-  # the total number of tasks that can run at any one time
+  # the maximum number of tasks that can run concurrently per namespace
   # qosMaxNamespaceTasks: 20
 
 # it is also possible to allow the controller to purge harbor of the associated repositories
