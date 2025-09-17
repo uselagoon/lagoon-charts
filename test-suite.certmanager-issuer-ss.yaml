@@ -1,37 +1,6 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: selfsigned-issuer
-spec:
-  selfSigned: {}
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: lagoon-testing-ca
-  namespace: cert-manager
-spec:
-  isCA: true
-  commonName: lagoon.test
-  subject:
-    organizations:
-      - Lagoon Testing Inc
-    organizationalUnits:
-      - Lagoon
-  dnsNames:
-    - lagoon.test
-  secretName: lagoon-test-secret
-  privateKey:
-    algorithm: ECDSA
-    size: 256
-  issuerRef:
-    name: selfsigned-issuer
-    kind: ClusterIssuer
-    group: cert-manager.io
----
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
   name: lagoon-testing-issuer
 spec:
   ca:
