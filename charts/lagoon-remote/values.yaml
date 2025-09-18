@@ -438,6 +438,7 @@ natsConfig:
   # use this if you're only providing the ca certificate to nats.
   # this can be used if you've got lagoon-core leafnode tls verify disabled
   tls:
+    enabled: true
     caOnly: false
     # If the lagoon-remote-nats-tls secret should be created by the
     # lagoon-remote chart, certificate values can be specified directly in
