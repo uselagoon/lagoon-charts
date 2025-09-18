@@ -4,8 +4,8 @@ description: A Helm chart to run a lagoon-remote
 home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
-- name: schnitzel
-  email: michael@amazee.com
+- name: shreddedbacon
+  email: ben.jackson@amazee.io
   url: https://amazee.io
 - name: smlx
   email: scott.leggett@amazee.io
@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.100.0
+version: 0.101.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -50,3 +50,7 @@ annotations:
       description: update storage-calculator to v0.8.2
     - kind: changed
       description: update lagoon-build-deploy subchart to v0.37.0
+    - kind: changed
+      description: update insights-remote to v0.0.14
+    - kind: changed
+      description: bump chart version for release
