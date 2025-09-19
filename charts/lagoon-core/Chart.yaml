@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.55.0
+version: 1.56.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.27.0
+appVersion: v2.28.0
 
 dependencies:
 - name: nats
@@ -50,3 +50,5 @@ annotations:
       description: update opensearch-sync to v0.9.1
     - kind: changed
       description: update insights-handler to v0.0.9
+    - kind: changed
+      description: bump chart version for release
