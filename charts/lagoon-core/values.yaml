@@ -954,7 +954,7 @@ nats:
           {{- end }}
 
 natsService:
-  # this service is enabled via nats.enabled
+  enabled: true
   type: LoadBalancer
   leafnodes:
     port: 7422
