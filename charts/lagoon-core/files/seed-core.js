@@ -43,7 +43,8 @@ mutation LagoonCoreSeeding {
 const seedOrgGql = `
 mutation LagoonCoreSeedOrg {
     CreateOrganization: addOrganization(input: {
-        name: "${INITIAL_ORGANIZATION_NAME}"
+        name: "${INITIAL_ORGANIZATION_NAME.toLocaleLowerCase().replace(/[^0-9a-z-]/g,'-')}"
+        friendlyName: "${INITIAL_ORGANIZATION_NAME}"
     }) {
         id
     }
@@ -72,14 +73,13 @@ async function waitForKeycloak(url, timeout = 600000, interval = 2000) {
 async function seedOrg() {
   console.log("Seeding Lagoon core with initial organization");
 
-  const lagoonApiUrl = LAGOON_API_URL.replace("https://", "http://");
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${TOKEN}`
   };
 
   try {
-    const response = await axios.post(lagoonApiUrl, { query: seedOrgGql }, { headers });
+    const response = await axios.post(LAGOON_API_URL, { query: seedOrgGql }, { headers });
     const body = response.data;
 
     const orgId = body?.data?.CreateOrganization?.id;
@@ -98,18 +98,16 @@ async function seedOrg() {
 async function seedUser() {
   console.log("Seeding Lagoon core with initial user");
 
-  const lagoonApiUrl = LAGOON_API_URL.replace("https://", "http://");
   const headers = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${TOKEN}`
   };
 
   try {
-    const response = await axios.post(lagoonApiUrl, { query: seedUserGql }, { headers });
-    const keycloakUrl = `${KEYCLOAK_FRONTEND_URL}/auth`.replace("https://", "http://");
+    const response = await axios.post(LAGOON_API_URL, { query: seedUserGql }, { headers });
 
-    await waitForKeycloak(keycloakUrl + "/admin/master/console");
-    console.log(`Setting user password in keycloak at ${keycloakUrl}`);
+    await waitForKeycloak(KEYCLOAK_FRONTEND_URL + "/admin/master/console");
+    console.log(`Setting user password in keycloak at ${KEYCLOAK_FRONTEND_URL}`);
 
     const data = new URLSearchParams({
       grant_type: "client_credentials",
@@ -118,7 +116,7 @@ async function seedUser() {
     });
 
     const tokenResponse = await axios.post(
-      `${keycloakUrl}/realms/master/protocol/openid-connect/token`,
+      `${KEYCLOAK_FRONTEND_URL}/realms/master/protocol/openid-connect/token`,
       data
     );
 
@@ -136,7 +134,7 @@ async function seedUser() {
     };
 
     const userLookup = await axios.get(
-      `${keycloakUrl}/admin/realms/lagoon/users?email=${INITIAL_USER_EMAIL}`,
+      `${KEYCLOAK_FRONTEND_URL}/admin/realms/lagoon/users?email=${INITIAL_USER_EMAIL}`,
       { headers: keycloakHeaders }
     );
 
@@ -159,7 +157,7 @@ async function seedUser() {
     };
 
     const resetPw = await axios.put(
-      `${keycloakUrl}/admin/realms/lagoon/users/${userId}/reset-password`,
+      `${KEYCLOAK_FRONTEND_URL}/admin/realms/lagoon/users/${userId}/reset-password`,
       pwData,
       { headers: keycloakHeaders }
     );
