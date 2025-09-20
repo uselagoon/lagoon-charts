@@ -50,3 +50,5 @@ annotations:
       description: update opensearch-sync to v0.9.1
     - kind: changed
       description: update insights-handler to v0.0.9
+    - kind: changed
+      description: configuration option to disable external facing nats concentrator service
