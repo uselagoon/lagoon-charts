@@ -24,7 +24,7 @@ spec:
           args: 
             - |
               cat <<'JS' > /app/seed-core.js
-{{ .Files.Get "files/seed-core.js" | indent 14 }}
+              {{ .Files.Get "files/seed-core.js" | indent 14 }}
               JS
               node /app/seed-core.js || true
           env:
@@ -49,7 +49,7 @@ spec:
                 name: {{ include "lagoon-core.keycloak.fullname" . }}
                 key: KEYCLOAK_ADMIN_API_CLIENT_SECRET
           - name: KEYCLOAK_FRONTEND_URL
-            value: "{{ .Values.keycloakFrontEndURL }}"
+            value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
           - name: LAGOON_API_URL
-            value: "{{ .Values.lagoonAPIURL }}"
+            value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
 {{- end }}

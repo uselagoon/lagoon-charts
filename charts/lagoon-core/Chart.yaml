@@ -50,5 +50,9 @@ annotations:
       description: update opensearch-sync to v0.9.1
     - kind: changed
       description: update insights-handler to v0.0.9
+    - kind: fixed
+      description: fix seeding job to use internal service names for connecting to api
+    - kind: fixed
+      description: fix seeding job to set safe organization name and friendlyname
     - kind: changed
       description: configuration option to disable external facing nats concentrator service
