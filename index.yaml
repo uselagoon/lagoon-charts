@@ -1942,6 +1942,51 @@ entries:
   lagoon-core:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: fix chart seeding not waiting for keycloak to be ready
+        - kind: changed
+          description: update nats subchart to v1.3.14
+        - kind: changed
+          description: update ssh-portal-api and ssh-token services to v0.43.1
+        - kind: changed
+          description: update opensearch-sync to v0.9.1
+        - kind: changed
+          description: update insights-handler to v0.0.9
+        - kind: fixed
+          description: fix seeding job to use internal service names for connecting to api
+        - kind: fixed
+          description: fix seeding job to set safe organization name and friendlyname
+        - kind: changed
+          description: configuration option to disable external facing nats concentrator service
+        - kind: changed
+          description: bump chart version for release
+    apiVersion: v2
+    appVersion: v2.28.0
+    created: "2025-09-23T00:57:09.05049971Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.3.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: c86f036f5da93b793a6614e0fd6222335247ab2c3a38d9412bb9048d85040334
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.56.0/lagoon-core-1.56.0.tgz
+    version: 1.56.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: add support for s3 files bucket to actions-handler
         - kind: changed
@@ -9747,6 +9792,54 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update nats subchart to v1.3.14
+        - kind: changed
+          description: update docker-host to v3.6.1
+        - kind: changed
+          description: update ssh-portal to v0.43.1
+        - kind: changed
+          description: update storage-calculator to v0.8.2
+        - kind: changed
+          description: update lagoon-build-deploy subchart to v0.37.0
+        - kind: changed
+          description: update insights-remote to v0.0.14
+        - kind: changed
+          description: bump chart version for release
+    apiVersion: v2
+    created: "2025-09-23T00:57:09.167381662Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.37.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.3.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.3.0
+    description: A Helm chart to run a lagoon-remote
+    digest: 859f4a5d2df29a0972ca87669b4950ce8475f5934bc1f3a13f77881534eda35b
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.101.0/lagoon-remote-0.101.0.tgz
+    version: 0.101.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: change nats tls certificate secret to allow for setting only the ca certificate
         - kind: changed
           description: pass extraEnvs directly from values
@@ -14805,6 +14898,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update lagoon appVersion to 2.28.0
+    apiVersion: v2
+    appVersion: v2.28.0
+    created: "2025-09-23T00:57:09.289293921Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: b97bb96e1080bb38ef1bf5f2def6fb892aef59f4c4bfdddb3a4cbf6cc697e895
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.67.0/lagoon-test-0.67.0.tgz
+    version: 0.67.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon appVersion to 2.26.0
     apiVersion: v2
     appVersion: v2.26.0
@@ -16150,4 +16264,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-09-17T05:15:00.756786685Z"
+generated: "2025-09-23T00:57:09.292020714Z"
