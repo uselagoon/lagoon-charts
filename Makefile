@@ -785,7 +785,6 @@ endif
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminUser=admin") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.host=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = true ] && echo --set "unauthenticatedRegistry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(OVERRIDE_REMOTE_CONTROLLER_IMAGETAG) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.tag=$(OVERRIDE_REMOTE_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.repository=$(OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY)') \
 		$$([ $(REMOTE_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set rootlessBuildPods=true') \
