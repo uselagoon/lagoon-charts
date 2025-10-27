@@ -46,3 +46,5 @@ annotations:
       description: removed lagoon-core bitbucket sync and open distro integrations
     - kind: added
       description: support for external database for api and keycloak
+    - kind: changed
+      description: update opensearch-sync to v0.14.2
