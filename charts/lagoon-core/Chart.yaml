@@ -27,7 +27,7 @@ version: 1.56.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.28.0
+appVersion: v2.29.0
 
 dependencies:
 - name: nats
@@ -44,3 +44,5 @@ annotations:
       description: description: update opensearch-sync to v0.13.0
     - kind: changed
       description: update ssh-portal-api and ssh-token services to v0.45.0
+    - kind: changed
+      description: update lagoon appVersion to 2.29.0
