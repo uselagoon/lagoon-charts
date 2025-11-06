@@ -21,13 +21,13 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.56.0
+version: 1.57.0
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.28.0
+appVersion: v2.29.0
 
 dependencies:
 - name: nats
@@ -40,21 +40,9 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: fix chart seeding not waiting for keycloak to be ready
     - kind: changed
-      description: update nats subchart to v1.3.14
+      description: update opensearch-sync to v0.13.0
     - kind: changed
-      description: update ssh-portal-api and ssh-token services to v0.43.1
+      description: update ssh-portal-api and ssh-token services to v0.45.0
     - kind: changed
-      description: update opensearch-sync to v0.9.1
-    - kind: changed
-      description: update insights-handler to v0.0.9
-    - kind: fixed
-      description: fix seeding job to use internal service names for connecting to api
-    - kind: fixed
-      description: fix seeding job to set safe organization name and friendlyname
-    - kind: changed
-      description: configuration option to disable external facing nats concentrator service
-    - kind: changed
-      description: bump chart version for release
+      description: update lagoon appVersion to 2.29.0

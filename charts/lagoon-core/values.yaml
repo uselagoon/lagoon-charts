@@ -85,7 +85,7 @@ buildDeployImage:
   default:
     # when updating this chart, ensure that if there are any changes made to the build-deploy-tool repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    image: uselagoon/build-deploy-image:core-v2.28.0
+    image: uselagoon/build-deploy-image:core-v2.29.0
   edge:
     enabled: false
 
@@ -575,7 +575,7 @@ ui:
     pullPolicy: Always
     # when updating this chart, ensure that if there are any changes made to the lagoon-ui repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    tag: "core-v2.28.0"
+    tag: "core-v2.29.0"
 
   podAnnotations: {}
 
@@ -995,7 +995,7 @@ sshPortalAPI:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.43.1"
+    tag: "v0.45.0"
 
   command:
     - /ssh-portal-api
@@ -1041,7 +1041,7 @@ opensearchSync:
     repository: ghcr.io/uselagoon/lagoon-opensearch-sync
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.9.1"
+    tag: "v0.13.0"
 
   # debug logging toggle
   debug: false
@@ -1071,7 +1071,7 @@ sshToken:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-token
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.43.1"
+    tag: "v0.45.0"
 
   command:
     - /ssh-token
