@@ -41,16 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update nats subchart to v1.3.14
-    - kind: changed
-      description: update docker-host to v3.6.1
-    - kind: changed
-      description: update ssh-portal to v0.43.1
-    - kind: changed
-      description: update storage-calculator to v0.8.2
-    - kind: changed
-      description: update lagoon-build-deploy subchart to v0.37.0
-    - kind: changed
-      description: update insights-remote to v0.0.14
-    - kind: changed
-      description: bump chart version for release
+      description: update ssh-portal to v0.45.0
