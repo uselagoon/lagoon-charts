@@ -40,21 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: fix chart seeding not waiting for keycloak to be ready
     - kind: changed
-      description: update nats subchart to v1.3.14
-    - kind: changed
-      description: update ssh-portal-api and ssh-token services to v0.43.1
-    - kind: changed
-      description: update opensearch-sync to v0.9.1
-    - kind: changed
-      description: update insights-handler to v0.0.9
-    - kind: fixed
-      description: fix seeding job to use internal service names for connecting to api
-    - kind: fixed
-      description: fix seeding job to set safe organization name and friendlyname
-    - kind: changed
-      description: configuration option to disable external facing nats concentrator service
-    - kind: changed
-      description: bump chart version for release
+      description: description: update opensearch-sync to v0.13.0
