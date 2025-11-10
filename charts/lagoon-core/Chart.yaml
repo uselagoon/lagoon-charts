@@ -41,4 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: Update referenced changelogs according to the services that consume them
+      description: use correct secret checksum references for services
