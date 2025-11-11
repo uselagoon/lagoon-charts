@@ -3,7 +3,7 @@
 {{- $bucket := coalesce .Values.k8upBackupBucketName (dig "spec" "backend" "s3" "bucket" "" $schedule) (print "baas-" (include "lagoon-core.fullname" .) "-" (randAlphaNum 8 | lower)) }}
 {{- if .Capabilities.APIVersions.Has "backup.appuio.ch/v1alpha1/Schedule" }}
 {{- $schedule = index (lookup "backup.appuio.ch/v1alpha1" "Schedule" .Release.Namespace (include "lagoon-core.fullname" . )) | default dict }}
-{{- $bucket = coalesce $bucket (dig "spec" "backend" "s3" "bucket" "" $schedule) (print "baas-" (include "lagoon-core.fullname" .) "-" (randAlphaNum 8 | lower)) }}
+{{- $bucket = coalesce (dig "spec" "backend" "s3" "bucket" "" $schedule) $bucket (print "baas-" (include "lagoon-core.fullname" .) "-" (randAlphaNum 8 | lower)) }}
 {{- end }}
 {{- if .Capabilities.APIVersions.Has "k8up.io/v1/Schedule" }}
 apiVersion: k8up.io/v1
