@@ -133,6 +133,11 @@ LAGOON_SEED_ORGANIZATION =
 # this can be used to verify upgrades
 # by default this will not be install in charts testing, but uselagoon/lagoon can consume it for local development
 INSTALL_K8UP = false
+
+# this has multiple options available, will default to v2
+# set to v1 to install only k8upv1
+# set to v1,v2 to install both k8upv1 and k8upv2
+INSTALL_K8UP_VERSIONS = v2
 REMOTE_CONTROLLER_K8UP_VERSION = v2
 
 # optionally install aergia for local testing
@@ -488,10 +493,15 @@ endif
 ifeq ($(INSTALL_MONGODB_PROVIDER),true)
 install-lagoon-dependencies: install-mongodb
 endif
+
+K8UP_V1_REQUESTED := $(findstring v1,$(INSTALL_K8UP_VERSIONS))
+K8UP_V2_REQUESTED := $(findstring v2,$(INSTALL_K8UP_VERSIONS))
 # install k8up versions for backup upgrade path verifications if requested
 ifeq ($(INSTALL_K8UP),true)
-ifeq ($(REMOTE_CONTROLLER_K8UP_VERSION), v1)
+ifeq ($(K8UP_V1_REQUESTED)$(K8UP_V2_REQUESTED),v1v2)
 install-lagoon-dependencies: install-k8upv1 install-k8upv2
+else ifeq ($(K8UP_V1_REQUESTED),v1)
+install-lagoon-dependencies: install-k8upv1
 else
 install-lagoon-dependencies: install-k8upv2
 endif 
