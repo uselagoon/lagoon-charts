@@ -1979,6 +1979,37 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: use correct secret checksum references for services
+        - kind: changed
+          description: update lagoon appVersion to 2.29.2
+    apiVersion: v2
+    appVersion: v2.29.2
+    created: "2025-11-14T06:16:52.143153567Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.3.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 952b5933accd38d5d5a66939c3d4ef263dcbd012ac04c948189c88454779f71b
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.58.0/lagoon-core-1.58.0.tgz
+    version: 1.58.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update opensearch-sync to v0.13.0
         - kind: changed
           description: update ssh-portal-api and ssh-token services to v0.45.0
@@ -15005,6 +15036,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update lagoon appVersion to 2.29.2
+    apiVersion: v2
+    appVersion: v2.29.2
+    created: "2025-11-14T06:16:52.290429955Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 5520925b3ac12a90b172149c2c5716d3ca9037ef15dd9b7a8f6cbc2fbf59199a
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.69.0/lagoon-test-0.69.0.tgz
+    version: 0.69.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon appVersion to 2.29.0
     apiVersion: v2
     appVersion: v2.29.0
@@ -16392,4 +16444,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-06T22:18:46.686947862Z"
+generated: "2025-11-14T06:16:52.292497611Z"
