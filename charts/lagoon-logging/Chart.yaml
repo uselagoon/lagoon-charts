@@ -38,4 +38,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
     - kind: added
-      description: allow usage of cert from public CA
+      description: allow external secrets for log forwarding
