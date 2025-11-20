@@ -38,4 +38,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
     - kind: added
-      description: allow external secrets for log forwarding
+      description: allow support of additional env sources
