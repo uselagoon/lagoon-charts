@@ -105,10 +105,15 @@ spec:
             fieldRef:
               fieldPath: spec.nodeName
         envFrom:
-        - secretRef:
-            name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
-        - configMapRef:
-            name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
+          {{- if .Values.logsDispatcher.extraEnvSecret }}
+          - secretRef:
+              name: {{ .Values.logsDispatcher.extraEnvSecret }}
+              optional: true
+          {{- end }}
+          - secretRef:
+              name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
+          - configMapRef:
+              name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
         resources:
           {{- toYaml .Values.logsDispatcher.resources | nindent 10 }}
       {{- with .Values.logsDispatcher.nodeSelector }}
