@@ -84,6 +84,8 @@ logsDispatcher:
     size: 16Gi
     storageClassName: ""
 
+  extraEnvsFrom: []
+
 openshiftHaproxyLogsCollector:
 
   enabled: false
