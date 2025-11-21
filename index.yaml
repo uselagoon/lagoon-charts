@@ -6136,6 +6136,34 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: added
+          description: allow support of additional env sources
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.11.4
+    created: "2025-11-21T14:50:09.743530198Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: oci://ghcr.io/kube-logging/helm-charts
+      version: 4.11.4
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: dbfa06afdf5605161d4179992cab665d8e9056b660f7cf1735ce2e87b6755505
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.90.0/lagoon-logging-0.90.0.tgz
+    version: 0.90.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
           description: allow usage of cert from public CA
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
@@ -16444,4 +16472,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-14T06:16:52.292497611Z"
+generated: "2025-11-21T14:50:09.744477581Z"
