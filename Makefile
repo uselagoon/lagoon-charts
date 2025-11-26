@@ -8,6 +8,8 @@ IMAGE_TAG =
 # only works for installations where INSTALL_STABLE_CORE=false
 # UI_IMAGE_REPO = uselagoon/ui
 # UI_IMAGE_TAG = latest
+# BETA_UI_IMAGE_REPO = uselagoon/beta-ui
+# BETA_UI_IMAGE_TAG = main
 
 # SSHPORTALAPI_IMAGE_REPO and SSHPORTALAPI_IMAGE_TAG are an easy way to override the ssh portal api image used in the local stack lagoon-core
 # only works for installations where INSTALL_STABLE_CORE=false
@@ -279,6 +281,7 @@ install-ingress: install-certmanager
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.annotations-risk-level=Critical \
 		--set controller.config.proxy-body-size=0 \
+		--set controller.config.proxy-buffer-size=64k \
 		--set controller.config.hsts=false \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
@@ -613,6 +616,7 @@ endif
 		--set "lagoonAPIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
 		--set "lagoonUIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set "lagoonWebhookURL=http://lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "betaUIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set api.image.repository=$(IMAGE_REGISTRY)/api') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db') \
@@ -680,6 +684,16 @@ endif
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string ui.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_REPO) ] && echo '--set ui.image.repository=$(UI_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_TAG) ] && echo '--set ui.image.tag=$(UI_IMAGE_TAG)') \
+		--set betaUI.ingress.enabled=true \
+		--set betaUI.ingress.hosts[0].host="lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set betaUI.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.additionalEnvs.NODE_TLS_REJECT_UNAUTHORIZED=0') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set betaUI.ingress.tls[0].hosts[0]=lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.ingress.tls[0].secretName=beta-ui-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(BETA_UI_IMAGE_REPO) ] && echo '--set betaUI.image.repository=$(BETA_UI_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(BETA_UI_IMAGE_TAG) ] && echo '--set betaUI.image.tag=$(BETA_UI_IMAGE_TAG)') \
 		--set keycloak.ingress.enabled=true \
 		--set keycloak.ingress.hosts[0].host="lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set keycloak.ingress.hosts[0].paths[0]="/" \
