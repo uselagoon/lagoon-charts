@@ -26,3 +26,21 @@ The dashboard is available at:
 {{- end }}
 
 Lagoon Admin credentials are: lagoonadmin / {{ .Values.keycloakLagoonAdminPassword }}
+
+{{- if or (.Capabilities.APIVersions.Has "k8up.io/v1/Schedule") (.Capabilities.APIVersions.Has "backup.appuio.ch/v1alpha1/Schedule") }}
+{{- $schedule := index (lookup "k8up.io/v1" "Schedule" .Release.Namespace (include "lagoon-core.fullname" . )) | default dict }}
+{{- $bucket := coalesce .Values.k8upBackupBucketName (dig "spec" "backend" "s3" "bucket" "" $schedule) (print "baas-" (include "lagoon-core.fullname" .) "-" (randAlphaNum 8 | lower)) }}
+{{- $oldbucket := "" }}
+{{- if .Capabilities.APIVersions.Has "backup.appuio.ch/v1alpha1/Schedule" }}
+{{- $oldschedule := index (lookup "backup.appuio.ch/v1alpha1" "Schedule" .Release.Namespace (include "lagoon-core.fullname" . )) }}
+{{- if $oldschedule }}
+{{- $oldbucket = coalesce (dig "spec" "backend" "s3" "bucket" "" $oldschedule) $bucket (print "baas-" (include "lagoon-core.fullname" .) "-" (randAlphaNum 8 | lower)) }}
+{{- end }}
+{{- end }}
+{{- if eq $oldbucket $bucket }}
+The backup schedule for Lagoon was updated from an older k8up version. 
+You may need to perform a manual step to remove the old schedule to prevent issues with lagoon-core backups
+Running the following command will remove this older schedule.
+$ kubectl -n {{ .Release.Namespace }} delete schedule.backup.appuio.ch {{ include "lagoon-core.fullname" . }}
+{{- end }}
+{{- end }}
