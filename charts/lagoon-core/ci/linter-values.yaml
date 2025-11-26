@@ -137,6 +137,14 @@ ui:
     requests:
       cpu: "10m"
 
+betaUI:
+  replicaCount: 1
+  image:
+    repository: uselagoon/beta-ui
+  resources:
+    requests:
+      cpu: "10m"
+
 backupHandler:
   replicaCount: 1
   image:
