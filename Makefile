@@ -734,6 +734,7 @@ endif
 		$$([ $(INSTALL_STABLE_REMOTE) != true ] && [ $(SSHPORTAL_IMAGE_REPO) ] && echo '--set sshPortal.image.repository=$(SSHPORTAL_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_REMOTE) != true ] && [ $(SSHPORTAL_IMAGE_TAG) ] && echo '--set sshPortal.image.tag=$(SSHPORTAL_IMAGE_TAG)') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshPortal.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set storageCalculator.serviceMonitor.enabled=true') \
 		lagoon-remote \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo 'lagoon/lagoon-remote'; else echo './charts/lagoon-remote'; fi)
 	# rerun the remote certs installation as a workaround for the way the localstack used to seed the nats certs from helm
