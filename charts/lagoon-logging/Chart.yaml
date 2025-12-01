@@ -23,12 +23,12 @@ version: 0.91.0
 
 # AppVersion is set here the same as the logging-operator chart version to
 # autopopulate the post-install CRD message.
-appVersion: 4.12.4
+appVersion: 4.11.4
 
 dependencies:
 - name: logging-operator
   repository: oci://ghcr.io/kube-logging/helm-charts
-  version: 4.12.4
+  version: 4.11.4
   condition: logging-operator.enabled
 
 # This section is used to collect a changelog for artifacthub.io
