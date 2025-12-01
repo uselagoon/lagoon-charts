@@ -367,15 +367,12 @@ install-mariadb:
 .PHONY: install-postgresql
 install-postgresql:
 	# root password is required on upgrade if the chart is already installed
-	# use postgres 14.15.0 image because 15+ have some permission issue
-	# 14.15.0-debian-12-r1 is multiarch though
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace postgresql \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set image.tag="14.15-alpine3.20" \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')) \
 		--version=0.2.2 \
 		postgresql \
