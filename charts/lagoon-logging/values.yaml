@@ -126,6 +126,10 @@ openshiftHaproxyLogsCollector:
   serviceMonitor:
     enabled: true
 
+  buffer:
+    size: 16Gi
+    storageClassName: ""
+
 cdnLogsCollector:
 
   enabled: false
