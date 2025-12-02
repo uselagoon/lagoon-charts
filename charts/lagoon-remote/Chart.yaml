@@ -27,7 +27,7 @@ dependencies:
   repository: https://uselagoon.github.io/lagoon-charts/
   condition: lagoon-build-deploy.enabled
 - name: dbaas-operator
-  version: ~0.3.0
+  version: ~0.4.0
   repository: https://amazeeio.github.io/charts/
   condition: dbaas-operator.enabled
 - name: nats
@@ -41,6 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update ssh-portal to v0.45.0
-    - kind: changed
-      description: update lagoon-build-deploy subchart to v0.38.0
+      description: update dbaas-operator subchart to v0.4.0
