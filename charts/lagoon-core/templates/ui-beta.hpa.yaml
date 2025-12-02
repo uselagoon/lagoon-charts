@@ -1,0 +1,32 @@
+{{- if and .Values.betaUI.enabled .Values.betaUI.autoscaling.enabled -}}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "lagoon-core.betaUI.fullname" . }}
+  labels:
+    {{- include "lagoon-core.betaUI.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "lagoon-core.betaUI.fullname" . }}
+  minReplicas: {{ .Values.betaUI.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.betaUI.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.betaUI.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          averageUtilization: {{ .Values.betaUI.autoscaling.targetCPUUtilizationPercentage }}
+          type: Utilization
+  {{- end }}
+  {{- if .Values.betaUI.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          averageUtilization: {{ .Values.betaUI.autoscaling.targetMemoryUtilizationPercentage }}
+          type: Utilization
+  {{- end }}
+{{- end }}
