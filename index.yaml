@@ -8786,6 +8786,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: added
+          description: allow configurable buffer storage
+    apiVersion: v2
+    created: "2025-12-03T15:18:43.050828069Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: 01c37fb403a5a0ddc9915f447c3a7c998d97e2a865ae3538fd4e4a718c7d4cce
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.55.0/lagoon-logs-concentrator-0.55.0.tgz
+    version: 0.55.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
           description: allow usage of cert from public CA
     apiVersion: v2
     created: "2025-08-21T12:57:07.590466746Z"
@@ -16472,4 +16493,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-21T14:50:09.744477581Z"
+generated: "2025-12-03T15:18:43.312212281Z"
