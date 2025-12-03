@@ -74,4 +74,13 @@ rules:
   - subjectaccessreviews
   verbs:
   - create
+- apiGroups:
+  - mariadb.amazee.io
+  - postgres.amazee.io
+  resources:
+  - mariadbconsumers
+  - postgresqlconsumers
+  verbs:
+  - list
+  - watch
 {{- end }}
