@@ -3,7 +3,6 @@
 # harborAdminPassword:
 # elasticsearchURL:
 # harborURL:
-# kibanaURL:
 # s3BAASSecretAccessKey:
 # s3BAASAccessKeyID:
 # s3FilesAccessKeyID:
@@ -27,6 +26,7 @@
 # gitlabAPIToken:
 # gitlabAPIURL:
 # s3Region:
+# kibanaURL:
 
 # These values may be set on install, otherwise the chart tries to guess
 # sensible defaults.
