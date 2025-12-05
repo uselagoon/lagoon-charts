@@ -26,8 +26,6 @@
 
 # gitlabAPIToken:
 # gitlabAPIURL:
-# bitbucketAPIToken:
-# bitbucketAPIURL:
 # s3Region:
 
 # These values may be set on install, otherwise the chart tries to guess
