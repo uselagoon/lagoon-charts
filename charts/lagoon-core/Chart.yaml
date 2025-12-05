@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update lagoon backup schedule to support changing to k8up.io
+    - kind: removed
+      description: removed lagoon-core bitbucket sync and open distro integrations
