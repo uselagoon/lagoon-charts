@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update dbaas-operator subchart to v0.4.0
+    - kind: changed
+      description: update storage-calculator to v0.9.0
