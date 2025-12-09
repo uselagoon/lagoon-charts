@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.102.0
+version: 0.103.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -41,6 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update dbaas-operator subchart to v0.4.0
-    - kind: changed
-      description: update storage-calculator to v0.9.0
+      description: allow configuration of docker host pod annotations
