@@ -652,7 +652,7 @@ endif
 		$$([ $(IMAGE_TAG) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set overwriteActiveStandbyTaskImage=$(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE)') \
 		$$([ $(OVERRIDE_PROJECTCLONE_TASK_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set overwriteProjectcloneTaskImage=$(OVERRIDE_PROJECTCLONE_TASK_IMAGE)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set buildDeployImage.default.image=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set buildDeployImage.default.image=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		--set api.additionalEnvs.ENABLE_SAVED_HISTORY_EXPORT="true" \
 		--set "keycloakFrontEndURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set "lagoonAPIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
