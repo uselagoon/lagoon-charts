@@ -276,6 +276,7 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 		$$(envsubst < ci/default-ingress-certificate-request.yaml.tpl > ci/default-ingress-certificate-request.yaml)
 	$(KUBECTL) --namespace ingress-traefik create -f ci/default-ingress-certificate-request.yaml || true
 	$(KUBECTL) --namespace ingress-traefik create -f ci/traefik-default-certificate.yaml || true
+	$(KUBECTL) create -f ci/traefik-role-for-admin.yaml || true
 	$(KUBECTL) create -f ci/nginx-ingressclass.yaml || true
 else
 	$(HELM) upgrade \
