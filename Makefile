@@ -254,7 +254,8 @@ endif
 .PHONY: install-ingress
 install-ingress: install-certmanager
 ifeq ($(INGRESS_CONTROLLER),traefik)
-# https://github.com/traefik/traefik/pull/12353 to fix weird intermittent 418s
+# https://github.com/traefik/traefik/issues/12332 to fix weird intermittent 418s
+# use image override
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -262,7 +263,7 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set image.repository=shreddedbacon/traefik \
-		--set image.tag=418-fix \
+		--set image.tag=418-fix2 \
 		--set ingressClass.isDefaultClass=true \
 		--set ingressClass.name=traefik \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.prometheus.serviceMonitor.enabled=true') \
