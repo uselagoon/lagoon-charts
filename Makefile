@@ -266,6 +266,7 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.prometheus.serviceMonitor.enabled=true') \
 		--set "additionalArguments[0]=--experimental.kubernetesingressnginx" \
 		--set "additionalArguments[1]=--providers.kubernetesingressnginx" \
+		--set "additionalArguments[1]=--providers.kubernetescrd.allowcrossnamespace=true" \
 		--version=37.3.0 \
 		ingress-traefik \
 		traefik/traefik
