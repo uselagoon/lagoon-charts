@@ -49,6 +49,9 @@ dockerHost:
 
   pruneImagesUntil: 168h
 
+  # Add annotations to pod template
+  podAnnotations: {}
+
   replicaCount: 1
 
   ## proxy configuration
