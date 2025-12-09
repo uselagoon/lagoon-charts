@@ -235,6 +235,7 @@ install-aergia:
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set templates.enabled=false \
+		--set image.tag=traefik \
 		--set idling.enabled=true \
 		--set idling.serviceCron="0\,15\,30\,45 * * * *" \
 		--set idling.podCheckInterval=5m \
