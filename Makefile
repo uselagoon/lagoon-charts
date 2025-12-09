@@ -159,10 +159,12 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 INGRESS_CONTROLLER_NAMESPACE = ingress-traefik
 INGRESS_CONTROLLER_SERVICE = ingress-traefik
 INGRESS_CONTROLLER_CLASSNAME = nginx
+INGRESS_CONTROLLER_REMOTE_CLASSNAME = nginx
 else
 INGRESS_CONTROLLER_NAMESPACE = ingress-nginx
 INGRESS_CONTROLLER_SERVICE = ingress-nginx-controller
 INGRESS_CONTROLLER_CLASSNAME = nginx
+INGRESS_CONTROLLER_REMOTE_CLASSNAME = nginx
 endif
 
 .PHONY: fill-test-ci-values
@@ -810,7 +812,7 @@ endif
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenHost=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenPort=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.spec.ports[0].port}')") \
 		--set "QoSMaxBuilds=5" \
-		--set "extraEnvs[0].name=LAGOON_FEATURE_FLAG_DEFAULT_INGRESS_CLASS,extraEnvs[0].value=nginx" \
+		--set "extraEnvs[0].name=LAGOON_FEATURE_FLAG_DEFAULT_INGRESS_CLASS,extraEnvs[0].value=$(INGRESS_CONTROLLER_REMOTE_CLASSNAME)" \
 		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc") \
 		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "broker.tls.enabled=false") \
 		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
