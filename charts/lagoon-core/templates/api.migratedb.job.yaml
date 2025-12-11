@@ -6,6 +6,7 @@ metadata:
     {{- include "lagoon-core.api.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": post-install, pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
     "helm.sh/hook-weight": "-5"
 spec:
   backoffLimit: 2
@@ -31,13 +32,25 @@ spec:
         securityContext:
           {{- toYaml .Values.api.securityContext | nindent 10 }}
         env:
+        {{- if not .Values.apiDB.useExternal }}
+        {{- $data := index (lookup "v1" "Secret" .Release.Namespace (include "lagoon-core.apiDB.fullname" .)) "data" | default dict }}
+        {{- $apiDBPassword := coalesce .Values.apiDBPassword (ternary (randAlpha 32) (index $data "API_DB_PASSWORD" | default "" | b64dec) (index $data "API_DB_PASSWORD" | empty)) }}
+        - name: API_DB_PASSWORD
+          value: {{ $apiDBPassword | quote }}
         - name: API_DB_HOST
           value: {{ include "lagoon-core.apiDB.fullname" . }}
+        {{- else }}
+        - name: API_DB_HOST
+          value: {{ required "A valid apiDBHost required!" .Values.apiDBHost }}
+        - name: API_DB_PORT
+          value: {{ required "A valid apiDBPort required!" .Values.apiDBPort | quote }}
+        - name: API_DB_USERNAME
+          value: {{ required "A valid apiDBUsername required!" .Values.apiDBUsername }}
         - name: API_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.apiDB.fullname" . }}
-              key: API_DB_PASSWORD
+          value: {{ required "A valid apiDBPassword required!" .Values.apiDBPassword | quote }}
+        - name: API_DB_DATABASE
+          value: {{ required "A valid apiDBDatabase required!" .Values.apiDBDatabase }}
+        {{- end }}
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}
       {{- range $key, $val := .Values.api.additionalEnvs }}

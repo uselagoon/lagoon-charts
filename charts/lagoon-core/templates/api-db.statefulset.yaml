@@ -1,3 +1,4 @@
+{{- if not .Values.apiDB.useExternal -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -34,15 +35,13 @@ spec:
         image: "{{ .Values.apiDB.image.repository }}:{{ coalesce .Values.apiDB.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.apiDB.image.pullPolicy }}
         env:
-        - name: API_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.apiDB.fullname" . }}
-              key: API_DB_PASSWORD
       {{- range $key, $val := .Values.apiDB.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
       {{- end }}
+        envFrom:
+        - secretRef:
+            name: {{ include "lagoon-core.apiDB.fullname" . }}
         ports:
         - name: mariadb
           containerPort: 3306
@@ -92,3 +91,4 @@ spec:
       resources:
         requests:
           storage: {{ .Values.apiDB.storageSize | quote }}
+{{- end}}
