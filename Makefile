@@ -114,6 +114,8 @@ INSTALL_MARIADB_PROVIDER = true
 INSTALL_POSTGRES_PROVIDER = true
 INSTALL_MONGODB_PROVIDER = true
 
+INSTALL_LAGOON_CORE_DATABASES = false
+
 LOGS2SLACK_DISABLED = false
 LOGS2EMAIL_DISABLED = false
 LOGS2ROCKETCHAT_DISABLED = true
@@ -362,6 +364,31 @@ install-mariadb:
 		mariadb \
 		oci://registry-1.docker.io/cloudpirates/mariadb
 
+.PHONY: install-mariadb-lagoon-databases
+install-mariadb-lagoon-databases:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace lagoon-core-databases \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set auth.database=api \
+		$$($(KUBECTL) get ns lagoon-core-databases > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace lagoon-core-databases apidb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
+		--version=0.2.1 \
+		apidb \
+		oci://registry-1.docker.io/cloudpirates/mariadb
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace lagoon-core-databases \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set auth.database=keycloak \
+		$$($(KUBECTL) get ns lagoon-core-databases > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace lagoon-core-databases keycloakdb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
+		--version=0.2.1 \
+		keycloakdb \
+		oci://registry-1.docker.io/cloudpirates/mariadb
+
 .PHONY: install-postgresql
 install-postgresql:
 	# root password is required on upgrade if the chart is already installed
@@ -488,6 +515,9 @@ endif
 ifeq ($(INSTALL_MONGODB_PROVIDER),true)
 install-lagoon-dependencies: install-mongodb
 endif
+ifeq ($(INSTALL_LAGOON_CORE_DATABASES),true)
+install-lagoon-dependencies: install-mariadb-lagoon-databases
+endif
 
 K8UP_V1_REQUESTED := $(findstring v1,$(INSTALL_K8UP_VERSIONS))
 K8UP_V2_REQUESTED := $(findstring v2,$(INSTALL_K8UP_VERSIONS))
@@ -559,6 +589,18 @@ endif
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set api.image.repository=$(IMAGE_REGISTRY)/api') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db') \
 		--set apiDB.vendor=$(CORE_DATABASE_VENDOR) \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDB.useExternal=true') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBDatabase=api') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBHost=apidb-mariadb.lagoon-core-databases.svc.cluster.local') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBPassword='$$($(KUBECTL) get secret --namespace lagoon-core-databases apidb-mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBUsername=root') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBPort=3306') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDB.useExternal=true') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBDatabase=keycloak') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBHost=keycloakdb-mariadb.lagoon-core-databases.svc.cluster.local') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBPassword='$$($(KUBECTL) get secret --namespace lagoon-core-databases keycloakdb-mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBUsername=root') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBPort=3306') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server') \
 		--set autoIdler.enabled=false \

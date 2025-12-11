@@ -38,14 +38,12 @@
 
 # These values are randomly generated on install if not otherwise defined.
 
-# apiDBPassword:
 # jwtSecret:
 # keycloakAdminPassword:
 # keycloakAPIClientSecret:
 # keycloakAdminAPIClientSecret:
 # keycloakAuthServerClientSecret:
 # keycloakLagoonUIOIDCClientSecret:
-# keycloakDBPassword:
 # keycloakLagoonAdminPassword:
 # logsDBAdminPassword:
 # rabbitMQPassword:
@@ -57,7 +55,6 @@
 
 # projectSeed:
 
-
 # Set these values to automatically create an initial user or an initialOrganization
 # upon install of the Lagoon Core helm chart. Either 'lagoonSeedOrganization' or both
 # 'lagoonSeedUsername' and 'lagoonSeedPassword' must be set to trigger this feature.
@@ -67,6 +64,23 @@
 # lagoonSeedPassword: password
 # lagoonSeedOrganization: example-org
 
+# these are used to configure database credentils if using external databases. 
+# configure external database usage under `apiDB.useExternal` and `keycloakDB.useExternal`
+# `apiDBPassword` and `keycloakDBPassword` will be automatically generated if `useExternal: false`
+# if your external database is `mysql` instead of `mariadb` ensure you also set the following
+# * `apiDB.vendor: mysql`
+# * `keycloakDB.vendor: mysql`
+# apiDBPassword:
+# apiDBUsername:
+# apiDBDatabase:
+# apiDBHost:
+# apiDBPort:
+
+# keycloakDBPassword:
+# keycloakDBUsername:
+# keycloakDBDatabase:
+# keycloakDBHost:
+# keycloakDBPort:
 
 # These values are the chart defaults, but can be overridden.
 imagePullSecrets: []
@@ -163,6 +177,8 @@ api:
 
 apiDB:
   vendor: mariadb
+  # Disable apiDB statefulset and service.
+  useExternal: false
   image:
     repository: uselagoon/api-db
     pullPolicy: Always
@@ -311,6 +327,8 @@ keycloak:
 
 keycloakDB:
   vendor: mariadb
+  # Disable apiDB statefulset and service.
+  useExternal: false
   replicaCount: 1
   image:
     repository: uselagoon/keycloak-db
