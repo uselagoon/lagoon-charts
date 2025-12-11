@@ -99,6 +99,21 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.broker.fullname" . }}
               key: RABBITMQ_USERNAME
+        - name: DEFAULT_BUILD_DEPLOY_IMAGE
+        {{- with dig "default" "image" nil .Values.buildDeployImage }}
+          value: {{ . }}
+        {{- else }}
+          value: {{ print "uselagoon/build-deploy-image:core-" .Chart.AppVersion }}
+        {{- end }}
+      {{- if dig "edge" "enabled" nil .Values.buildDeployImage }}
+        - name: EDGE_BUILD_DEPLOY_IMAGE
+          value: {{ coalesce .Values.buildDeployImage.edge.image (print "uselagoon/build-deploy-image:edge-v" (semver .Chart.AppVersion).Major "." (semver .Chart.AppVersion).Minor ".x") }}
+      {{- end }}
+        - name: PROJECTSEED
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-secrets
+              key: PROJECTSEED
       {{- range $key, $val := .Values.api.sidecar.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
