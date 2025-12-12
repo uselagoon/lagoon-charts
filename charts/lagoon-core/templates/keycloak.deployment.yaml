@@ -37,8 +37,6 @@ spec:
             -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true
             -Djboss.modules.system.pkgs=org.jboss.byteman
             -Djava.awt.headless=true
-        - name: DB_ADDR
-          value: {{ include "lagoon-core.keycloakDB.fullname" . }}
         - name: KEYCLOAK_ADMIN_USER
           value: {{ .Values.keycloakAdminUser | quote }}
         - name: KEYCLOAK_FRONTEND_URL

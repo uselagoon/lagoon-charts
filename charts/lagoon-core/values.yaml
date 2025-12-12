@@ -26,6 +26,8 @@
 
 # apiDBHost:
 # apiDBPort:
+# keycloakDBHost:
+# keycloakDBPort:
 # gitlabAPIToken:
 # gitlabAPIURL:
 # bitbucketAPIToken:
@@ -82,6 +84,8 @@ k8upS3Endpoint: ""
 apiDBUsername: api
 apiDBDatabase: infrastructure
 
+keycloakDBUser: keycloak
+keycloakDBDatabase: keycloak
 keycloakAdminUser: admin
 # this is required if email sending is to be enabled in keycloak
 # keycloakAdminEmail: admin@example.com
@@ -320,6 +324,8 @@ keycloak:
 
 keycloakDB:
   vendor: mariadb
+  # Disable keycloakDB statefulset and service.
+  useExternal: false
   replicaCount: 1
   image:
     repository: uselagoon/keycloak-db
