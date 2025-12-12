@@ -64,7 +64,7 @@
 # lagoonSeedPassword: password
 # lagoonSeedOrganization: example-org
 
-# these are used to configure database credentils if using external databases. 
+# these are used to configure database credentils if using external databases.
 # configure external database usage under `apiDB.useExternal` and `keycloakDB.useExternal`
 # `apiDBPassword` and `keycloakDBPassword` will be automatically generated if `useExternal: false`
 # if your external database is `mysql` instead of `mariadb` ensure you also set the following

@@ -44,3 +44,5 @@ annotations:
       description: update lagoon backup schedule to support changing to k8up.io
     - kind: removed
       description: removed lagoon-core bitbucket sync and open distro integrations
+    - kind: added
+      description: support for external database for api and keycloak
