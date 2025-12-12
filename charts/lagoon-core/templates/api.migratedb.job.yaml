@@ -31,8 +31,18 @@ spec:
         securityContext:
           {{- toYaml .Values.api.securityContext | nindent 10 }}
         env:
+        # These values are duplicated from `api-db.secret.yml` because they won't
+        # be available during the `pre-upgrade` hook.
         - name: API_DB_HOST
-          value: {{ include "lagoon-core.apiDB.fullname" . }}
+          value: {{ coalesce .Values.apiDBHost (include "lagoon-core.apiDB.fullname" .) }}
+        - name: API_DB_PORT
+          value: {{ coalesce .Values.apiDBPort .Values.apiDB.service.port | quote }}
+        - name: API_DB_USERNAME
+          value: {{ .Values.apiDBUsername }}
+        - name: API_DB_DATABASE
+          value: {{ .Values.apiDBDatabase }}
+        # This is loaded from `api-db.secret.yml` to make sure a new random password
+        # isn't generated just for this migrate job.
         - name: API_DB_PASSWORD
           valueFrom:
             secretKeyRef:

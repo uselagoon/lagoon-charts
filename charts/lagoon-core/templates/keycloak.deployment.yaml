@@ -55,19 +55,33 @@ spec:
         {{- end }}
         - name: DB_VENDOR
           value: {{ .Values.keycloakDB.vendor }}
-        - name: LAGOON_DB_HOST
-          value: {{ include "lagoon-core.apiDB.fullname" . }}
         - name: LAGOON_DB_VENDOR
           value: {{ .Values.apiDB.vendor }}
+        - name: LAGOON_DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_HOST
+        - name: LAGOON_DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_PORT
         - name: LAGOON_DB_USER
-          value: api
-        - name: LAGOON_DB_DATABASE
-          value: infrastructure
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_USERNAME
         - name: LAGOON_DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
+        - name: LAGOON_DB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_DATABASE
       {{- if .Values.keycloak.serviceMonitor.enabled }}
         - name: KC_METRICS_ENABLED
           value: "true"
