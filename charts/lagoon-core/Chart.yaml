@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: update lagoon backup schedule to support changing to k8up.io
+    - kind: added
+      description: more values for apiDB and keycloakDB connection config

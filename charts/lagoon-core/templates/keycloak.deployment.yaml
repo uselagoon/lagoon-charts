@@ -37,8 +37,6 @@ spec:
             -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true
             -Djboss.modules.system.pkgs=org.jboss.byteman
             -Djava.awt.headless=true
-        - name: DB_ADDR
-          value: {{ include "lagoon-core.keycloakDB.fullname" . }}
         - name: KEYCLOAK_ADMIN_USER
           value: {{ .Values.keycloakAdminUser | quote }}
         - name: KEYCLOAK_FRONTEND_URL
@@ -55,19 +53,33 @@ spec:
         {{- end }}
         - name: DB_VENDOR
           value: {{ .Values.keycloakDB.vendor }}
-        - name: LAGOON_DB_HOST
-          value: {{ include "lagoon-core.apiDB.fullname" . }}
         - name: LAGOON_DB_VENDOR
           value: {{ .Values.apiDB.vendor }}
+        - name: LAGOON_DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_HOST
+        - name: LAGOON_DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_PORT
         - name: LAGOON_DB_USER
-          value: api
-        - name: LAGOON_DB_DATABASE
-          value: infrastructure
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_USERNAME
         - name: LAGOON_DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
+        - name: LAGOON_DB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_DATABASE
       {{- if .Values.keycloak.serviceMonitor.enabled }}
         - name: KC_METRICS_ENABLED
           value: "true"

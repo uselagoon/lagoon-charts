@@ -24,6 +24,10 @@
 # These values are optional depending on the services Lagoon is integrated with
 # in your environment.
 
+# apiDBHost:
+# apiDBPort:
+# keycloakDBHost:
+# keycloakDBPort:
 # gitlabAPIToken:
 # gitlabAPIURL:
 # bitbucketAPIToken:
@@ -77,6 +81,11 @@ rabbitMQUsername: lagoon
 
 k8upS3Endpoint: ""
 
+apiDBUsername: api
+apiDBDatabase: infrastructure
+
+keycloakDBUser: keycloak
+keycloakDBDatabase: keycloak
 keycloakAdminUser: admin
 # this is required if email sending is to be enabled in keycloak
 # keycloakAdminEmail: admin@example.com
@@ -165,6 +174,8 @@ api:
 
 apiDB:
   vendor: mariadb
+  # Disable apiDB statefulset and service.
+  useExternal: false
   image:
     repository: uselagoon/api-db
     pullPolicy: Always
@@ -313,6 +324,8 @@ keycloak:
 
 keycloakDB:
   vendor: mariadb
+  # Disable keycloakDB statefulset and service.
+  useExternal: false
   replicaCount: 1
   image:
     repository: uselagoon/keycloak-db

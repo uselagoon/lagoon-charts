@@ -1,3 +1,4 @@
+{{- if not .Values.keycloakDB.useExternal -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -43,6 +44,9 @@ spec:
         - name: {{ $key }}
           value: {{ $val | quote }}
       {{- end }}
+        envFrom:
+        - secretRef:
+            name: {{ include "lagoon-core.keycloak.fullname" . }}
         ports:
         - name: mariadb
           containerPort: 3306
@@ -92,3 +96,4 @@ spec:
       resources:
         requests:
           storage: 16Gi
+{{- end }}
