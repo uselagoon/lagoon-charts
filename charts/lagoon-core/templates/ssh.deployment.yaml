@@ -16,7 +16,6 @@ spec:
     metadata:
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
         checksum/ssh.secret: {{ include (print $.Template.BasePath "/ssh.secret.yaml") . | sha256sum }}
     {{- with .Values.ssh.podAnnotations }}
         {{- toYaml . | nindent 8 }}
