@@ -14,7 +14,7 @@ spec:
       annotations:
         checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
         checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
-        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret-migratejob.yaml") . | sha256sum }}
         checksum/opensearch-sync.secret: {{ include (print $.Template.BasePath "/opensearch-sync.secret.yaml") . | sha256sum }}
     {{- with .Values.opensearchSync.podAnnotations }}
         {{- toYaml . | nindent 8 }}
