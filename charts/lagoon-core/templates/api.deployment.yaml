@@ -115,14 +115,6 @@ spec:
               key: API_DB_PASSWORD
         - name: API_HOST
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
-        {{- with .Values.bitbucketAPIURL }}
-        - name: BITBUCKET_API_HOST
-          value: {{ . | quote }}
-        {{- end }}
-        {{- with .Values.bitbucketAPIToken }}
-        - name: BITBUCKET_API_TOKEN
-          value: {{ . | quote }}
-        {{- end }}
         - name: DEFAULT_BUILD_DEPLOY_IMAGE
         {{- with dig "default" "image" nil .Values.buildDeployImage }}
           value: {{ . }}
@@ -175,8 +167,6 @@ spec:
           {{- end }}
         - name: KEYCLOAK_URL
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
-        - name: KIBANA_URL
-          value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}
         {{- with .Values.overwriteActiveStandbyTaskImage }}
