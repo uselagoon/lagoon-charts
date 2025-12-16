@@ -6,6 +6,7 @@ metadata:
     {{- include "lagoon-core.broker.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
     "helm.sh/hook-weight": "-5"
 spec:
   backoffLimit: 2
