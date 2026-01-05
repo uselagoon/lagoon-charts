@@ -25,8 +25,6 @@ logs2webhook:
   enabled: false
 webhookHandler:
   enabled: false
-webhooks2tasks:
-  enabled: false
 sshPortal:
   enabled: false
 ```
