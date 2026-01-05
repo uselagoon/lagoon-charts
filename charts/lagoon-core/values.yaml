@@ -1135,7 +1135,7 @@ sshToken:
     rsa: ""
 
 betaUI:
-  enabled: true
+  enabled: false
   replicaCount: 2
   image:
     repository: uselagoon/beta-ui

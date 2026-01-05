@@ -138,6 +138,7 @@ ui:
       cpu: "10m"
 
 betaUI:
+  enabled: true
   replicaCount: 1
   image:
     repository: uselagoon/beta-ui
