@@ -48,3 +48,5 @@ annotations:
       description: support for external database for api and keycloak
     - kind: added
       description: initial beta-ui inclusion
+    - kind: changed
+      description: update opensearch-sync to v0.14.2
