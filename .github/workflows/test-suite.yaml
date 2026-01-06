@@ -94,8 +94,8 @@ jobs:
     - name: Configure registry for containerd
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (steps.get-labels.outputs.needsTesting == 'needs-testing') ||
+        (steps.get-labels.outputs.nextRelease == 'next-release')
       run: |
         LAGOON_KIND_CIDR_BLOCK=$(docker network inspect kind | jq '.[].Containers[].IPv4Address' | tr -d '"')
         export KIND_NODE_IP=$(echo ${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $1,$2,$3,240}' OFS='.')
