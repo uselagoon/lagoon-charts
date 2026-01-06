@@ -134,6 +134,7 @@ jobs:
         helm repo add metallb https://metallb.github.io/metallb
         helm repo add jetstack https://charts.jetstack.io
         helm repo add jouve https://jouve.github.io/charts/
+        helm repo add gatekeeper https://open-policy-agent.github.io/gatekeeper/charts
 
     - name: Install gojq
       if: |

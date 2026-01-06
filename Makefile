@@ -201,15 +201,42 @@ install-certmanager: generate-ca
 		--namespace cert-manager \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set installCRDs=true \
 		--set ingressShim.defaultIssuerName=lagoon-testing-issuer \
 		--set ingressShim.defaultIssuerKind=ClusterIssuer \
 		--set ingressShim.defaultIssuerGroup=cert-manager.io \
-		--version=v1.12.6 \
+		--set crds.enabled=true \
+		--version=v1.18.2 \
 		cert-manager \
 		jetstack/cert-manager
 	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem || true
 	$(KUBECTL) create -f test-suite.certmanager-issuer-ss.yaml || true
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace cert-manager \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--version=v0.19.0  \
+		--set crds.enabled=true \
+		--set secretTargets.enabled=true \
+		--set secretTargets.authorizedSecretsAll=true \
+		trust-manager \
+		jetstack/trust-manager
+	$(KUBECTL) create -f test-suite.ca-bundle.yaml || true
+
+.PHONY: install-gatekeeper
+install-gatekeeper:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace gatekeeper-system \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--version=v3.11.0 \
+		--set replicas=1 \
+		gatekeeper \
+		gatekeeper/gatekeeper
+	$(KUBECTL) create -f test-suite.gatekeeper-ca-volume.yaml || true
 
 ifeq ($(INSTALL_AERGIA),true)
 .PHONY: install-aergia
@@ -269,6 +296,7 @@ install-ingress: install-certmanager
 	$(KUBECTL) --namespace ingress-nginx create -f ci/default-ingress-certificate-request.yaml || true
 
 .PHONY: install-registry
+install-registry: install-gatekeeper
 ifeq ($(INSTALL_UNAUTHENTICATED_REGISTRY),false)
 install-registry: install-ingress
 	$(HELM) upgrade \
@@ -813,8 +841,8 @@ endif
 		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc") \
 		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "broker.tls.enabled=false") \
 		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
-			echo "--set extraArgs={--skip-tls-verify=true,--cleanup-harbor-repository-on-delete,--lagoon-feature-flag-support-k8upv2}" || \
-			echo "--set extraArgs={--skip-tls-verify=true,--cleanup-harbor-repository-on-delete}") \
+			echo "--set extraArgs={--cleanup-harbor-repository-on-delete,--lagoon-feature-flag-support-k8upv2}" || \
+			echo "--set extraArgs={--cleanup-harbor-repository-on-delete}") \
 		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
 			echo "--set extraEnvs[0].name=LAGOON_FEATURE_FLAG_DEFAULT_K8UP_V2,extraEnvs[0].value=enabled") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.enabled=true") \

@@ -46,3 +46,5 @@ annotations:
       description: update storage-calculator to v0.9.0
     - kind: changed
       description: allow configuration of docker host pod annotations
+    - kind: changed
+      description: allow nats remote tls certificates to be disabled if not required
