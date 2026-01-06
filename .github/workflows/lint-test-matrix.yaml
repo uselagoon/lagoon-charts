@@ -71,8 +71,8 @@ jobs:
         make install-lagoon-certs CORE_NAMESPACE=lagoon-${{ github.event.pull_request.number }} REMOTE_NAMESPACE=lagoon-${{ github.event.pull_request.number }}
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing')) ||
-        (contains(github.event.pull_request.labels.*.name, 'next-release'))
+        (steps.get-labels.outputs.needsTesting == 'needs-testing') ||
+        (steps.get-labels.outputs.nextRelease == 'next-release')
 
     - name: Run chart-testing (install changed only)
       run: |
