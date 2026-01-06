@@ -98,7 +98,7 @@ buildDeployImage:
   default:
     # when updating this chart, ensure that if there are any changes made to the build-deploy-tool repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    image: uselagoon/build-deploy-image:core-v2.29.0
+    image: uselagoon/build-deploy-image:core-v2.30.0
   edge:
     enabled: false
 
@@ -705,7 +705,7 @@ insightsHandler:
     repository: uselagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.9"
+    tag: "v0.0.10"
 
   podAnnotations: {}
 

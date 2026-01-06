@@ -157,7 +157,7 @@ jobs:
 
     - name: Helm-install the test fixtures and fill lagoon-test/ci/linter-values.yaml (needs-testing)
       if: |
-        (steps.list-changed.outputs.changed == 'true' && !steps.get-labels.outputs.nextRelease == 'next-release') ||
+        (steps.list-changed.outputs.changed == 'true' && !(steps.get-labels.outputs.nextRelease == 'next-release')) ||
         (steps.get-labels.outputs.needsTesting == 'needs-testing')
       run: |
         make install-lagoon
