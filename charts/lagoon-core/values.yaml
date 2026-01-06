@@ -49,6 +49,7 @@
 # rabbitMQPassword:
 # redisPassword:
 # k8upBackupBucketName:
+# uiAuthSecret:
 
 # This value is set to match jwtSecret on existing installs if not defined.
 # It should only ever be set here for backwards compatibility.
@@ -1132,3 +1133,49 @@ sshToken:
     ecdsa: ""
     ed25519: ""
     rsa: ""
+
+betaUI:
+  enabled: false
+  replicaCount: 2
+  image:
+    repository: uselagoon/beta-ui
+    pullPolicy: Always
+    # when updating this chart, ensure that if there are any changes made to the lagoon-beta-ui repository
+    # and a new image tag is released, that this image tag is updated to reference the new image version
+    tag: "main"
+
+  podAnnotations: {}
+
+  securityContext: {}
+
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
+
+  additionalEnvs:
+  #   FOO: Bar
+
+  service:
+    type: ClusterIP
+    port: 3000
+
+  ingress:
+    enabled: false
+    annotations: {}
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+    - host: beta-ui.example.com
+      paths:
+      - /
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
