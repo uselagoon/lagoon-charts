@@ -5,9 +5,6 @@ global:
   broker:
     tls:
       enabled: true
-    tlsCA:
-      enabled: true
-      secretName: lagoon-remote-broker-tls
 
 lagoon-build-deploy:
   enabled: true
@@ -50,7 +47,7 @@ nats:
 natsConfig:
   coreURL: "tls://ci-ssh-portal:ci-password@lagoon-core-nats-concentrator.lagoon-core.svc:7422"
   tls:
-    caOnly: true
+    enableCerts: false
 
 sshPortal:
   enabled: true

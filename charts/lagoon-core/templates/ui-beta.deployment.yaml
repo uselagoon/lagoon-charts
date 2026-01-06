@@ -1,0 +1,108 @@
+{{- if .Values.betaUI.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-core.betaUI.fullname" . }}
+  labels:
+    {{- include "lagoon-core.betaUI.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.betaUI.autoscaling.enabled }}
+  replicas: {{ .Values.betaUI.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.betaUI.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
+        checksum/ui-beta.secret: {{ include (print $.Template.BasePath "/ui-beta.secret.yaml") . | sha256sum }}
+    {{- with .Values.betaUI.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "lagoon-core.betaUI.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml (coalesce .Values.betaUI.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
+      containers:
+      - name: ui
+        securityContext:
+          {{- toYaml .Values.betaUI.securityContext | nindent 10 }}
+        image: "{{ .Values.betaUI.image.repository }}:{{ coalesce .Values.betaUI.image.tag (print "core-" .Chart.AppVersion) }}"
+        imagePullPolicy: {{ .Values.betaUI.image.pullPolicy }}
+        env:
+        - name: GRAPHQL_API
+          {{- if .Values.lagoonAPIURL }}
+          value: {{ .Values.lagoonAPIURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.api.ingress.hosts 0 "host" }}/graphql
+          {{- end }}
+        - name: AUTH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.betaUI.fullname" . }}
+              key: AUTH_SECRET
+        - name: AUTH_KEYCLOAK_ID
+          value: lagoon-ui-oidc
+        - name: AUTH_KEYCLOAK_ISSUER
+          {{- if .Values.keycloakFrontEndURL }}
+          value: {{ .Values.keycloakFrontEndURL }}/auth/realms/lagoon
+          {{- else if .Values.keycloak.ingress.enabled }}
+          value: https://{{ index .Values.keycloak.ingress.hosts 0 "host" }}/auth/realms/lagoon
+          {{- else }}
+          value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth/realms/lagoon
+          {{- end }}
+        - name: AUTH_KEYCLOAK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_LAGOON_UI_OIDC_CLIENT_SECRET
+        - name: LAGOON_ROUTE
+          {{- if .Values.betaUIURL }}
+          value: {{ .Values.betaUIURL }}
+          {{- else if .Values.betaUI.ingress.enabled }}
+          value: https://{{ index .Values.betaUI.ingress.hosts 0 "host" }}
+          {{- else }}
+          value: http://{{ include "lagoon-core.betaUI.fullname" . }}:{{ .Values.betaUI.service.port }}
+          {{- end }}
+        - name: WEBHOOK_URL
+          {{- if .Values.lagoonWebhookURL }}
+          value: {{ .Values.lagoonWebhookURL | quote }}
+          {{- else }}
+          value: https://{{ index .Values.webhookHandler.ingress.hosts 0 "host" }}
+          {{- end }}
+        - name: LAGOON_VERSION
+          value: {{ .Chart.AppVersion | replace "-" "." }}
+      {{- range $key, $val := .Values.betaUI.additionalEnvs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+      {{- end }}
+        ports:
+        - name: http-3000
+          containerPort: 3000
+        livenessProbe:
+          tcpSocket:
+            port: http-3000
+        readinessProbe:
+          tcpSocket:
+            port: http-3000
+        resources:
+          {{- toYaml .Values.betaUI.resources | nindent 10 }}
+      {{- with .Values.betaUI.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.betaUI.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.betaUI.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

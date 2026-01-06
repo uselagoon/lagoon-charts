@@ -47,6 +47,8 @@ annotations:
     - kind: changed
       description: allow configuration of docker host pod annotations
     - kind: changed
+      description: allow nats remote tls certificates to be disabled if not required
+    - kind: changed
       description: update lagoon-build-deploy subchart to v0.39.0
     - kind: changed
       description: update insights-remote to v0.0.15

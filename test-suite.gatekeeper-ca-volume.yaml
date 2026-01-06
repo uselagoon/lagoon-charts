@@ -1,0 +1,75 @@
+apiVersion: mutations.gatekeeper.sh/v1
+kind: Assign
+metadata:
+  name: trust-ca-volume
+spec:
+  applyTo:
+  - groups: [""]
+    kinds: ["Pod"]
+    versions: ["v1"]
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["Pod"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system", "cert-manager", "ingress-nginx"]
+  location: "spec.volumes[name:cluster-ca-certs]"
+  parameters:
+    assign:
+      value:
+        name: cluster-ca-certs
+        configMap:
+          name: public-bundle-lagoon-test-ca
+          defaultMode: 0644
+          optional: false
+          items:
+          - key: ca-certificates.crt
+            path: ca-certificates.crt
+---
+apiVersion: mutations.gatekeeper.sh/v1
+kind: Assign
+metadata:
+  name: trust-ca-volumemount
+spec:
+  applyTo:
+  - groups: [""]
+    kinds: ["Pod"]
+    versions: ["v1"]
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["Pod"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system", "cert-manager", "ingress-nginx"]
+  # All containers in a pod mounting to volumeMount named "cluster-ca-certs"
+  location: "spec.containers[name:*].volumeMounts[name:cluster-ca-certs]"
+  parameters:
+    assign:
+      value:
+        mountPath: /etc/ssl/certs/
+        name: cluster-ca-certs
+        readOnly: true
+---
+apiVersion: mutations.gatekeeper.sh/v1
+kind: ModifySet
+metadata:
+  name: trust-ca-envvar
+spec:
+  applyTo:
+  - groups: [""]
+    kinds: ["Pod"]
+    versions: ["v1"]
+  match:
+    scope: Namespaced
+    kinds:
+    - apiGroups: ["*"]
+      kinds: ["Pod"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system", "cert-manager", "ingress-nginx"]
+  # All containers in a pod mounting envvar named "NODE_EXTRA_CA_CERTS" for node applications to use
+  location: "spec.containers[name:*].env"
+  parameters:
+    operation: merge
+    values:
+      fromList:
+        - name: NODE_EXTRA_CA_CERTS
+          value: /etc/ssl/certs/ca-certificates.crt

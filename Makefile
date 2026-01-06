@@ -8,6 +8,8 @@ IMAGE_TAG =
 # only works for installations where INSTALL_STABLE_CORE=false
 # UI_IMAGE_REPO = uselagoon/ui
 # UI_IMAGE_TAG = latest
+# BETA_UI_IMAGE_REPO = uselagoon/beta-ui
+# BETA_UI_IMAGE_TAG = main
 
 # SSHPORTALAPI_IMAGE_REPO and SSHPORTALAPI_IMAGE_TAG are an easy way to override the ssh portal api image used in the local stack lagoon-core
 # only works for installations where INSTALL_STABLE_CORE=false
@@ -201,15 +203,42 @@ install-certmanager: generate-ca
 		--namespace cert-manager \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set installCRDs=true \
 		--set ingressShim.defaultIssuerName=lagoon-testing-issuer \
 		--set ingressShim.defaultIssuerKind=ClusterIssuer \
 		--set ingressShim.defaultIssuerGroup=cert-manager.io \
-		--version=v1.12.6 \
+		--set crds.enabled=true \
+		--version=v1.18.2 \
 		cert-manager \
 		jetstack/cert-manager
 	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem || true
 	$(KUBECTL) create -f test-suite.certmanager-issuer-ss.yaml || true
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace cert-manager \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--version=v0.19.0  \
+		--set crds.enabled=true \
+		--set secretTargets.enabled=true \
+		--set secretTargets.authorizedSecretsAll=true \
+		trust-manager \
+		jetstack/trust-manager
+	$(KUBECTL) create -f test-suite.ca-bundle.yaml || true
+
+.PHONY: install-gatekeeper
+install-gatekeeper:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace gatekeeper-system \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--version=v3.11.0 \
+		--set replicas=1 \
+		gatekeeper \
+		gatekeeper/gatekeeper
+	$(KUBECTL) create -f test-suite.gatekeeper-ca-volume.yaml || true
 
 ifeq ($(INSTALL_AERGIA),true)
 .PHONY: install-aergia
@@ -252,6 +281,7 @@ install-ingress: install-certmanager
 		--set controller.service.nodePorts.https=32443 \
 		--set controller.config.annotations-risk-level=Critical \
 		--set controller.config.proxy-body-size=0 \
+		--set controller.config.proxy-buffer-size=64k \
 		--set controller.config.hsts=false \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
@@ -269,6 +299,7 @@ install-ingress: install-certmanager
 	$(KUBECTL) --namespace ingress-nginx create -f ci/default-ingress-certificate-request.yaml || true
 
 .PHONY: install-registry
+install-registry: install-gatekeeper
 ifeq ($(INSTALL_UNAUTHENTICATED_REGISTRY),false)
 install-registry: install-ingress
 	$(HELM) upgrade \
@@ -585,6 +616,7 @@ endif
 		--set "lagoonAPIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
 		--set "lagoonUIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set "lagoonWebhookURL=http://lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "betaUIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set api.image.repository=$(IMAGE_REGISTRY)/api') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db') \
@@ -652,6 +684,16 @@ endif
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string ui.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_REPO) ] && echo '--set ui.image.repository=$(UI_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_TAG) ] && echo '--set ui.image.tag=$(UI_IMAGE_TAG)') \
+		--set betaUI.ingress.enabled=true \
+		--set betaUI.ingress.hosts[0].host="lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set betaUI.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.additionalEnvs.NODE_TLS_REJECT_UNAUTHORIZED=0') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set betaUI.ingress.tls[0].hosts[0]=lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.ingress.tls[0].secretName=beta-ui-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(BETA_UI_IMAGE_REPO) ] && echo '--set betaUI.image.repository=$(BETA_UI_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(BETA_UI_IMAGE_TAG) ] && echo '--set betaUI.image.tag=$(BETA_UI_IMAGE_TAG)') \
 		--set keycloak.ingress.enabled=true \
 		--set keycloak.ingress.hosts[0].host="lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set keycloak.ingress.hosts[0].paths[0]="/" \
@@ -813,8 +855,8 @@ endif
 		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc") \
 		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "broker.tls.enabled=false") \
 		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
-			echo "--set extraArgs={--skip-tls-verify=true,--cleanup-harbor-repository-on-delete,--lagoon-feature-flag-support-k8upv2}" || \
-			echo "--set extraArgs={--skip-tls-verify=true,--cleanup-harbor-repository-on-delete}") \
+			echo "--set extraArgs={--cleanup-harbor-repository-on-delete,--lagoon-feature-flag-support-k8upv2}" || \
+			echo "--set extraArgs={--cleanup-harbor-repository-on-delete}") \
 		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
 			echo "--set extraEnvs[0].name=LAGOON_FEATURE_FLAG_DEFAULT_K8UP_V2,extraEnvs[0].value=enabled") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.enabled=true") \

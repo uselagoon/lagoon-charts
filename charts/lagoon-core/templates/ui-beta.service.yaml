@@ -1,0 +1,16 @@
+{{- if .Values.ui.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lagoon-core.betaUI.fullname" . }}
+  labels:
+    {{- include "lagoon-core.betaUI.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.betaUI.service.type }}
+  ports:
+  - port: {{ .Values.betaUI.service.port }}
+    targetPort: http-3000
+    name: http-3000
+  selector:
+    {{- include "lagoon-core.betaUI.selectorLabels" . | nindent 4 }}
+{{- end }}
