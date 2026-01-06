@@ -1057,7 +1057,7 @@ opensearchSync:
     repository: ghcr.io/uselagoon/lagoon-opensearch-sync
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.13.0"
+    tag: "v0.14.2"
 
   # debug logging toggle
   debug: false
