@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.0
+    controller-gen.kubebuilder.io/version: v0.16.5
   name: mongodbproviders.crd.lagoon.sh
 spec:
   group: crd.lagoon.sh
@@ -124,13 +124,14 @@ spec:
                   type: object
                 minItems: 1
                 type: array
-              scope:
-                description: Scope is the scope of the database request, this is used
-                  to select a provider from a pool of scopes
+              selector:
+                description: Selector is the name of the database request, this is
+                  used to select a provider from a pool of providers with the same
+                  selector
                 type: string
             required:
             - connections
-            - scope
+            - selector
             type: object
           status:
             description: MongoDBProviderStatus defines the observed state of MongoDBProvider

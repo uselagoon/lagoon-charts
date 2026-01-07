@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.0
+    controller-gen.kubebuilder.io/version: v0.16.5
   name: databaserequests.crd.lagoon.sh
 spec:
   group: crd.lagoon.sh
@@ -137,10 +137,6 @@ spec:
                   Name is used for the service name and the prefix in the secret data
                   for example mariadb-0
                 type: string
-              scope:
-                description: Scope is the scope of the database request, this is used
-                  to select a provider from a pool of scopes
-                type: string
               seed:
                 description: |-
                   Seed is the seed for the database request
@@ -156,6 +152,11 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              selector:
+                description: Selector is the name of the database request, this is
+                  used to select a provider from a pool of providers with the same
+                  selector
+                type: string
               type:
                 description: |-
                   Type is the type of the database request
@@ -168,7 +169,7 @@ spec:
                 type: string
             required:
             - name
-            - scope
+            - selector
             - type
             type: object
           status:
