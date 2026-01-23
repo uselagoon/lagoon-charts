@@ -38,4 +38,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
     - kind: added
-      description: bump logs-dispatcher image tag
+      description: bump logs-dispatcher image tag to v3.11.0
