@@ -34,7 +34,7 @@ logsDispatcher:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.9.0"
+    tag: "v3.11.0"
 
   serviceAccount:
     # Specifies whether a service account should be created
