@@ -42,4 +42,3 @@ annotations:
   artifacthub.io/changes: |
     - kind: changed
       description: add buildScannerImage config to insights-remote
-      
