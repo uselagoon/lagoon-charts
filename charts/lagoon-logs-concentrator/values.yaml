@@ -12,7 +12,7 @@ image:
   repository: uselagoon/logs-concentrator
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is "latest".
-  tag: "v3.5.0"
+  tag: "v3.7.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -62,6 +62,17 @@ resources:
     cpu: "1"
     memory: 2Gi
 
+startupProbe:
+  failureThreshold: 10
+  tcpSocket:
+    port: forward
+livenessProbe:
+  tcpSocket:
+    port: forward
+readinessProbe:
+  tcpSocket:
+    port: forward
+
 autoscaling:
   enabled: true
   minReplicas: 2
@@ -86,6 +97,12 @@ opensearchTLSVerify: true
 # Certificates should be provided in PEM format, and are generated as described
 # in the README.
 opensearchAdminUser: "admin"
+
+mTLS: true
+
+buffer:
+  size: 32Gi
+  storageClassName: ""
 
 # Sample data shown below.
 # opensearchHost: "logs-db-service.opensearch.svc.cluster.local"

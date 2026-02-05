@@ -1,4 +1,18 @@
 {{- $rabbitMQHostname := coalesce (.Values.global).rabbitMQHostname .Values.rabbitMQHostname }}
+{{- $rabbitMQTLSSecretName := coalesce (.Values.global.broker).tlsCA.secretName .Values.broker.tlsCA.secretName }}
+
+{{- $rabbitMQTLSEnabled := .Values.broker.tls.enabled }}
+{{- if (.Values.global.broker).tls.enabled }}
+{{- $rabbitMQTLSEnabled = (.Values.global.broker).tls.enabled }}
+{{- end }}
+{{- $rabbitMQTLSCAEnabled := .Values.broker.tlsCA.enabled }}
+{{- if (.Values.global.broker).tlsCA.enabled }}
+{{- $rabbitMQTLSCAEnabled = (.Values.global.broker).tlsCA.enabled }}
+{{- end }}
+{{- $rabbitMQTLSVerifyPeer := .Values.broker.tls.verifyPeer | quote }}
+{{- if (.Values.global.broker).tls.verifyPeer }}
+{{- $rabbitMQTLSVerifyPeer = (.Values.global.broker).tls.verifyPeer | quote }}
+{{- end }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -25,21 +39,6 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-      - name: kube-rbac-proxy
-        securityContext:
-          {{- toYaml .Values.kubeRBACProxy.securityContext | nindent 10 }}
-        image: "{{ .Values.kubeRBACProxy.image.repository }}:{{ .Values.kubeRBACProxy.image.tag }}"
-        imagePullPolicy: {{ .Values.kubeRBACProxy.image.pullPolicy }}
-        args:
-        - "--secure-listen-address=0.0.0.0:8443"
-        - "--upstream=http://127.0.0.1:8080/"
-        - "--logtostderr=true"
-        - "--v=10"
-        ports:
-        - containerPort: 8443
-          name: https
-        resources:
-          {{- toYaml .Values.kubeRBACProxy.resources | nindent 10 }}
       - name: manager
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
@@ -48,15 +47,16 @@ spec:
         command:
         - /manager
         ports:
-        - containerPort: 9912
-          name: metrics
+        - containerPort: 8443
+          name: https
         args:
-        - "--metrics-addr=127.0.0.1:8080"
-        - "--enable-leader-election=true"
+        - "--metrics-bind-address=:8443"
+        - "--leader-elect=true"
+        {{- if $rabbitMQTLSEnabled }}
+        - "--rabbitmq-tls"
+        {{- end }}
         {{- if .Values.harbor.enabled }}
         - "--enable-harbor=true"
-        - "--harbor-password={{ .Values.harbor.adminPassword }}"
-        - "--harbor-username={{ .Values.harbor.adminUser }}"
         - "--harbor-url={{ .Values.harbor.host }}"
         - "--harbor-api={{ .Values.harbor.host }}/api"
         {{- if .Values.harbor.rotationCron }}
@@ -152,14 +152,23 @@ spec:
         {{- with .Values.nativeCronPodMinFrequency }}
         - "--native-cron-pod-min-frequency={{ . }}"
         {{- end }}
-        {{- with .Values.lagoonFeatureFlagEnableQoS }}
-        - "--enable-qos={{ . }}"
-        {{- end }}
-        {{- with .Values.QoSMaxBuilds }}
+        {{- with or .Values.qos.maxBuilds .Values.QoSMaxBuilds }}
         - "--qos-max-builds={{ . }}"
         {{- end }}
-        {{- with .Values.QoSDefault }}
+        {{- with .Values.qos.totalBuilds }}
+        - "--qos-total-builds={{ . }}"
+        {{- end }}
+        {{- with or .Values.qos.defaultBuildPriority .Values.QoSDefault }}
         - "--qos-default={{ . }}"
+        {{- end }}
+        {{- with .Values.qos.enableTaskQoS }}
+        - "--enable-task-qos={{ . }}"
+        {{- end }}
+        {{- with .Values.qos.qosMaxTasks }}
+        - "--qos-max-tasks={{ . }}"
+        {{- end }}
+        {{- with .Values.qos.qosMaxNamespaceTasks }}
+        - "--qos-max-namespace-tasks={{ . }}"
         {{- end }}
         {{- with .Values.timeoutForLongRunningBuildPods }}
         - "--timeout-longrunning-build-pod-cleanup={{ . }}"
@@ -174,9 +183,8 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
-        {{- range $name, $value := .Values.extraEnvs }}
-        - name: {{ .name }}
-          value: {{ .value | quote }}
+        {{- with .Values.extraEnvs }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         - name: LAGOON_TARGET_NAME
           value: {{ required "A valid .Values.lagoonTargetName required!" .Values.lagoonTargetName | quote }}
@@ -258,6 +266,12 @@ spec:
           value: {{ .Values.pendingMessageCron | quote }}
         - name: RABBITMQ_HOSTNAME
           value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
+        {{- if $rabbitMQTLSCAEnabled }}
+        - name: RABBITMQ_CACERT
+          value: "/ca.crt"
+        {{- end }}
+        - name: RABBITMQ_VERIFY
+          value: {{ $rabbitMQTLSVerifyPeer }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -268,14 +282,38 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-build-deploy.fullname" . }}
               key: RABBITMQ_USERNAME
+        {{- if .Values.harbor.enabled }}
+        - name: HARBOR_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-build-deploy.fullname" . }}
+              key: HARBOR_PASSWORD
+        - name: HARBOR_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-build-deploy.fullname" . }}
+              key: HARBOR_USERNAME
+        {{- end }}
         - name: NAMESPACE_PREFIX
           value: {{ .Values.namespacePrefix | quote }}
         - name: CONTROLLER_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        volumeMounts:
+        {{- if $rabbitMQTLSCAEnabled }}
+        - mountPath: /ca.crt
+          name: {{ include "lagoon-build-deploy.fullname" . }}-amqp-tls
+          subPath: ca.crt
+        {{- end }}
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+      volumes:
+      {{- if $rabbitMQTLSCAEnabled }}
+      - name: {{ include "lagoon-build-deploy.fullname" . }}-amqp-tls
+        secret:
+          secretName: {{ $rabbitMQTLSSecretName }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

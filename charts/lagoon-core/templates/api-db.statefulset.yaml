@@ -1,3 +1,4 @@
+{{- if not .Values.apiDB.useExternal -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -12,7 +13,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret-migratejob.yaml") . | sha256sum }}
         k8up.syn.tools/backupcommand: /bin/sh -c "mysqldump --max-allowed-packet=500M --events --routines --quick --add-locks --no-autocommit --single-transaction --all-databases"
         k8up.syn.tools/file-extension: .api-db.sql
     {{- with .Values.apiDB.podAnnotations }}
@@ -34,15 +35,13 @@ spec:
         image: "{{ .Values.apiDB.image.repository }}:{{ coalesce .Values.apiDB.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.apiDB.image.pullPolicy }}
         env:
-        - name: MARIADB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.apiDB.fullname" . }}
-              key: API_DB_PASSWORD
       {{- range $key, $val := .Values.apiDB.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
       {{- end }}
+        envFrom:
+        - secretRef:
+            name: {{ include "lagoon-core.apiDB.fullname" . }}
         ports:
         - name: mariadb
           containerPort: 3306
@@ -92,3 +91,4 @@ spec:
       resources:
         requests:
           storage: {{ .Values.apiDB.storageSize | quote }}
+{{- end}}

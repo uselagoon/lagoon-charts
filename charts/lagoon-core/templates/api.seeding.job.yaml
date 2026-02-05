@@ -1,0 +1,55 @@
+{{- if or (and .Values.lagoonSeedUsername .Values.lagoonSeedPassword) .Values.lagoonSeedOrganization }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "lagoon-core.apiSeeding.fullname" . }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-4"
+spec:
+  backoffLimit: 2
+  template:
+    metadata:
+      labels:
+        {{- include "lagoon-core.api.selectorLabels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      securityContext:
+          {{- toYaml .Values.api.securityContext | nindent 8 }}
+      containers:
+        - name: api-seeding
+          image: {{ .Values.api.image.repository }}:{{ coalesce .Values.api.image.tag .Values.imageTag .Chart.AppVersion }}
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          command: ["/bin/sh", "-c"]
+          args: 
+            - |
+              cat <<'JS' > /app/seed-core.js
+              {{ .Files.Get "files/seed-core.js" | indent 14 }}
+              JS
+              node /app/seed-core.js || true
+          env:
+          - name: INITIAL_USER_EMAIL
+            value: "{{ .Values.lagoonSeedUsername }}"
+          - name: INITIAL_USER_PASSWORD
+            value: "{{ .Values.lagoonSeedPassword }}"
+          - name: INITIAL_ORGANIZATION_NAME
+            value: "{{ .Values.lagoonSeedOrganization }}"
+          - name: JWTAUDIENCE
+            value: "api.dev"
+          - name: JWTUSER
+            value: "localadmin"
+          - name: JWTSECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "lagoon-core.fullname" . }}-secrets
+                key: JWTSECRET
+          - name: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "lagoon-core.keycloak.fullname" . }}
+                key: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+          - name: KEYCLOAK_FRONTEND_URL
+            value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
+          - name: LAGOON_API_URL
+            value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
+{{- end }}

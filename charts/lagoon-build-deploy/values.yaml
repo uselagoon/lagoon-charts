@@ -75,6 +75,24 @@ extraEnvs:
 # lagoonBackupDefaultWeeklyRetention: 5
 # lagoonBackupDefaultMonthlyRetention: 12
 
+# the following values can be used to configure QoS settings
+# QoS is now enabled by default for builds only, it cannot be disabled. the settings below can be used to change the behavior
+# previous values for lagoonFeatureFlagEnableQoS, QoSMaxBuilds, and QoSDefault are deprecated, and will be removed in a future release
+# you should change to the following configuration methods
+qos: {}
+  # the default qos priority value to apply if one is not provided
+  # defaultBuildPriority: 5
+  # the total number of builds during the container build phase that can run at any one time
+  # maxBuilds: 20
+  # the total number of builds that can run at any one time. defaults to maxBuilds if not provided or less than maxBuilds
+  # totalBuilds: 0
+  # flag to enable this controller with QoS for tasks
+  # enableTaskQoS: false
+  # the total number of tasks that can run at any one time
+  # qosMaxTasks: 200
+  # the maximum number of tasks that can run concurrently per namespace
+  # qosMaxNamespaceTasks: 20
+
 # it is also possible to allow the controller to purge harbor of the associated repositories
 # when an environment is deleted, this can be enabled by setting the following to true
 # if the remote is sharing a harbor with another remote, and migrations are taking place then enabling
@@ -197,13 +215,20 @@ tolerations: []
 
 affinity: {}
 
-# this is a sidecar in the same pod as the lagoonBuildDeploy container
-kubeRBACProxy:
-  image:
-    repository: gcr.io/kubebuilder/kube-rbac-proxy
-    pullPolicy: IfNotPresent
-    tag: v0.4.1
-
-  securityContext: {}
-
-  resources: {}
+broker:
+  # enable if providing a custom CA for broker connections
+  tlsCA:
+    enabled: false
+    # if lagoon-build-deploy chart is installed as part of lagoon-remote
+    # then this secret name could be defined by the "global" configs for lagoon-remote instead of here.
+    # if this chart and lagoon-remote are installed in isolation, but in the same namespace
+    # then you can use the same secret that lagoon-remote may be using if lagoon-remote is also configured
+    # to use the "global" settings for broker by setting the secretName manually to "lagoon-remote-broker-tls".
+    # in other cases, you may need to create this secret manually if not defining the CA in values.
+    secretName: lagoon-remote-build-deploy-broker-tls
+    # secretData:
+    #   ca.crt: |
+    #     ...
+  tls:
+    enabled: false
+    verifyPeer: true

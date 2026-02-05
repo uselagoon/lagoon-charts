@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.2
+    controller-gen.kubebuilder.io/version: v0.16.5
   name: lagoonbuilds.crd.lagoon.sh
 spec:
   group: crd.lagoon.sh
@@ -14,8 +14,18 @@ spec:
     singular: lagoonbuild
   scope: Namespaced
   versions:
-  - deprecated: true
-    deprecationWarning: use lagoonbuilds.crd.lagoon.sh/v1beta2
+  - additionalPrinterColumns:
+    - description: Status of the LagoonBuild
+      jsonPath: .status.phase
+      name: Status
+      type: string
+    - description: The build step of the LagoonBuild
+      jsonPath: .status.conditions[?(@.type == "BuildStep")].reason
+      name: BuildStep
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
     name: v1beta1
     schema:
       openAPIV3Schema:
@@ -40,162 +50,61 @@ spec:
             type: object
           spec:
             description: LagoonBuildSpec defines the desired state of LagoonBuild
-            properties:
-              branch:
-                description: Branch contains the branch name used for a branch deployment.
-                properties:
-                  name:
-                    type: string
-                type: object
-              build:
-                description: Build contains the type of build, and the image to use
-                  for the builder.
-                properties:
-                  bulkId:
-                    type: string
-                  ci:
-                    type: string
-                  image:
-                    type: string
-                  priority:
-                    type: integer
-                  type:
-                    type: string
-                required:
-                - type
-                type: object
-              gitReference:
-                type: string
-              project:
-                description: Project contains the project information from lagoon.
-                properties:
-                  deployTarget:
-                    type: string
-                  environment:
-                    type: string
-                  environmentId:
-                    type: integer
-                  environmentIdling:
-                    type: integer
-                  environmentType:
-                    type: string
-                  gitUrl:
-                    type: string
-                  id:
-                    type: integer
-                  key:
-                    format: byte
-                    type: string
-                  monitoring:
-                    description: Monitoring contains the monitoring information for
-                      the project in Lagoon.
-                    properties:
-                      contact:
-                        type: string
-                      statuspageID:
-                        type: string
-                    type: object
-                  name:
-                    type: string
-                  namespacePattern:
-                    type: string
-                  organization:
-                    properties:
-                      id:
-                        type: integer
-                      name:
-                        type: string
-                    type: object
-                  productionEnvironment:
-                    type: string
-                  projectIdling:
-                    type: integer
-                  projectSecret:
-                    type: string
-                  registry:
-                    type: string
-                  routerPattern:
-                    type: string
-                  standbyEnvironment:
-                    type: string
-                  storageCalculator:
-                    type: integer
-                  subfolder:
-                    type: string
-                  uiLink:
-                    type: string
-                  variables:
-                    description: Variables contains the project and environment variables
-                      from lagoon.
-                    properties:
-                      environment:
-                        format: byte
-                        type: string
-                      project:
-                        format: byte
-                        type: string
-                    type: object
-                required:
-                - deployTarget
-                - environment
-                - environmentType
-                - gitUrl
-                - key
-                - monitoring
-                - name
-                - productionEnvironment
-                - projectSecret
-                - standbyEnvironment
-                - variables
-                type: object
-              promote:
-                description: Promote contains the information for a promote deployment.
-                properties:
-                  sourceEnvironment:
-                    type: string
-                  sourceProject:
-                    type: string
-                type: object
-              pullrequest:
-                description: Pullrequest contains the information for a pullrequest
-                  deployment.
-                properties:
-                  baseBranch:
-                    type: string
-                  baseSha:
-                    type: string
-                  headBranch:
-                    type: string
-                  headSha:
-                    type: string
-                  number:
-                    type: string
-                  title:
-                    type: string
-                type: object
-            required:
-            - build
-            - gitReference
-            - project
             type: object
           status:
             description: LagoonBuildStatus defines the observed state of LagoonBuild
             properties:
               conditions:
+                description: |-
+                  Conditions provide a standard mechanism for higher-level status reporting from a controller.
+                  They are an extension mechanism which allows tools and other controllers to collect summary information about
+                  resources without needing to understand resource-specific status details.
                 items:
-                  description: LagoonBuildConditions defines the observed conditions
-                    of build pods.
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
                   properties:
                     lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
                       type: string
                     message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
                       type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
                     reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
                       type: string
                     status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
                       type: string
                     type:
-                      description: BuildStatusType const for the status type
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
                   required:
                   - lastTransitionTime
@@ -205,492 +114,13 @@ spec:
                   - type
                   type: object
                 type: array
-              log:
-                format: byte
+              phase:
                 type: string
             type: object
-          statusMessages:
-            description: LagoonStatusMessages is where unsent messages are stored
-              for re-sending.
-            properties:
-              buildLogMessage:
-                description: |-
-                  LagoonLog is used to sendToLagoonLogs messaging queue
-                  this is general logging information
-                properties:
-                  event:
-                    type: string
-                  message:
-                    type: string
-                  meta:
-                    description: LagoonLogMeta is the metadata that is used by logging
-                      in Lagoon.
-                    properties:
-                      advancedData:
-                        type: string
-                      branchName:
-                        type: string
-                      buildName:
-                        type: string
-                      buildPhase:
-                        type: string
-                      buildStatus:
-                        type: string
-                      buildStep:
-                        type: string
-                      clusterName:
-                        type: string
-                      endTime:
-                        type: string
-                      environment:
-                        type: string
-                      environmentId:
-                        type: integer
-                      environmentServices:
-                        items:
-                          description: EnvironmentService  is based on the Lagoon
-                            API type.
-                          properties:
-                            containers:
-                              items:
-                                description: ServiceContainer  is based on the Lagoon
-                                  API type.
-                                properties:
-                                  name:
-                                    type: string
-                                type: object
-                              type: array
-                            created:
-                              type: string
-                            id:
-                              type: integer
-                            name:
-                              type: string
-                            type:
-                              type: string
-                            updated:
-                              type: string
-                          type: object
-                        type: array
-                      jobName:
-                        type: string
-                      jobStatus:
-                        type: string
-                      jobStep:
-                        type: string
-                      key:
-                        type: string
-                      logLink:
-                        type: string
-                      project:
-                        type: string
-                      projectId:
-                        type: integer
-                      projectName:
-                        type: string
-                      remoteId:
-                        type: string
-                      route:
-                        type: string
-                      routes:
-                        items:
-                          type: string
-                        type: array
-                      services:
-                        items:
-                          type: string
-                        type: array
-                      startTime:
-                        type: string
-                      task:
-                        description: LagoonTaskInfo defines what a task can use to
-                          communicate with Lagoon via SSH/API.
-                        properties:
-                          apiHost:
-                            type: string
-                          command:
-                            type: string
-                          id:
-                            type: string
-                          name:
-                            type: string
-                          service:
-                            type: string
-                          sshHost:
-                            type: string
-                          sshPort:
-                            type: string
-                          taskName:
-                            type: string
-                        required:
-                        - id
-                        type: object
-                    type: object
-                  project:
-                    type: string
-                  severity:
-                    type: string
-                  uuid:
-                    type: string
-                type: object
-              environmentMessage:
-                description: |-
-                  LagoonMessage is used for sending build info back to Lagoon
-                  messaging queue to update the environment or deployment
-                properties:
-                  meta:
-                    description: LagoonLogMeta is the metadata that is used by logging
-                      in Lagoon.
-                    properties:
-                      advancedData:
-                        type: string
-                      branchName:
-                        type: string
-                      buildName:
-                        type: string
-                      buildPhase:
-                        type: string
-                      buildStatus:
-                        type: string
-                      buildStep:
-                        type: string
-                      clusterName:
-                        type: string
-                      endTime:
-                        type: string
-                      environment:
-                        type: string
-                      environmentId:
-                        type: integer
-                      environmentServices:
-                        items:
-                          description: EnvironmentService  is based on the Lagoon
-                            API type.
-                          properties:
-                            containers:
-                              items:
-                                description: ServiceContainer  is based on the Lagoon
-                                  API type.
-                                properties:
-                                  name:
-                                    type: string
-                                type: object
-                              type: array
-                            created:
-                              type: string
-                            id:
-                              type: integer
-                            name:
-                              type: string
-                            type:
-                              type: string
-                            updated:
-                              type: string
-                          type: object
-                        type: array
-                      jobName:
-                        type: string
-                      jobStatus:
-                        type: string
-                      jobStep:
-                        type: string
-                      key:
-                        type: string
-                      logLink:
-                        type: string
-                      project:
-                        type: string
-                      projectId:
-                        type: integer
-                      projectName:
-                        type: string
-                      remoteId:
-                        type: string
-                      route:
-                        type: string
-                      routes:
-                        items:
-                          type: string
-                        type: array
-                      services:
-                        items:
-                          type: string
-                        type: array
-                      startTime:
-                        type: string
-                      task:
-                        description: LagoonTaskInfo defines what a task can use to
-                          communicate with Lagoon via SSH/API.
-                        properties:
-                          apiHost:
-                            type: string
-                          command:
-                            type: string
-                          id:
-                            type: string
-                          name:
-                            type: string
-                          service:
-                            type: string
-                          sshHost:
-                            type: string
-                          sshPort:
-                            type: string
-                          taskName:
-                            type: string
-                        required:
-                        - id
-                        type: object
-                    type: object
-                  namespace:
-                    type: string
-                  type:
-                    type: string
-                type: object
-              statusMessage:
-                description: |-
-                  LagoonLog is used to sendToLagoonLogs messaging queue
-                  this is general logging information
-                properties:
-                  event:
-                    type: string
-                  message:
-                    type: string
-                  meta:
-                    description: LagoonLogMeta is the metadata that is used by logging
-                      in Lagoon.
-                    properties:
-                      advancedData:
-                        type: string
-                      branchName:
-                        type: string
-                      buildName:
-                        type: string
-                      buildPhase:
-                        type: string
-                      buildStatus:
-                        type: string
-                      buildStep:
-                        type: string
-                      clusterName:
-                        type: string
-                      endTime:
-                        type: string
-                      environment:
-                        type: string
-                      environmentId:
-                        type: integer
-                      environmentServices:
-                        items:
-                          description: EnvironmentService  is based on the Lagoon
-                            API type.
-                          properties:
-                            containers:
-                              items:
-                                description: ServiceContainer  is based on the Lagoon
-                                  API type.
-                                properties:
-                                  name:
-                                    type: string
-                                type: object
-                              type: array
-                            created:
-                              type: string
-                            id:
-                              type: integer
-                            name:
-                              type: string
-                            type:
-                              type: string
-                            updated:
-                              type: string
-                          type: object
-                        type: array
-                      jobName:
-                        type: string
-                      jobStatus:
-                        type: string
-                      jobStep:
-                        type: string
-                      key:
-                        type: string
-                      logLink:
-                        type: string
-                      project:
-                        type: string
-                      projectId:
-                        type: integer
-                      projectName:
-                        type: string
-                      remoteId:
-                        type: string
-                      route:
-                        type: string
-                      routes:
-                        items:
-                          type: string
-                        type: array
-                      services:
-                        items:
-                          type: string
-                        type: array
-                      startTime:
-                        type: string
-                      task:
-                        description: LagoonTaskInfo defines what a task can use to
-                          communicate with Lagoon via SSH/API.
-                        properties:
-                          apiHost:
-                            type: string
-                          command:
-                            type: string
-                          id:
-                            type: string
-                          name:
-                            type: string
-                          service:
-                            type: string
-                          sshHost:
-                            type: string
-                          sshPort:
-                            type: string
-                          taskName:
-                            type: string
-                        required:
-                        - id
-                        type: object
-                    type: object
-                  project:
-                    type: string
-                  severity:
-                    type: string
-                  uuid:
-                    type: string
-                type: object
-              taskLogMessage:
-                description: |-
-                  LagoonLog is used to sendToLagoonLogs messaging queue
-                  this is general logging information
-                properties:
-                  event:
-                    type: string
-                  message:
-                    type: string
-                  meta:
-                    description: LagoonLogMeta is the metadata that is used by logging
-                      in Lagoon.
-                    properties:
-                      advancedData:
-                        type: string
-                      branchName:
-                        type: string
-                      buildName:
-                        type: string
-                      buildPhase:
-                        type: string
-                      buildStatus:
-                        type: string
-                      buildStep:
-                        type: string
-                      clusterName:
-                        type: string
-                      endTime:
-                        type: string
-                      environment:
-                        type: string
-                      environmentId:
-                        type: integer
-                      environmentServices:
-                        items:
-                          description: EnvironmentService  is based on the Lagoon
-                            API type.
-                          properties:
-                            containers:
-                              items:
-                                description: ServiceContainer  is based on the Lagoon
-                                  API type.
-                                properties:
-                                  name:
-                                    type: string
-                                type: object
-                              type: array
-                            created:
-                              type: string
-                            id:
-                              type: integer
-                            name:
-                              type: string
-                            type:
-                              type: string
-                            updated:
-                              type: string
-                          type: object
-                        type: array
-                      jobName:
-                        type: string
-                      jobStatus:
-                        type: string
-                      jobStep:
-                        type: string
-                      key:
-                        type: string
-                      logLink:
-                        type: string
-                      project:
-                        type: string
-                      projectId:
-                        type: integer
-                      projectName:
-                        type: string
-                      remoteId:
-                        type: string
-                      route:
-                        type: string
-                      routes:
-                        items:
-                          type: string
-                        type: array
-                      services:
-                        items:
-                          type: string
-                        type: array
-                      startTime:
-                        type: string
-                      task:
-                        description: LagoonTaskInfo defines what a task can use to
-                          communicate with Lagoon via SSH/API.
-                        properties:
-                          apiHost:
-                            type: string
-                          command:
-                            type: string
-                          id:
-                            type: string
-                          name:
-                            type: string
-                          service:
-                            type: string
-                          sshHost:
-                            type: string
-                          sshPort:
-                            type: string
-                          taskName:
-                            type: string
-                        required:
-                        - id
-                        type: object
-                    type: object
-                  project:
-                    type: string
-                  severity:
-                    type: string
-                  uuid:
-                    type: string
-                type: object
-            type: object
         type: object
-    served: true
+    served: false
     storage: false
+    subresources: {}
   - additionalPrinterColumns:
     - description: Status of the LagoonBuild
       jsonPath: .status.phase

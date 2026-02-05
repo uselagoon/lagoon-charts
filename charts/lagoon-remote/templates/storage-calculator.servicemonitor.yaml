@@ -7,7 +7,12 @@ metadata:
     {{- include "lagoon-remote.storageCalculator.labels" . | nindent 4 }}
 spec:
   endpoints:
-  - port: metrics
+    - path: /metrics
+      port: https
+      scheme: https
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      tlsConfig:
+        insecureSkipVerify: true
   namespaceSelector:
     matchNames:
     - {{ .Release.Namespace }}

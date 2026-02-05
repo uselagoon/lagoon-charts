@@ -1,7 +1,10 @@
 global:
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
-  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc
+  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc:5671
+  broker:
+    tls:
+      enabled: true
 
 lagoon-build-deploy:
   enabled: true
@@ -12,7 +15,7 @@ lagoon-build-deploy:
   # remove on next release
   rabbitMQUsername: lagoon
   rabbitMQPassword: ci
-  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc
+  rabbitMQHostname: lagoon-core-broker.lagoon-core.svc:5671
 
 dockerHost:
   image:
@@ -44,38 +47,7 @@ nats:
 natsConfig:
   coreURL: "tls://ci-ssh-portal:ci-password@lagoon-core-nats-concentrator.lagoon-core.svc:7422"
   tls:
-    secretData:
-      ca.crt: |
-        -----BEGIN CERTIFICATE-----
-        MIIBgDCCASagAwIBAgIUUbG6sFBXxdA1wxjmlt/zkfpQTTwwCgYIKoZIzj0EAwIw
-        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yNDA0MTUwNDA4MDBa
-        Fw0zNDA0MTMwNDA4MDBaMB4xHDAaBgNVBAMTE25hdHMtY2EuZXhhbXBsZS5jb20w
-        WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATRF6Wjy5sm5quCKkqFBZERPcrCj2fL
-        xKjCNDJtwZijhR/DoHPImxnxXbcNuqXmFENDsleAXBb0YHTC6nauSCVmo0IwQDAO
-        BgNVHQ8BAf8EBAMCAQYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUPCFB/EwR
-        pk6xM9YSqzbLgchB6fQwCgYIKoZIzj0EAwIDSAAwRQIgCSCLQTN1K703YR/VXY+G
-        iYmI+nuDxvSE7s/u5hhmh+wCIQDXoxiQvQuokI06j6W1K5UgR6h9dUoKeTFQIqXp
-        uKPLhg==
-        -----END CERTIFICATE-----
-      tls.crt: |
-        -----BEGIN CERTIFICATE-----
-        MIIByDCCAW+gAwIBAgIUJnuRfZT3Viio6HpYvGEehas9qWowCgYIKoZIzj0EAwIw
-        HjEcMBoGA1UEAxMTbmF0cy1jYS5leGFtcGxlLmNvbTAeFw0yNDA0MTUwNDA5MDBa
-        Fw0zNDA0MTMwNDA5MDBaMBgxFjAUBgNVBAMTDWNpLXNzaC1wb3J0YWwwWTATBgcq
-        hkjOPQIBBggqhkjOPQMBBwNCAATlrIBuIQSN8Ngdpk+i2KFcieDLeuPQ+DmRQ0cY
-        jsFBYeeZdcV2s5Kb99tJGeg4QWImsINiFJ37LhkuoatWRcsvo4GQMIGNMA4GA1Ud
-        DwEB/wQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDAjAMBgNVHRMBAf8EAjAAMB0G
-        A1UdDgQWBBQz4i828vqWC/S52FfdnIYIXHLIvTAfBgNVHSMEGDAWgBQ8IUH8TBGm
-        TrEz1hKrNsuByEHp9DAYBgNVHREEETAPgg1jaS1zc2gtcG9ydGFsMAoGCCqGSM49
-        BAMCA0cAMEQCIGaSyihjkNL2DiUg6nftAUb2jXl97Y38cb8R/srWZdaaAiAC9K6r
-        jzJR6clzzHTzidSigsyeoBmhv7L6643jfB02HQ==
-        -----END CERTIFICATE-----
-      tls.key: |
-        -----BEGIN EC PRIVATE KEY-----
-        MHcCAQEEINvOV43X7WgqNmkg++wNfmU033hwBDpSG7iDWh6ErzCXoAoGCCqGSM49
-        AwEHoUQDQgAE5ayAbiEEjfDYHaZPotihXIngy3rj0Pg5kUNHGI7BQWHnmXXFdrOS
-        m/fbSRnoOEFiJrCDYhSd+y4ZLqGrVkXLLw==
-        -----END EC PRIVATE KEY-----
+    enableCerts: false
 
 sshPortal:
   enabled: true

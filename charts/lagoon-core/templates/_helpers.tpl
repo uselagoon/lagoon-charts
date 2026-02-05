@@ -82,6 +82,12 @@ Create a default fully qualified app name for api-migratedb-job.
 {{- include "lagoon-core.fullname" . }}-api-migratedb
 {{- end }}
 
+{{/*
+Create a default fully qualified app name for api-seeding-job.
+*/}}
+{{- define "lagoon-core.apiSeeding.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-api-seeding
+{{- end }}
 
 {{/*
 Create a default fully qualified app name for api-db.
@@ -241,10 +247,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Create a default fully qualified app name for broker-flag-enable job.
+Create a default fully qualified app name for broker-bootstrap job.
 */}}
 {{- define "lagoon-core.brokerFlagEnable.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-broker-flag-enable
+{{- include "lagoon-core.fullname" . }}-broker-bootstrap
 {{- end }}
 
 
@@ -368,6 +374,33 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 
+{{/*
+Create a default fully qualified app name for betaUI.
+*/}}
+{{- define "lagoon-core.betaUI.fullname" -}}
+{{- include "lagoon-core.fullname" . }}-beta-ui
+{{- end }}
+
+{{/*
+Common labels ui
+*/}}
+{{- define "lagoon-core.betaUI.labels" -}}
+helm.sh/chart: {{ include "lagoon-core.chart" . }}
+{{ include "lagoon-core.betaUI.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels ui
+*/}}
+{{- define "lagoon-core.betaUI.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
+app.kubernetes.io/component: {{ include "lagoon-core.betaUI.fullname" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 
 {{/*
 Create a default fully qualified app name for backup-handler.
@@ -586,39 +619,6 @@ app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
 app.kubernetes.io/component: {{ include "lagoon-core.ssh.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-
-{{/*
---- WORKFLOWS ---
-*/}}
-{{/*
-Create a default fully qualified app name for workflows.
-*/}}
-{{- define "lagoon-core.workflows.fullname" -}}
-{{- include "lagoon-core.fullname" . }}-workflows
-{{- end }}
-
-{{/*
-Common labels workflows
-*/}}
-{{- define "lagoon-core.workflows.labels" -}}
-helm.sh/chart: {{ include "lagoon-core.chart" . }}
-{{ include "lagoon-core.workflows.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels workflows
-*/}}
-{{- define "lagoon-core.workflows.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "lagoon-core.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-core.workflows.fullname" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
 
 
 {{/*

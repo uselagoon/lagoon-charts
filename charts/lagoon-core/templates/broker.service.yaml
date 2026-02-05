@@ -13,6 +13,9 @@ spec:
   - port: {{ .Values.broker.service.ports.amqp }}
     targetPort: amqp
     name: amqp
+  - port: {{ .Values.broker.service.ports.amqps }}
+    targetPort: amqps
+    name: amqps
   - port: {{ .Values.broker.service.ports.http }}
     targetPort: http
     name: http
@@ -35,6 +38,9 @@ spec:
   - port: {{ .Values.broker.service.ports.amqp }}
     targetPort: amqp
     name: amqp
+  - port: {{ .Values.broker.service.ports.amqps }}
+    targetPort: amqps
+    name: amqps
   - port: {{ .Values.broker.service.ports.http }}
     targetPort: http
     name: http
@@ -44,19 +50,37 @@ spec:
   selector:
     {{- include "lagoon-core.broker.selectorLabels" . | nindent 4 }}
 ---
-{{- if .Values.broker.service.amqpExternal.enabled -}}
+{{- if or (.Values.broker.service.amqpExternal.enabled) (.Values.broker.service.amqpsExternal.enabled) }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "lagoon-core.broker.fullname" . }}-amqp-ext
   labels:
     {{- include "lagoon-core.broker.labels" . | nindent 4 }}
+  {{- with .Values.broker.service.amqpExternal.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.broker.service.amqpExternal.type }}
+  {{- with .Values.broker.service.amqpExternal.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ . }}
+  {{- end }}
+  {{- with .Values.broker.service.amqpExternal.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
   ports:
+  {{- if .Values.broker.service.amqpExternal.enabled }}
   - port: {{ .Values.broker.service.amqpExternal.port }}
     targetPort: amqp
     name: amqp
+  {{- end }}
+  {{- if .Values.broker.service.amqpsExternal.enabled }}
+  - port: {{ .Values.broker.service.amqpsExternal.port }}
+    targetPort: amqps
+    name: amqps
+  {{- end }}
   selector:
     {{- include "lagoon-core.broker.selectorLabels" . | nindent 4 }}
 {{- end }}

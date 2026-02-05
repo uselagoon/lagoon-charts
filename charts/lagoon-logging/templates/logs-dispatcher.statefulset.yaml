@@ -90,9 +90,14 @@ spec:
         {{- end }}
         - mountPath: /fluentd/buffer/
           name: buffer
-        {{- if .Values.enableDefaultForwarding }}
+        {{- if and .Values.enableDefaultForwarding .Values.forward.mTLS }}
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
+        {{- end }}
+        {{- if .Values.lagoonLogs.broker.tlsCA.enabled }}
+        - mountPath: /lagoon-ca.crt
+          name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-lagoon-broker-tls
+          subPath: ca.crt
         {{- end }}
         env:
         - name: K8S_NODE_NAME
@@ -104,6 +109,9 @@ spec:
             name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
         - configMapRef:
             name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
+        {{- with .Values.logsDispatcher.extraEnvsFrom }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         resources:
           {{- toYaml .Values.logsDispatcher.resources | nindent 10 }}
       {{- with .Values.logsDispatcher.nodeSelector }}
@@ -138,11 +146,16 @@ spec:
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-source-lagoon
         name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-source-lagoon
       {{- end }}
-      {{- if .Values.enableDefaultForwarding }}
+      {{- if and .Values.enableDefaultForwarding .Values.forward.mTLS }}
       - secret:
           defaultMode: 420
           secretName: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
         name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
+      {{- end }}
+      {{- if .Values.lagoonLogs.broker.tlsCA.enabled }}
+      - name: {{ include "lagoon-build-deploy.fullname" . }}-lagoon-broker-tls
+        secret:
+          secretName: {{ .Values.lagoonLogs.broker.tlsCA.secretName }}
       {{- end }}
   volumeClaimTemplates:
   - metadata:

@@ -1,4 +1,5 @@
 {{- if .Values.nats.enabled -}}
+{{- if .Values.natsService.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,4 +15,5 @@ spec:
     targetPort: 7422
   selector:
     app.kubernetes.io/name: {{ .Values.nats.nameOverride | default "nats" | quote }}
+{{- end }}
 {{- end }}

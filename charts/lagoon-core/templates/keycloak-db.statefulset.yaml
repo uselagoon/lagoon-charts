@@ -1,3 +1,4 @@
+{{- if not .Values.keycloakDB.useExternal -}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -34,7 +35,7 @@ spec:
         image: "{{ .Values.keycloakDB.image.repository }}:{{ coalesce .Values.keycloakDB.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.keycloakDB.image.pullPolicy }}
         env:
-        - name: MARIADB_PASSWORD
+        - name: KEYCLOAK_DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
@@ -92,3 +93,4 @@ spec:
       resources:
         requests:
           storage: 16Gi
+{{- end }}

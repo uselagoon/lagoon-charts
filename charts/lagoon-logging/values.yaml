@@ -9,6 +9,21 @@ fullnameOverride: ""
 # on the service level, if not set it falls back to chart appVersion.
 imageTag: ""
 
+# Optionally reconfigure the container images to be used by the logging operator
+# logging-operator:
+#   image:
+#     repository: ghcr.io/kube-logging/logging-operator
+# fluentdImage:
+#   repository: ghcr.io/kube-logging/fluentd
+#   tag: v0.1.0
+# fluentbitImage:
+#   repository: docker.io/fluent/fluent-bit
+# fluentdConfigHotReloadImage:
+#   repository: ghcr.io/kube-logging/config-reloader
+#   pullPolicy: Always
+# fluentbitConfigHotReloadImage:
+#   repository: ghcr.io/kube-logging/config-reloader
+
 logsDispatcher:
 
   name: logs-dispatcher
@@ -19,7 +34,7 @@ logsDispatcher:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.7.0"
+    tag: "v3.11.0"
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -68,6 +83,8 @@ logsDispatcher:
   buffer:
     size: 16Gi
     storageClassName: ""
+
+  extraEnvsFrom: []
 
 openshiftHaproxyLogsCollector:
 
@@ -121,7 +138,7 @@ cdnLogsCollector:
     repository: uselagoon/logs-dispatcher
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is "latest".
-    tag: "v3.7.0"
+    tag: "v3.9.0"
 
   podAnnotations: {}
 
@@ -136,6 +153,13 @@ cdnLogsCollector:
   tolerations: []
 
   affinity: {}
+
+  metrics:
+    enabled: true
+    service:
+      type: ClusterIP
+      port: 24231
+      annotations: {}
 
   serviceMonitor:
     enabled: true
@@ -236,10 +260,22 @@ logging-operator:
 # enabling this.
 lagoonLogs:
   enabled: false
+  broker:
+    # enable if providing a custom CA for broker connections
+    tlsCA:
+      enabled: false
+      secretName: lagoon-logging-broker-tls
+      # secretData:
+      #   ca.crt: |
+      #     ...
+    tls:
+      enabled: false
+      verifyPeer: true
 
 forward:
   verifyConnectionAtStartup: true
   tlsVerifyHostname: true
+  mTLS: true
 
 # Some cluster services use ephemeral namespaces that cause many indices to be
 # created in elasticsearch. Setting this to true will cause these service logs

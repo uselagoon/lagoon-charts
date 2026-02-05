@@ -1,2 +1,6 @@
-/test-suite.kind-config.yaml
-/test-suite.kind-config.calico.yaml
+/test-suite.metallb-pool.yaml
+/test-suite.registry.toml
+certs/
+ci/default-ingress-certificate-request.yaml
+local-dev/
+kubeconfig.*

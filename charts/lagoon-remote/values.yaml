@@ -7,6 +7,18 @@ global:
   rabbitMQUsername: ""
   rabbitMQPassword: ""
   rabbitMQHostname: ""
+  broker:
+    # enable if providing a custom CA for broker connections
+    tlsCA:
+      enabled: false
+      secretName: lagoon-remote-broker-tls
+      # secretData:
+      #   ca.crt: |
+      #     ...
+    tls:
+      enabled: false
+      # https://www.rabbitmq.com/docs/ssl#enabling-tls for what these options can be set to
+      verifyPeer: true
 
 imagePullSecrets: []
 
@@ -27,7 +39,7 @@ dockerHost:
     repository: uselagoon/docker-host
     pullPolicy: Always
     # Overrides the image tag whose default is "latest".
-    tag: "v3.5.0"
+    tag: "v3.6.1"
 
   name: docker-host
 
@@ -36,6 +48,9 @@ dockerHost:
   repositoryToUpdate: amazeeio|lagoon
 
   pruneImagesUntil: 168h
+
+  # Add annotations to pod template
+  podAnnotations: {}
 
   replicaCount: 1
 
@@ -126,13 +141,15 @@ sshPortal:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.41.3"
+    tag: "v0.45.0"
 
   service:
     type: LoadBalancer
     ports:
       sshserver: 22
     annotations: {}
+    # externalTrafficPolicy: ""
+    # loadBalancerSourceRanges: []
 
   metricsService:
     type: ClusterIP
@@ -225,11 +242,14 @@ insightsRemote:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.11"
+    tag: "v0.0.15"
 
   imagePullSecrets: []
   nameOverride: ""
   fullnameOverride: ""
+
+  # add extra environment variables if required
+  extraEnvs:
 
   serviceAccount:
     # Specifies whether a service account should be created
@@ -300,6 +320,19 @@ insightsRemote:
     type: ClusterIP
     port: 80
 
+  broker:
+    # enable if providing a custom CA for broker connections
+    tlsCA:
+      enabled: false
+      # if you're definining configuration using the "global" broker settings, this secretName
+      # will not be used
+      secretName: lagoon-remote-insights-broker-tls
+      # secretData:
+      #   ca.crt: |
+      #     ...
+    tls:
+      enabled: false
+      verifyPeer: true
 
 # the nats chart is a subchart which is configured for use by lagoon-remote
 # nats subchart is configured for use by lagoon-remote
@@ -411,7 +444,14 @@ nats:
 natsConfig:
   # coreURL format tls://<username>:<password>@<host>:7422
   coreURL: ""
-  tls: {}
+  # use this if you're only providing the ca certificate to nats.
+  # this can be used if you've got lagoon-core leafnode tls verify disabled
+  tls:
+    # this enables the tls block in the nats secret. if your nats is configured to use a public certificate
+    # and you are not using client certificates, you can set this to `false`.
+    # this value needs to be `true` if `caOnly` is also `true`
+    enableCerts: true
+    caOnly: false
     # If the lagoon-remote-nats-tls secret should be created by the
     # lagoon-remote chart, certificate values can be specified directly in
     # secretData. Configuring TLS this way also allows specifying a custom
@@ -445,7 +485,7 @@ storageCalculator:
   metricsService:
     type: ClusterIP
     ports:
-      metrics: 9912
+      metrics: 8443
 
   serviceMonitor:
     enabled: true
@@ -454,4 +494,40 @@ storageCalculator:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.6.0
+    tag: v0.9.0
+
+  broker:
+    # enable if providing a custom CA for broker connections
+    tlsCA:
+      enabled: false
+      # if you're definining configuration using the "global" broker settings, this secretName
+      # will not be used
+      secretName: lagoon-remote-storage-broker-tls
+      # secretData:
+      #   ca.crt: |
+      #     ...
+    tls:
+      enabled: false
+      verifyPeer: true
+
+# sysctlConfigure is used  to configure sysctl options on nodes for use by elasticsearch/opensearch pods used in lagoon
+# https://github.com/uselagoon/lagoon/issues/2588
+# the elasticsearch/opensearch templates in the `build-deploy-tool` currently run a privileged init container
+# https://github.com/uselagoon/build-deploy-tool/blob/d2508efa74871cabe4c477e44bbe87e339d99f5d/internal/servicetypes/opensearch.go#L75-L96
+# which will be removed in a future release
+sysctlConfigure:
+  enabled: false
+  serviceAccount:
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname
+    # template
+    name:
+
+  # this is only used for the max_map_count, but could support more
+  sysctl:
+    vm.max_map_count: 262144
+
+  image:
+    repository: alpine/k8s
+    pullPolicy: IfNotPresent
+    tag: 1.25.3

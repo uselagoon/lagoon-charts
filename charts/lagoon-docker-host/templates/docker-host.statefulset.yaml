@@ -15,6 +15,10 @@ spec:
     metadata:
       labels:
         {{- include "lagoon-docker-host.dockerHost.selectorLabels" . | nindent 8 }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -32,9 +36,8 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-        {{- range $name, $value := .Values.extraEnvs }}
-        - name: {{ .name }}
-          value: {{ .value | quote }}
+        {{- with .Values.extraEnvs }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- with .Values.httpProxy }}
         - name: HTTP_PROXY

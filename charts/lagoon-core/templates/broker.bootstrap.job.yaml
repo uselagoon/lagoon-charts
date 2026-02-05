@@ -6,6 +6,7 @@ metadata:
     {{- include "lagoon-core.broker.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
     "helm.sh/hook-weight": "-5"
 spec:
   backoffLimit: 2
@@ -19,9 +20,9 @@ spec:
           {{- toYaml .Values.broker.securityContext | nindent 8 }}
       terminationGracePeriodSeconds: 120
       containers:
-      - name: broker-flag-enable
+      - name: broker-job
         args:
-        - /enable-feature-flags.sh
+        - /broker-job.sh
         image: "{{ .Values.broker.image.repository }}:{{ coalesce .Values.broker.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.broker.image.pullPolicy }}
         command:

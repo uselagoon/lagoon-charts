@@ -15,7 +15,7 @@ spec:
     metadata:
       annotations:
         checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
-        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret-migratejob.yaml") . | sha256sum }}
         checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     {{- with .Values.api.podAnnotations }}
@@ -39,13 +39,6 @@ spec:
         imagePullPolicy: {{ .Values.api.image.pullPolicy }}
         name: migrations
         env:
-        - name: API_DB_HOST
-          value: {{ include "lagoon-core.apiDB.fullname" . }}
-        - name: API_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.apiDB.fullname" . }}
-              key: API_DB_PASSWORD
         - name: KEYCLOAK_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -58,6 +51,11 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_ADMIN_API_CLIENT_SECRET
         - name: KEYCLOAK_FRONTEND_URL
           {{- if .Values.keycloakFrontEndURL }}
           value: {{ .Values.keycloakFrontEndURL }}/auth
@@ -73,6 +71,8 @@ spec:
         envFrom:
         - secretRef:
             name: {{ include "lagoon-core.api.fullname" . }}
+        - secretRef:
+            name: {{ include "lagoon-core.apiDB.fullname" . }}
       containers:
       - name: api-sidecar-handler
         securityContext:
@@ -101,23 +101,8 @@ spec:
         image: "{{ .Values.api.image.repository }}:{{ coalesce .Values.api.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.api.image.pullPolicy }}
         env:
-        - name: API_DB_HOST
-          value: {{ include "lagoon-core.apiDB.fullname" . }}
-        - name: API_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.apiDB.fullname" . }}
-              key: API_DB_PASSWORD
         - name: API_HOST
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}
-        {{- with .Values.bitbucketAPIURL }}
-        - name: BITBUCKET_API_HOST
-          value: {{ . | quote }}
-        {{- end }}
-        {{- with .Values.bitbucketAPIToken }}
-        - name: BITBUCKET_API_TOKEN
-          value: {{ . | quote }}
-        {{- end }}
         - name: DEFAULT_BUILD_DEPLOY_IMAGE
         {{- with dig "default" "image" nil .Values.buildDeployImage }}
           value: {{ . }}
@@ -155,6 +140,11 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.keycloak.fullname" . }}
               key: KEYCLOAK_API_CLIENT_SECRET
+        - name: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.keycloak.fullname" . }}
+              key: KEYCLOAK_ADMIN_API_CLIENT_SECRET
         - name: KEYCLOAK_FRONTEND_URL
           {{- if .Values.keycloakFrontEndURL }}
           value: {{ .Values.keycloakFrontEndURL }}/auth
@@ -165,8 +155,6 @@ spec:
           {{- end }}
         - name: KEYCLOAK_URL
           value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}
-        - name: KIBANA_URL
-          value: {{ required "A valid .Values.kibanaURL required!" .Values.kibanaURL | quote }}
         - name: LAGOON_VERSION
           value: {{ .Chart.AppVersion | replace "-" "." }}
         {{- with .Values.overwriteActiveStandbyTaskImage }}
@@ -229,6 +217,8 @@ spec:
         envFrom:
         - secretRef:
             name: {{ include "lagoon-core.api.fullname" . }}
+        - secretRef:
+            name: {{ include "lagoon-core.apiDB.fullname" . }}
         ports:
         - name: http-3000
           containerPort: 3000

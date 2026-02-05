@@ -15,10 +15,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/api.secret: {{ include (print $.Template.BasePath "/api.secret.yaml") . | sha256sum }}
-        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
         checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     {{- with .Values.ui.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}

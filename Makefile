@@ -3,6 +3,36 @@ TESTS = [api]
 # lagoon-remote, and lagoon-test charts. If IMAGE_TAG is not set, it will fall
 # back to the version set in the CI values file, then to the chart default.
 IMAGE_TAG =
+
+# UI_IMAGE_REPO and UI_IMAGE_TAG are an easy way to override the UI image used
+# only works for installations where INSTALL_STABLE_CORE=false
+# UI_IMAGE_REPO = uselagoon/ui
+# UI_IMAGE_TAG = latest
+# BETA_UI_IMAGE_REPO = uselagoon/beta-ui
+# BETA_UI_IMAGE_TAG = main
+
+# SSHPORTALAPI_IMAGE_REPO and SSHPORTALAPI_IMAGE_TAG are an easy way to override the ssh portal api image used in the local stack lagoon-core
+# only works for installations where INSTALL_STABLE_CORE=false
+# SSHPORTALAPI_IMAGE_REPO =
+# SSHPORTALAPI_IMAGE_TAG =
+
+# SSHTOKEN_IMAGE_REPO and SSHTOKEN_IMAGE_TAG are an easy way to override the ssh token image used in the local stack lagoon-core
+# only works for installations where INSTALL_STABLE_CORE=false
+# SSHTOKEN_IMAGE_REPO =
+# SSHTOKEN_IMAGE_TAG =
+
+# SSHPORTAL_IMAGE_REPO and SSHPORTAL_IMAGE_TAG are an easy way to override the ssh portal image used in the local stack lagoon-remote
+# only works for installations where INSTALL_STABLE_REMOTE=false
+# SSHPORTAL_IMAGE_REPO =
+# SSHPORTAL_IMAGE_TAG =
+
+# The two variables below are an easy way to override the insights-handler image used in the local stack lagoon-core 
+# only works for installations where ENABLE_INSIGHTS=true and INSTALL_STABLE_CORE=false
+#INSIGHTS_HANDLER_IMAGE_REPO = 
+#INSIGHTS_HANDLER_IMAGE_TAG = 
+
+LAGOON_CORE_USE_HTTPS = true
+
 # IMAGE_REGISTRY controls the registry used for container images in the
 # lagoon-core, lagoon-remote, and lagoon-test charts. If IMAGE_REGISTRY is not
 # set, it will fall back to the version set in the chart values files. This
@@ -16,15 +46,15 @@ OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
 OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE =
 # Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
 # the lagoon-build-deploy chart appVersion.
-OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG =
+OVERRIDE_REMOTE_CONTROLLER_IMAGETAG =
 # Overrides the image repository for amazeeio/lagoon-builddeploy whose default
 # is the amazeeio/lagoon-builddeploy.
-OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY =
+OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY =
 # If set, sets the lagoon-build-deploy chart .Value.rootless=true.
-BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS =
+REMOTE_CONTROLLER_ROOTLESS_BUILD_PODS =
 # Control the feature flags on the lagoon-build-deploy chart. Valid values: `enabled` or `disabled`.
-LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD =
-LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY =
+LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD = enabled
+LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY = enabled
 LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO = enabled
 # Set to `true` to use the Calico CNI plugin instead of the default kindnet. This
 # is useful for testing network policies.
@@ -39,26 +69,99 @@ SKIP_INSTALL_REGISTRY =
 SKIP_ALL_DEPS =
 # Set to `true` to use the disable harbor integration in lagoon-core
 DISABLE_CORE_HARBOR =
-# Set to `true` to enable the elements of lagoon-core that talk to OpenSearch installs
-OPENSEARCH_INTEGRATION_ENABLED = false
 # Ordinarily we shouldn't need to clear the API data as it's usually a first run. Set this
 # variable on a test run to clear (what's clearable) first
 CLEAR_API_DATA = false
 DOCKER_NETWORK = kind
 LAGOON_SSH_PORTAL_LOADBALANCER =
+CORE_DATABASE_VENDOR = mariadb
+
+# this should not need to be changed in regular instances, only used by lint tests at the moment
+# it is used to stop metallb from being installed when certmanager is installed for the tests
+INSTALL_CERTMANAGER_METALLB = true
+
+# install lagoon dependencies by default with the install-lagoon target
+INSTALL_LAGOON_DEPENDENCIES = true
+
+# don't install stable charts by default
+INSTALL_STABLE_CORE = false
+INSTALL_STABLE_REMOTE = false
+INSTALL_STABLE_BUILDDEPLOY = false
+
+# unset will install latest released chart version
+STABLE_CORE_CHART_VERSION = 
+STABLE_REMOTE_CHART_VERSION = 
+STABLE_BUILDDEPLOY_CHART_VERSION = 
+
+# verions of core before this version didn't use tls on the broker by default
+# setting this ensures that when the lagoon-build-deploy chart is installed with the stable flag
+# that if the core version is one that didn't have broker tls enabled in stable
+# that it will disable the broker tls settings in lagoon-build-deploy
+STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS = 1.52.0
+
+# versions of core before this version had the nats tls certs defined in the linter values
+STABLE_CORE_CHART_VERSION_PRE_NATS_TLS = 1.54.2
+STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS = 0.99.1
+
+INSTALL_UNAUTHENTICATED_REGISTRY = false
+
+# don't install mailpit in charts ci
+INSTALL_MAILPIT = false
+
+# don't install prometheus in charts ci
+INSTALL_PROMETHEUS = false
+
+# install dbaas providers by default
+INSTALL_MARIADB_PROVIDER = true
+INSTALL_POSTGRES_PROVIDER = true
+INSTALL_MONGODB_PROVIDER = true
+
+INSTALL_LAGOON_CORE_DATABASES = false
+
+LOGS2SLACK_DISABLED = false
+LOGS2EMAIL_DISABLED = false
+LOGS2ROCKETCHAT_DISABLED = true
+LOGS2EMAIL_DISABLED = false
+LOGS2MICROSOFTTEAMS_DISABLED = true
+
+# set these to seed the lagoon-core installation with an initial user or org
+LAGOON_SEED_USERNAME = 
+LAGOON_SEED_PASSWORD = 
+LAGOON_SEED_ORGANIZATION = 
+
+# install k8up v1 (backup.appuio.ch/v1alpah1) and v2 (k8up.io/v1)
+# specifify which version the remote controller should start with
+# currently lagoon supports both versions, but may one day only support k8up v2
+# this can be used to verify upgrades
+# by default this will not be install in charts testing, but uselagoon/lagoon can consume it for local development
+INSTALL_K8UP = false
+
+# this has multiple options available, will default to v2
+# set to v1 to install only k8upv1
+# set to v1,v2 to install both k8upv1 and k8upv2
+INSTALL_K8UP_VERSIONS = v2
+REMOTE_CONTROLLER_K8UP_VERSION = v2
+
+# optionally install aergia for local testing
+INSTALL_AERGIA = false
+
+# optionally enable Lagoon Insights
+ENABLE_INSIGHTS = false
 
 TIMEOUT = 30m
 HELM = helm
 KUBECTL = kubectl
 JQ = jq
 
+PROMETHEUS_VERSION = 75.9.0
+
 .PHONY: fill-test-ci-values
 fill-test-ci-values:
 	export ingressIP="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" \
 		&& export keycloakAuthServerClientSecret="$$($(KUBECTL) -n lagoon-core get secret lagoon-core-keycloak -o json | $(JQ) -r '.data.KEYCLOAK_AUTH_SERVER_CLIENT_SECRET | @base64d')" \
-		&& export routeSuffixHTTP="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		&& export routeSuffixHTTPS="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		&& export token="$$($(KUBECTL) -n lagoon create token lagoon-build-deploy --duration 3h)" \
+		&& export routeSuffixHTTP="a.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		&& export routeSuffixHTTPS="a.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		&& export token="$$($(KUBECTL) -n lagoon get secret lagoon-remote-ssh-core-token -o json | $(JQ) -r '.data.token | @base64d')" \
 		&& export $$([ $(IMAGE_TAG) ] && echo imageTag='$(IMAGE_TAG)' || echo imageTag='latest') \
 		&& export webhookHandler="lagoon-core-webhook-handler" \
 		&& export tests='$(TESTS)' imageRegistry='$(IMAGE_REGISTRY)' clearApiData='$(CLEAR_API_DATA)' \
@@ -66,18 +169,11 @@ fill-test-ci-values:
 		&& envsubst < $$valueTemplate.tpl > $$valueTemplate \
 		&& cat $$valueTemplate
 
-ifneq ($(SKIP_ALL_DEPS),true)
-ifneq ($(SKIP_INSTALL_REGISTRY),true)
-fill-test-ci-values: install-registry
-endif
-fill-test-ci-values: install-ingress install-lagoon-core install-lagoon-build-deploy install-bulk-storageclass
-endif
-
 # metallb is used to allow access to the ingress within kubernetes without having to specify a node port
 # it picks a small range from the end of the network used by the cluster
 .PHONY: install-metallb
 install-metallb:
-	LAGOON_KIND_CIDR_BLOCK=$$(docker network inspect $(DOCKER_NETWORK) | $(JQ) '. [0].IPAM.Config[0].Subnet' | tr -d '"') && \
+	LAGOON_KIND_CIDR_BLOCK=$$(docker network inspect $(DOCKER_NETWORK) | $(JQ) '.[].Containers[].IPv4Address' | tr -d '"') && \
 	export LAGOON_KIND_NETWORK_RANGE=$$(echo $${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $$1,$$2,$$3,240}' OFS='.')/29 && \
 	$(HELM) upgrade \
 		--install \
@@ -85,29 +181,90 @@ install-metallb:
 		--namespace metallb-system  \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--version=v0.13.12 \
+		--version=v0.14.9 \
 		metallb \
 		metallb/metallb && \
 	$$(envsubst < test-suite.metallb-pool.yaml.tpl > test-suite.metallb-pool.yaml) && \
-	$(KUBECTL) apply -f test-suite.metallb-pool.yaml \
+	$(KUBECTL) apply -f test-suite.metallb-pool.yaml
+ifeq ($(INSTALL_PROMETHEUS),true)
+	$(HELM) show crds prometheus-community/kube-prometheus-stack --version $(PROMETHEUS_VERSION) | $(KUBECTL) create -f - || true
+endif
 
 # cert-manager is used to allow self-signed certificates to be generated automatically by ingress in the same way lets-encrypt would
+# this allows for the registry and other services to use certificates
 .PHONY: install-certmanager
+ifeq ($(INSTALL_CERTMANAGER_METALLB),true)
 install-certmanager: install-metallb
+endif
+install-certmanager: generate-ca
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace cert-manager \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set installCRDs=true \
 		--set ingressShim.defaultIssuerName=lagoon-testing-issuer \
 		--set ingressShim.defaultIssuerKind=ClusterIssuer \
 		--set ingressShim.defaultIssuerGroup=cert-manager.io \
-		--version=v1.11.0 \
+		--set crds.enabled=true \
+		--version=v1.18.2 \
 		cert-manager \
 		jetstack/cert-manager
-	$(KUBECTL) apply -f test-suite.certmanager-issuer-ss.yaml
+	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem || true
+	$(KUBECTL) create -f test-suite.certmanager-issuer-ss.yaml || true
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace cert-manager \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--version=v0.19.0  \
+		--set crds.enabled=true \
+		--set secretTargets.enabled=true \
+		--set secretTargets.authorizedSecretsAll=true \
+		trust-manager \
+		jetstack/trust-manager
+	$(KUBECTL) create -f test-suite.ca-bundle.yaml || true
+
+.PHONY: install-gatekeeper
+install-gatekeeper:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace gatekeeper-system \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--version=v3.11.0 \
+		--set replicas=1 \
+		gatekeeper \
+		gatekeeper/gatekeeper
+	$(KUBECTL) create -f test-suite.gatekeeper-ca-volume.yaml || true
+
+ifeq ($(INSTALL_AERGIA),true)
+.PHONY: install-aergia
+install-aergia:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace aergia \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set templates.enabled=false \
+		--set idling.enabled=true \
+		--set idling.serviceCron="0\,15\,30\,45 * * * *" \
+		--set idling.podCheckInterval=5m \
+		--set idling.prometheusCheckInterval=5m \
+		--set idling.prometheusEndpoint="http://kube-prometheus-kube-prome-prometheus.kube-prometheus.svc:9090" \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set servicemonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.enabled=true') \
+		--set unidling.verifyRequests.enabled=false \
+		--version=0.7.2 \
+		aergia \
+		amazeeio/aergia
+
+# install aergia before installing ingress-nginx
+install-ingress: install-aergia
+endif
 
 .PHONY: install-ingress
 install-ingress: install-certmanager
@@ -118,19 +275,33 @@ install-ingress: install-certmanager
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set controller.allowSnippetAnnotations=true \
+		--set controller.enableAnnotationValidations=false \
 		--set controller.service.type=LoadBalancer \
 		--set controller.service.nodePorts.http=32080 \
 		--set controller.service.nodePorts.https=32443 \
-		--set controller.config.proxy-body-size=100m \
-		--set controller.config.hsts="false" \
+		--set controller.config.annotations-risk-level=Critical \
+		--set controller.config.proxy-body-size=0 \
+		--set controller.config.proxy-buffer-size=64k \
+		--set controller.config.hsts=false \
 		--set controller.watchIngressWithoutClass=true \
 		--set controller.ingressClassResource.default=true \
-		--version=4.9.1 \
+		--set controller.addHeaders.X-Lagoon="remote>ingress-nginx>$$namespace:$$service_name" \
+		--set controller.extraArgs.default-ssl-certificate=ingress-nginx/default-ingress-certificate-tls \
+		$$([ $(INSTALL_AERGIA) = true ] && echo '--set controller.extraArgs.default-backend-service=aergia/aergia-backend') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.serviceMonitor.additionalLabels.release=kube-prometheus') \
+		--version=4.12.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
+	export INGRESS_IP="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
+		$$(envsubst < ci/default-ingress-certificate-request.yaml.tpl > ci/default-ingress-certificate-request.yaml)
+	$(KUBECTL) --namespace ingress-nginx create -f ci/default-ingress-certificate-request.yaml || true
 
 .PHONY: install-registry
-install-registry: install-mailpit
+install-registry: install-gatekeeper
+ifeq ($(INSTALL_UNAUTHENTICATED_REGISTRY),false)
+install-registry: install-ingress
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -140,7 +311,7 @@ install-registry: install-mailpit
 		--set expose.tls.enabled=true \
 		--set expose.tls.certSource=secret \
 		--set expose.tls.secret.secretName=harbor-ingress \
-		--set "expose.ingress.annotations.kubernetes\.io\/ingress\.class=nginx" \
+		--set expose.ingress.className=nginx \
 		--set-string expose.ingress.annotations.kubernetes\\.io/tls-acme=true \
 		--set "expose.ingress.hosts.core=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set "externalURL=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
@@ -148,12 +319,56 @@ install-registry: install-mailpit
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.14.0 \
+		--version=1.16.2 \
 		registry \
 		harbor/harbor
+else
+# install an unauthenticated registry (https://helm.twun.io) instead of harbor
+# useful for arm based systems until harbor supports arm
+install-registry: install-ingress
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace registry \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set ingress.enabled=true \
+		--set-string ingress.annotations.kubernetes\\.io/tls-acme=true \
+		--set ingress.tls[0].secretName=registry-docker-registry-tls \
+		--set ingress.tls[0].hosts[0]=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set "ingress.hosts[0]=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set ingress.path="/" \
+		--set persistence.enabled=true \
+		--version=2.2.3 \
+		registry \
+		twuni/docker-registry
+endif
+
+.PHONY: install-prometheus
+install-prometheus:
+	@$(KUBECTL) create namespace kube-prometheus 2>/dev/null || true
+	@for dashboard in $(shell ls ci/grafana-dashboards); do \
+		$(KUBECTL) --namespace kube-prometheus apply -f ci/grafana-dashboards/$$dashboard; \
+	done
+	@$(HELM) upgrade \
+		--install --create-namespace \
+		--namespace kube-prometheus \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--version $(PROMETHEUS_VERSION) \
+		--set grafana.ingress.enabled=true \
+		--set grafana.sidecar.dashboards.enabled=true \
+		--set grafana.ingress.hosts[0]="grafana.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set grafana.ingress.tls[0].hosts[0]="grafana.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set grafana.ingress.tls[0].secretName=grafana-tls \
+		--set-string grafana.ingress.annotations.kubernetes\\.io/tls-acme=true \
+		--set-string grafana.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false \
+		--set prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues=false \
+		--set prometheus.prometheusSpec.podMonitorSelectorNilUsesHelmValues=false \
+		kube-prometheus prometheus-community/kube-prometheus-stack
 
 .PHONY: install-mailpit
-install-mailpit: install-ingress
+install-mailpit:
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -163,13 +378,12 @@ install-mailpit: install-ingress
 		--set ingress.enabled=true \
 		--set-string ingress.annotations.kubernetes\\.io/tls-acme=true \
 		--set "ingress.hostname=mailpit.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		--version=0.15.3 \
+		--version=0.18.6 \
 		mailpit \
 		jouve/mailpit
 
 .PHONY: install-mariadb
 install-mariadb:
-	# root password is required on upgrade if the chart is already installed
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -177,9 +391,34 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=12.2.9 \
+		--version=0.2.1 \
 		mariadb \
-		bitnami/mariadb
+		oci://registry-1.docker.io/cloudpirates/mariadb
+
+.PHONY: install-mariadb-lagoon-databases
+install-mariadb-lagoon-databases:
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace lagoon-core-databases \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set auth.database=api \
+		$$($(KUBECTL) get ns lagoon-core-databases > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace lagoon-core-databases apidb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
+		--version=0.2.1 \
+		apidb \
+		oci://registry-1.docker.io/cloudpirates/mariadb
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace lagoon-core-databases \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set auth.database=keycloak \
+		$$($(KUBECTL) get ns lagoon-core-databases > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace lagoon-core-databases keycloakdb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
+		--version=0.2.1 \
+		keycloakdb \
+		oci://registry-1.docker.io/cloudpirates/mariadb
 
 .PHONY: install-postgresql
 install-postgresql:
@@ -191,9 +430,9 @@ install-postgresql:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')) \
-		--version=11.9.13 \
+		--version=0.2.2 \
 		postgresql \
-		bitnami/postgresql
+		oci://registry-1.docker.io/cloudpirates/postgres
 
 .PHONY: install-mongodb
 install-mongodb:
@@ -204,10 +443,9 @@ install-mongodb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
-		--set tls.enabled=false \
-		--version=12.1.31 \
+		--version=0.1.6 \
 		mongodb \
-		bitnami/mongodb
+		oci://registry-1.docker.io/cloudpirates/mongodb
 
 .PHONY: install-minio
 install-minio: install-ingress
@@ -218,176 +456,430 @@ install-minio: install-ingress
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set auth.rootUser=lagoonFilesAccessKey,auth.rootPassword=lagoonFilesSecretKey \
-		--set defaultBuckets='lagoon-files\,restores' \
+		--set consoleIngress.enabled=true \
+		--set consoleIngress.hosts[0].host=minio.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set consoleIngress.hosts[0].paths[0].path="/" \
+		--set consoleIngress.hosts[0].paths[0].pathType=Prefix \
 		--set ingress.enabled=true \
-		--set ingress.hostname=minio.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
-		--version=13.6.2 \
+		--set ingress.hosts[0].host=minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set ingress.hosts[0].paths[0].path="/" \
+		--set ingress.hosts[0].paths[0].pathType=Prefix \
+		--version=0.2.0 \
 		minio \
-		bitnami/minio
+		oci://registry-1.docker.io/cloudpirates/minio
+	$(KUBECTL) -n minio exec -it $$($(KUBECTL) -n minio  get pod -l app.kubernetes.io/name=minio -o jsonpath="{.items[0].metadata.name}") -- sh -c 'mc alias set local http://localhost:9000 lagoonFilesAccessKey lagoonFilesSecretKey && mc mb local/lagoon-files && mc mb local/restores' || true
+
+.PHONY: install-k8upv1
+install-k8upv1:
+	$(KUBECTL) create -f https://github.com/vshn/k8up/releases/download/v1.2.0/k8up-crd.yaml || \
+		$(KUBECTL) replace -f https://github.com/vshn/k8up/releases/download/v1.2.0/k8up-crd.yaml
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace k8upv1 \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set k8up.envVars[0].name=BACKUP_GLOBALS3ENDPOINT,k8up.envVars[0].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[1].name=BACKUP_GLOBALRESTORES3ENDPOINT,k8up.envVars[1].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[2].name=BACKUP_GLOBALSTATSURL,k8up.envVars[2].value=http://lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[3].name=BACKUP_GLOBALACCESSKEYID,k8up.envVars[3].value=lagoonFilesAccessKey \
+		--set k8up.envVars[4].name=BACKUP_GLOBALSECRETACCESSKEY,k8up.envVars[4].value=lagoonFilesSecretKey \
+		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
+		--set k8up.envVars[6].name=BACKUP_GLOBALRESTORES3ACCESSKEYID,k8up.envVars[6].value=lagoonFilesAccessKey \
+		--set k8up.envVars[7].name=BACKUP_GLOBALRESTORES3SECRETACCESSKEY,k8up.envVars[7].value=lagoonFilesSecretKey \
+		--version=1.1.0 \
+		k8upv1 \
+		appuio/k8up
+
+# renovate: datasource=github-releases depName=k8up-io/k8up
+K8UPV2_VERSION ?= 4.8.4
+.PHONY: install-k8upv2
+install-k8upv2:
+	$(KUBECTL) create -f https://github.com/k8up-io/k8up/releases/download/k8up-$(K8UPV2_VERSION)/k8up-crd.yaml || \
+		$(KUBECTL) replace -f https://github.com/k8up-io/k8up/releases/download/k8up-$(K8UPV2_VERSION)/k8up-crd.yaml
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace k8upv2 \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set k8up.envVars[0].name=BACKUP_GLOBALS3ENDPOINT,k8up.envVars[0].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[1].name=BACKUP_GLOBALRESTORES3ENDPOINT,k8up.envVars[1].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[2].name=BACKUP_GLOBALSTATSURL,k8up.envVars[2].value=http://lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
+		--set k8up.envVars[3].name=BACKUP_GLOBALACCESSKEYID,k8up.envVars[3].value=lagoonFilesAccessKey \
+		--set k8up.envVars[4].name=BACKUP_GLOBALSECRETACCESSKEY,k8up.envVars[4].value=lagoonFilesSecretKey \
+		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
+		--set k8up.envVars[6].name=BACKUP_GLOBALRESTORES3ACCESSKEYID,k8up.envVars[6].value=lagoonFilesAccessKey \
+		--set k8up.envVars[7].name=BACKUP_GLOBALRESTORES3SECRETACCESSKEY,k8up.envVars[7].value=lagoonFilesSecretKey \
+		--version=$(K8UPV2_VERSION) \
+		k8upv2 \
+		k8up/k8up
+
+# generate-ca will generate a CA certificate that will be used to issue certificates
+# this CA certificate can be loaded into a web browser so that certificates don't present warnings
+.PHONY: generate-ca
+generate-ca:
+	@ mkdir -p certs && \
+	openssl x509 -enddate -noout -in certs/rootCA.pem > /dev/null 2>&1 || \
+	(openssl genrsa -out certs/rootCA-key.pem 2048 && \
+	openssl req -x509 -new -nodes -key certs/rootCA-key.pem \
+		-sha256 -days 3560 -out certs/rootCA.pem -addext keyUsage=critical,digitalSignature,keyEncipherment,keyCertSign \
+		-subj '/CN=lagoon.test')
+
+.PHONY: install-lagoon-dependencies
+# this will install all the Lagoon dependencies prior to anything related to Lagoon being installed
+# this allows for only Lagoon core, remote, or the build-deploy chart to be installed or upgraded without having
+# to re-run all the initial dependencies
+install-lagoon-dependencies: install-registry install-minio install-bulk-storageclass
+ifeq ($(INSTALL_MAILPIT),true)
+install-lagoon-dependencies: install-mailpit
+endif
+ifeq ($(INSTALL_PROMETHEUS),true)
+install-lagoon-dependencies: install-prometheus
+endif
+ifeq ($(INSTALL_MARIADB_PROVIDER),true)
+install-lagoon-dependencies: install-mariadb
+endif
+ifeq ($(INSTALL_POSTGRES_PROVIDER),true)
+install-lagoon-dependencies: install-postgresql
+endif
+ifeq ($(INSTALL_MONGODB_PROVIDER),true)
+install-lagoon-dependencies: install-mongodb
+endif
+ifeq ($(INSTALL_LAGOON_CORE_DATABASES),true)
+install-lagoon-dependencies: install-mariadb-lagoon-databases
+endif
+
+K8UP_V1_REQUESTED := $(findstring v1,$(INSTALL_K8UP_VERSIONS))
+K8UP_V2_REQUESTED := $(findstring v2,$(INSTALL_K8UP_VERSIONS))
+# install k8up versions for backup upgrade path verifications if requested
+ifeq ($(INSTALL_K8UP),true)
+ifeq ($(K8UP_V1_REQUESTED)$(K8UP_V2_REQUESTED),v1v2)
+install-lagoon-dependencies: install-k8upv1 install-k8upv2
+else ifeq ($(K8UP_V1_REQUESTED),v1)
+install-lagoon-dependencies: install-k8upv1
+else
+install-lagoon-dependencies: install-k8upv2
+endif 
+endif
+
+# this installs lagoon-core, lagoon-remote, and lagoon-build-deploy, and if dependencies required will install them too
+.PHONY: install-lagoon
+ifeq ($(INSTALL_LAGOON_DEPENDENCIES),true)
+install-lagoon: install-lagoon-dependencies
+endif
+install-lagoon: install-lagoon-core install-lagoon-remote install-lagoon-build-deploy
+
+# this is only used by lint tests at the moment
+.PHONY: install-lagoon-certs
+install-lagoon-certs: install-lagoon-core-certs install-lagoon-remote-certs
+
+# this should not need to be changed in regular instances, only used by lint tests at the moment
+CORE_NAMESPACE = lagoon-core
+.PHONY: install-lagoon-core-certs
+install-lagoon-core-certs:
+# create the namespace if it doesn't exist so we can request a certificate from our local testing CA for the broker
+	@$(KUBECTL) create namespace $(CORE_NAMESPACE) 2>/dev/null || true
+	@$(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/broker-core-certificate-request.yaml
+ifeq ($(INSTALL_STABLE_CORE),true)
+ifeq (,$(subst ",,$(STABLE_CORE_CHART_VERSION)))
+	$(eval STABLE_CORE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-core -o json | $(JQ) -r '.[]|.version'))
+endif
+endif
+	@[ $(INSTALL_STABLE_CORE) = false ] || [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_NATS_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) > triple($$target))) | length') = 1 ] \
+		&& $(KUBECTL) -n $(CORE_NAMESPACE) apply -f ci/nats-core-certificate-request.yaml || true
 
 .PHONY: install-lagoon-core
-install-lagoon-core: install-minio
+install-lagoon-core: install-lagoon-core-certs
+ifneq ($(INSTALL_STABLE_CORE),true)
 	$(HELM) dependency build ./charts/lagoon-core/
+else
+ifeq (,$(subst ",,$(STABLE_CORE_CHART_VERSION)))
+	$(eval STABLE_CORE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-core -o json | $(JQ) -r '.[]|.version'))
+endif
+endif
+	$(KUBECTL) create namespace lagoon-core 2>/dev/null || true
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace lagoon-core \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--values ./charts/lagoon-core/ci/linter-values.yaml \
-		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
-		$$([ $(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE) ] && echo '--set overwriteActiveStandbyTaskImage=$(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set buildDeployImage.default.image=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
+		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(STABLE_CORE_CHART_VERSION) ] && echo '--version=$(STABLE_CORE_CHART_VERSION)') \
+		$$(if [ $(INSTALL_STABLE_CORE) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-core-$(STABLE_CORE_CHART_VERSION)/charts/lagoon-core/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-core/ci/linter-values.yaml'; fi) \
+		$$([ $(IMAGE_TAG) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set imageTag=$(IMAGE_TAG)') \
+		$$([ $(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set overwriteActiveStandbyTaskImage=$(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE)') \
+		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set buildDeployImage.default.image=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
 		$$([ $(DISABLE_CORE_HARBOR) ] && echo '--set api.additionalEnvs.DISABLE_CORE_HARBOR=$(DISABLE_CORE_HARBOR)') \
-		$$([ $(OPENSEARCH_INTEGRATION_ENABLED) ] && echo '--set api.additionalEnvs.OPENSEARCH_INTEGRATION_ENABLED=$(OPENSEARCH_INTEGRATION_ENABLED)') \
-		--set "keycloakFrontEndURL=http://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		--set "lagoonAPIURL=http://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
-		--set "lagoonUIURL=http://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set api.additionalEnvs.ENABLE_SAVED_HISTORY_EXPORT="true" \
+		--set "keycloakFrontEndURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set "lagoonAPIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
+		--set "lagoonUIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set "lagoonWebhookURL=http://lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler  \
-		--set api.image.repository=$(IMAGE_REGISTRY)/api \
-		--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db \
-		--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis \
-		--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server \
+		--set "betaUIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set actionsHandler.image.repository=$(IMAGE_REGISTRY)/actions-handler') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set api.image.repository=$(IMAGE_REGISTRY)/api') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiDB.image.repository=$(IMAGE_REGISTRY)/api-db') \
+		--set apiDB.vendor=$(CORE_DATABASE_VENDOR) \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDB.useExternal=true') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBDatabase=api') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBHost=apidb-mariadb.lagoon-core-databases.svc.cluster.local') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBPassword='$$($(KUBECTL) get secret --namespace lagoon-core-databases apidb-mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBUsername=root') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set apiDBPort=3306') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDB.useExternal=true') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBDatabase=keycloak') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBHost=keycloakdb-mariadb.lagoon-core-databases.svc.cluster.local') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBPassword='$$($(KUBECTL) get secret --namespace lagoon-core-databases keycloakdb-mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBUsername=root') \
+		$$([ $(INSTALL_LAGOON_CORE_DATABASES) = true ] && echo '--set keycloakDBPort=3306') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiRedis.image.repository=$(IMAGE_REGISTRY)/api-redis') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set authServer.image.repository=$(IMAGE_REGISTRY)/auth-server') \
 		--set autoIdler.enabled=false \
-		--set backupHandler.enabled=false \
-		--set broker.image.repository=$(IMAGE_REGISTRY)/broker \
-		--set apiSidecarHandler.image.repository=$(IMAGE_REGISTRY)/api-sidecar-handler \
-		--set insightsHandler.enabled=false \
-		--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak \
-		--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db \
-		--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications \
-		--set logs2notifications.additionalEnvs.EMAIL_HOST="mailpit-smtp.mailpit.svc" \
-		--set logs2notifications.additionalEnvs.EMAIL_PORT="25" \
-		--set logs2notifications.logs2email.disabled=false \
-		--set logs2notifications.logs2microsoftteams.disabled=true \
-		--set logs2notifications.logs2rocketchat.disabled=true \
-		--set logs2notifications.logs2slack.disabled=true \
-		--set logs2notifications.logs2webhooks.disabled=true \
-		--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh \
-		--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler \
-		--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks \
+		--set backupHandler.enabled=$(INSTALL_K8UP) \
+		--set backupHandler.ingress.enabled=true \
+		--set backupHandler.ingress.hosts[0].host="lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set backupHandler.ingress.hosts[0].paths[0]="/" \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set backupHandler.image.repository=$(IMAGE_REGISTRY)/backup-handler') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set broker.image.repository=$(IMAGE_REGISTRY)/broker') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set apiSidecarHandler.image.repository=$(IMAGE_REGISTRY)/api-sidecar-handler') \
+		$$([ $(ENABLE_INSIGHTS) != true ] && echo '--set insightsHandler.enabled=false') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set keycloak.image.repository=$(IMAGE_REGISTRY)/keycloak') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set keycloakDB.image.repository=$(IMAGE_REGISTRY)/keycloak-db') \
+		--set keycloakDB.vendor=$(CORE_DATABASE_VENDOR) \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set logs2notifications.image.repository=$(IMAGE_REGISTRY)/logs2notifications') \
+		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set logs2notifications.additionalEnvs.EMAIL_HOST=mailpit-smtp.mailpit.svc') \
+		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set logs2notifications.additionalEnvs.EMAIL_PORT=25') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set keycloak.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshPortalAPI.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshToken.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set broker.serviceMonitor.enabled=true') \
+		--set logs2notifications.logs2email.disabled=$(LOGS2EMAIL_DISABLED) \
+		--set logs2notifications.logs2microsoftteams.disabled=$(LOGS2MICROSOFTTEAMS_DISABLED) \
+		--set logs2notifications.logs2rocketchat.disabled=$(LOGS2ROCKETCHAT_DISABLED) \
+		--set logs2notifications.logs2slack.disabled=$(LOGS2SLACK_DISABLED) \
+		--set logs2notifications.logs2webhooks.disabled=$(LOGS2WEBHOOKS_DISABLED) \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler') \
+		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks') \
+		--set s3BAASAccessKeyID=lagoonFilesAccessKey \
+		--set s3BAASSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
 		--set s3FilesSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesBucket=lagoon-files \
-		--set s3FilesHost=http://minio.minio.svc:9000 \
+		--set s3FilesHost=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--set api.ingress.enabled=true \
 		--set api.ingress.hosts[0].host="lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set api.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set api.ingress.tls[0].hosts[0]=lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set api.ingress.tls[0].secretName=api-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string api.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string api.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		--set ui.ingress.enabled=true \
 		--set ui.ingress.hosts[0].host="lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set ui.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set ui.ingress.tls[0].hosts[0]=lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set ui.ingress.tls[0].secretName=ui-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string ui.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string ui.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_REPO) ] && echo '--set ui.image.repository=$(UI_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_TAG) ] && echo '--set ui.image.tag=$(UI_IMAGE_TAG)') \
+		--set betaUI.ingress.enabled=true \
+		--set betaUI.ingress.hosts[0].host="lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set betaUI.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.additionalEnvs.NODE_TLS_REJECT_UNAUTHORIZED=0') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set betaUI.ingress.tls[0].hosts[0]=lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.ingress.tls[0].secretName=beta-ui-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(BETA_UI_IMAGE_REPO) ] && echo '--set betaUI.image.repository=$(BETA_UI_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(BETA_UI_IMAGE_TAG) ] && echo '--set betaUI.image.tag=$(BETA_UI_IMAGE_TAG)') \
 		--set keycloak.ingress.enabled=true \
 		--set keycloak.ingress.hosts[0].host="lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set keycloak.ingress.hosts[0].paths[0]="/" \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set keycloak.ingress.tls[0].hosts[0]=lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set keycloak.ingress.tls[0].secretName=keycloak-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string keycloak.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string keycloak.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
 		--set webhookHandler.ingress.enabled=true \
 		--set webhookHandler.ingress.hosts[0].host="lagoon-webhook.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set webhookHandler.ingress.hosts[0].paths[0]="/" \
+		--set-string webhookHandler.ingress.annotations.kubernetes\\.io/tls-acme=true \
 		--set broker.ingress.enabled=true \
 		--set broker.ingress.hosts[0].host="lagoon-broker.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set broker.ingress.hosts[0].paths[0]="/" \
-		--set workflows.image.repository=$(IMAGE_REGISTRY)/workflows \
-		--set keycloak.email.enabled=true \
-		--set keycloak.email.settings.host=mailpit-smtp.mailpit.svc \
-		--set keycloak.email.settings.port=25 \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set broker.ingress.tls[0].hosts[0]=lagoon-broker.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set broker.ingress.tls[0].secretName=broker-tls') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.kubernetes\\.io/tls-acme=true') \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string broker.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
+		$$([ $(LAGOON_SEED_USERNAME) ] && echo '--set lagoonSeedUsername=$(LAGOON_SEED_USERNAME)') \
+		$$([ $(LAGOON_SEED_PASSWORD) ] && echo '--set lagoonSeedPassword=$(LAGOON_SEED_PASSWORD)') \
+		$$([ $(LAGOON_SEED_ORGANIZATION) ] && echo '--set lagoonSeedOrganization=$(LAGOON_SEED_ORGANIZATION)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_REPO) ] && echo '--set sshPortalAPI.image.repository=$(SSHPORTALAPI_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHPORTALAPI_IMAGE_TAG) ] && echo '--set sshPortalAPI.image.tag=$(SSHPORTALAPI_IMAGE_TAG)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_REPO) ] && echo '--set sshToken.image.repository=$(SSHTOKEN_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(SSHTOKEN_IMAGE_TAG) ] && echo '--set sshToken.image.tag=$(SSHTOKEN_IMAGE_TAG)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(INSIGHTS_HANDLER_IMAGE_REPO) ] && echo '--set insightsHandler.image.repository=$(INSIGHTS_HANDLER_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(INSIGHTS_HANDLER_IMAGE_TAG) ] && echo '--set insightsHandler.image.tag=$(INSIGHTS_HANDLER_IMAGE_TAG)') \
+		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.enabled=true') \
+		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.settings.host=mailpit-smtp.mailpit.svc') \
+		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set keycloak.email.settings.port=25') \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set sshToken.service.type=LoadBalancer') \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set sshToken.service.ports.sshserver=2223') \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set ssh.service.type=LoadBalancer') \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set ssh.service.port=2020') \
 		lagoon-core \
-		./charts/lagoon-core
+		$$(if [ $(INSTALL_STABLE_CORE) = true ]; then echo 'lagoon/lagoon-core'; else echo './charts/lagoon-core'; fi)
+	$(KUBECTL) -n lagoon-core patch deployment lagoon-core-api -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","env":[{"name":"SSH_TOKEN_ENDPOINT","value":"lagoon-token.'$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')'.nip.io"}]}]}}}}'
+
+# this should not need to be changed in regular instances, only used by lint tests at the moment
+REMOTE_NAMESPACE = lagoon
+.PHONY: install-lagoon-remote-certs
+install-lagoon-remote-certs:
+# create the namespace if it doesn't exist and add the CA certificate for the remote to use where required
+	@$(KUBECTL) create namespace $(REMOTE_NAMESPACE) 2>/dev/null || true
+	@$(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-broker-tls 2>/dev/null || true
+	@$(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-broker-tls --from-file=ca.crt=certs/rootCA.pem
+ifeq ($(INSTALL_STABLE_REMOTE),true)
+ifeq (,$(subst ",,$(STABLE_REMOTE_CHART_VERSION)))
+	$(eval STABLE_REMOTE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-remote -o json | $(JQ) -r '.[]|.version'))
+endif
+endif
+	@[ $(INSTALL_STABLE_REMOTE) = false ] || [ $(shell echo "[{\"version\":\"$(STABLE_REMOTE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) > triple($$target))) | length') = 1 ] \
+		&& $(KUBECTL) -n $(REMOTE_NAMESPACE) delete secret lagoon-remote-nats-tls 2>/dev/null || true
+	@[ $(INSTALL_STABLE_REMOTE) = false ] || [ $(shell echo "[{\"version\":\"$(STABLE_REMOTE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) > triple($$target))) | length') = 1 ] \
+		&& $(KUBECTL) -n $(REMOTE_NAMESPACE) create secret generic lagoon-remote-nats-tls --from-file=ca.crt=certs/rootCA.pem || true
 
 .PHONY: install-lagoon-remote
-install-lagoon-remote: install-mariadb install-postgresql install-mongodb install-lagoon-core
+install-lagoon-remote: install-lagoon-remote-certs
+ifneq ($(INSTALL_STABLE_REMOTE),true)
 	$(HELM) dependency build ./charts/lagoon-remote/
+else
+ifeq (,$(subst ",,$(STABLE_REMOTE_CHART_VERSION)))
+	$(eval STABLE_REMOTE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-remote -o json | $(JQ) -r '.[]|.version'))
+endif
+endif
+	$(KUBECTL) create namespace lagoon 2>/dev/null || true
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace lagoon \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--values ./charts/lagoon-remote/ci/linter-values.yaml \
+		$$([ $(INSTALL_STABLE_REMOTE) = true ] && [ $(STABLE_REMOTE_CHART_VERSION) ] && echo '--version=$(STABLE_REMOTE_CHART_VERSION)') \
+		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-remote-$(STABLE_REMOTE_CHART_VERSION)/charts/lagoon-remote/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-remote/ci/linter-values.yaml'; fi) \
 		--set "lagoon-build-deploy.enabled=false" \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		--set "dbaas-operator.mariadbProviders.development.environment=development" \
-		--set "dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local" \
-		--set "dbaas-operator.mariadbProviders.development.password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
-		--set "dbaas-operator.mariadbProviders.development.port=3306" \
-		--set "dbaas-operator.mariadbProviders.development.user=root" \
-		--set "dbaas-operator.mariadbProviders.production.environment=production" \
-		--set "dbaas-operator.mariadbProviders.production.hostname=mariadb.mariadb.svc.cluster.local" \
-		--set "dbaas-operator.mariadbProviders.production.password=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')" \
-		--set "dbaas-operator.mariadbProviders.production.port=3306" \
-		--set "dbaas-operator.mariadbProviders.production.user=root" \
-		--set "dbaas-operator.postgresqlProviders.development.environment=development" \
-		--set "dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local" \
-		--set "dbaas-operator.postgresqlProviders.development.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')" \
-		--set "dbaas-operator.postgresqlProviders.development.port=5432" \
-		--set "dbaas-operator.postgresqlProviders.development.user=postgres" \
-		--set "dbaas-operator.postgresqlProviders.production.environment=production" \
-		--set "dbaas-operator.postgresqlProviders.production.hostname=postgresql.postgresql.svc.cluster.local" \
-		--set "dbaas-operator.postgresqlProviders.production.password=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')" \
-		--set "dbaas-operator.postgresqlProviders.production.port=5432" \
-		--set "dbaas-operator.postgresqlProviders.production.user=postgres" \
-		--set "dbaas-operator.mongodbProviders.development.environment=development" \
-		--set "dbaas-operator.mongodbProviders.development.hostname=mongodb.mongodb.svc.cluster.local" \
-		--set "dbaas-operator.mongodbProviders.development.password=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')" \
-		--set "dbaas-operator.mongodbProviders.development.port=27017" \
-		--set "dbaas-operator.mongodbProviders.development.user=root" \
-		--set "dbaas-operator.mongodbProviders.development.auth.mechanism=SCRAM-SHA-1" \
-		--set "dbaas-operator.mongodbProviders.development.auth.source=admin" \
-		--set "dbaas-operator.mongodbProviders.development.auth.tls=false" \
-		--set "dbaas-operator.mongodbProviders.production.environment=production" \
-		--set "dbaas-operator.mongodbProviders.production.hostname=mongodb.mongodb.svc.cluster.local" \
-		--set "dbaas-operator.mongodbProviders.production.password=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')" \
-		--set "dbaas-operator.mongodbProviders.production.port=27017" \
-		--set "dbaas-operator.mongodbProviders.production.user=root" \
-		--set "dbaas-operator.mongodbProviders.production.auth.mechanism=SCRAM-SHA-1" \
-		--set "dbaas-operator.mongodbProviders.production.auth.source=admin" \
-		--set "dbaas-operator.mongodbProviders.production.auth.tls=false" \
-		--set "sshCore.enaled=true" \
-		--set "mxoutHost=mailpit-smtp.mailpit.svc.cluster.local" \
-		$$([ $(IMAGE_TAG) ] && echo '--set imageTag=$(IMAGE_TAG)') \
+		--set "global.rabbitMQPassword=$$($(KUBECTL) -n lagoon-core get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.environment=development') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.hostname=mariadb.mariadb.svc.cluster.local') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.password='$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.port=3306') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.user=root') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.environment=production') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.hostname=mariadb.mariadb.svc.cluster.local') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.password='$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.port=3306') \
+		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.production.user=root') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.environment=development') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.hostname=postgresql.postgresql.svc.cluster.local') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.password='$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')'') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.port=5432') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.development.user=postgres') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.environment=production') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.hostname=postgresql.postgresql.svc.cluster.local') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.password='$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')'') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.port=5432') \
+		$$([ $(INSTALL_POSTGRES_PROVIDER) = true ] && echo '--set dbaas-operator.postgresqlProviders.production.user=postgres') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.environment=development') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.hostname=mongodb.mongodb.svc.cluster.local') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.password='$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.port=27017') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.user=admin') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.auth.mechanism=SCRAM-SHA-1') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.auth.source=admin') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.development.auth.tls=false') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.environment=production') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.hostname=mongodb.mongodb.svc.cluster.local') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.password='$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')'') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.port=27017') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.user=admin') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.auth.mechanism=SCRAM-SHA-1') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.auth.source=admin') \
+		$$([ $(INSTALL_MONGODB_PROVIDER) = true ] && echo '--set dbaas-operator.mongodbProviders.production.auth.tls=false') \
+		--set "sshCore.enabled=true" \
+		$$([ $(INSTALL_MAILPIT) = true ] && echo '--set mxoutHost=mailpit-smtp.mailpit.svc.cluster.local') \
+		$$([ $(IMAGE_TAG) ] && [ $(INSTALL_STABLE_REMOTE) != true ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set sshPortal.service.type=LoadBalancer') \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo '--set sshPortal.service.ports.sshserver=2222') \
+		$$([ $(INSTALL_STABLE_REMOTE) != true ] && [ $(SSHPORTAL_IMAGE_REPO) ] && echo '--set sshPortal.image.repository=$(SSHPORTAL_IMAGE_REPO)') \
+		$$([ $(INSTALL_STABLE_REMOTE) != true ] && [ $(SSHPORTAL_IMAGE_TAG) ] && echo '--set sshPortal.image.tag=$(SSHPORTAL_IMAGE_TAG)') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshPortal.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set storageCalculator.serviceMonitor.enabled=true') \
 		lagoon-remote \
-		./charts/lagoon-remote
-	$(KUBECTL) -n lagoon-core patch deployment lagoon-core-api -p '{"spec":{"template":{"spec":{"containers":[{"name":"api","env":[{"name":"SSH_TOKEN_ENDPOINT_PORT","value":"'$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.spec.ports[0].port}')'"},{"name":"SSH_TOKEN_ENDPOINT","value":"'$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.status.loadBalancer.ingress[0].ip}')'"}]}]}}}}'
+		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo 'lagoon/lagoon-remote'; else echo './charts/lagoon-remote'; fi)
+	# rerun the remote certs installation as a workaround for the way the localstack used to seed the nats certs from helm
+	# they are installed as a secret directly since STABLE_REMOTE_CHART_VERSION_PRE_NATS_TLS
+	$(MAKE) install-lagoon-remote-certs
 
 # The following target should only be called as a dependency of lagoon-remote
 # Do not install without lagoon-core
 #
 .PHONY: install-lagoon-build-deploy
-install-lagoon-build-deploy: install-lagoon-remote install-bulk-storageclass
+install-lagoon-build-deploy:
+ifneq ($(INSTALL_STABLE_BUILDDEPLOY),true)
 	$(HELM) dependency build ./charts/lagoon-build-deploy/
+else
+ifeq (,$(subst ",,$(STABLE_CORE_CHART_VERSION)))
+	$(eval STABLE_CORE_CHART_VERSION = $(shell $(HELM) search repo lagoon/lagoon-core -o json | $(JQ) -r '.[]|.version'))
+endif
+ifeq (,$(subst ",,$(STABLE_BUILDDEPLOY_CHART_VERSION)))
+	$(eval STABLE_BUILDDEPLOY_CHART_VERSION := $(shell $(HELM) search repo lagoon/lagoon-build-deploy -o json | $(JQ) -r '.[]|.version'))
+endif
+endif
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace lagoon \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--values ./charts/lagoon-build-deploy/ci/linter-values.yaml \
+		$$([ $(INSTALL_STABLE_BUILDDEPLOY) = true ] && [ $(STABLE_BUILDDEPLOY_CHART_VERSION) ] && echo '--version=$(STABLE_BUILDDEPLOY_CHART_VERSION)') \
+		$$(if [ $(INSTALL_STABLE_BUILDDEPLOY) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-build-deploy-$(STABLE_BUILDDEPLOY_CHART_VERSION)/charts/lagoon-build-deploy/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-build-deploy/ci/linter-values.yaml'; fi) \
 		--set "rabbitMQPassword=$$($(KUBECTL) -n lagoon-core get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
-		--set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc" \
 		--set "lagoonFeatureFlagEnableQoS=true" \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set sshPortalHost=$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.status.loadBalancer.ingress[0].ip}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set sshPortalPort=$$($(KUBECTL) -n lagoon get services lagoon-remote-ssh-portal -o jsonpath='{.spec.ports[0].port}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenHost=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.status.loadBalancer.ingress[0].ip}')") \
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenPort=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.spec.ports[0].port}')") \
 		--set "QoSMaxBuilds=5" \
-		--set "harbor.enabled=true" \
-		--set "harbor.adminPassword=Harbor12345" \
-		--set "harbor.adminUser=admin" \
-		--set "harbor.host=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && echo '--set overrideBuildDeployImage=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG) ] && echo '--set image.tag=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGETAG)') \
-		$$([ $(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY) ] && echo '--set image.repository=$(OVERRIDE_BUILD_DEPLOY_CONTROLLER_IMAGE_REPOSITORY)') \
-		$$([ $(BUILD_DEPLOY_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set rootlessBuildPods=true') \
+		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc") \
+		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "broker.tls.enabled=false") \
+		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
+			echo "--set extraArgs={--cleanup-harbor-repository-on-delete,--lagoon-feature-flag-support-k8upv2}" || \
+			echo "--set extraArgs={--cleanup-harbor-repository-on-delete}") \
+		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
+			echo "--set extraEnvs[0].name=LAGOON_FEATURE_FLAG_DEFAULT_K8UP_V2,extraEnvs[0].value=enabled") \
+		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.enabled=true") \
+		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminPassword=Harbor12345") \
+		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminUser=admin") \
+		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.host=https://registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = true ] && echo --set "unauthenticatedRegistry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(OVERRIDE_REMOTE_CONTROLLER_IMAGETAG) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.tag=$(OVERRIDE_REMOTE_CONTROLLER_IMAGETAG)') \
+		$$([ $(OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.repository=$(OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY)') \
+		$$([ $(REMOTE_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set rootlessBuildPods=true') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoonFeatureFlagDefaultIsolationNetworkPolicy=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO) ] && echo '--set lagoonFeatureFlagDefaultRWX2RWO=$(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO)') \
+		$$([ $(ENABLE_INSIGHTS) = true ] && echo '--set lagoonFeatureFlagDefaultInsights=enabled') \
+		--set "lagoonAPIHost=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		lagoon-build-deploy \
-		./charts/lagoon-build-deploy
+		$$(if [ $(INSTALL_STABLE_BUILDDEPLOY) = true ]; then echo 'lagoon/lagoon-build-deploy'; else echo './charts/lagoon-build-deploy'; fi)
+ifeq ($(INSTALL_STABLE_BUILDDEPLOY),true)
+	$(HELM) show crds lagoon/lagoon-build-deploy $$([ $(STABLE_BUILDDEPLOY_CHART_VERSION) ] && echo '--version=$(STABLE_BUILDDEPLOY_CHART_VERSION)') | $(KUBECTL) apply -f -
+else
+	$(KUBECTL) apply -f ./charts/lagoon-build-deploy/crds/crd.lagoon.sh_lagoonbuilds.yaml
+	$(KUBECTL) apply -f ./charts/lagoon-build-deploy/crds/crd.lagoon.sh_lagoontasks.yaml
+endif
 
 # allow skipping registry install for install-lagoon-remote target
 ifneq ($(SKIP_INSTALL_REGISTRY),true)
@@ -404,11 +896,7 @@ install-bulk-storageclass:
 
 .PHONY: create-kind-cluster
 create-kind-cluster:
-	docker network inspect kind >/dev/null || docker network create kind \
-		&& LAGOON_KIND_CIDR_BLOCK=$$(docker network inspect kind | $(JQ) '. [0].IPAM.Config[0].Subnet' | tr -d '"') \
-		&& export KIND_NODE_IP=$$(echo $${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $$1,$$2,$$3,240}' OFS='.') \
-		&& envsubst < test-suite.kind-config.yaml.tpl > test-suite.kind-config.yaml \
-		&& envsubst < test-suite.kind-config.calico.yaml.tpl > test-suite.kind-config.calico.yaml
+	docker network inspect kind >/dev/null || docker network create kind
 ifeq ($(USE_CALICO_CNI),true)
 	kind create cluster --wait=60s --config=test-suite.kind-config.calico.yaml \
 		&& $(KUBECTL) create -f ./ci/calico/tigera-operator.yaml --context kind-chart-testing \
@@ -435,15 +923,12 @@ endif
 .PHONY: install-test-cluster
 install-test-cluster: install-ingress install-registry install-bulk-storageclass install-mariadb install-postgresql install-mongodb install-minio
 
-.PHONY: install-lagoon
-install-lagoon:  install-lagoon-core install-lagoon-remote
-
 .PHONY: get-admin-creds
 get-admin-creds:
 	@echo "\nLagoon UI URL: " \
-	&& echo "http://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 	&& echo "Lagoon API URL: " \
-	&& echo "http://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
+	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
 	&& echo "Lagoon API admin legacy token: \n$$(docker run \
 		-e JWTSECRET="$$($(KUBECTL) get secret -n lagoon-core lagoon-core-secrets -o jsonpath="{.data.JWTSECRET}" | base64 --decode)" \
 		-e JWTAUDIENCE=api.dev \
@@ -451,7 +936,7 @@ get-admin-creds:
 		uselagoon/tests \
 		python3 /ansible/tasks/api/admin_token.py)" \
 	&& echo "Keycloak admin URL: " \
-	&& echo "http://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/auth" \
+	&& echo "$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/auth" \
 	&& echo "Keycloak admin password: " \
 	&& $(KUBECTL) get secret -n lagoon-core lagoon-core-keycloak -o jsonpath="{.data.KEYCLOAK_ADMIN_PASSWORD}" | base64 --decode \
 	&& echo "\n"
@@ -478,3 +963,77 @@ port-forwards: pf-keycloak pf-api pf-ssh pf-ui
 .PHONY: run-tests
 run-tests:
 	$(HELM) test --namespace lagoon-core --timeout 30m lagoon-test
+
+KIND_CLUSTER ?= chart-testing
+KIND_VERSION = v0.27.0
+CHART_TESTING_VERSION = v3.11.0
+KIND = $(realpath ./local-dev/kind)
+ARCH := $(shell uname | tr '[:upper:]' '[:lower:]')
+
+.PHONY: local-dev/kind
+local-dev/kind:	
+ifeq ($(KIND_VERSION), $(shell kind version 2>/dev/null | sed -nE 's/kind (v[0-9.]+).*/\1/p'))
+	$(info linking local kind version $(KIND_VERSION))
+	$(eval KIND = $(realpath $(shell command -v kind)))
+else
+ifneq ($(KIND_VERSION), $(shell ./local-dev/kind version 2>/dev/null | sed -nE 's/kind (v[0-9.]+).*/\1/p'))
+	$(info downloading kind version $(KIND_VERSION) for $(ARCH))
+	mkdir -p /local-dev
+	rm local-dev/kind || true
+	curl -sSLo local-dev/kind https://kind.sigs.k8s.io/dl/$(KIND_VERSION)/kind-$(ARCH)-amd64
+	chmod a+x local-dev/kind
+endif
+endif
+
+# this creates a local kind cluster
+.PHONY: kind/create-cluster
+kind/create-cluster: local-dev/kind
+	docker network inspect $(DOCKER_NETWORK) >/dev/null || docker network create $(DOCKER_NETWORK) \
+		&& export KIND_EXPERIMENTAL_DOCKER_NETWORK=$(DOCKER_NETWORK) \
+ 		&& $(KIND) create cluster --wait=60s --name=$(KIND_CLUSTER) --config=test-suite.kind-config.yaml
+	LAGOON_KIND_CIDR_BLOCK=$$(docker network inspect $(DOCKER_NETWORK) | $(JQ) '.[].Containers[].IPv4Address' | tr -d '"') \
+		&& export KIND_NODE_IP=$$(echo $${LAGOON_KIND_CIDR_BLOCK%???} | awk -F'.' '{print $$1,$$2,$$3,240}' OFS='.') \
+		&& envsubst < test-suite.registry.toml.tpl > test-suite.registry.toml \
+		&& export REGISTRY_DIR="/etc/containerd/certs.d/registry.$${KIND_NODE_IP}.nip.io" && \
+		for node in $$($(KIND) get nodes --name $(KIND_CLUSTER)); do \
+			docker exec "$$node" mkdir -p "$${REGISTRY_DIR}"; \
+			cat test-suite.registry.toml | docker exec -i "$$node" cp /dev/stdin "$${REGISTRY_DIR}/hosts.toml"; \
+		done
+
+# install lagoon will create the cluster and then install lagoon only
+.PHONY: kind/install-lagoon
+kind/install-lagoon: kind/create-cluster
+	export KIND_CLUSTER=$(KIND_CLUSTER) && \
+	$(KIND) export kubeconfig --name=$(KIND_CLUSTER) && \
+	kubectl get nodes && kubectl get pods -A && \
+	$(MAKE) install-lagoon
+
+# this will create cluster, install lagoon, and then run tests
+.PHONY: kind/test
+kind/test: kind/install-lagoon
+	$(MAKE) kind/re-test
+
+# this will re-run tests
+.PHONY: kind/re-test
+kind/re-test:
+	export KIND_CLUSTER=$(KIND_CLUSTER) && \
+	$(KIND) get kubeconfig --name=$(KIND_CLUSTER) > ./kubeconfig.kind && \
+	$(MAKE) -O fill-test-ci-values TESTS=$(TESTS) && \
+	docker run --rm --network host --name ct \
+		--volume "$$(pwd)/test-suite-run.ct.yaml:/etc/ct/ct.yaml" \
+		--volume "$$(pwd):/workdir" \
+		--volume "./kubeconfig.kind:/root/.kube/config" \
+		--workdir /workdir \
+		"quay.io/helmpack/chart-testing:$(CHART_TESTING_VERSION)" \
+		ct install --helm-extra-args "--timeout 60m"
+
+# get kubeconfig for local usage
+.PHONY: kind/set-kubeconfig
+kind/set-kubeconfig:
+	export KIND_CLUSTER=$(KIND_CLUSTER) && \
+	$(KIND) export kubeconfig --name=$(KIND_CLUSTER)
+
+# tears down the kind cluster
+.PHONY: kind/clean
+kind/clean:
+	$(KIND) delete cluster --name=$(KIND_CLUSTER) && docker network rm $(DOCKER_NETWORK)

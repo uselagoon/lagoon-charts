@@ -11,15 +11,12 @@ jobs:
       fail-fast: false
       matrix:
         kindest_node_version:
-        - v1.25.16@sha256:6110314339b3b44d10da7d27881849a87e092124afab5956f2e10ecdb463b025
-        - v1.26.15@sha256:1cc15d7b1edd2126ef051e359bf864f37bbcf1568e61be4d2ed1df7a3e87b354
-        - v1.27.17@sha256:3fd82731af34efe19cd54ea5c25e882985bafa2c9baefe14f8deab1737d9fabe
-        - v1.28.13@sha256:45d319897776e11167e4698f6b14938eb4d52eb381d9e3d7a9086c16c69a8110
-        - v1.29.8@sha256:d46b7aa29567e93b27f7531d258c372e829d7224b25e3fc6ffdefed12476d3aa
-        - v1.31.0@sha256:53df588e04085fd41ae12de0c3fe4c72f7013bba32a20e7325357a1ac94ba865
+        - v1.29.14@sha256:8703bd94ee24e51b778d5556ae310c6c0fa67d761fae6379c8e0bb480e6fea29
+        - v1.30.10@sha256:4de75d0e82481ea846c0ed1de86328d821c1e6a6a91ac37bf804e5313670e507
+        - v1.32.2@sha256:f226345927d7e348497136874b6d207e0b32cc52154ad8323129352923a3142f
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       with:
         fetch-depth: "0"
 
@@ -27,7 +24,7 @@ jobs:
       run: sudo apt-get -y install python3-wheel
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@v2.6.1
+      uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
 
     - name: Run chart-testing (list-changed)
       id: list-changed
@@ -38,29 +35,56 @@ jobs:
           echo "$changed"
         fi
 
+    - name: Get labels
+      id: get-labels
+      run: |
+        NEEDS_TESTING="$(gh api repos/$OWNER/$REPO_NAME/pulls/$PULL_REQUEST_NUMBER --jq '.labels.[].name | select(.=="needs-testing")')"
+        NEXT_RELEASE="$(gh api repos/$OWNER/$REPO_NAME/pulls/$PULL_REQUEST_NUMBER --jq '.labels.[].name | select(.=="next-release")')"
+        echo "$NEEDS_TESTING"
+        echo "$NEXT_RELEASE"
+        echo "needsTesting=$NEEDS_TESTING" >> $GITHUB_OUTPUT
+        echo "nextRelease=$NEXT_RELEASE" >> $GITHUB_OUTPUT
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OWNER: ${{ github.repository_owner }}
+        REPO_NAME: ${{ github.event.repository.name }}
+        PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+
     - name: Run chart-testing (lint)
       run: ct lint --config ./default.ct.yaml
 
     - name: Create kind cluster
-      uses: helm/kind-action@v1.10.0
+      uses: helm/kind-action@92086f6be054225fa813e0a4b13787fc9088faab # v1.13.0
       with:
-        version: v0.24.0
+        version: v0.27.0
         node_image: kindest/node:${{ matrix.kindest_node_version }}
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
-        (contains(github.event.pull_request.labels.*.name, 'needs-testing'))
+        (steps.get-labels.outputs.needsTesting == 'needs-testing') ||
+        (steps.get-labels.outputs.nextRelease == 'next-release')
+
+    - name: Install lagoon test certificates
+      run: |
+        helm repo add jetstack https://charts.jetstack.io
+        make INSTALL_CERTMANAGER_METALLB=false install-certmanager
+        make install-lagoon-certs CORE_NAMESPACE=lagoon-${{ github.event.pull_request.number }} REMOTE_NAMESPACE=lagoon-${{ github.event.pull_request.number }}
+      if: |
+        (steps.list-changed.outputs.changed == 'true') ||
+        (steps.get-labels.outputs.needsTesting == 'needs-testing') ||
+        (steps.get-labels.outputs.nextRelease == 'next-release')
 
     - name: Run chart-testing (install changed only)
       run: |
-        ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
-      if: ${{ !contains(github.event.pull_request.labels.*.name, 'next-release') && !contains(github.event.pull_request.labels.*.name, 'needs-testing') }}
+        ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m" --namespace lagoon-${{ github.event.pull_request.number }}
+      if: ${{ !steps.get-labels.outputs.nextRelease == 'next-release' && !steps.get-labels.outputs.needsTesting == 'needs-testing' }}
 
     - name: Run chart-testing (install changed next-release only)
       run: |
         yq eval-all --inplace 'select(fileIndex == 0) * select(fileIndex == 1)' ./charts/lagoon-core/ci/linter-values.yaml ./charts/lagoon-core/ci/testlagoon-main-override.yaml
-        ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m"
-      if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') }}
+        ct install --config ./default.ct.yaml --helm-extra-args "--timeout 30m" --namespace lagoon-${{ github.event.pull_request.number }}
+      if: ${{ steps.get-labels.outputs.nextRelease == 'next-release' }}
 
     - name: Run chart-testing (install all charts when required)
-      run: ct install --config ./default.ct.yaml  --helm-extra-args "--timeout 30m" --all
-      if: ${{ contains(github.event.pull_request.labels.*.name, 'next-release') || contains(github.event.pull_request.labels.*.name, 'needs-testing') }}
+      run: ct install --config ./default.ct.yaml  --helm-extra-args "--timeout 30m" --all --namespace lagoon-${{ github.event.pull_request.number }}
+      if: ${{ steps.get-labels.outputs.nextRelease == 'next-release' || steps.get-labels.outputs.needsTesting == 'needs-testing' }}

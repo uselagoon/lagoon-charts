@@ -19,7 +19,7 @@ spec:
     metadata:
       annotations:
         checksum/keycloak.secret: {{ include (print $.Template.BasePath "/keycloak.secret.yaml") . | sha256sum }}
-        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret-migratejob.yaml") . | sha256sum }}
         checksum/nats.secret: {{ include (print $.Template.BasePath "/nats.secret.yaml") . | sha256sum }}
     {{- with .Values.sshPortalAPI.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -37,10 +37,18 @@ spec:
         image: "{{ .Values.sshPortalAPI.image.repository }}:{{ coalesce .Values.sshPortalAPI.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.sshPortalAPI.image.pullPolicy }}
         command:
-        - "/ssh-portal-api"
+        {{- .Values.sshPortalAPI.command | toYaml | nindent 8 }}
+        {{- if .Values.sshPortalAPI.args }}
+        args:
+        {{- .Values.sshPortalAPI.args | toYaml | nindent 8 }}
+        {{- end }}
         env:
         {{- if .Values.sshPortalAPI.debug }}
         - name: DEBUG
+          value: "true"
+        {{- end }}
+        {{- if .Values.sshPortalAPI.insecureTLS }}
+        - name: KEYCLOAK_INSECURE_TLS
           value: "true"
         {{- end }}
         {{- if .Values.blockDeveloperSSH }}
@@ -62,17 +70,13 @@ spec:
               key: KEYCLOAK_SERVICE_API_CLIENT_SECRET
         - name: NATS_URL
           value: nats://{{ include "lagoon-core.nats.fullname" . }}
-        - name: API_DB_ADDRESS
-          value: {{ include "lagoon-core.apiDB.fullname" . }}
-        - name: API_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.apiDB.fullname" . }}
-              key: API_DB_PASSWORD
       {{- range $key, $val := .Values.sshPortalAPI.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
       {{- end }}
+        envFrom:
+        - secretRef:
+            name: {{ include "lagoon-core.apiDB.fullname" . }}
         ports:
         - name: metrics
           containerPort: 9911

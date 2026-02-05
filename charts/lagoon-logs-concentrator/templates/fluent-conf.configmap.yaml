@@ -33,10 +33,16 @@ data:
         @include user.d/*.conf
       </security>
       <transport tls>
+        {{- if .Values.mTLS }}
         ca_path /fluentd/tls/ca.crt
         cert_path /fluentd/tls/server.crt
         private_key_path /fluentd/tls/server.key
         client_cert_auth true
+        {{- else }}
+        cert_path /fluentd/tls/tls.crt
+        private_key_path /fluentd/tls/tls.key
+        client_cert_auth false
+        {{- end }}
       </transport>
     </source>
 
@@ -74,7 +80,9 @@ data:
       password "#{ENV['LOGSDB_ADMIN_PASSWORD']}"
       # endpoint error handling
       reconnect_on_error true
-      reload_on_failure true
+      # never reload - always use the configured host only
+      reload_on_failure false
+      reload_connections false
       request_timeout 600s
       slow_flush_log_threshold 300s
       log_es_400_reason true
@@ -103,6 +111,6 @@ data:
       verify_os_version_at_startup false
 {{- end }}
 {{- if .Values.opensearchCACert }}
-      ca_file /fluentd/es-tls/ca.crt
+      ca_file /fluentd/os-tls/ca.crt
 {{- end }}
     </match>

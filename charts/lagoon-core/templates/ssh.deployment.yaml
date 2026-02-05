@@ -16,7 +16,7 @@ spec:
     metadata:
       annotations:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-        checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret.yaml") . | sha256sum }}
+        checksum/ssh.secret: {{ include (print $.Template.BasePath "/ssh.secret.yaml") . | sha256sum }}
     {{- with .Values.ssh.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
@@ -32,15 +32,6 @@ spec:
         image: "{{ .Values.ssh.image.repository }}:{{ coalesce .Values.ssh.image.tag .Values.imageTag .Chart.AppVersion }}"
         imagePullPolicy: {{ .Values.ssh.image.pullPolicy }}
         env:
-        - name: API_DB_HOST
-          value: {{ include "lagoon-core.apiDB.fullname" . }}
-        - name: API_DB_USER
-          value: api
-        - name: API_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.apiDB.fullname" . }}
-              key: API_DB_PASSWORD
         - name: API_HOST
           value: {{ include "lagoon-core.api.fullname" . }}
         - name: AUTH_SERVER

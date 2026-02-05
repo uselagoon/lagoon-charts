@@ -53,19 +53,50 @@ spec:
         - name: KEYCLOAK_ADMIN_EMAIL
           value: {{ . | quote }}
         {{- end }}
+        - name: DB_VENDOR
+          value: {{ .Values.keycloakDB.vendor }}
+        - name: LAGOON_DB_VENDOR
+          value: {{ .Values.apiDB.vendor }}
+        {{- if not .Values.apiDB.useExternal }}
         - name: LAGOON_DB_HOST
           value: {{ include "lagoon-core.apiDB.fullname" . }}
-        - name: LAGOON_DB_VENDOR
-          value: mariadb
         - name: LAGOON_DB_USER
           value: api
         - name: LAGOON_DB_DATABASE
           value: infrastructure
+        {{- else }}
+        - name: LAGOON_DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_HOST
+        - name: LAGOON_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_USERNAME
+        - name: LAGOON_DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_PORT
+        - name: LAGOON_DB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.apiDB.fullname" . }}
+              key: API_DB_DATABASE
+        {{- end }}
         - name: LAGOON_DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ include "lagoon-core.apiDB.fullname" . }}
               key: API_DB_PASSWORD
+      {{- if .Values.keycloak.serviceMonitor.enabled }}
+        - name: KC_METRICS_ENABLED
+          value: "true"
+        - name: KC_EVENT_METRICS_USER_ENABLED
+          value: "true"
+      {{- end }}
       {{- range $key, $val := .Values.keycloak.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
@@ -76,6 +107,10 @@ spec:
         ports:
         - name: http-8080
           containerPort: 8080
+        {{- if .Values.keycloak.serviceMonitor.enabled }}
+        - name: metrics
+          containerPort: {{ .Values.keycloak.serviceMonitor.metrics.port }}
+        {{- end }}
         livenessProbe:
           httpGet:
             path: /auth
