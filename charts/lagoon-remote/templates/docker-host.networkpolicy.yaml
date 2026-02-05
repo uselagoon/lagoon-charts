@@ -16,6 +16,14 @@ spec:
         matchExpressions:
         - key: lagoon.sh/buildName
           operator: Exists
+    - namespaceSelector:
+        matchExpressions:
+        - key: lagoon.sh/environment
+          operator: Exists
+      podSelector:
+        matchExpressions:
+        - key: insights.lagoon.sh/imagescanner
+          operator: Exists
   podSelector:
     matchLabels:
       {{- include "lagoon-remote.dockerHost.selectorLabels" . | nindent 6 }}

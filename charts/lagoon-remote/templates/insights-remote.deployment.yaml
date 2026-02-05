@@ -59,6 +59,12 @@ spec:
             - name: BURN_AFTER_READING
               value: "TRUE"
           {{- end }}
+          {{- if .Values.insightsRemote.enableBuildScanning }}
+            - name: ENABLE_BUILD_SCANNING
+              value: "TRUE"
+            - name: BUILD_SCANNER_IMAGE
+              value: "{{ coalesce .Values.insightsRemote.buildScannerImage "docker.io/uselagoon/insights-scanner:latest" }}"
+          {{- end }}
           {{- if $rabbitMQTLSEnabled }}
             - name: RABBITMQ_TLS
               value: "TRUE"
