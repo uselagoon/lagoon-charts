@@ -524,4 +524,4 @@ sysctlConfigure:
   image:
     repository: alpine/k8s
     pullPolicy: IfNotPresent
-    tag: 1.25.3
+    tag: 1.35.1
