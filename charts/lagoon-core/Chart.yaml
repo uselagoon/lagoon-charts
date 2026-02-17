@@ -40,17 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: update lagoon backup schedule to support changing to k8up.io
-    - kind: removed
-      description: removed lagoon-core bitbucket sync and open distro integrations
-    - kind: added
-      description: support for external database for api and keycloak
-    - kind: added
-      description: initial beta-ui inclusion
-    - kind: changed
-      description: update opensearch-sync to v0.14.2
-    - kind: changed
-      description: update lagoon appVersion to 2.30.0
-    - kind: changed
-      description: update insights-handler to v0.0.10
+    - kind: fixed
+      description: don't deploy any 'ui-beta' resources when not enabled
