@@ -16,6 +16,7 @@ spec:
     metadata:
       annotations:
         checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     {{- with .Values.webhookHandler.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}

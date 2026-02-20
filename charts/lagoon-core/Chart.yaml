@@ -42,3 +42,7 @@ annotations:
   artifacthub.io/changes: |
     - kind: removed
       description: vestiges of harbor support
+    - kind: changed
+      description: backup-handler no longer requires rabbitmq connections
+    - kind: removed
+      description: removed webhooks2tasks as no longer used
