@@ -40,21 +40,7 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
+    - kind: changed
+      description: backup-handler no longer requires rabbitmq connections
     - kind: removed
-      description: vestiges of harbor support
-    - kind: added
-      description: add support for project cloning task image
-    - kind: changed
-      description: change keycloak rollout strategy to recreate
-    - kind: changed
-      description: update trivy image to 0.70.0
-    - kind: changed
-      description: update insights-handler to v0.0.12
-    - kind: changed
-      description: update legacy ui pinned image to core-v2.32.0
-    - kind: changed
-      description: changed build-deploy-image to core-v2.32.0
-    - kind: changed
-      description: fixed beta-ui version to v0.1.0
-    - kind: changed
-      description: update lagoon appVersion to 2.32.0
+      description: removed webhooks2tasks as no longer used
