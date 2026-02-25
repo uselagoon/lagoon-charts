@@ -14,14 +14,9 @@ metadata:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded
 rules:
-- apiGroups:
-  - ""
-  resources:
-  - persistentvolumeclaims
-  verbs:
-  - get
-  - list
-  - patch
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["get", "list", "patch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -51,12 +46,12 @@ spec:
       serviceAccountName: {{ include "lagoon-core.fullname" . }}-k8up-disable-pvcs
       restartPolicy: OnFailure
       containers:
-        - name: runner
-          image: alpine/kubectl:latest
-          command:
-            - /bin/sh
-            - -c
-            - >-
-              kubectl annotate pvc --overwrite -n {{ .Release.Namespace }}
-              -l 'app.kubernetes.io/component in ({{ include "lagoon-core.apiDB.fullname" . }},{{ include "lagoon-core.keycloakDB.fullname" . }},{{ include "lagoon-core.broker.fullname" . }})'
-              k8up.io/backup="false"
+      - name: runner
+        image: alpine/kubectl:latest
+        command:
+        - /bin/sh
+        - -c
+        - >-
+          kubectl annotate pvc --overwrite -n {{ .Release.Namespace }}
+          -l 'app.kubernetes.io/component in ({{ include "lagoon-core.apiDB.fullname" . }},{{ include "lagoon-core.keycloakDB.fullname" . }},{{ include "lagoon-core.broker.fullname" . }})'
+          k8up.io/backup="false"
