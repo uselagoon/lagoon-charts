@@ -162,6 +162,11 @@ INGRESS_CONTROLLER_NAMESPACE = ingress-traefik
 INGRESS_CONTROLLER_SERVICE = ingress-traefik
 INGRESS_CONTROLLER_CLASSNAME = nginx
 INGRESS_CONTROLLER_REMOTE_CLASSNAME = nginx
+else ifeq ($(INGRESS_CONTROLLER),haproxy)
+INGRESS_CONTROLLER_NAMESPACE = ingress-haproxy
+INGRESS_CONTROLLER_SERVICE = ingress-haproxy-kubernetes-ingress
+INGRESS_CONTROLLER_CLASSNAME = haproxy
+INGRESS_CONTROLLER_REMOTE_CLASSNAME = nginx
 else
 INGRESS_CONTROLLER_NAMESPACE = ingress-nginx
 INGRESS_CONTROLLER_SERVICE = ingress-nginx-controller
@@ -313,6 +318,24 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 ifeq ($(INSTALL_AERGIA),true)
 	$(KUBECTL) --namespace aergia create -f ci/traefik-default-backend.yaml || true
 endif
+else ifeq ($(INGRESS_CONTROLLER),haproxy)
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace $(INGRESS_CONTROLLER_NAMESPACE) \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set controller.ingressClassResource.default=true \
+		--set controller.defaultTLSSecret.secret=default-ingress-certificate-tls \
+		--set controller.service.type=LoadBalancer \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.serviceMonitor.enabled=true') \
+		--version=1.49.0 \
+		ingress-haproxy \
+		haproxytech/kubernetes-ingress
+	export INGRESS_IP="$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
+		$$(envsubst < ci/default-ingress-certificate-request.yaml.tpl > ci/default-ingress-certificate-request.yaml)
+	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) create -f ci/default-ingress-certificate-request.yaml || true
+	$(KUBECTL) create -f ci/nginx-ingressclass.yaml || true
 else
 	$(HELM) upgrade \
 		--install \
@@ -732,10 +755,10 @@ endif
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_REPO) ] && echo '--set ui.image.repository=$(UI_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_TAG) ] && echo '--set ui.image.tag=$(UI_IMAGE_TAG)') \
 		--set betaUI.ingress.enabled=true \
-		--set betaUI.ingress.hosts[0].host="lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set betaUI.ingress.hosts[0].host="lagoon-beta-ui.$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set betaUI.ingress.hosts[0].paths[0]="/" \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.additionalEnvs.NODE_TLS_REJECT_UNAUTHORIZED=0') \
-		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set betaUI.ingress.tls[0].hosts[0]=lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set betaUI.ingress.tls[0].hosts[0]=lagoon-beta-ui.$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.ingress.tls[0].secretName=beta-ui-tls') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.kubernetes\\.io/tls-acme=true') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
