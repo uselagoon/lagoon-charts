@@ -167,6 +167,11 @@ INGRESS_CONTROLLER_NAMESPACE = ingress-haproxy
 INGRESS_CONTROLLER_SERVICE = ingress-haproxy-kubernetes-ingress
 INGRESS_CONTROLLER_CLASSNAME = haproxy
 INGRESS_CONTROLLER_REMOTE_CLASSNAME = nginx
+else ifeq ($(INGRESS_CONTROLLER),contour)
+INGRESS_CONTROLLER_NAMESPACE = ingress-contour
+INGRESS_CONTROLLER_SERVICE = ingress-contour-envoy
+INGRESS_CONTROLLER_CLASSNAME = contour
+INGRESS_CONTROLLER_REMOTE_CLASSNAME = nginx
 else
 INGRESS_CONTROLLER_NAMESPACE = ingress-nginx
 INGRESS_CONTROLLER_SERVICE = ingress-nginx-controller
@@ -332,7 +337,28 @@ else ifeq ($(INGRESS_CONTROLLER),haproxy)
 		--version=1.49.0 \
 		ingress-haproxy \
 		haproxytech/kubernetes-ingress
-	export INGRESS_IP="$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
+	export INGRESS_IP="$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
+		$$(envsubst < ci/default-ingress-certificate-request.yaml.tpl > ci/default-ingress-certificate-request.yaml)
+	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) create -f ci/default-ingress-certificate-request.yaml || true
+	$(KUBECTL) create -f ci/nginx-ingressclass.yaml || true
+else ifeq ($(INGRESS_CONTROLLER),contour)
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace $(INGRESS_CONTROLLER_NAMESPACE) \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set contour.ingressclass.default=true \
+		--set contour.ingressclass.name=contour \
+		--set tls.fallback-certificate.name=default-ingress-certificate-tls \
+		--set tls.fallback-certificate.namespace=$(INGRESS_CONTROLLER_NAMESPACE) \
+		--set controller.service.type=LoadBalancer \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.serviceMonitor.enabled=true') \
+		--version=0.3.0 \
+		ingress-contour \
+		contour/contour
+	export INGRESS_IP="$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
 		$$(envsubst < ci/default-ingress-certificate-request.yaml.tpl > ci/default-ingress-certificate-request.yaml)
 	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) create -f ci/default-ingress-certificate-request.yaml || true
 	$(KUBECTL) create -f ci/nginx-ingressclass.yaml || true
