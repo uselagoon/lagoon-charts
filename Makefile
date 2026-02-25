@@ -174,8 +174,8 @@ INGRESS_CONTROLLER_CLASSNAME = contour
 INGRESS_CONTROLLER_REMOTE_CLASSNAME = nginx
 else ifeq ($(INGRESS_CONTROLLER),nginxingress)
 INGRESS_CONTROLLER_NAMESPACE = nginx-ingress
-INGRESS_CONTROLLER_SERVICE = ingress-contour-envoy
-INGRESS_CONTROLLER_CLASSNAME = nginx
+INGRESS_CONTROLLER_SERVICE = nginx-ingress-controller
+INGRESS_CONTROLLER_CLASSNAME = nginxingress
 INGRESS_CONTROLLER_REMOTE_CLASSNAME = nginx
 else
 INGRESS_CONTROLLER_NAMESPACE = ingress-nginx
@@ -370,19 +370,20 @@ else ifeq ($(INGRESS_CONTROLLER),contour)
 	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) create -f ci/default-ingress-certificate-request.yaml || true
 	$(KUBECTL) create -f ci/nginx-ingressclass.yaml || true
 else ifeq ($(INGRESS_CONTROLLER),nginxingress)
+	$(KUBECTL) create namespace $(INGRESS_CONTROLLER_NAMESPACE) || true
+	@$(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) create secret tls default-ingress-certificate-tls --cert=certs/rootCA.pem --key=certs/rootCA-key.pem
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
 		--namespace $(INGRESS_CONTROLLER_NAMESPACE) \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set contour.ingressclass.default=true \
-		--set contour.ingressclass.name=contour \
-		--set tls.fallback-certificate.name=default-ingress-certificate-tls \
-		--set tls.fallback-certificate.namespace=$(INGRESS_CONTROLLER_NAMESPACE) \
-		--set controller.service.type=LoadBalancer \
-		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.enabled=true') \
-		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.serviceMonitor.enabled=true') \
+		--set controller.ingressClass.setAsDefaultIngress=true \
+		--set controller.ingressClass.name=nginxingress \
+		--set controller.defaultTLS.secret=$(INGRESS_CONTROLLER_NAMESPACE)/default-ingress-certificate-tls \
+		--set-string controller.config.entries.client-max-body-size=0 \
+		--set-string controller.config.entries.hsts=false \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set prometheus.serviceMonitor.create=true') \
 		--version=2.4.4 \
 		nginx-ingress \
 		oci://ghcr.io/nginx/charts/nginx-ingress
