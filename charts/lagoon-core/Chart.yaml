@@ -42,3 +42,7 @@ annotations:
   artifacthub.io/changes: |
     - kind: fixed
       description: don't deploy any 'ui-beta' resources when not enabled
+    - kind: changed
+      description: backup-handler no longer requires rabbitmq connections
+    - kind: removed
+      description: removed webhooks2tasks as no longer used
