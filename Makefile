@@ -279,7 +279,7 @@ install-aergia:
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set templates.enabled=false \
-		--set image.tag=traefik \
+		--set image.tag=traefik-haproxy \
 		--set idling.enabled=true \
 		--set idling.serviceCron="0\,15\,30\,45 * * * *" \
 		--set idling.podCheckInterval=5m \
@@ -291,6 +291,9 @@ install-aergia:
 		--version=0.7.2 \
 		aergia \
 		amazeeio/aergia
+ifeq ($(INGRESS_CONTROLLER),haproxy)
+
+endif
 
 # install aergia before installing ingress-nginx
 install-ingress: install-aergia
@@ -338,7 +341,7 @@ else ifeq ($(INGRESS_CONTROLLER),haproxy)
 		--set controller.ingressClassResource.default=true \
 		--set controller.defaultTLSSecret.secret=default-ingress-certificate-tls \
 		--set controller.service.type=LoadBalancer \
-		$$([ $(INSTALL_AERGIA) = true ] && echo '--set controller.extraArgs={--default-backend-service=aergia/aergia-backend,--default-backend-port=80}') \
+		$$([ $(INSTALL_AERGIA) = true ] && echo '--set controller.extraArgs={--default-backend-service=aergia/aergia-backend,--default-backend-port=80,--configmap-errorfiles=$(INGRESS_CONTROLLER_NAMESPACE)/errorfile}') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.serviceMonitor.enabled=true') \
 		--version=1.49.0 \
 		ingress-haproxy \
@@ -348,6 +351,13 @@ else ifeq ($(INGRESS_CONTROLLER),haproxy)
 	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) create -f ci/default-ingress-certificate-request.yaml || true
 	$(KUBECTL) create -f ci/nginx-ingressclass.yaml || true
 	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) rollout restart deployment/$(INGRESS_CONTROLLER_SERVICE)
+ifeq ($(INSTALL_AERGIA),true)
+	export INGRESS_IP="$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
+		$$(envsubst < ci/aergia-ingress.yaml.tpl > ci/aergia-ingress.yaml) && \
+		$$(envsubst < ci/aergia-haproxy-errorfiles.yaml.tpl > ci/aergia-haproxy-errorfiles.yaml) && \
+	$(KUBECTL) --namespace aergia apply -f ci/aergia-ingress.yaml || true
+	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) apply -f ci/aergia-haproxy-errorfiles.yaml || true
+endif
 else ifeq ($(INGRESS_CONTROLLER),contour)
 	$(HELM) upgrade \
 		--install \

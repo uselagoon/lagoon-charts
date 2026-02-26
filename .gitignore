@@ -2,5 +2,7 @@
 /test-suite.registry.toml
 certs/
 ci/default-ingress-certificate-request.yaml
+ci/aergia-ingress.yaml
+ci/aergia-haproxy-errorfiles.yaml
 local-dev/
 kubeconfig.*
