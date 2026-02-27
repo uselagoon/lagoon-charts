@@ -14,8 +14,13 @@ spec:
     metadata:
       annotations:
         checksum/api-db.secret: {{ include (print $.Template.BasePath "/api-db.secret-migratejob.yaml") . | sha256sum }}
+        {{- if .Capabilities.APIVersions.Has "k8up.io/v1/Schedule" }}
+        k8up.io/backupcommand: /bin/sh -c "mysqldump --max-allowed-packet=500M --events --routines --quick --add-locks --no-autocommit --single-transaction --all-databases"
+        k8up.io/file-extension: .api-db.sql
+        {{- else }}
         k8up.syn.tools/backupcommand: /bin/sh -c "mysqldump --max-allowed-packet=500M --events --routines --quick --add-locks --no-autocommit --single-transaction --all-databases"
         k8up.syn.tools/file-extension: .api-db.sql
+        {{- end }}
     {{- with .Values.apiDB.podAnnotations }}
         {{- toYaml . | nindent 8 }}
     {{- end }}
