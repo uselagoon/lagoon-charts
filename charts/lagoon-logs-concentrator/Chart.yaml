@@ -27,4 +27,4 @@ version: 0.56.0
 annotations:
   artifacthub.io/changes: |
     - kind: added
-      description: conditional creation of the users
+      description: allow usage of existing secret for users
