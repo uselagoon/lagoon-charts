@@ -104,6 +104,8 @@ buffer:
   size: 32Gi
   storageClassName: ""
 
+usersExistingSecret: ""
+
 # Sample data shown below.
 # opensearchHost: "logs-db-service.opensearch.svc.cluster.local"
 # opensearchAdminPassword: "securepass"
