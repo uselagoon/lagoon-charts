@@ -46,3 +46,5 @@ annotations:
       description: k8upv2 support for api-db/keycloak-db pods
     - kind: added
       description: configurable k8up backupcommand
+    - kind: changed
+      description: update ssh-portal to v0.47.1
