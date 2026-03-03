@@ -242,7 +242,7 @@ insightsRemote:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.16"
+    tag: "v0.0.17"
 
   imagePullSecrets: []
   nameOverride: ""

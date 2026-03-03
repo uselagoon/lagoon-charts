@@ -48,3 +48,5 @@ annotations:
       description: update lagoon-build-deploy subchart to v0.40.0
     - kind: changed
       description: update ssh-portal to v0.47.1
+    - kind: changed
+      description: update insights-remote to v0.0.17
