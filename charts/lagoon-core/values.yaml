@@ -180,6 +180,10 @@ apiDB:
   vendor: mariadb
   # Disable apiDB statefulset and service.
   useExternal: false
+  backupCommand: >-
+    /bin/sh -c "mysqldump --max-allowed-packet=500M --events --routines --quick
+    --add-locks --no-autocommit --single-transaction --all-databases"
+
   image:
     repository: uselagoon/api-db
     pullPolicy: Always
@@ -326,7 +330,10 @@ keycloakDB:
   vendor: mariadb
   # Disable apiDB statefulset and service.
   useExternal: false
-  replicaCount: 1
+  backupCommand: >-
+    /bin/sh -c "mysqldump --max-allowed-packet=500M --events --routines --quick --add-locks
+    --no-autocommit --single-transaction --all-databases"
+
   image:
     repository: uselagoon/keycloak-db
     pullPolicy: Always
