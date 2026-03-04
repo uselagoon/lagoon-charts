@@ -118,7 +118,11 @@ spec:
         name: {{ include "lagoon-logs-concentrator.fullname" . }}-tls
       - secret:
           defaultMode: 420
+          {{- if .Values.usersExistingSecret }}
+          secretName: {{ .Values.usersExistingSecret }}
+          {{- else }}
           secretName: {{ include "lagoon-logs-concentrator.fullname" . }}-users
+          {{- end }}
         name: {{ include "lagoon-logs-concentrator.fullname" . }}-users
       {{- if .Values.opensearchCACert }}
       - secret:
