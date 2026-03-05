@@ -48,3 +48,5 @@ annotations:
       description: configurable k8up backupcommand
     - kind: changed
       description: update ssh-portal to v0.47.1
+    - kind: changed
+      description: update insights-handler to v0.0.11
