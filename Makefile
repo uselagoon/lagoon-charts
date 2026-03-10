@@ -310,15 +310,17 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 		--namespace $(INGRESS_CONTROLLER_NAMESPACE) \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--set image.repository=shreddedbacon/traefik \
-		--set image.tag=418-fix2 \
 		--set ingressClass.isDefaultClass=true \
 		--set ingressClass.name=traefik \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.prometheus.serviceMonitor.enabled=true') \
-		--set "additionalArguments[0]=--experimental.kubernetesingressnginx" \
-		--set "additionalArguments[1]=--providers.kubernetesingressnginx" \
-		--set "additionalArguments[2]=--providers.kubernetescrd.allowcrossnamespace=true" \
-		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set additionalArguments[3]=--metrics.prometheus=true') \
+		--set providers.kubernetesCRD.allowCrossNamespace=true" \
+		--set experimental.plugins.corsmiddleware.moduleName=github.com/SergioFloresG/corsmiddleware \
+		--set experimental.plugins.corsmiddleware.version=v0.1.1 \
+		--set experimental.plugins.traefik-real-ip.moduleName=github.com/soulbalz/traefik-real-ip \
+		--set experimental.plugins.traefik-real-ip.version=v1.0.3 \
+		--set logs.access.enabled=true \
+		--set rbac.rbac.aggregateTo[0]=admin \
+		--set service.externalTrafficPolicy=Local \
 		--version=37.3.0 \
 		ingress-traefik \
 		traefik/traefik
@@ -327,7 +329,6 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) create -f ci/default-ingress-certificate-request.yaml || true
 	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) create -f ci/traefik-default-certificate.yaml || true
 	$(KUBECTL) create -f ci/nginx-ingressclass.yaml || true
-	$(KUBECTL) create -f ci/traefik-role-for-admin.yaml || true
 ifeq ($(INSTALL_AERGIA),true)
 	$(KUBECTL) --namespace aergia create -f ci/traefik-default-backend.yaml || true
 endif
