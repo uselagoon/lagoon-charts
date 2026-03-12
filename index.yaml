@@ -4,6 +4,42 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update remote-controller to v0.29.1
+      artifacthub.io/crds: |
+        - kind: LagoonBuild
+          version: v1beta2
+          name: lagoonbuild
+          displayName: LagoonBuild
+          description: This is the CRD used for managing LagoonBuilds
+        - kind: LagoonTask
+          version: v1beta2
+          name: lagoontask
+          displayName: LagoonTask
+          description: This is the CRD used for managing LagoonTasks
+    apiVersion: v2
+    appVersion: v0.29.1
+    created: "2026-03-12T22:40:08.616744837Z"
+    description: A Helm chart for Kubernetes which installs Lagoon remote controllers
+      which are used for handling build and task pods (https://github.com/uselagoon/remote-controller).
+    digest: 9d26627eba256d643bf88322786c465d4e4e8efe7826e1c2bdc437e77b56b714
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-build-deploy
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-build-deploy-0.40.1/lagoon-build-deploy-0.40.1.tgz
+    version: 0.40.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update remote-controller to v0.29.0
       artifacthub.io/crds: |
         - kind: LagoonBuild
@@ -16826,4 +16862,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-09T20:58:32.272981301Z"
+generated: "2026-03-12T22:40:08.617749475Z"
