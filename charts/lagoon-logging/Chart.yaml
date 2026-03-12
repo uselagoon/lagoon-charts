@@ -38,4 +38,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
     - kind: added
-      description: Less restrictive Helm value checks to support External Secrets.
+      description: Extend support for external secrets for forward and rabbitmq.
