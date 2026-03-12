@@ -104,6 +104,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        {{- if .Values.forwardSecretPresent }}
         envFrom:
         - secretRef:
             {{- if .Values.forwardSecretName }}
