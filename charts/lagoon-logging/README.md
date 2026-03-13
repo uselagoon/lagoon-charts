@@ -125,7 +125,7 @@ The chart supports using [External Secrets Operator](https://external-secrets.io
 To enable this feature:
 
 1. Set `forwardSecretPresent: true` in your values file.
-2. Configure your External Secrets Operator to create a secret named `lagoon-logging-logs-dispatcher-env` using the template ConfigMap `lagoon-logging-logs-dispatcher-env-template`.
+2. Configure your External Secrets Operator to create a secret named `lagoon-logging-logs-dispatcher-env` using the template ConfigMap `lagoon-logging-logs-dispatcher-external-secrets-template`.
 
 Example External Secrets configuration:
 
@@ -136,7 +136,7 @@ lagoonLogs:
   enabled: true
 ```
 
-The chart will create a ConfigMap template (`lagoon-logging-logs-dispatcher-env-template`) that External Secrets Operator can use to populate the following environment variables:
+The chart will create a ConfigMap template (`lagoon-logging-logs-dispatcher-external-secrets-template`) that External Secrets Operator can use to populate the following environment variables:
 
 - `LOGS_FORWARD_HOST` (when `enableDefaultForwarding: true`)
 - `LOGS_FORWARD_HOSTNAME` (when `enableDefaultForwarding: true`)
