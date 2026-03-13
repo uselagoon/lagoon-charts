@@ -13,7 +13,9 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if not .Values.forwardSecretPresent }}
         checksum/secret: {{ include (print $.Template.BasePath "/logs-dispatcher.secret.yaml") . | sha256sum }}
+        {{- end }}
         checksum/env-configmap: {{ include (print $.Template.BasePath "/logs-dispatcher.env.configmap.yaml") . | sha256sum }}
         checksum/fluent-conf-configmap: {{ include (print $.Template.BasePath "/logs-dispatcher.fluent-conf.configmap.yaml") . | sha256sum }}
         {{- if .Values.exportLogs }}
@@ -90,7 +92,7 @@ spec:
         {{- end }}
         - mountPath: /fluentd/buffer/
           name: buffer
-        {{- if and .Values.enableDefaultForwarding .Values.forward.mTLS }}
+        {{- if and .Values.enableDefaultForwarding .Values.forward.mTLS (not .Values.forwardSecretPresent) }}
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls
         {{- end }}
@@ -146,7 +148,7 @@ spec:
           name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-source-lagoon
         name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-source-lagoon
       {{- end }}
-      {{- if and .Values.enableDefaultForwarding .Values.forward.mTLS }}
+      {{- if and .Values.enableDefaultForwarding .Values.forward.mTLS (not .Values.forwardSecretPresent) }}
       - secret:
           defaultMode: 420
           secretName: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-tls

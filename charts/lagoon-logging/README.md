@@ -118,6 +118,43 @@ NOTE: If the `logging-operator` chart upgrade doesn't work, just uninstall the h
 helm upgrade --debug --namespace lagoon-logging --reuse-values lagoon-logging lagoon-logging
 ```
 
+## Using External Secrets Operator
+
+The chart supports using [External Secrets Operator](https://external-secrets.io/) to manage the `logs-dispatcher-env` secret instead of creating it directly from Helm values.
+
+To enable this feature:
+
+1. Set `forwardSecretPresent: true` in your values file.
+2. Configure your External Secrets Operator to create a secret named `lagoon-logging-logs-dispatcher-env` using the template ConfigMap `lagoon-logging-logs-dispatcher-external-secrets-template`.
+
+Example External Secrets configuration:
+
+```yaml
+forwardSecretPresent: true
+enableDefaultForwarding: true
+lagoonLogs:
+  enabled: true
+```
+
+The chart will create a ConfigMap template (`lagoon-logging-logs-dispatcher-external-secrets-template`) that External Secrets Operator can use to populate the following environment variables:
+
+- `LOGS_FORWARD_HOST` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_HOSTNAME` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_HOST_PORT` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_USERNAME` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_PASSWORD` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_SELF_HOSTNAME` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_SHARED_KEY` (when `enableDefaultForwarding: true`)
+- `RABBITMQ_USER` (when `lagoonLogs.enabled: true`)
+- `RABBITMQ_PASSWORD` (when `lagoonLogs.enabled: true`)
+- `RABBITMQ_HOST` (when `lagoonLogs.enabled: true`)
+
+**Note on TLS Certificates**: When `forwardSecretPresent: true`, the chart will not create or mount TLS certificate secrets. If you need mTLS with external secrets, you should either:
+- Set `forward.mTLS: false` and handle TLS termination externally, OR
+- Manage TLS certificates through a different mechanism outside of this chart's scope
+
+In default mode (`forwardSecretPresent: false`) with `forward.mTLS: true`, the chart creates and mounts a TLS secret from `.Values.tls.*` containing `ca.crt`, `client.crt`, and `client.key`.
+
 ## Generating certificates
 
 Some components of this chart use server or client TLS authentication.
