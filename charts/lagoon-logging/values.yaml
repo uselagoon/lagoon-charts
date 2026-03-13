@@ -286,6 +286,12 @@ consolidateServiceIndices: false
 # sent to a third-party service and not to a central elasticsearch.
 enableDefaultForwarding: true
 
+# Set this to true when using External Secrets Operator to manage the
+# logs-dispatcher-env secret. When enabled, the chart will not create the
+# logs-dispatcher-env secret and will instead expect it to be provided
+# externally (e.g., via External Secrets Operator).
+forwardSecretPresent: false
+
 # Set this to "On" for the default behavior including kubernetes_namespace_name
 # labels. In router-logs this could be confusing, but may be useful for debug.
 fluentbitNamespaceLabels: "Off"

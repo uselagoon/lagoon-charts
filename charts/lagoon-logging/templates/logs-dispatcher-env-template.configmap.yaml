@@ -1,0 +1,21 @@
+{{- if .Values.forwardSecretPresent }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env-template
+  labels:
+    {{- include "lagoon-logging.logsDispatcher.labels" . | nindent 4 }}
+data:
+  config: |
+    {{- if .Values.enableDefaultForwarding }}
+    LOGS_FORWARD_USERNAME={{ "{{ .forward_username }}" }}
+    LOGS_FORWARD_PASSWORD={{ "{{ .forward_password }}" }}
+    LOGS_FORWARD_SELF_HOSTNAME={{ "{{ .forward_self_hostname }}" }}
+    LOGS_FORWARD_SHARED_KEY={{ "{{ .forward_shared_key }}" }}
+    {{- end }}
+    {{- if .Values.lagoonLogs.enabled }}
+    RABBITMQ_USER={{ "{{ .rabbitmq_user }}" }}
+    RABBITMQ_PASSWORD={{ "{{ .rabbitmq_password }}" }}
+    RABBITMQ_HOST={{ "{{ .rabbitmq_host }}" }}
+    {{- end }}
+{{- end }}
