@@ -149,7 +149,11 @@ The chart will create a ConfigMap template (`lagoon-logging-logs-dispatcher-env-
 - `RABBITMQ_PASSWORD` (when `lagoonLogs.enabled: true`)
 - `RABBITMQ_HOST` (when `lagoonLogs.enabled: true`)
 
-**Note on TLS Certificates**: When `forwardSecretPresent: true` and `forward.mTLS: true`, you must also manage the TLS certificates secret (`lagoon-logging-logs-dispatcher-tls`) externally. The chart will not create this secret, but the logs-dispatcher will expect it to exist with the keys `ca.crt`, `client.crt`, and `client.key`.
+**Note on TLS Certificates**: When `forwardSecretPresent: true`, the chart will not create or mount TLS certificate secrets. If you need mTLS with external secrets, you should either:
+- Set `forward.mTLS: false` and handle TLS termination externally, OR
+- Manage TLS certificates through a different mechanism outside of this chart's scope
+
+In default mode (`forwardSecretPresent: false`) with `forward.mTLS: true`, the chart creates and mounts a TLS secret from `.Values.tls.*` containing `ca.crt`, `client.crt`, and `client.key`.
 
 ## Generating certificates
 
