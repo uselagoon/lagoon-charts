@@ -138,6 +138,9 @@ lagoonLogs:
 
 The chart will create a ConfigMap template (`lagoon-logging-logs-dispatcher-env-template`) that External Secrets Operator can use to populate the following environment variables:
 
+- `LOGS_FORWARD_HOST` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_HOSTNAME` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_HOST_PORT` (when `enableDefaultForwarding: true`)
 - `LOGS_FORWARD_USERNAME` (when `enableDefaultForwarding: true`)
 - `LOGS_FORWARD_PASSWORD` (when `enableDefaultForwarding: true`)
 - `LOGS_FORWARD_SELF_HOSTNAME` (when `enableDefaultForwarding: true`)
@@ -153,7 +156,7 @@ These can be generated using the instructions in the `lagoon-logs-concentrator` 
 
 The convention for SAN and CN naming is along the lines of:
 
-* `logs-dispatcher.cluster1.example.com` for the lagoon-logging "client" and `logs-concentrator.cluster2.example.com` for the `lagoon-logs-concentrator` "server`.
+* `logs-dispatcher.cluster1.example.com` for the lagoon-logging "client" and `logs-concentrator.cluster2.example.com` for the `lagoon-logs-concentrator` "server".
 * `cdn.cluster1.example.com` for the CDN "client" and `cdn-logs-collector.cluster1.example.com` for the `cdn-logs-collector` "server".
 
 ## Log export
