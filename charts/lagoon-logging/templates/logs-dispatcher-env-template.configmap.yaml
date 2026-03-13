@@ -8,6 +8,9 @@ metadata:
 data:
   config: |
     {{- if .Values.enableDefaultForwarding }}
+    LOGS_FORWARD_HOST={{ "{{ .forward_host }}" }}
+    LOGS_FORWARD_HOSTNAME={{ "{{ .forward_hostname }}" }}
+    LOGS_FORWARD_HOST_PORT={{ "{{ .forward_host_port }}" }}
     LOGS_FORWARD_USERNAME={{ "{{ .forward_username }}" }}
     LOGS_FORWARD_PASSWORD={{ "{{ .forward_password }}" }}
     LOGS_FORWARD_SELF_HOSTNAME={{ "{{ .forward_self_hostname }}" }}
