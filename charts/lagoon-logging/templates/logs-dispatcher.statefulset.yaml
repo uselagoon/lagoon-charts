@@ -13,7 +13,9 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if not .Values.forwardSecretPresent }}
         checksum/secret: {{ include (print $.Template.BasePath "/logs-dispatcher.secret.yaml") . | sha256sum }}
+        {{- end }}
         checksum/env-configmap: {{ include (print $.Template.BasePath "/logs-dispatcher.env.configmap.yaml") . | sha256sum }}
         checksum/fluent-conf-configmap: {{ include (print $.Template.BasePath "/logs-dispatcher.fluent-conf.configmap.yaml") . | sha256sum }}
         {{- if .Values.exportLogs }}
