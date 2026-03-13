@@ -118,6 +118,34 @@ NOTE: If the `logging-operator` chart upgrade doesn't work, just uninstall the h
 helm upgrade --debug --namespace lagoon-logging --reuse-values lagoon-logging lagoon-logging
 ```
 
+## Using External Secrets Operator
+
+The chart supports using [External Secrets Operator](https://external-secrets.io/) to manage the `logs-dispatcher-env` secret instead of creating it directly from Helm values.
+
+To enable this feature:
+
+1. Set `forwardSecretPresent: true` in your values file.
+2. Configure your External Secrets Operator to create a secret named `lagoon-logging-logs-dispatcher-env` using the template ConfigMap `lagoon-logging-logs-dispatcher-env-template`.
+
+Example External Secrets configuration:
+
+```yaml
+forwardSecretPresent: true
+enableDefaultForwarding: true
+lagoonLogs:
+  enabled: true
+```
+
+The chart will create a ConfigMap template (`lagoon-logging-logs-dispatcher-env-template`) that External Secrets Operator can use to populate the following environment variables:
+
+- `LOGS_FORWARD_USERNAME` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_PASSWORD` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_SELF_HOSTNAME` (when `enableDefaultForwarding: true`)
+- `LOGS_FORWARD_SHARED_KEY` (when `enableDefaultForwarding: true`)
+- `RABBITMQ_USER` (when `lagoonLogs.enabled: true`)
+- `RABBITMQ_PASSWORD` (when `lagoonLogs.enabled: true`)
+- `RABBITMQ_HOST` (when `lagoonLogs.enabled: true`)
+
 ## Generating certificates
 
 Some components of this chart use server or client TLS authentication.
@@ -125,7 +153,7 @@ These can be generated using the instructions in the `lagoon-logs-concentrator` 
 
 The convention for SAN and CN naming is along the lines of:
 
-* `logs-dispatcher.cluster1.example.com` for the lagoon-logging "client" and `logs-concentrator.cluster2.example.com` for the `lagoon-logs-concentrator` "server".
+* `logs-dispatcher.cluster1.example.com` for the lagoon-logging "client" and `logs-concentrator.cluster2.example.com` for the `lagoon-logs-concentrator` "server`.
 * `cdn.cluster1.example.com` for the CDN "client" and `cdn-logs-collector.cluster1.example.com` for the `cdn-logs-collector` "server".
 
 ## Log export
