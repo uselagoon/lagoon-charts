@@ -462,5 +462,5 @@ keepIngressNginxController: false
 # Do not set testFixtures.create=true in a production environment.
 testFixtures:
   create: false
-
-forwardSecretName: ""
+ 
+forwardSecretPresent: false
