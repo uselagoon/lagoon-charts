@@ -13,8 +13,10 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if not .Values.forwardSecretPresent }}
         checksum/secret: {{ include (print $.Template.BasePath "/logs-dispatcher.secret.yaml") . | sha256sum }}
         checksum/env-configmap: {{ include (print $.Template.BasePath "/logs-dispatcher.env.configmap.yaml") . | sha256sum }}
+        {{- end }}
         checksum/fluent-conf-configmap: {{ include (print $.Template.BasePath "/logs-dispatcher.fluent-conf.configmap.yaml") . | sha256sum }}
         {{- if .Values.exportLogs }}
         checksum/store-configmap: {{ include (print $.Template.BasePath "/logs-dispatcher.store.configmap.yaml") . | sha256sum }}
@@ -107,8 +109,13 @@ spec:
         envFrom:
         - secretRef:
             name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
+        {{- if not .Values.forwardSecretPresent }}
         - configMapRef:
             name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
+        {{- else }}
+        - configMapRef:
+            name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env-template
+        {{- end }}
         {{- with .Values.logsDispatcher.extraEnvsFrom }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
