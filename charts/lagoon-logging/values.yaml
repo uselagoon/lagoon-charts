@@ -463,4 +463,4 @@ keepIngressNginxController: false
 testFixtures:
   create: false
 
-forwardSecretPresent: false
+forwardSecretPresent: ""
