@@ -106,10 +106,10 @@ spec:
               fieldPath: spec.nodeName
         envFrom:
         - secretRef:
-            name: {{- if .Values.forwardSecretPresent }}
-              {{ .Values.forwardSecretPresent }}
+            {{- if .Values.forwardSecretName }}
+              name: {{ .Values.forwardSecretName }}
             {{- else }}
-              {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
+              name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
             {{- end }}
         - configMapRef:
             name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
