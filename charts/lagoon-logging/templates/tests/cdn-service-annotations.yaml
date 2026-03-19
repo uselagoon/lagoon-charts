@@ -8,7 +8,7 @@ metadata:
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
     "helm.sh/hook-weight": "-2"
 rules:
-- apiGroups: [""] # "" indicates the core API group
+- apiGroups: [""]  # "" indicates the core API group
   resources: ["services"]
   verbs: ["get", "watch", "list"]
 ---
@@ -22,7 +22,7 @@ metadata:
     "helm.sh/hook-weight": "-1"
 subjects:
 - kind: Group
-  name: system:serviceaccounts # all serviceaccounts
+  name: system:serviceaccounts  # all serviceaccounts
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
