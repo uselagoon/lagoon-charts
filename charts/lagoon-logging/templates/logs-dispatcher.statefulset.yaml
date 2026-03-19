@@ -107,12 +107,12 @@ spec:
         envFrom:
         - secretRef:
             {{- if .Values.forwardSecretName }}
-              name: {{ .Values.forwardSecretName }}
+            name: {{ .Values.forwardSecretName }}
             {{- else }}
-              name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
+            name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
             {{- end }}
         - configMapRef:
-          name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
+            name: {{ include "lagoon-logging.logsDispatcher.fullname" . }}-env
         {{- with .Values.logsDispatcher.extraEnvsFrom }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
