@@ -10,6 +10,7 @@
 
 # These values are optional.
 # overwriteActiveStandbyTaskImage:
+# overwriteProjectcloneTaskImage:
 
 # appspecific discovery.json settings
 # This should point to the publicly accessible ssh endpoint as a schema-less

@@ -157,6 +157,10 @@ spec:
         - name: OVERWRITE_ACTIVESTANDBY_TASK_IMAGE
           value: {{ . | quote }}
         {{- end }}
+        {{- with .Values.overwriteProjectcloneTaskImage }}
+        - name: OVERWRITE_PROJECTCLONE_TASK_IMAGE
+          value: {{ . | quote }}
+        {{- end }}
         - name: PROJECTSEED
           valueFrom:
             secretKeyRef:
