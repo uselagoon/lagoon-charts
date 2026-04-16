@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "lagoon-core.keycloak.labels" . | nindent 4 }}
 spec:
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "lagoon-core.keycloak.selectorLabels" . | nindent 6 }}

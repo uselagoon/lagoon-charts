@@ -107,6 +107,10 @@ cdnLogsCollector:
       xSz1hWx3HID81bhRijZ+icPvoJU0NpTXoQ==
       -----END EC PRIVATE KEY-----
 
+excludeNamespaceRegexps:
+- ^kube-system$
+- ^monitoring$
+
 extraExcludeNamespaces:
 - ci-fake-namespace-0
 - ci-fake-namespace-1

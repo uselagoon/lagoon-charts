@@ -1,8 +1,6 @@
 # These values must be set on install, as they don't have sensible defaults.
 
-# harborAdminPassword:
 # elasticsearchURL:
-# harborURL:
 # s3BAASSecretAccessKey:
 # s3BAASAccessKeyID:
 # s3FilesAccessKeyID:
@@ -12,6 +10,7 @@
 
 # These values are optional.
 # overwriteActiveStandbyTaskImage:
+# overwriteProjectcloneTaskImage:
 
 # appspecific discovery.json settings
 # This should point to the publicly accessible ssh endpoint as a schema-less
@@ -98,12 +97,9 @@ buildDeployImage:
   default:
     # when updating this chart, ensure that if there are any changes made to the build-deploy-tool repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    image: uselagoon/build-deploy-image:core-v2.31.0
+    image: uselagoon/build-deploy-image:core-v2.33.1
   edge:
     enabled: false
-
-# Set to an empty string to support Harbor v1.x.x
-harborAPIVersion: v2.0
 
 # this default podSecurityContext is set for all services and can be overridden
 # on the service level.
@@ -168,6 +164,8 @@ api:
 
   additionalEnvs:
   #   FOO: Bar
+  sidecar:
+    additionalEnvs:
 
   autoscaling:
     enabled: false
@@ -510,34 +508,6 @@ authServer:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
-webhooks2tasks:
-  enabled: true
-  replicaCount: 2
-  image:
-    repository: uselagoon/webhooks2tasks
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  podAnnotations: {}
-
-  securityContext: {}
-
-  resources:
-    requests:
-      memory: "64Mi"
-      cpu: "50m"
-
-  additionalEnvs:
-  #   FOO: Bar
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
 webhookHandler:
   enabled: true
   replicaCount: 2
@@ -591,7 +561,7 @@ ui:
     pullPolicy: Always
     # when updating this chart, ensure that if there are any changes made to the lagoon-ui repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    tag: "core-v2.29.0"
+    tag: "core-v2.32.0"
 
   podAnnotations: {}
 
@@ -704,7 +674,7 @@ insightsHandler:
     repository: uselagoon/insights-handler
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.11"
+    tag: "v0.0.12"
 
   podAnnotations: {}
 
@@ -728,7 +698,7 @@ insightsHandler:
     enabled: false
     image:
       repository: aquasec/trivy
-      tag: 0.62.1
+      tag: 0.70.0
     service:
       type: ClusterIP
       port: 4954
@@ -1057,7 +1027,7 @@ opensearchSync:
     repository: ghcr.io/uselagoon/lagoon-opensearch-sync
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.14.2"
+    tag: "v0.15.0"
 
   # debug logging toggle
   debug: false
@@ -1141,7 +1111,7 @@ betaUI:
     pullPolicy: Always
     # when updating this chart, ensure that if there are any changes made to the lagoon-beta-ui repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    tag: "main"
+    tag: "v0.2.0"
 
   podAnnotations: {}
 

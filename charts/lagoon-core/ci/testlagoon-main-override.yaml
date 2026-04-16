@@ -36,10 +36,6 @@ authServer:
   image:
     repository: testlagoon/auth-server
 
-webhooks2tasks:
-  image:
-    repository: testlagoon/webhooks2tasks
-
 webhookHandler:
   image:
     repository: testlagoon/webhook-handler

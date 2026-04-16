@@ -73,7 +73,11 @@ spec:
         {{- end }}
         envFrom:
         - secretRef:
+            {{- if .Values.envExistingSecret }}
+            name: {{ .Values.envExistingSecret }}
+            {{- else }}
             name: {{ include "lagoon-logs-concentrator.fullname" . }}-env
+            {{- end }}
         - configMapRef:
             name: {{ include "lagoon-logs-concentrator.fullname" . }}-env
         volumeMounts:
