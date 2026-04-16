@@ -68,7 +68,7 @@ data:
     @include source.d/*.conf
 
     #
-    # pre-processing for nginx_router logs
+    # pre-processing for ingress router logs
     #
     # the reason for having the two match blocks is because we have two checks
     # to distinguish nginx_router logs:
@@ -86,9 +86,29 @@ data:
         tag     "process.app_nginx_ingress"
       </rule>
       <rule>
+        key     $.kubernetes.labels.name
+        pattern ^ingress-nginx$
+        tag     "process.app_nginx_ingress"
+      </rule>
+      <rule>
         key     $['kubernetes']['labels']['app.kubernetes.io/name']
         pattern ^ingress-nginx$
         tag     "process.app_nginx_ingress"
+      </rule>
+      <rule>
+        key     $.kubernetes.labels.app
+        pattern ^ingress-traefik$
+        tag     "process.app_traefik_ingress"
+      </rule>
+      <rule>
+        key     $.kubernetes.labels.name
+        pattern ^ingress-traefik$
+        tag     "process.app_traefik_ingress"
+      </rule>
+      <rule>
+        key     $['kubernetes']['labels']['app.kubernetes.io/name']
+        pattern ^ingress-traefik$
+        tag     "process.app_traefik_ingress"
       </rule>
       # Last rule: catchall
       <rule>
@@ -122,6 +142,22 @@ data:
         invert  true
         key     $.kubernetes.namespace_name
         pattern ^syn-nginx-ingress$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
+      </rule>
+    </match>
+
+    <match process.app_traefik_ingress>
+      @type rewrite_tag_filter
+      <rule>
+        key     $.kubernetes.namespace_name
+        pattern ^ingress-traefik$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
+      </rule>
+      # Last rule: catchall
+      <rule>
+        invert  true
+        key     $.kubernetes.namespace_name
+        pattern ^ingress-traefik$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
       </rule>
     </match>
@@ -243,6 +279,59 @@ data:
         </pattern>
       </parse>
     </filter>
+
+    <filter lagoon.*.router.traefik>
+      @type parser
+{{- if eq .Values.containerRuntime "docker" }}
+      key_name log
+{{- else }}
+      key_name message
+{{- end }}
+      reserve_time true
+      reserve_data true
+      remove_key_name_field true
+      <parse>
+        @type multi_format
+        <pattern>
+          format json
+        </pattern>
+        <pattern>
+          format none
+        </pattern>
+      </parse>
+    </filter>
+    <filter lagoon.*.router.traefik>
+      @type record_modifier
+      remove_keys _dummy_
+      <record>
+        _dummy_ ${router_name = record['RouterName']&.sub(/@.*/, ''); headers = record['RequestHeaders'] || {}; request_path = record['RequestPath'] || record['request_uri']; request_query = record['RequestQuery']; if request_query.nil? && request_path&.include?('?'); request_path, request_query = request_path.split('?', 2); end; x_forwarded_for = headers['X-Forwarded-For'] || headers['x-forwarded-for'] || record['X-Forwarded-For'] || record['x-forwarded-for']; true_client_ip = headers['True-Client-IP'] || headers['true-client-ip'] || record['True-Client-IP'] || record['true-client-ip']; req_id = record['RequestID'] || headers['X-Request-Id'] || headers['X-Request-ID'] || headers['x-request-id']; record['time'] = record['time'] || record['StartUTC']; record['host'] = record['host'] || record['RequestHost']; record['remote_addr'] = record['remote_addr'] || record['ClientHost']; record['request_method'] = record['request_method'] || record['RequestMethod']; record['request_uri'] = record['request_uri'] || request_path; record['request_query'] = record['request_query'] || request_query || '-'; record['request_proto'] = record['request_proto'] || record['RequestProtocol']; record['status'] = record['status'] || record['DownstreamStatus']&.to_s; record['bytes_sent'] = record['bytes_sent'] || record['DownstreamContentSize']; record['request_time'] = record['request_time'] || (record['Duration'] ? (record['Duration'].to_f / 1_000_000_000).round(6) : nil); record['http_user_agent'] = record['http_user_agent'] || record['RequestUserAgent'] || headers['User-Agent'] || headers['user-agent'] || '-'; record['http_referer'] = record['http_referer'] || record['RequestReferer'] || headers['Referer'] || headers['referer'] || '-'; record['x-forwarded-for'] = record['x-forwarded-for'] || x_forwarded_for || '-'; record['true-client-ip'] = record['true-client-ip'] || true_client_ip || '-'; record['req_id'] = record['req_id'] || req_id || '-'; record['remote_user'] = record['remote_user'] || record['RequestUser'] || record['ClientUsername'] || '-'; record['request_length'] = record['request_length'] || record['RequestContentSize'] || record['RequestLength'] || 0; record['namespace'] = record['namespace'] || router_name; record['ingress_name'] = record['ingress_name'] || record['RequestHost'] || router_name; record['service_name'] = record['service_name'] || record['ServiceName']&.sub(/@.*/, ''); record['service_port'] = record['service_port'] || record['ServiceAddr'] || record['ServiceURL']; nil}
+      </record>
+    </filter>
+    <filter lagoon.*.router.traefik>
+      @type record_modifier
+      remove_keys _dummy_,StartUTC,ClientHost,RequestHost,RequestMethod,RequestPath,RequestQuery,RequestProtocol,RequestUserAgent,RequestReferer,RequestID,RequestUser,ClientUsername,RequestLength,RequestContentSize,RequestHeaders,X-Forwarded-For,x-forwarded-for,True-Client-IP,true-client-ip,DownstreamStatus,DownstreamContentSize,Duration,RouterName,ServiceName,ServiceAddr,ServiceURL
+    </filter>
+    <match lagoon.*.router.traefik>
+      @type rewrite_tag_filter
+      <rule>
+        invert true
+        key host
+        pattern /.+/
+        tag ${tag}
+{{- if .Values.traefikLogProcessing }}
+        label @OUTPUT
+{{- else }}
+        label @DISCARD
+{{- end }}
+      </rule>
+      <rule>
+        key host
+        pattern /.+/
+        tag "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
+        label @ROUTER_OUTPUT
+      </rule>
+    </match>
+
     # match the nginx router logs here and relabel them based on whether they
     # were successfully parsed as json above or not
     <match lagoon.*.router.nginx>
@@ -268,13 +357,13 @@ data:
         key host
         pattern /.+/
         tag ${tag}
-        label @NGINX_ROUTER_OUTPUT
+        label @ROUTER_OUTPUT
       </rule>
     </match>
-    <label @NGINX_ROUTER_OUTPUT>
-      # Strip the nginx-ingress namespace info and add enough dummy information
+    <label @ROUTER_OUTPUT>
+      # Strip ingress namespace info and add enough dummy information
       # so that kubernetes_metadata plugin can get the namespace labels.
-      <filter lagoon.*.router.nginx>
+      <filter lagoon.*.router.**>
         @type record_modifier
         remove_keys _dummy_
         <record>
@@ -282,14 +371,14 @@ data:
         </record>
       </filter>
       # enrich with k8s metadata (will get the namespace labels)
-      <filter lagoon.*.router.nginx>
+      <filter lagoon.*.router.**>
         @type kubernetes_metadata
         @log_level warn
         skip_container_metadata true
         skip_master_url         true
       </filter>
       # strip the dummy information so that it doesn't appear in logs
-      <filter lagoon.*.router.nginx>
+      <filter lagoon.*.router.**>
         @type record_modifier
         remove_keys _dummy_,docker
         <record>
@@ -299,7 +388,7 @@ data:
       {{- with .Values.routerLogsPostProcess }}
         {{- . | nindent 6 }}
       {{- end }}
-      <match lagoon.*.router.nginx>
+      <match lagoon.*.router.**>
         @type relabel
         @label @OUTPUT
       </match>
