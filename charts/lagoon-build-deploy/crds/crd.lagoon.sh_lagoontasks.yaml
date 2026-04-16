@@ -162,6 +162,8 @@ spec:
                     type: string
                   sshKey:
                     type: boolean
+                  volumeMounts:
+                    type: boolean
                 type: object
               environment:
                 description: LagoonTaskEnvironment defines the lagoon environment
