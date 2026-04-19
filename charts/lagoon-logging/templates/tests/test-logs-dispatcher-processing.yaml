@@ -202,11 +202,6 @@ data:
     # Traefik access logs are also JSON, but the field names differ from the
     # ingress-nginx JSON format. Map a few common fields back to the nginx-style
     # names here so downstream consumers can keep using the same schema.
-    #
-    # NOTE: The namespace/ingress_name mapping below is intentionally only a
-    # starter. It assumes RouterName can be reduced to a Lagoon namespace once
-    # the provider suffix is stripped. Extend this to match your Traefik router
-    # naming convention.
     <filter lagoon.*.router.traefik>
       @type parser
       key_name message
