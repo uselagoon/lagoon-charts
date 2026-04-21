@@ -104,6 +104,7 @@ buffer:
   size: 32Gi
   storageClassName: ""
 
+envExistingSecret: ""
 usersExistingSecret: ""
 
 # Sample data shown below.
