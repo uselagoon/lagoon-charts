@@ -1,8 +1,6 @@
 # These values must be set on install, as they don't have sensible defaults.
 
-# harborAdminPassword:
 # elasticsearchURL:
-# harborURL:
 # s3BAASSecretAccessKey:
 # s3BAASAccessKeyID:
 # s3FilesAccessKeyID:
@@ -101,9 +99,6 @@ buildDeployImage:
     image: uselagoon/build-deploy-image:core-v2.31.0
   edge:
     enabled: false
-
-# Set to an empty string to support Harbor v1.x.x
-harborAPIVersion: v2.0
 
 # this default podSecurityContext is set for all services and can be overridden
 # on the service level.
