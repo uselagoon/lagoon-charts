@@ -9049,6 +9049,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: added
+          description: allow usage of existing secret for env
+    apiVersion: v2
+    created: "2026-04-21T15:41:10.262346585Z"
+    description: 'A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
+      service. '
+    digest: 7577ca16be611585042b425ca4fd5e2254552c5ce09998b31431ea6511bcdf49
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.23.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logs-concentrator
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logs-concentrator-0.57.0/lagoon-logs-concentrator-0.57.0.tgz
+    version: 0.57.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
           description: allow usage of existing secret for users
     apiVersion: v2
     created: "2026-03-04T19:08:08.783386929Z"
@@ -16926,4 +16947,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2026-03-20T14:56:44.640058097Z"
+generated: "2026-04-21T15:41:10.413502133Z"
