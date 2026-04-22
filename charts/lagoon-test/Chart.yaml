@@ -29,4 +29,4 @@ appVersion: v2.30.0
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update lagoon appVersion to 2.30.0
+      description: update tests with support for project cloning
