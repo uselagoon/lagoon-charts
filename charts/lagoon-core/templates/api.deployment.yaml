@@ -119,10 +119,6 @@ spec:
         - name: GITLAB_API_HOST
           value: {{ . | quote }}
         {{- end }}
-        - name: HARBOR_API_VERSION
-          value: {{ .Values.harborAPIVersion | quote }}
-        - name: HARBOR_URL
-          value: {{ required "A valid .Values.harborURL required!" .Values.harborURL | quote }}
         - name: JWTSECRET
           valueFrom:
             secretKeyRef:
