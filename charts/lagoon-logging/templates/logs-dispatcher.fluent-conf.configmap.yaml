@@ -309,7 +309,7 @@ data:
     </filter>
     <filter lagoon.*.router.traefik>
       @type record_modifier
-      remove_keys _dummy_,StartUTC,StartLocal,ClientHost,ClientAddr,ClientPort,RequestHost,RequestAddr,RequestPort,RequestScheme,RequestMethod,RequestPath,RequestQuery,RequestProtocol,RequestUserAgent,RequestReferer,RequestID,RequestUser,RequestCount,ClientUsername,RequestLength,RequestContentSize,RequestHeaders,X-Forwarded-For,x-forwarded-for,X-Forwarded-Proto,x-forwarded-proto,True-Client-IP,true-client-ip,Fastly-Client-IP,fastly-client-ip,DownstreamStatus,DownstreamContentSize,OriginContentSize,OriginDuration,OriginStatus,Duration,Overhead,RetryAttempts,RouterName,ServiceName,ServiceAddr,ServiceURL,TLSCipher,TLSVersion,entryPointName,request_User-Agent,request_X-Real-Ip,level,msg
+      remove_keys _dummy_,StartUTC,StartLocal,ClientHost,ClientAddr,ClientPort,RequestHost,RequestAddr,RequestPort,RequestScheme,RequestMethod,RequestPath,RequestQuery,RequestProtocol,RequestUserAgent,RequestReferer,RequestID,RequestUser,RequestCount,ClientUsername,RequestLength,RequestContentSize,RequestHeaders,X-Forwarded-For,X-Forwarded-Proto,x-forwarded-proto,True-Client-IP,Fastly-Client-IP,fastly-client-ip,DownstreamStatus,DownstreamContentSize,OriginContentSize,OriginDuration,OriginStatus,Duration,Overhead,RetryAttempts,RouterName,ServiceName,ServiceAddr,ServiceURL,TLSCipher,TLSVersion,entryPointName,request_User-Agent,request_X-Real-Ip,level,msg
     </filter>
     <match lagoon.*.router.traefik>
       @type rewrite_tag_filter
