@@ -118,19 +118,32 @@ data:
       </rule>
     </match>
     # check namespace_name for Traefik too.
-    # Traefik ingress controller namespace is explicitly ingress-traefik.
     <match process.app_traefik_ingress>
       @type rewrite_tag_filter
+      # To be removed later
       <rule>
         key     $.kubernetes.namespace_name
         pattern ^ingress-traefik$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
+      </rule>
+      # To be removed later
+      <rule>
+        invert  true
+        key     $.kubernetes.namespace_name
+        pattern ^ingress-traefik$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
+      </rule>
+      # The rules we actually want.
+      <rule>
+        key     $.kubernetes.namespace_name
+        pattern ^infra-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
       </rule>
       # Last rule: catchall
       <rule>
         invert  true
         key     $.kubernetes.namespace_name
-        pattern ^ingress-traefik$
+        pattern ^infra-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
       </rule>
     </match>
@@ -408,7 +421,7 @@ data:
     {{- /* traefik router logs 0 */}}
     {"stream":"stdout","logtag":"F","kubernetes":{"namespace_name":"test-logs-deleteme-fakeproject-dev","namespace_labels":{"app.kubernetes.io/managed-by":"Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-dev","lagoon.sh/environment":"dev","lagoon.sh/environmentType":"development","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"time":"2022-11-22T07:43:13.123456Z","remote_addr":"198.51.100.10","x-forwarded-for":"198.51.100.10, 203.0.113.1","true-client-ip":"198.51.100.10","req_id":"traefik-req-123","remote_user":"-","bytes_sent":987,"request_time":0.041,"status":"200","host":"test-logs-deleteme-fakeproject-dev.test1.amazee.io","request_proto":"HTTP/2.0","request_uri":"/traefik-example","request_query":"foo=bar","request_length":321,"request_method":"GET","request_scheme":"https","http_referer":"https://ref.example/","http_user_agent":"curl/8.7.1","namespace":"test-logs-deleteme-fakeproject-dev","ingress_name":"test-logs-deleteme-fakeproject-dev.test1.amazee.io","ingress_controller":"ingress-traefik","service_name":"nginx","service_port":"http","cluster":"test-cluster-name","index_name":"router-logs-test-logs-deleteme-fakeproject-_-development-_-2022.11"}
     {{- /* raw traefik router log */}}
-    {"stream":"stdout","logtag":"F","message":"{\"StartUTC\":\"2022-11-22T07:45:15.000000Z\",\"ClientHost\":\"203.0.113.44\",\"DownstreamContentSize\":456,\"Duration\":11000000,\"DownstreamStatus\":200,\"RequestHost\":\"test-logs-deleteme-fakeproject-prod.test1.amazee.io\",\"RequestProtocol\":\"HTTP/2.0\",\"RequestPath\":\"/raw-traefik\",\"RequestMethod\":\"POST\",\"RequestScheme\":\"https\",\"RequestContentSize\":210,\"RequestCount\":14517,\"RequestHeaders\":{\"Content-Length\":\"210\",\"Referer\":\"https://ref.example/\",\"User-Agent\":\"curl/8.7.1\",\"X-Forwarded-For\":\"198.51.100.20, 203.0.113.10\",\"X-Request-Id\":\"raw-traefik-req-1\"},\"RouterName\":\"test-logs-deleteme-fakeproject-prod-nginx-http@kubernetes\",\"ServiceName\":\"test-logs-deleteme-fakeproject-prod-nginx-http@kubernetes\",\"ServiceURL\":\"http://10.96.0.42:8080\"}","kubernetes":{"pod_name":"traefik-6f7b7d9c8f-abcde","namespace_name":"ingress-traefik","labels":{"app.kubernetes.io/name":"traefik"}}}
+    {"stream":"stdout","logtag":"F","message":"{\"StartUTC\":\"2022-11-22T07:45:15.000000Z\",\"ClientHost\":\"203.0.113.44\",\"DownstreamContentSize\":456,\"Duration\":11000000,\"DownstreamStatus\":200,\"RequestHost\":\"test-logs-deleteme-fakeproject-prod.test1.amazee.io\",\"RequestProtocol\":\"HTTP/2.0\",\"RequestPath\":\"/raw-traefik\",\"RequestMethod\":\"POST\",\"RequestScheme\":\"https\",\"RequestContentSize\":210,\"RequestCount\":14517,\"RequestHeaders\":{\"Content-Length\":\"210\",\"Referer\":\"https://ref.example/\",\"User-Agent\":\"curl/8.7.1\",\"X-Forwarded-For\":\"198.51.100.20, 203.0.113.10\",\"X-Request-Id\":\"raw-traefik-req-1\"},\"RouterName\":\"test-logs-deleteme-fakeproject-prod-nginx-http@kubernetes\",\"ServiceName\":\"test-logs-deleteme-fakeproject-prod-nginx-http@kubernetes\",\"ServiceURL\":\"http://10.96.0.42:8080\"}","kubernetes":{"pod_name":"traefik-6f7b7d9c8f-abcde","namespace_name":"infra-ingress","labels":{"app.kubernetes.io/name":"traefik"}}}
     {{- /* application log 0 */}}
   expected.output.log: |
     {{- /* nginx router logs */}}

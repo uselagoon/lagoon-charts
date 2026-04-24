@@ -148,21 +148,30 @@ data:
 
     <match process.app_traefik_ingress>
       @type rewrite_tag_filter
+      # To be removed later
       <rule>
         key     $.kubernetes.namespace_name
         pattern ^ingress-traefik$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
       </rule>
+      # To be removed later
+      <rule>
+        invert  true
+        key     $.kubernetes.namespace_name
+        pattern ^ingress-traefik$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
+      </rule>
+      # The rules we actually want.
       <rule>
         key     $.kubernetes.namespace_name
-        pattern ^infra-ingress-traefik$
+        pattern ^infra-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
       </rule>
       # Last rule: catchall
       <rule>
         invert  true
         key     $.kubernetes.namespace_name
-        pattern ^ingress-traefik$
+        pattern ^infra-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
       </rule>
     </match>
