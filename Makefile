@@ -727,10 +727,10 @@ endif
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_REPO) ] && echo '--set ui.image.repository=$(UI_IMAGE_REPO)') \
 		$$([ $(INSTALL_STABLE_CORE) != true ] && [ $(UI_IMAGE_TAG) ] && echo '--set ui.image.tag=$(UI_IMAGE_TAG)') \
 		--set betaUI.ingress.enabled=true \
-		--set betaUI.ingress.hosts[0].host="lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		--set betaUI.ingress.hosts[0].host="lagoon-beta-ui.$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set betaUI.ingress.hosts[0].paths[0]="/" \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.additionalEnvs.NODE_TLS_REJECT_UNAUTHORIZED=0') \
-		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set betaUI.ingress.tls[0].hosts[0]=lagoon-beta-ui.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
+		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "--set betaUI.ingress.tls[0].hosts[0]=lagoon-beta-ui.$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set betaUI.ingress.tls[0].secretName=beta-ui-tls') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.kubernetes\\.io/tls-acme=true') \
 		$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo '--set-string betaUI.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect=false') \
