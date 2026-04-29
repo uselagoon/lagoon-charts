@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: removed
       description: vestiges of harbor support
+    - kind: added
+      description: add support for project cloning task image

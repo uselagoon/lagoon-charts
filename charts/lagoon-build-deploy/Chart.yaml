@@ -23,7 +23,7 @@ appVersion: v0.29.1
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update remote-controller to v0.29.1
+      description: update LagoonTask CRD with volume mount support
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2

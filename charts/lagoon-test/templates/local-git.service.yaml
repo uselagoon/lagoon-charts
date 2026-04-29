@@ -11,5 +11,9 @@ spec:
       targetPort: ssh
       protocol: TCP
       name: ssh
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
   selector:
     {{- include "lagoon-test.localGit.selectorLabels" . | nindent 4 }}
