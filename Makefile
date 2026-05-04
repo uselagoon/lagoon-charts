@@ -498,6 +498,13 @@ K8UPV2_VERSION ?= 4.8.4
 install-k8upv2:
 	$(KUBECTL) create -f https://github.com/k8up-io/k8up/releases/download/k8up-$(K8UPV2_VERSION)/k8up-crd.yaml || \
 		$(KUBECTL) replace -f https://github.com/k8up-io/k8up/releases/download/k8up-$(K8UPV2_VERSION)/k8up-crd.yaml
+	$(KUBECTL) create namespace k8upv2 2>/dev/null || true
+	$(KUBECTL) -n k8upv2 create secret generic global-bucket-credentials \
+		--from-literal=username=lagoonFilesAccessKey \
+		--from-literal=password=lagoonFilesSecretKey 2>/dev/null || true
+	$(KUBECTL) -n k8upv2 create secret generic global-restore-credentials \
+		--from-literal=username=lagoonFilesAccessKey \
+		--from-literal=password=lagoonFilesSecretKey 2>/dev/null || true
 	$(HELM) upgrade \
 		--install \
 		--create-namespace \
@@ -507,11 +514,11 @@ install-k8upv2:
 		--set k8up.envVars[0].name=BACKUP_GLOBALS3ENDPOINT,k8up.envVars[0].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--set k8up.envVars[1].name=BACKUP_GLOBALRESTORES3ENDPOINT,k8up.envVars[1].value=http://minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--set k8up.envVars[2].name=BACKUP_GLOBALSTATSURL,k8up.envVars[2].value=http://lagoon-backups.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
-		--set k8up.envVars[3].name=BACKUP_GLOBALACCESSKEYID,k8up.envVars[3].value=lagoonFilesAccessKey \
-		--set k8up.envVars[4].name=BACKUP_GLOBALSECRETACCESSKEY,k8up.envVars[4].value=lagoonFilesSecretKey \
+		--set-json k8up.envVars[3]='{"name":"BACKUP_GLOBALACCESSKEYID","valueFrom":{"secretKeyRef":{"name":"global-bucket-credentials","key":"username"}}}' \
+		--set-json k8up.envVars[4]='{"name":"BACKUP_GLOBALSECRETACCESSKEY","valueFrom":{"secretKeyRef":{"name":"global-bucket-credentials","key":"password"}}}' \
 		--set k8up.envVars[5].name=BACKUP_GLOBALRESTORES3BUCKET,k8up.envVars[5].value=baas-restores \
-		--set k8up.envVars[6].name=BACKUP_GLOBALRESTORES3ACCESSKEYID,k8up.envVars[6].value=lagoonFilesAccessKey \
-		--set k8up.envVars[7].name=BACKUP_GLOBALRESTORES3SECRETACCESSKEY,k8up.envVars[7].value=lagoonFilesSecretKey \
+		--set-json k8up.envVars[6]='{"name":"BACKUP_GLOBALRESTORES3ACCESSKEYID","valueFrom":{"secretKeyRef":{"name":"global-restore-credentials","key":"username"}}}' \
+		--set-json k8up.envVars[7]='{"name":"BACKUP_GLOBALRESTORES3SECRETACCESSKEY","valueFrom":{"secretKeyRef":{"name":"global-restore-credentials","key":"password"}}}' \
 		--version=$(K8UPV2_VERSION) \
 		k8upv2 \
 		k8up/k8up
