@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.92.0
+version: 0.92.1
 
 # AppVersion is set here the same as the logging-operator chart version to
 # autopopulate the post-install CRD message.
@@ -37,5 +37,5 @@ dependencies:
 annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
-    - kind: added
-      description: Extend support for external secrets for forward and rabbitmq.
+    - kind: fixed
+      description: Add cache_ttl to kubernetes_metadata filters to reduce API lookups.
