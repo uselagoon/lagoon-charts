@@ -37,5 +37,5 @@ dependencies:
 annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
-    - kind: added
-      description: Extend support for external secrets for forward and rabbitmq.
+    - kind: fixed
+      description: Add cache_ttl to kubernetes_metadata filters to reduce API lookups.
