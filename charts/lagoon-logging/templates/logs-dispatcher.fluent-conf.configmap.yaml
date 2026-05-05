@@ -157,6 +157,7 @@ data:
       @log_level warn
       skip_container_metadata true
       skip_master_url         true
+      cache_ttl {{ default 3600 .Values.logsDispatcher.kubernetesMetadataCacheTTL }}
     </filter>
     # strip the duplicate information so that it doesn't appear in logs
     <filter lagoon.*.container>
@@ -208,6 +209,7 @@ data:
       @log_level warn
       skip_container_metadata true
       skip_master_url         true
+      cache_ttl {{ default 3600 .Values.logsDispatcher.kubernetesMetadataCacheTTL }}
     </filter>
     # strip the dummy information so that it doesn't appear in logs
     <filter lagoon.*.application>
@@ -287,6 +289,7 @@ data:
         @log_level warn
         skip_container_metadata true
         skip_master_url         true
+        cache_ttl {{ default 3600 .Values.logsDispatcher.kubernetesMetadataCacheTTL }}
       </filter>
       # strip the dummy information so that it doesn't appear in logs
       <filter lagoon.*.router.nginx>
@@ -324,6 +327,7 @@ data:
       @log_level warn
       skip_container_metadata true
       skip_master_url         true
+      cache_ttl {{ default 3600 .Values.logsDispatcher.kubernetesMetadataCacheTTL }}
     </filter>
 
 {{- end }}

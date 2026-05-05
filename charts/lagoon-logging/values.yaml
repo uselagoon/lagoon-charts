@@ -86,6 +86,10 @@ logsDispatcher:
 
   extraEnvsFrom: []
 
+  # TTL in seconds for the kubernetes_metadata plugin cache (covers both
+  # successful and failed/404 lookups). Increase to reduce API server load.
+  kubernetesMetadataCacheTTL: 3600
+
 openshiftHaproxyLogsCollector:
 
   enabled: false
