@@ -294,6 +294,7 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 		--set ingressClass.isDefaultClass=true \
 		--set ingressClass.name=traefik \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.prometheus.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.addInternals=true') \
 		--set "additionalArguments[0]=--providers.kubernetescrd.allowcrossnamespace=true" \
 		--version=39.0.9 \
 		ingress-traefik \
