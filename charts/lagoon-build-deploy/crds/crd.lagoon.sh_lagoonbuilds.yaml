@@ -203,6 +203,9 @@ spec:
                   key:
                     format: byte
                     type: string
+                  organizationKey:
+                    format: byte
+                    type: string
                   monitoring:
                     description: Monitoring contains the monitoring information for
                       the project in Lagoon.
