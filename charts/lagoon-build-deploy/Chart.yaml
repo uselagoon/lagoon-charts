@@ -16,9 +16,9 @@ kubeVersion: ">= 1.25.0-0"
 
 type: application
 
-version: 0.40.1
+version: 0.41.0
 
-appVersion: v0.29.1
+appVersion: v1.0.0
 
 annotations:
   artifacthub.io/changes: |
@@ -26,6 +26,8 @@ annotations:
       description: update LagoonTask CRD with volume mount support
     - kind: changed
       description: update LagoonBuild CRD with organization key support
+    - kind: changed
+      description: update remote-controller to v1.0.0
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
