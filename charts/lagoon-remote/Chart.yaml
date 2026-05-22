@@ -48,4 +48,3 @@ annotations:
       description: update lagoon-build-deploy subchart to v0.41.0
     - kind: changed
       description: updates storage calculator to v0.9.3
-    
