@@ -48,3 +48,5 @@ annotations:
       description: update lagoon-build-deploy subchart to v0.41.0
     - kind: changed
       description: updates storage calculator to v0.9.3
+    - kind: changed
+      description: Update Helm release dbaas-operator to ~0.5.0
