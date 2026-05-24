@@ -4,9 +4,9 @@ dependencies:
   version: 0.41.0
 - name: dbaas-operator
   repository: https://amazeeio.github.io/charts/
-  version: 0.4.0
+  version: 0.5.0
 - name: nats
   repository: https://nats-io.github.io/k8s/helm/charts/
   version: 1.3.14
-digest: sha256:13fdf3fbf8453189873c9ff03de53998824466a6fb1a9c426b94e538c50119e5
-generated: "2026-05-22T16:23:47.761868592+12:00"
+digest: sha256:a724193388f8dbca7555a2d597587ab774a981b520e06ab1b9cd40417ae6717c
+generated: "2026-05-22T17:54:02.043778735Z"
