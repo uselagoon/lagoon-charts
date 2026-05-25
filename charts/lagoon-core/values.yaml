@@ -587,7 +587,7 @@ ui:
     pullPolicy: Always
     # when updating this chart, ensure that if there are any changes made to the lagoon-ui repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    tag: "core-v2.29.0"
+    tag: "core-v2.32.0"
 
   podAnnotations: {}
 
