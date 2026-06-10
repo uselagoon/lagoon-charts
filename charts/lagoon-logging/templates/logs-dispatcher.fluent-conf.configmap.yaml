@@ -152,9 +152,16 @@ data:
       </record>
     </filter>
     # enrich with k8s metadata (will get the namespace labels)
+    # watch is disabled to eliminate LIST/WATCH calls to the API server at
+    # scale (see https://aws.amazon.com/blogs/containers/fluentd-considerations-and-actions-required-at-scale-in-amazon-eks/)
+    # K8S_NODE_NAME is set in the StatefulSet to scope watch/list calls to the node.
+    # skip_pod_labels skips pod labels/annotations while keeping namespace_labels,
+    # which are required for index routing (lagoon.sh/project, lagoon.sh/environmentType).
     <filter lagoon.*.container>
       @type kubernetes_metadata
       @log_level warn
+      watch                   false
+      skip_pod_labels         true
       skip_container_metadata true
       skip_master_url         true
     </filter>
@@ -203,9 +210,12 @@ data:
       </record>
     </filter>
     # enrich with k8s metadata (will get the namespace labels)
+    # watch disabled and pod labels skipped - see container filter comment above.
     <filter lagoon.*.application>
       @type kubernetes_metadata
       @log_level warn
+      watch                   false
+      skip_pod_labels         true
       skip_container_metadata true
       skip_master_url         true
     </filter>
@@ -282,9 +292,12 @@ data:
         </record>
       </filter>
       # enrich with k8s metadata (will get the namespace labels)
+      # watch disabled and pod labels skipped - see container filter comment above.
       <filter lagoon.*.router.nginx>
         @type kubernetes_metadata
         @log_level warn
+        watch                   false
+        skip_pod_labels         true
         skip_container_metadata true
         skip_master_url         true
       </filter>
@@ -319,9 +332,12 @@ data:
       </record>
     </filter>
     # enrich with k8s metadata
+    # watch disabled and pod labels skipped - see container filter comment above.
     <filter lagoon.*.router.openshift.**>
       @type kubernetes_metadata
       @log_level warn
+      watch                   false
+      skip_pod_labels         true
       skip_container_metadata true
       skip_master_url         true
     </filter>
