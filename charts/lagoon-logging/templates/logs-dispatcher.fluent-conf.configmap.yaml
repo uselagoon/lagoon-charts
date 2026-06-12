@@ -211,11 +211,13 @@ data:
     </filter>
     # enrich with k8s metadata (will get the namespace labels)
     # watch disabled and pod labels skipped - see container filter comment above.
+    # skip_pod_lookup is set because the pod_name above is synthetic (the
+    # application host) and would cause API 404s.
     <filter lagoon.*.application>
       @type kubernetes_metadata
       @log_level warn
       watch                   false
-      skip_pod_labels         true
+      skip_pod_lookup         true
       skip_container_metadata true
       skip_master_url         true
     </filter>
@@ -293,11 +295,13 @@ data:
       </filter>
       # enrich with k8s metadata (will get the namespace labels)
       # watch disabled and pod labels skipped - see container filter comment above.
+      # skip_pod_lookup is set because the pod_name above is 'nopod' (synthetic)
+      # and would cause API 404s.
       <filter lagoon.*.router.nginx>
         @type kubernetes_metadata
         @log_level warn
         watch                   false
-        skip_pod_labels         true
+        skip_pod_lookup         true
         skip_container_metadata true
         skip_master_url         true
       </filter>
