@@ -442,6 +442,20 @@ data:
           </exclude>
         </or>
       </filter>
+      {{- with .Values.excludeNamespaceRegexps }}
+      #
+      # Drop logs from namespaces matching the configured regex patterns
+      #
+      <filter lagoon.**>
+        @type grep
+        {{- range . }}
+        <exclude>
+          key $.kubernetes.namespace_name
+          pattern {{ . }}
+        </exclude>
+        {{- end }}
+      </filter>
+      {{- end }}
       #
       # forward all to logs-concentrator
       #
