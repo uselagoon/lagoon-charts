@@ -448,11 +448,25 @@ data:
       #
       <filter lagoon.**>
         @type grep
+        {{- $exceptions := $.Values.exceptNamespaceRegexps }}
         {{- range . }}
+        {{- if $exceptions }}
+        <and>
+          <exclude>
+            key $.kubernetes.namespace_name
+            pattern {{ . }}
+          </exclude>
+          <regexp>
+            key $.kubernetes.namespace_name
+            pattern ^(?!({{ join "|" $exceptions }}))
+          </regexp>
+        </and>
+        {{- else }}
         <exclude>
           key $.kubernetes.namespace_name
           pattern {{ . }}
         </exclude>
+        {{- end }}
         {{- end }}
       </filter>
       {{- end }}

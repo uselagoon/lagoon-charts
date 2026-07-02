@@ -237,6 +237,12 @@ extraExcludeNamespaces: []
 excludeNamespaceRegexps: []
 # - "^myproject"
 
+# Regex patterns to exempt specific namespaces from exclusion.
+# Namespaces matching any of these patterns will NOT be dropped even if they
+# match an excludeNamespaceRegexps pattern. Uses Ruby regex syntax.
+exceptNamespaceRegexps: []
+# - "^myproject-special$"
+
 # Configure the cluster output buffer.
 # This may require tweaking to handle high volumes of logs.
 clusterOutputBuffer:
