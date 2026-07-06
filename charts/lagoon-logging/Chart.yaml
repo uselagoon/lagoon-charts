@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.93.0
+version: 0.94.0
 
 # AppVersion is set here the same as the logging-operator chart version to
 # autopopulate the post-install CRD message.
@@ -37,5 +37,5 @@ dependencies:
 annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
-    - kind: added
-      description: Support for excluding a list of namespaces from logging collection.
+    - kind: fixed
+      description: Exclusion namespace matching syntax error
