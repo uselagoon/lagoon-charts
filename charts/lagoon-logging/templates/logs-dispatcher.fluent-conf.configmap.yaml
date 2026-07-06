@@ -448,12 +448,10 @@ data:
       #
       <filter lagoon.**>
         @type grep
-        {{- range . }}
         <exclude>
           key $.kubernetes.namespace_name
-          pattern {{ . }}
+          pattern {{ join "|" . }}
         </exclude>
-        {{- end }}
       </filter>
       {{- end }}
       #
