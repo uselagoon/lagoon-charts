@@ -6448,6 +6448,34 @@ entries:
   lagoon-logging:
   - annotations:
       artifacthub.io/changes: |
+        - kind: fixed
+          description: Exclusion namespace matching syntax error
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.11.4
+    created: "2026-07-06T06:21:51.608980217Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: oci://ghcr.io/kube-logging/helm-charts
+      version: 4.11.4
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 9fdefd997b7005b8b834bea1d5d2bb7e6ecda7dcf1474109aeade0a31b83c000
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.94.0/lagoon-logging-0.94.0.tgz
+    version: 0.94.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: added
           description: Support for excluding a list of namespaces from logging collection.
       artifacthub.io/containsSecurityUpdates: "false"
@@ -17123,4 +17151,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-02T04:10:58.288798788Z"
+generated: "2026-07-06T06:21:51.609916021Z"
