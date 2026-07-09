@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.105.0
+version: 0.106.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -41,10 +41,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: update insights-remote to v0.0.18
-    - kind: changed
-      description: update lagoon-build-deploy subchart to v0.41.0
-    - kind: changed
-      description: updates storage calculator to v0.9.3
-    - kind: changed
-      description: Update Helm release dbaas-operator to ~0.5.0
+      description: update insights-remote to v0.0.19
