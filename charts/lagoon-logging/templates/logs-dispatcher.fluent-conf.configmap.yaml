@@ -453,6 +453,17 @@ data:
           pattern {{ join "|" . }}
         </exclude>
       </filter>
+      #
+      # Drop lagoon-logs (broker logs) where the project matches the same patterns.
+      # lagoon.*.lagoon records have no kubernetes.namespace_name; they use record['project'].
+      #
+      <filter lagoon.*.lagoon>
+        @type grep
+        <exclude>
+          key $.project
+          pattern {{ join "|" . }}
+        </exclude>
+      </filter>
       {{- end }}
       #
       # forward all to logs-concentrator
