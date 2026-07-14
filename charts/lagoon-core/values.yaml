@@ -97,7 +97,7 @@ buildDeployImage:
   default:
     # when updating this chart, ensure that if there are any changes made to the build-deploy-tool repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    image: uselagoon/build-deploy-image:core-v2.32.0
+    image: uselagoon/build-deploy-image:core-v2.33.0
   edge:
     enabled: false
 
@@ -1027,7 +1027,7 @@ opensearchSync:
     repository: ghcr.io/uselagoon/lagoon-opensearch-sync
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.14.2"
+    tag: "v0.15.0"
 
   # debug logging toggle
   debug: false
@@ -1111,7 +1111,7 @@ betaUI:
     pullPolicy: Always
     # when updating this chart, ensure that if there are any changes made to the lagoon-beta-ui repository
     # and a new image tag is released, that this image tag is updated to reference the new image version
-    tag: "v0.1.0"
+    tag: "v0.2.0"
 
   podAnnotations: {}
 
