@@ -2162,6 +2162,45 @@ entries:
   lagoon-core:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: backup-handler no longer requires rabbitmq connections
+        - kind: removed
+          description: removed webhooks2tasks as no longer used
+        - kind: changed
+          description: update build-deploy-image to core-v2.33.0
+        - kind: changed
+          description: update beta-ui version to v0.2.0
+        - kind: changed
+          description: update lagoon appVersion to 2.33.0
+        - kind: changed
+          description: update opensearch-sync to v0.15.0
+    apiVersion: v2
+    appVersion: v2.33.0
+    created: "2026-07-14T14:01:48.865797691Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.3.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: eefb65b68c5a2cb906b9dd898bcdca07342dedc68b90974ede6d25c4ca247cf7
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.62.0/lagoon-core-1.62.0.tgz
+    version: 1.62.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: removed
           description: vestiges of harbor support
         - kind: added
@@ -10444,6 +10483,46 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update insights-remote to v0.0.19
+        - kind: changed
+          description: update storage-calculator to v0.9.4
+        - kind: changed
+          description: update lagoon-build-deploy subchart to v0.42.0
+    apiVersion: v2
+    created: "2026-07-14T14:01:49.046472351Z"
+    dependencies:
+    - condition: lagoon-build-deploy.enabled
+      name: lagoon-build-deploy
+      repository: https://uselagoon.github.io/lagoon-charts/
+      version: ~0.42.0
+    - condition: dbaas-operator.enabled
+      name: dbaas-operator
+      repository: https://amazeeio.github.io/charts/
+      version: ~0.5.0
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: 1.3.14
+    description: A Helm chart to run a lagoon-remote
+    digest: 9c93d1e147ada18442c49d0261f8dd2dcabdd96f999097c9e61599bbe6482eec
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-remote
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-remote-0.106.0/lagoon-remote-0.106.0.tgz
+    version: 0.106.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update insights-remote to v0.0.18
         - kind: changed
           description: update lagoon-build-deploy subchart to v0.41.0
@@ -15758,6 +15837,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update lagoon appVersion to 2.33.0
+    apiVersion: v2
+    appVersion: v2.33.0
+    created: "2026-07-14T14:01:49.255428813Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 825ab7dc7bc5260a3887e2ec70a8edfd644d0b58cdcd48bd2ae8f63a35e511cd
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.71.0/lagoon-test-0.71.0.tgz
+    version: 0.71.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon appVersion to 2.30.0
     apiVersion: v2
     appVersion: v2.30.0
@@ -17187,4 +17287,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-13T22:54:42.959359766Z"
+generated: "2026-07-14T14:01:49.257811405Z"
