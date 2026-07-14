@@ -302,8 +302,21 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 	export INGRESS_IP="$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
 		$$(envsubst < ci/default-ingress-certificate-request.yaml.tpl > ci/default-ingress-certificate-request.yaml)
 	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) create -f ci/default-ingress-certificate-request.yaml || true
-	$(KUBECTL) --namespace $(INGRESS_CONTROLLER_NAMESPACE) create -f ci/traefik-default-certificate.yaml || true
-	$(KUBECTL) create -f ci/nginx-ingressclass.yaml || true
+	$(HELM) upgrade \
+		--install \
+		--create-namespace \
+		--namespace $(INGRESS_CONTROLLER_NAMESPACE) \
+		--wait \
+		--timeout $(TIMEOUT) \
+		--set ingressClass.isDefaultClass=true \
+		--set ingressClass.name=traefik \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.prometheus.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.addInternals=true') \
+		--set "additionalArguments[0]=--providers.kubernetescrd.allowcrossnamespace=true" \
+		--set "additionalArguments[0]=--providers.file.filename=/config/dyn.yaml" \
+		--version=39.0.9 \
+		ingress-traefik \
+		traefik/traefik -f ci/traefik-extra-objects.yaml
 	$(KUBECTL) create -f ci/traefik-role-for-admin.yaml || true
 ifeq ($(INSTALL_AERGIA),true)
 	$(KUBECTL) --namespace aergia create -f ci/traefik-default-backend.yaml || true

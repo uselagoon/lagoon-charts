@@ -1,0 +1,33 @@
+deployment:
+  additionalVolumes:
+    - name: default-cert
+      secret:
+        secretName: default-ingress-certificate-tls
+    - name: traefik-config
+      configMap:
+        name: traefik-config
+
+additionalVolumeMounts:
+  - name: default-cert
+    mountPath: /certs
+    readOnly: true
+  - name: traefik-config
+    mountPath: /config
+    type: configMap
+
+extraObjects:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: traefik-config
+    labels:
+      name: traefik-config
+  data:
+    dyn.yaml: |
+      # https://doc.traefik.io/traefik/https/tls/
+      tls:
+        stores:
+          default:
+            defaultCertificate:
+              certFile: '/certs/tls.crt'
+              keyFile: '/certs/tls.key'
