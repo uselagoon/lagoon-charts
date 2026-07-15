@@ -296,7 +296,7 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.prometheus.serviceMonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.addInternals=true') \
 		--set "additionalArguments[0]=--providers.kubernetescrd.allowcrossnamespace=true" \
-		--version=39.0.9 \
+		--version=41.0.2 \
 		ingress-traefik \
 		traefik/traefik
 	export INGRESS_IP="$$($(KUBECTL) -n $(INGRESS_CONTROLLER_NAMESPACE) get services $(INGRESS_CONTROLLER_SERVICE) -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
@@ -314,7 +314,7 @@ ifeq ($(INGRESS_CONTROLLER),traefik)
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.addInternals=true') \
 		--set "additionalArguments[0]=--providers.kubernetescrd.allowcrossnamespace=true" \
 		--set "additionalArguments[0]=--providers.file.filename=/config/dyn.yaml" \
-		--version=39.0.9 \
+		--version=41.0.2 \
 		ingress-traefik \
 		traefik/traefik -f ci/traefik-extra-objects.yaml
 	$(KUBECTL) create -f ci/traefik-role-for-admin.yaml || true
