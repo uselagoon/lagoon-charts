@@ -267,7 +267,6 @@ install-aergia:
 		--wait \
 		--timeout $(TIMEOUT) \
 		--set templates.enabled=false \
-		--set image.tag=traefik \
 		--set idling.enabled=true \
 		--set idling.serviceCron="0\,15\,30\,45 * * * *" \
 		--set idling.podCheckInterval=5m \
@@ -276,7 +275,7 @@ install-aergia:
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set servicemonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.enabled=true') \
 		--set unidling.verifyRequests.enabled=false \
-		--version=0.7.2 \
+		--version=0.8.0 \
 		aergia \
 		amazeeio/aergia
 
