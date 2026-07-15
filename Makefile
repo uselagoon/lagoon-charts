@@ -157,12 +157,14 @@ JQ = jq
 PROMETHEUS_VERSION = 75.9.0
 
 INGRESS_CONTROLLER = nginx
+ENABLE_TRAEFIK_MIDDLEWARE = disabled
 
 ifeq ($(INGRESS_CONTROLLER),traefik)
 INGRESS_CONTROLLER_NAMESPACE = ingress-traefik
 INGRESS_CONTROLLER_SERVICE = ingress-traefik
 INGRESS_CONTROLLER_CLASSNAME = nginx
 INGRESS_CONTROLLER_REMOTE_CLASSNAME = nginx
+ENABLE_TRAEFIK_MIDDLEWARE = enabled
 else
 INGRESS_CONTROLLER_NAMESPACE = ingress-nginx
 INGRESS_CONTROLLER_SERVICE = ingress-nginx-controller
@@ -908,13 +910,14 @@ endif
 		$$([ $(LAGOON_SSH_PORTAL_LOADBALANCER) ] && echo "--set lagoonTokenPort=$$($(KUBECTL) -n lagoon-core get services lagoon-core-ssh-token -o jsonpath='{.spec.ports[0].port}')") \
 		--set "QoSMaxBuilds=5" \
 		--set "extraEnvs[0].name=LAGOON_FEATURE_FLAG_DEFAULT_INGRESS_CLASS,extraEnvs[0].value=$(INGRESS_CONTROLLER_REMOTE_CLASSNAME)" \
+		--set "extraEnvs[1].name=LAGOON_FEATURE_FLAG_DEFAULT_TRAEFIK_MIDDLEWARE,extraEnvs[1].value=$(ENABLE_TRAEFIK_MIDDLEWARE)" \
 		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "rabbitMQHostname=lagoon-core-broker.lagoon-core.svc") \
 		$$([ $(INSTALL_STABLE_CORE) = true ] && [ $(shell echo "[{\"version\":\"$(STABLE_CORE_CHART_VERSION)\"}]" | $(JQ) --arg target $(STABLE_CORE_CHART_VERSION_PRE_BROKER_TLS) 'def triple($$i): $$i | [splits("[.-]") | tonumber? // .];  map(select(triple(.version) <= triple($$target))) | length') = 1 ] && echo --set "broker.tls.enabled=false") \
 		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
 			echo "--set extraArgs={--cleanup-harbor-repository-on-delete,--lagoon-feature-flag-support-k8upv2}" || \
 			echo "--set extraArgs={--cleanup-harbor-repository-on-delete}") \
 		$$([ $(REMOTE_CONTROLLER_K8UP_VERSION) = "v2" ] && [ $(INSTALL_K8UP) = true ] && \
-			echo "--set extraEnvs[1].name=LAGOON_FEATURE_FLAG_DEFAULT_K8UP_V2,extraEnvs[1].value=enabled") \
+			echo "--set extraEnvs[2].name=LAGOON_FEATURE_FLAG_DEFAULT_K8UP_V2,extraEnvs[2].value=enabled") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.enabled=true") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminPassword=Harbor12345") \
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = false ] && echo --set "harbor.adminUser=admin") \
