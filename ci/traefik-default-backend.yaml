@@ -18,4 +18,4 @@ metadata:
 spec:
   headers:
     customResponseHeaders:
-      X-Lagoon: ci-remote>traefik
+      X-Lagoon: ci-local-control-k8s>traefik>default-backend
