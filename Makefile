@@ -320,7 +320,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.16.2 \
+		--version=1.19.1 \
 		registry \
 		harbor/harbor
 else
