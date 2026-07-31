@@ -27,7 +27,7 @@ version: 1.62.0
 # number should be incremented each time you make changes to the application.
 # Versions are not expected to follow Semantic Versioning. They should reflect
 # the version the application is using.
-appVersion: v2.33.0
+appVersion: v2.33.1
 
 dependencies:
 - name: nats
@@ -42,3 +42,7 @@ annotations:
   artifacthub.io/changes: |
     - kind: fixed
       description: add missing build image override logic to webhook-handler
+    - kind: changed
+      description: update build-deploy-image to core-v2.33.1
+    - kind: changed
+      description: update lagoon appVersion to 2.33.1
