@@ -15865,6 +15865,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update lagoon appVersion to 2.33.1
+    apiVersion: v2
+    appVersion: v2.33.1
+    created: "2026-07-31T05:30:35.122409283Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: f3f5ef3b1356836e08d9acd6f2f2a739901afd4bffc05ec3213e4595bcbadc5b
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.71.1/lagoon-test-0.71.1.tgz
+    version: 0.71.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon appVersion to 2.33.0
     apiVersion: v2
     appVersion: v2.33.0
@@ -17315,4 +17336,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-15T06:51:21.323972148Z"
+generated: "2026-07-31T05:30:35.123753826Z"
