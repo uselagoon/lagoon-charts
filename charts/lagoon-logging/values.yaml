@@ -230,6 +230,13 @@ extraExcludeNamespaces: []
 # - extra-namespace-0
 # - extra-namespace-1
 
+# Regex patterns to exclude namespaces from log forwarding.
+# Logs from namespaces whose name matches any of these patterns are dropped
+# before being forwarded. Uses Ruby regex syntax (Fluentd grep filter).
+# A single pattern covers all log types (container, router, application).
+excludeNamespaceRegexps: []
+# - "^myproject"
+
 # Configure the cluster output buffer.
 # This may require tweaking to handle high volumes of logs.
 clusterOutputBuffer:

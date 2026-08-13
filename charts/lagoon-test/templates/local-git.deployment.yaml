@@ -39,6 +39,9 @@ spec:
         - name: ssh
           containerPort: 22
           protocol: TCP
+        - name: http
+          containerPort: 8080
+          protocol: TCP
         livenessProbe:
           tcpSocket:
             port: ssh

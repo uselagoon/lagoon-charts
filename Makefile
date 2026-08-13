@@ -44,6 +44,9 @@ OVERRIDE_BUILD_DEPLOY_DIND_IMAGE =
 # if OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/task-activestandby:${lagoonVersion}).
 OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE =
+# if OVERRIDE_PROJECTCLONE_TASK_IMAGE is not set, it will fall back to the
+# controller default (uselagoon/task-projectclone:${lagoonVersion}).
+OVERRIDE_PROJECTCLONE_TASK_IMAGE =
 # Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
 # the lagoon-build-deploy chart appVersion.
 OVERRIDE_REMOTE_CONTROLLER_IMAGETAG =
@@ -67,8 +70,6 @@ SKIP_INSTALL_REGISTRY =
 # This allows updating the fill-test-ci-values template only, without
 # installing any chart dependencies.
 SKIP_ALL_DEPS =
-# Set to `true` to use the disable harbor integration in lagoon-core
-DISABLE_CORE_HARBOR =
 # Ordinarily we shouldn't need to clear the API data as it's usually a first run. Set this
 # variable on a test run to clear (what's clearable) first
 CLEAR_API_DATA = false
@@ -609,8 +610,8 @@ endif
 		$$(if [ $(INSTALL_STABLE_CORE) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-core-$(STABLE_CORE_CHART_VERSION)/charts/lagoon-core/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-core/ci/linter-values.yaml'; fi) \
 		$$([ $(IMAGE_TAG) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set imageTag=$(IMAGE_TAG)') \
 		$$([ $(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set overwriteActiveStandbyTaskImage=$(OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE)') \
+		$$([ $(OVERRIDE_PROJECTCLONE_TASK_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set overwriteProjectcloneTaskImage=$(OVERRIDE_PROJECTCLONE_TASK_IMAGE)') \
 		$$([ $(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set buildDeployImage.default.image=$(OVERRIDE_BUILD_DEPLOY_DIND_IMAGE)') \
-		$$([ $(DISABLE_CORE_HARBOR) ] && echo '--set api.additionalEnvs.DISABLE_CORE_HARBOR=$(DISABLE_CORE_HARBOR)') \
 		--set api.additionalEnvs.ENABLE_SAVED_HISTORY_EXPORT="true" \
 		--set "keycloakFrontEndURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-keycloak.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set "lagoonAPIURL=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io/graphql" \
@@ -661,7 +662,6 @@ endif
 		--set logs2notifications.logs2webhooks.disabled=$(LOGS2WEBHOOKS_DISABLED) \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set ssh.image.repository=$(IMAGE_REGISTRY)/ssh') \
 		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhookHandler.image.repository=$(IMAGE_REGISTRY)/webhook-handler') \
-		$$([ $(IMAGE_REGISTRY) ] && [ $(INSTALL_STABLE_CORE) != true ] && echo '--set webhooks2tasks.image.repository=$(IMAGE_REGISTRY)/webhooks2tasks') \
 		--set s3BAASAccessKeyID=lagoonFilesAccessKey \
 		--set s3BAASSecretAccessKey=lagoonFilesSecretKey \
 		--set s3FilesAccessKeyID=lagoonFilesAccessKey \
@@ -866,6 +866,7 @@ endif
 		$$([ $(INSTALL_UNAUTHENTICATED_REGISTRY) = true ] && echo --set "unauthenticatedRegistry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io") \
 		$$([ $(OVERRIDE_REMOTE_CONTROLLER_IMAGETAG) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.tag=$(OVERRIDE_REMOTE_CONTROLLER_IMAGETAG)') \
 		$$([ $(OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY) ] && [ $(INSTALL_STABLE_BUILDDEPLOY) = false ] && echo '--set image.repository=$(OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY)') \
+		--set image.pullPolicy=Always \
 		$$([ $(REMOTE_CONTROLLER_ROOTLESS_BUILD_PODS) ] && echo '--set rootlessBuildPods=true') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD) ] && echo '--set lagoonFeatureFlagDefaultRootlessWorkload=$(LAGOON_FEATURE_FLAG_DEFAULT_ROOTLESS_WORKLOAD)') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoonFeatureFlagDefaultIsolationNetworkPolicy=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
