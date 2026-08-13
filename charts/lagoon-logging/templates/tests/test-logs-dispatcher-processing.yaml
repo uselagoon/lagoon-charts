@@ -62,6 +62,11 @@ data:
         pattern ^ingress-nginx$
         tag     "process.app_nginx_ingress"
       </rule>
+      <rule>
+        key     $['kubernetes']['labels']['app.kubernetes.io/instance']
+        pattern ^traefik-ingress$
+        tag     "process.app_traefik_ingress"
+      </rule>
       # Last rule: catchall
       <rule>
         invert  true
@@ -84,6 +89,11 @@ data:
         pattern ^ingress-nginx$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
       </rule>
+      <rule>
+        key     $.kubernetes.namespace_name
+        pattern ^syn-nginx-ingress$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
+      </rule>
       # Last rule: catchall
       <rule>
         key     $.kubernetes.namespace_name
@@ -94,13 +104,6 @@ data:
     <match process.app_traefik_ingress>
       @type rewrite_tag_filter
       <rule>
-        key     $.kubernetes.namespace_name
-        pattern ^(infra(-[a-z0-9][a-z0-9-]*))-ingress$
-        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
-      </rule>
-      # Last rule: catchall
-      <rule>
-        invert  true
         key     $.kubernetes.namespace_name
         pattern ^(infra(-[a-z0-9][a-z0-9-]*))-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
