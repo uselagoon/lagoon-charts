@@ -6556,6 +6556,34 @@ entries:
   lagoon-logging:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Adds support for Traefik ingresses for router logs collection.
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.11.4
+    created: "2026-08-13T12:53:35.326778374Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: oci://ghcr.io/kube-logging/helm-charts
+      version: 4.11.4
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: c2396646b1f291587783890a2e3a4d9e45a902f356e1bbabda9e8a4d8aa46ed1
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.96.0/lagoon-logging-0.96.0.tgz
+    version: 0.96.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: Prevent the inclusion of lagoon-logs-* for configured exclusion rules
       artifacthub.io/containsSecurityUpdates: "false"
@@ -17369,4 +17397,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-31T06:01:54.606456932Z"
+generated: "2026-08-13T12:53:35.327859426Z"
