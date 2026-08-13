@@ -92,7 +92,7 @@ data:
       </rule>
       <rule>
         key     $['kubernetes']['labels']['app.kubernetes.io/instance']
-        pattern ^traefik-ingress$
+        pattern traefik-ingress
         tag     "process.app_traefik_ingress"
       </rule>
       # Last rule: catchall
