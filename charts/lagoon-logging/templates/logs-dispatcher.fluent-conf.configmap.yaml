@@ -112,6 +112,11 @@ data:
         pattern ^ingress-nginx$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
       </rule>
+      <rule>
+        key     $.kubernetes.namespace_name
+        pattern ^syn-nginx-ingress$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
+      </rule>
       # Last rule: catchall
       <rule>
         key     $.kubernetes.namespace_name
