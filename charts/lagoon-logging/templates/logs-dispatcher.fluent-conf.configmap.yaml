@@ -129,6 +129,11 @@ data:
       @type rewrite_tag_filter
       <rule>
         key     $.kubernetes.namespace_name
+        pattern infra-ingress
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
+      </rule>
+      <rule>
+        key     $.kubernetes.namespace_name
         pattern ^infra(-[a-z0-9][a-z0-9-]*)?-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
       </rule>
