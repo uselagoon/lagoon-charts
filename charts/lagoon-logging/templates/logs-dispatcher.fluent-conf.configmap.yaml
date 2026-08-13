@@ -86,28 +86,18 @@ data:
         tag     "process.app_nginx_ingress"
       </rule>
       <rule>
-        key     $.kubernetes.labels.name
-        pattern ^ingress-nginx$
-        tag     "process.app_nginx_ingress"
-      </rule>
-      <rule>
         key     $['kubernetes']['labels']['app.kubernetes.io/name']
         pattern ^ingress-nginx$
         tag     "process.app_nginx_ingress"
       </rule>
       <rule>
-        key     $.kubernetes.labels.app
-        pattern ^ingress-traefik$
-        tag     "process.app_traefik_ingress"
-      </rule>
-      <rule>
-        key     $.kubernetes.labels.name
-        pattern ^ingress-traefik$
+        key     $['kubernetes']['labels']['app.kubernetes.io/instance']
+        pattern traefik-ingress
         tag     "process.app_traefik_ingress"
       </rule>
       <rule>
         key     $['kubernetes']['labels']['app.kubernetes.io/name']
-        pattern ^(traefik|ingress-traefik)$
+        pattern ^traefik$
         tag     "process.app_traefik_ingress"
       </rule>
       # Last rule: catchall
@@ -129,12 +119,7 @@ data:
       </rule>
       <rule>
         key     $.kubernetes.namespace_name
-        pattern ^ingress-nginx$
-        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
-      </rule>
-      <rule>
-        key     $.kubernetes.namespace_name
-        pattern ^sigsci-ingress-nginx$
+        pattern ^infra(-[a-z0-9][a-z0-9-]*)?-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
       </rule>
       # Last rule: catchall
@@ -279,7 +264,6 @@ data:
         </pattern>
       </parse>
     </filter>
-
     <filter lagoon.*.router.traefik>
       @type parser
 {{- if eq .Values.containerRuntime "docker" }}
