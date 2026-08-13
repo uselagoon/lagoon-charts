@@ -129,11 +129,6 @@ data:
       @type rewrite_tag_filter
       <rule>
         key     $.kubernetes.namespace_name
-        pattern infra-ingress
-        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
-      </rule>
-      <rule>
-        key     $.kubernetes.namespace_name
         pattern ^infra(-[a-z0-9][a-z0-9-]*)?-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
       </rule>
@@ -256,6 +251,10 @@ data:
         </pattern>
       </parse>
     </filter>
+
+    #
+    # process traefik_router logs
+    #
     <filter lagoon.*.router.traefik>
       @type parser
 {{- if eq .Values.containerRuntime "docker" }}
@@ -287,29 +286,38 @@ data:
       @type record_modifier
       remove_keys _dummy_,StartUTC,StartLocal,ClientHost,ClientAddr,ClientPort,RequestHost,RequestAddr,RequestPort,RequestScheme,RequestMethod,RequestPath,RequestQuery,RequestProtocol,RequestUserAgent,RequestReferer,RequestID,RequestUser,RequestCount,ClientUsername,RequestLength,RequestContentSize,RequestHeaders,X-Forwarded-For,X-Forwarded-Proto,x-forwarded-proto,True-Client-IP,Fastly-Client-IP,fastly-client-ip,DownstreamStatus,DownstreamContentSize,OriginContentSize,OriginDuration,OriginStatus,Duration,Overhead,RetryAttempts,RouterName,ServiceName,ServiceAddr,ServiceURL,TLSCipher,TLSVersion,entryPointName,request_User-Agent,request_user-agent,request_Referer,request_Content-Length,request_Content-length,request_content-length,request_X-Real-Ip,request_X-Forwarded-For,request_x-forwarded-for,request_True-Client-Ip,request_True-Client-IP,request_true-client-ip,request_X-Request-Id,request_X-Request-ID,request_x-request-id,level,msg
     </filter>
+
+    # Check Traefik routers
     <match lagoon.*.router.traefik>
       @type rewrite_tag_filter
       <rule>
         invert true
         key host
         pattern /.+/
-        tag ${tag}
-{{- if .Values.traefikLogProcessing }}
-        label @OUTPUT
-{{- else }}
-        label @DISCARD
-{{- end }}
+        tag ${tag}.unparsed
       </rule>
       <rule>
         key host
         pattern /.+/
-        tag "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
-        label @ROUTER_OUTPUT
+        tag ${tag}.parsed
       </rule>
     </match>
 
-    # match the nginx router logs here and relabel them based on whether they
-    # were successfully parsed as json above or not
+    <match lagoon.*.router.traefik.unparsed>
+      @type relabel
+{{- if .Values.traefikLogProcessing }}
+      @label @OUTPUT
+{{- else }}
+      @label @DISCARD
+{{- end }}
+    </match>
+
+    <match lagoon.*.router.traefik.parsed>
+      @type relabel
+      @label @ROUTER_OUTPUT
+    </match>
+
+    # Check Nginx routers
     <match lagoon.*.router.nginx>
       @type rewrite_tag_filter
       <rule>
@@ -336,10 +344,26 @@ data:
         label @ROUTER_OUTPUT
       </rule>
     </match>
+
+    <match lagoon.*.router.nginx.unparsed>
+      @type relabel
+{{- if .Values.keepIngressNginxController }}
+      @label @OUTPUT
+{{- else }}
+      @label @DISCARD
+{{- end }}
+    </match>
+
+    <match lagoon.*.router.nginx.parsed>
+      @type relabel
+      @label @ROUTER_OUTPUT
+    </match>
+
+    # Process all successfully parsed routers
     <label @ROUTER_OUTPUT>
       # Strip ingress namespace info and add enough dummy information
       # so that kubernetes_metadata plugin can get the namespace labels.
-      <filter lagoon.*.router.nginx>
+      <filter lagoon.*.router.*.parsed>
         @type record_modifier
         remove_keys _dummy_
         <record>
@@ -347,14 +371,14 @@ data:
         </record>
       </filter>
       # enrich with k8s metadata (will get the namespace labels)
-      <filter lagoon.*.router.nginx>
+      <filter lagoon.*.router.*.parsed>
         @type kubernetes_metadata
         @log_level warn
         skip_container_metadata true
         skip_master_url         true
       </filter>
       # strip the dummy information so that it doesn't appear in logs
-      <filter lagoon.*.router.nginx>
+      <filter lagoon.*.router.*.parsed>
         @type record_modifier
         remove_keys _dummy_,docker
         <record>
@@ -364,7 +388,7 @@ data:
       {{- with .Values.routerLogsPostProcess }}
         {{- . | nindent 6 }}
       {{- end }}
-      <match lagoon.*.router.nginx>
+      <match lagoon.*.router.*.parsed>
         @type relabel
         @label @OUTPUT
       </match>
@@ -429,7 +453,7 @@ data:
       </filter>
       #
       # add the router logs index_name
-      #
+      # Note: 'lagoon.*.router.**' safely matches the new `.parsed` and `.unparsed` suffix
       <filter lagoon.*.router.**>
         @type record_modifier
         <record>
