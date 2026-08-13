@@ -322,26 +322,19 @@ data:
       @type rewrite_tag_filter
       <rule>
         # if the host key doesn't exist then this was not parsed as JSON, so we
-        # just send to @OUTPUT directly because it is an actual nginx
-        # controller log. These logs will appear in index_name
+        # tag as .unparsed. These logs will appear in index_name
         # router-logs-ingress-nginx_.* if the keepIngressNginxController value
         # is set to true.
         invert true
         key host
         pattern /.+/
-        tag ${tag}
-{{- if .Values.keepIngressNginxController }}
-        label @OUTPUT
-{{- else }}
-        label @DISCARD
-{{- end }}
+        tag ${tag}.unparsed
       </rule>
       <rule>
         # host key exists, so this is a HTTP request log
         key host
         pattern /.+/
-        tag ${tag}
-        label @ROUTER_OUTPUT
+        tag ${tag}.parsed
       </rule>
     </match>
 
