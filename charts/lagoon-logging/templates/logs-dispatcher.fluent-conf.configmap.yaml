@@ -90,16 +90,6 @@ data:
         pattern ^ingress-nginx$
         tag     "process.app_nginx_ingress"
       </rule>
-      <rule>
-        key     $['kubernetes']['labels']['app.kubernetes.io/instance']
-        pattern traefik-ingress
-        tag     "process.app_traefik_ingress"
-      </rule>
-      <rule>
-        key     $['kubernetes']['labels']['app.kubernetes.io/name']
-        pattern ^traefik$
-        tag     "process.app_traefik_ingress"
-      </rule>
       # Last rule: catchall
       <rule>
         invert  true
@@ -119,15 +109,14 @@ data:
       </rule>
       <rule>
         key     $.kubernetes.namespace_name
-        pattern ^infra(-[a-z0-9][a-z0-9-]*)?-ingress$
+        pattern ^ingress-nginx$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
       </rule>
       # Last rule: catchall
       <rule>
-        invert  true
         key     $.kubernetes.namespace_name
-        pattern ^syn-nginx-ingress$
-        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
+        pattern ^sigsci-ingress-nginx$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
       </rule>
     </match>
 
@@ -135,15 +124,15 @@ data:
       @type rewrite_tag_filter
       <rule>
         key     $.kubernetes.namespace_name
-        pattern ^infra(-[a-z0-9][a-z0-9-]*)?-ingress$
+        pattern ^(infra(-[a-z0-9][a-z0-9-]*))-ingress$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
       </rule>
       # Last rule: catchall
       <rule>
         invert  true
         key     $.kubernetes.namespace_name
-        pattern ^infra(-[a-z0-9][a-z0-9-]*)?-ingress$
-        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
+        pattern ^(infra(-[a-z0-9][a-z0-9-]*))-ingress$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.traefik"
       </rule>
     </match>
 
@@ -347,7 +336,7 @@ data:
     <label @ROUTER_OUTPUT>
       # Strip ingress namespace info and add enough dummy information
       # so that kubernetes_metadata plugin can get the namespace labels.
-      <filter lagoon.*.router.**>
+      <filter lagoon.*.router.nginx>
         @type record_modifier
         remove_keys _dummy_
         <record>
@@ -355,14 +344,14 @@ data:
         </record>
       </filter>
       # enrich with k8s metadata (will get the namespace labels)
-      <filter lagoon.*.router.**>
+      <filter lagoon.*.router.nginx>
         @type kubernetes_metadata
         @log_level warn
         skip_container_metadata true
         skip_master_url         true
       </filter>
       # strip the dummy information so that it doesn't appear in logs
-      <filter lagoon.*.router.**>
+      <filter lagoon.*.router.nginx>
         @type record_modifier
         remove_keys _dummy_,docker
         <record>
@@ -372,7 +361,7 @@ data:
       {{- with .Values.routerLogsPostProcess }}
         {{- . | nindent 6 }}
       {{- end }}
-      <match lagoon.*.router.**>
+      <match lagoon.*.router.nginx>
         @type relabel
         @label @OUTPUT
       </match>
