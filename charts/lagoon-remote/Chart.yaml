@@ -42,3 +42,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: fixed
       description: use correct value name for enabling nats tls block
+    - kind: added
+      description: automatically generate lagoon-remote ssh-portal hostkeys unless defined
