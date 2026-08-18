@@ -450,7 +450,7 @@ natsConfig:
     # this enables the tls block in the nats secret. if your nats is configured to use a public certificate
     # and you are not using client certificates, you can set this to `false`.
     # this value needs to be `true` if `caOnly` is also `true`
-    enableCerts: true
+    enabled: true
     caOnly: false
     # If the lagoon-remote-nats-tls secret should be created by the
     # lagoon-remote chart, certificate values can be specified directly in

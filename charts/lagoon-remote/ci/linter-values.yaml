@@ -47,7 +47,7 @@ nats:
 natsConfig:
   coreURL: "tls://ci-ssh-portal:ci-password@lagoon-core-nats-concentrator.lagoon-core.svc:7422"
   tls:
-    enableCerts: false
+    enabled: false
 
 sshPortal:
   enabled: true
