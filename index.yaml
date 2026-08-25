@@ -2162,6 +2162,36 @@ entries:
   lagoon-core:
   - annotations:
       artifacthub.io/changes: |
+        - kind: changed
+          description: update lagoon appVersion to release 2.33.2
+      artifacthub.io/containsSecurityUpdates: "true"
+    apiVersion: v2
+    appVersion: v2.33.2
+    created: "2026-08-25T05:45:50.598870805Z"
+    dependencies:
+    - condition: nats.enabled
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: ~1.3.0
+    description: 'A Helm chart for Kubernetes which deploys Lagoon''s core components. '
+    digest: 3eca1c4e856c5c431dc277ed6733df975e2cdb8f054812e9516b71453c5e3bbb
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    - email: ben.jackson@amazee.io
+      name: shreddedbacon
+      url: https://amazee.io
+    name: lagoon-core
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-core-1.62.2/lagoon-core-1.62.2.tgz
+    version: 1.62.2
+  - annotations:
+      artifacthub.io/changes: |
         - kind: fixed
           description: add missing build image override logic to webhook-handler
         - kind: changed
@@ -15926,6 +15956,27 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: changed
+          description: update lagoon appVersion to 2.33.2
+    apiVersion: v2
+    appVersion: v2.33.2
+    created: "2026-08-25T05:45:50.862846092Z"
+    description: A Helm chart for Kubernetes which runs the Lagoon test suite.
+    digest: 803ed04d8fd79f8d780f9412822d6b690b4250c50f0fdf0958285e6aa1ca831a
+    home: https://github.com/uselagoon/lagoon-charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-test
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.71.2/lagoon-test-0.71.2.tgz
+    version: 0.71.2
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
           description: update lagoon appVersion to 2.33.1
     apiVersion: v2
     appVersion: v2.33.1
@@ -17397,4 +17448,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2026-08-13T12:53:35.327859426Z"
+generated: "2026-08-25T05:45:50.864136378Z"
