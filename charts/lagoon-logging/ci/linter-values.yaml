@@ -73,6 +73,7 @@ cdnLogsCollector:
     type: ClusterIP
     annotations:
       sh.lagoon.chart.testKey: lagoonTestValue
+  mTLS: true
   tls:
     caCert: |-
       -----BEGIN CERTIFICATE-----
