@@ -28,12 +28,19 @@ data:
       @id   in_tcp
       tag   "lagoon.cdn"
       port  5140
+      {{- if .Values.cdnLogsCollector.mTLS }}
       <transport tls>
         ca_path /fluentd/tls/ca.crt
         cert_path /fluentd/tls/server.crt
         private_key_path /fluentd/tls/server.key
         client_cert_auth true
       </transport>
+      {{- else }}
+      <security>
+        self_hostname "#{ENV['LOGS_FORWARD_SELF_HOSTNAME']}"
+        shared_key "#{ENV['LOGS_FORWARD_SHARED_KEY']}"
+      </security>
+      {{- end }}
       <parse>
         @type json
       </parse>
