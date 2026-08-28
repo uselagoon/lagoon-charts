@@ -45,7 +45,7 @@ spec:
         {{- if not .Values.cdnLogsCollector.mTLS }}
         envFrom:
         - secretRef:
-            name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-auth
+            name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-env
         {{- end }}
         ports:
         - containerPort: 5140
