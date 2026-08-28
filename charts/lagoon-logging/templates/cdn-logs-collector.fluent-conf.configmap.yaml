@@ -35,16 +35,25 @@ data:
         private_key_path /fluentd/tls/server.key
         client_cert_auth true
       </transport>
-      {{- else }}
-      <security>
-        self_hostname "#{ENV['LOGS_FORWARD_SELF_HOSTNAME']}"
-        shared_key "#{ENV['LOGS_FORWARD_SHARED_KEY']}"
-      </security>
       {{- end }}
       <parse>
         @type json
       </parse>
     </source>
+
+    {{- if not .Values.cdnLogsCollector.mTLS }}
+    <filter lagoon.cdn>
+      @type grep
+      <regexp>
+        key auth_token
+        pattern "^#{ENV['CDN_LOGS_AUTH_TOKEN']}$"
+      </regexp>
+    </filter>
+    <filter lagoon.cdn>
+      @type record_modifier
+      remove_keys auth_token
+    </filter>
+    {{- end }}
 
     # uncomment to debug
     # <filter lagoon.**>
