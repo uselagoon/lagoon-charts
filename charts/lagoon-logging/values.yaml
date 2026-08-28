@@ -175,6 +175,9 @@ cdnLogsCollector:
   # If TLS configuration not required disable mTLS.
   # mTLS: false
 
+  # Required when mTLS is disabled.
+  authToken: ""
+
   # TLS configuration is required
   # These should be server certificates, and the CDN should be configured to
   # present client certificates with the same trust root.
