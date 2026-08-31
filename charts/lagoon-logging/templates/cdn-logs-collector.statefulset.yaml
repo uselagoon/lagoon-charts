@@ -68,10 +68,8 @@ spec:
         - mountPath: /fluentd/etc/fluent.conf
           name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-fluent-conf
           subPath: fluent.conf
-        {{- if .Values.cdnLogsCollector.mTLS }}
         - mountPath: /fluentd/tls/
           name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-tls
-        {{- end }}
         resources:
           {{- toYaml .Values.cdnLogsCollector.resources | nindent 10 }}
       {{- with .Values.cdnLogsCollector.nodeSelector }}
@@ -94,12 +92,10 @@ spec:
             path: fluent.conf
           name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-fluent-conf
         name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-fluent-conf
-      {{- if .Values.cdnLogsCollector.mTLS }}
       - secret:
           defaultMode: 420
           secretName: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-tls
         name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-tls
-      {{- end }}
   volumeClaimTemplates:
   - metadata:
       name: buffer
