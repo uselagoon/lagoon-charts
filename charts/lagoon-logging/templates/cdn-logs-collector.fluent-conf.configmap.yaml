@@ -35,6 +35,11 @@ data:
         private_key_path /fluentd/tls/server.key
         client_cert_auth true
       </transport>
+      {{- else }}
+      <transport tls>
+        cert_path /fluentd/tls/server.crt
+        private_key_path /fluentd/tls/server.key
+      </transport>
       {{- end }}
       <parse>
         @type json
