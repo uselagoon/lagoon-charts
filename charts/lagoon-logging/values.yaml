@@ -172,9 +172,17 @@ cdnLogsCollector:
     type: LoadBalancer
     annotations: {}
 
-  # TLS configuration is required
-  # These should be server certificates, and the CDN should be configured to
-  # present client certificates with the same trust root.
+  # If mutual TLS with a custom CA is not required, disable mTLS.
+  # Connection is still encrypted (one-way TLS), auth is via "authToken" instead.
+  # Requires a pre-existing "<fullname>-tls" secret with tls.crt/tls.key.
+  mTLS: false
+
+  # Required when mTLS is disabled.
+  authToken: ""
+
+  # Custom TLS configuration required when mTLS is enabled.
+  # serverCert/serverKey: server certificate presented to the CDN.
+  # caCert: validates the CDN's client certificate.
   tls:
     caCert: ""
     serverCert: ""

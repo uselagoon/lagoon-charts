@@ -28,16 +28,37 @@ data:
       @id   in_tcp
       tag   "lagoon.cdn"
       port  5140
+      {{- if .Values.cdnLogsCollector.mTLS }}
       <transport tls>
         ca_path /fluentd/tls/ca.crt
         cert_path /fluentd/tls/server.crt
         private_key_path /fluentd/tls/server.key
         client_cert_auth true
       </transport>
+      {{- else }}
+      <transport tls>
+        cert_path /fluentd/tls/tls.crt
+        private_key_path /fluentd/tls/tls.key
+      </transport>
+      {{- end }}
       <parse>
         @type json
       </parse>
     </source>
+
+    {{- if not .Values.cdnLogsCollector.mTLS }}
+    <filter lagoon.cdn>
+      @type grep
+      <regexp>
+        key auth_token
+        pattern "^#{ENV['CDN_LOGS_AUTH_TOKEN']}$"
+      </regexp>
+    </filter>
+    <filter lagoon.cdn>
+      @type record_modifier
+      remove_keys auth_token
+    </filter>
+    {{- end }}
 
     # uncomment to debug
     # <filter lagoon.**>

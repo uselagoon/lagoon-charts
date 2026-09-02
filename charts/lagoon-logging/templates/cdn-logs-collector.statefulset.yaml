@@ -42,6 +42,11 @@ spec:
           {{- toYaml .Values.cdnLogsCollector.securityContext | nindent 10 }}
         image: "{{ .Values.cdnLogsCollector.image.repository }}:{{ coalesce .Values.cdnLogsCollector.image.tag .Values.imageTag "latest" }}"
         imagePullPolicy: {{ .Values.cdnLogsCollector.image.pullPolicy }}
+        {{- if not .Values.cdnLogsCollector.mTLS }}
+        envFrom:
+        - secretRef:
+            name: {{ include "lagoon-logging.cdnLogsCollector.fullname" . }}-env
+        {{- end }}
         ports:
         - containerPort: 5140
           protocol: TCP

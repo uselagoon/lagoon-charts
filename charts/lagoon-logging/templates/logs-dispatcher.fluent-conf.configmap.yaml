@@ -58,8 +58,15 @@ data:
       @type  forward
       @id    in_cdn
       port   24226
-      tag   "lagoon.#{ENV['CLUSTER_NAME']}.cdn"
     </source>
+    <match lagoon.cdn>
+      @type rewrite_tag_filter
+      <rule>
+        key     $.timestamp
+        pattern ^
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.cdn"
+      </rule>
+    </match>
 {{- end }}
 
     #
