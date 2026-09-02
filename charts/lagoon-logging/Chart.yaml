@@ -38,4 +38,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
     - kind: added
-      description: Allow optional mTLS for the CDN logs collector.
+      description: Allow optional mTLS with managed DNS-01 certificate for the CDN logs collector.
