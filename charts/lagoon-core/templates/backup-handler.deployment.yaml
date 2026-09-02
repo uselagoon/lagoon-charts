@@ -15,7 +15,6 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/broker.secret: {{ include (print $.Template.BasePath "/broker.secret.yaml") . | sha256sum }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
     {{- with .Values.backupHandler.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -38,22 +37,8 @@ spec:
         command:
         - "sh"
         - "-c"
-        - |
-          while ! nc -zvw5 $RABBITMQ_ADDRESS $RABBITMQ_PORT; do sleep 2; done
-          exec /app/backup-handler
+        - exec /app/backup-handler
         env:
-        - name: RABBITMQ_ADDRESS
-          value: {{ include "lagoon-core.broker.fullname" . }}
-        - name: RABBITMQ_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.broker.fullname" . }}
-              key: RABBITMQ_USERNAME
-        - name: RABBITMQ_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ include "lagoon-core.broker.fullname" . }}
-              key: RABBITMQ_PASSWORD
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
