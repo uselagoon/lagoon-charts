@@ -26,7 +26,7 @@ data:
     <source>
       @type tcp
       @id   in_tcp
-      tag   "lagoon.cdn"
+      tag   "lagoon.#{ENV['CLUSTER_NAME']}.cdn"
       port  5140
       {{- if .Values.cdnLogsCollector.mTLS }}
       <transport tls>
@@ -47,14 +47,14 @@ data:
     </source>
 
     {{- if not .Values.cdnLogsCollector.mTLS }}
-    <filter lagoon.cdn>
+    <filter lagoon.*.cdn>
       @type grep
       <regexp>
         key auth_token
         pattern "^#{ENV['CDN_LOGS_AUTH_TOKEN']}$"
       </regexp>
     </filter>
-    <filter lagoon.cdn>
+    <filter lagoon.*.cdn>
       @type record_modifier
       remove_keys auth_token
     </filter>
