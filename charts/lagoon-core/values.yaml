@@ -288,7 +288,7 @@ keycloak:
     repository: uselagoon/keycloak
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "v2.33.3"
 
   podAnnotations: {}
 
