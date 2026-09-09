@@ -349,6 +349,11 @@ keepIngressNginxController: false
 # log flow, which can be useful while refining Traefik access log parsing.
 traefikLogProcessing: true
 
+# Regex patterns for top-level fields to remove from parsed Traefik router logs
+# before forwarding to OpenSearch. Uses Ruby regex syntax (Fluentd
+# record_modifier), matched against record keys.
+excludeRouterFieldRegexps: []
+
 # The values below must be supplied during installation.
 # Certificates should be provided in PEM format, and are generated as described
 # in the README for the lagoon-logs-concentrator chart.
