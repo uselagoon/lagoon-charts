@@ -42,4 +42,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
     - kind: changed
-      description: set keycloak image tag to v2.33.3
+      description: revert keycloak
