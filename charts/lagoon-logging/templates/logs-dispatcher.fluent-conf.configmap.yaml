@@ -58,7 +58,6 @@ data:
       @type  forward
       @id    in_cdn
       port   24226
-      tag   "lagoon.#{ENV['CLUSTER_NAME']}.cdn"
     </source>
 {{- end }}
 
