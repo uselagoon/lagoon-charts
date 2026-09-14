@@ -981,7 +981,7 @@ sshPortalAPI:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-portal-api
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.47.1"
+    tag: "v0.47.3"
 
   command:
     - /ssh-portal-api
@@ -1057,7 +1057,7 @@ sshToken:
     repository: ghcr.io/uselagoon/lagoon-ssh-portal/ssh-token
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.47.1"
+    tag: "v0.47.3"
 
   command:
     - /ssh-token
