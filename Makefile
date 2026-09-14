@@ -465,7 +465,7 @@ install-minio: install-ingress
 		--set ingress.hosts[0].host=minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--set ingress.hosts[0].paths[0].path="/" \
 		--set ingress.hosts[0].paths[0].pathType=Prefix \
-		--version=0.2.0 \
+		--version=0.13.4 \
 		minio \
 		oci://registry-1.docker.io/cloudpirates/minio
 	$(KUBECTL) -n minio exec -it $$($(KUBECTL) -n minio  get pod -l app.kubernetes.io/name=minio -o jsonpath="{.items[0].metadata.name}") -- sh -c 'mc alias set local http://localhost:9000 lagoonFilesAccessKey lagoonFilesSecretKey && mc mb local/lagoon-files && mc mb local/restores' || true
