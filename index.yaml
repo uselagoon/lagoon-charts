@@ -6616,6 +6616,34 @@ entries:
   lagoon-logging:
   - annotations:
       artifacthub.io/changes: |
+        - kind: added
+          description: Allow optional mTLS with managed certificate for the CDN logs collector.
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.11.4
+    created: "2026-09-16T21:08:43.04332724Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: oci://ghcr.io/kube-logging/helm-charts
+      version: 4.11.4
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 4f8245931fbb6796ac267fe45da9741ebd5bb892343d155ddab0b4c97d9569c1
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.98.0/lagoon-logging-0.98.0.tgz
+    version: 0.98.0
+  - annotations:
+      artifacthub.io/changes: |
         - kind: changed
           description: Updated the test templates for lagoon-logging.
       artifacthub.io/containsSecurityUpdates: "false"
@@ -17534,4 +17562,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2026-09-10T01:24:21.700408734Z"
+generated: "2026-09-16T21:08:43.043861185Z"
