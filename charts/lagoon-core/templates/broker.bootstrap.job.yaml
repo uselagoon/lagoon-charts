@@ -17,7 +17,7 @@ spec:
     spec:
       restartPolicy: Never
       securityContext:
-          {{- toYaml .Values.broker.securityContext | nindent 8 }}
+        {{- toYaml (coalesce .Values.broker.podSecurityContext .Values.podSecurityContext) | nindent 8 }}
       terminationGracePeriodSeconds: 120
       containers:
       - name: broker-job
