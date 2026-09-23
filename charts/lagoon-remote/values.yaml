@@ -245,7 +245,7 @@ insightsRemote:
     repository: uselagoon/insights-remote
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.19"
+    tag: "v0.0.20"
 
   imagePullSecrets: []
   nameOverride: ""
@@ -497,7 +497,7 @@ storageCalculator:
     repository: uselagoon/remote-calculator
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: v0.9.4
+    tag: v0.9.5
 
   broker:
     # enable if providing a custom CA for broker connections
