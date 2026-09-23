@@ -320,7 +320,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.16.2 \
+		--version=1.19.1 \
 		registry \
 		harbor/harbor
 else
@@ -392,7 +392,7 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=0.2.1 \
+		--version=0.16.14 \
 		mariadb \
 		oci://registry-1.docker.io/cloudpirates/mariadb
 
@@ -406,7 +406,7 @@ install-mariadb-lagoon-databases:
 		--timeout $(TIMEOUT) \
 		--set auth.database=api \
 		$$($(KUBECTL) get ns lagoon-core-databases > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace lagoon-core-databases apidb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=0.2.1 \
+		--version=0.16.14 \
 		apidb \
 		oci://registry-1.docker.io/cloudpirates/mariadb
 	$(HELM) upgrade \
@@ -417,7 +417,7 @@ install-mariadb-lagoon-databases:
 		--timeout $(TIMEOUT) \
 		--set auth.database=keycloak \
 		$$($(KUBECTL) get ns lagoon-core-databases > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace lagoon-core-databases keycloakdb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=0.2.1 \
+		--version=0.16.14 \
 		keycloakdb \
 		oci://registry-1.docker.io/cloudpirates/mariadb
 
@@ -431,7 +431,7 @@ install-postgresql:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')) \
-		--version=0.2.2 \
+		--version=0.20.5 \
 		postgresql \
 		oci://registry-1.docker.io/cloudpirates/postgres
 
@@ -444,7 +444,7 @@ install-mongodb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
-		--version=0.1.6 \
+		--version=0.18.3 \
 		mongodb \
 		oci://registry-1.docker.io/cloudpirates/mongodb
 
@@ -465,7 +465,7 @@ install-minio: install-ingress
 		--set ingress.hosts[0].host=minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--set ingress.hosts[0].paths[0].path="/" \
 		--set ingress.hosts[0].paths[0].pathType=Prefix \
-		--version=0.2.0 \
+		--version=0.13.4 \
 		minio \
 		oci://registry-1.docker.io/cloudpirates/minio
 	$(KUBECTL) -n minio exec -it $$($(KUBECTL) -n minio  get pod -l app.kubernetes.io/name=minio -o jsonpath="{.items[0].metadata.name}") -- sh -c 'mc alias set local http://localhost:9000 lagoonFilesAccessKey lagoonFilesSecretKey && mc mb local/lagoon-files && mc mb local/restores' || true
