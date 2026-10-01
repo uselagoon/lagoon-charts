@@ -1,0 +1,23 @@
+{{- if .Values.enableServiceMonitor }}
+kind: ServiceMonitor
+apiVersion: monitoring.coreos.com/v1
+metadata:
+  name: {{ include "lagoon-build-deploy.fullname" . }}
+  labels:
+    {{- include "lagoon-build-deploy.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - interval: {{ .Values.metrics.interval }}
+      path: /metrics
+      port: https
+      scheme: https
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      tlsConfig:
+        insecureSkipVerify: true
+  namespaceSelector:
+    matchNames:
+      - lagoon
+  selector:
+    matchLabels:
+      {{- include "lagoon-build-deploy.selectorLabels" . | nindent 6 }}
+{{- end }}

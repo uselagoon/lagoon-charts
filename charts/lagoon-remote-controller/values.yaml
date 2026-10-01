@@ -1,0 +1,234 @@
+# the following values are requried and have no sensible default
+global: {}
+
+lagoonTargetName: ""
+rabbitMQHostname: ""
+rabbitMQPassword: ""
+rabbitMQUsername: ""
+
+# This is here due to the removal of the passthrough from core https://github.com/uselagoon/lagoon/pull/3659
+# if you leveraged this value in your core, you should ensure you update your remotes with this value to reflect what you previously had provided in core
+# unauthenticatedRegistry: registry.lagoon.svc:5000
+
+# NOTE!! lagoon api/host/port values if left empty fall back to the task api/host/port values
+# taskSSHHost/lagoonTokenHost is the hostname for the lagoon token service
+# taskSSHHost will be deprecated in favor of lagoonTokenHost
+taskSSHHost: ""
+lagoonTokenHost: ""
+# taskSSHPort/lagoonTokenPort is the port number for the lagoon token service
+# taskSSHPort will be deprecated in favor of lagoonTokenHost
+taskSSHPort: ""
+lagoonTokenPort: ""
+# taskAPIHost/lagoonAPIHost is the lagoon graphql API hostname, omitting `/graphql, eg: https://api.example.com
+# taskAPIHost will be deprecated in favor of lagoonAPIHost
+taskAPIHost: ""
+lagoonAPIHost: ""
+
+# NOTE!! sshPortal host/port values if left empty fall back to the task ssh host/port values
+# NOTE!! if `lagoonTokenHost/Port` are configured with the dedicated token service in lagoon core instead of the legacy ssh service in core
+# NOTE!! you will need to define the sshPortalHost/Port values for the ssh-portal that this remote is configured with
+# The sshPortalHost/Port can be configured with the legacy ssh service in core, but it is recommended that it is configured
+# to be the ssh-portal configured for this remote cluster.
+# sshPortalHost is the hostname for this remote clusters ssh portal service
+# the internal service name can be used (eg: lagoon-remote-ssh-portal.lagoon.svc) but a public dns can also be set
+sshPortalHost: ""
+# sshPortalPort is the port number for this remote clusters ssh portal service (public or internal port depending on how the host is configured)
+sshPortalPort: ""
+
+
+# if using controller namespace prefixing, define that prefix here
+# limited to 8 characters (will be truncated by controller if it exceeds this)
+namespacePrefix: ""
+
+# The following values are optional. They tell the build-deploy controller to
+# set an environment variable on the build pods which enforces the state of the
+# feature flag. Valid values are `enabled` or `disabled`.
+
+# lagoonFeatureFlagForceRootlessWorkload: enabled
+# lagoonFeatureFlagDefaultRootlessWorkload: enabled
+# lagoonFeatureFlagForceIsolationNetworkPolicy: disabled
+# lagoonFeatureFlagDefaultIsolationNetworkPolicy: disabled
+# lagoonFeatureFlagForceInsights: disabled
+# lagoonFeatureFlagDefaultInsights: disabled
+# lagoonFeatureFlagForceRWX2RWO: disabled
+# lagoonFeatureFlagDefaultRWX2RWO: disabled
+# lagoonFeatureFlagSupportK8upV2: false
+
+# It is also possible to define feature flags using `extraEnvs` by defining them like so
+# this method is useful for enabling features on the fly, ones that might not have built in support
+# in remote-controller, but as of v0.5.0 of remote-controller, these are passed into build pods
+# automatically (anything prefixed with `LAGOON_FEATURE_FLAG_`)
+#   extraEnvs:
+#     - name: "LAGOON_FEATURE_FLAG_FORCE_ROOTLESS_WORKLOAD"
+#       value: "enabled"
+
+# add extra environment variables if required
+extraEnvs:
+
+# the following values can be used to override the default
+# backup configurations for a dedicated cluster
+
+# lagoonFeatureFlagBackupWeeklyRandom: false
+# lagoonBackupDefaultSchedule: "M H(22-2) * * *"
+# lagoonBackupDefaultHourlyRetention: 0
+# lagoonBackupDefaultDailyRetention: 7
+# lagoonBackupDefaultWeeklyRetention: 5
+# lagoonBackupDefaultMonthlyRetention: 12
+
+# the following values can be used to configure QoS settings
+# QoS is now enabled by default for builds only, it cannot be disabled. the settings below can be used to change the behavior
+# previous values for lagoonFeatureFlagEnableQoS, QoSMaxBuilds, and QoSDefault are deprecated, and will be removed in a future release
+# you should change to the following configuration methods
+qos: {}
+  # the default qos priority value to apply if one is not provided
+  # defaultBuildPriority: 5
+  # the total number of builds during the container build phase that can run at any one time
+  # maxBuilds: 20
+  # the total number of builds that can run at any one time. defaults to maxBuilds if not provided or less than maxBuilds
+  # totalBuilds: 0
+  # flag to enable this controller with QoS for tasks
+  # enableTaskQoS: false
+  # the total number of tasks that can run at any one time
+  # qosMaxTasks: 200
+  # the maximum number of tasks that can run concurrently per namespace
+  # qosMaxNamespaceTasks: 20
+
+# it is also possible to allow the controller to purge harbor of the associated repositories
+# when an environment is deleted, this can be enabled by setting the following to true
+# if the remote is sharing a harbor with another remote, and migrations are taking place then enabling
+# this feature could cause issues with images missing if one remote deletes an environment that is migrated in another remote
+# note: only works if harbor is enabled too
+# enableHarborRepositoryCleanUp: false
+
+# the controller supports cleaning up namespaces that have been migrated or no longer required, which have already been
+# handled in lagoon, where the namespace remaining in the cluster can be deleted. this clean up process does not update Lagoon
+# with the deletion completion, it is purely used to remove abandoned or otherwise detatched namespaces.
+# enableExpiredNamespaceCleanup: false
+# expiredNamespaceCleanupCron: 30 * * * *
+
+# the following value can be used to override the default
+# cronjob interval defined in builds
+
+# nativeCronPodMinFrequency: 30
+
+## proxy configurations
+# httpProxy: ""
+# httpsProxy: ""
+# noProxy: ""
+
+## enable build pods to be injected with the HTTP_PROXY, HTTPS_PROXY, NO_PROXY variables if they are defined
+# enablePodProxy: false
+## enable pods to use a different proxy than the controller
+# podsUseDifferentProxy: false
+# podHTTPProxy: ""
+# podHTTPSProxy: ""
+# podNoProxy: ""
+
+# the following values are defaults which may be overridden
+
+# the number of hours a build/task pod can run before forcefully cancelled.
+timeoutForLongRunningBuildPods: 6
+timeoutForLongRunningTaskPods: 6
+
+adminLagoonFeatureFlag:
+  # Set the memory resource limit for containers deployed by Lagoon.
+  containerMemoryLimit: 16Gi
+  # Set the ephemeral storage limit for containers deployed by Lagoon.
+  # Setting just the limit will also set requests to be the same value.
+  # See the kubernetes docs before using these values to ensure you know what they do based on your workloads and nodes allocatable values
+  # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#setting-requests-and-limits-for-local-ephemeral-storage
+  # Specifically how pods with requests are scheduled here https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#how-pods-with-ephemeral-storage-requests-are-scheduled
+  # You need to be aware that setting the limit or requests will impact how your pods are scheduled
+  # You may need to set the requests to be a very low value to maintain your desired pod density for Lagoon deployed environments
+  # ephemeralStorageRequests: 100Mi
+  # ephemeralStorageLimit: 4Gi
+
+# rootlessBuildPods tells the build-deploy controller to create build pods
+# which do not run as root. See https://github.com/amazeeio/lagoon/pull/2481
+# for details.
+rootlessBuildPods: false
+
+# enableServiceMonitor adds a servicemonitor for lagoon metrics, and the ability to adjust the scraping interval
+enableServiceMonitor: false
+metrics:
+  interval: 30s
+
+# set these to your harbor configuration
+harbor:
+  enabled: false
+  # the following are REQUIRED values if harbor is enabled
+  adminPassword: Harbor12345
+  adminUser: admin
+  host: http://registry.172.16.0.1.nip.io
+  # rotationCron: 0 1 * * *
+
+  # the expiration length of new robot credentials
+  # robotAccountExpiration: 30d
+
+  # length of time before expiry that the credential be rotated
+  # robotAccountExpiryInterval: 2d
+
+  # length of time to force rotation if the credential is expiring or already expired, last line of defence
+  # robotRotateInterval: 1d
+
+extraArgs:
+
+pendingMessageCron: "15,45 * * * *"
+
+# The controller will use `uselagoon/kubectl-build-deploy-dind:latest` by
+# default, but this can be overridden here.
+overrideBuildDeployImage: ""
+
+# override .Chart.Name
+nameOverride: ""
+
+image:
+  repository: uselagoon/remote-controller
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+
+serviceAccount:
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 8443
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+broker:
+  # enable if providing a custom CA for broker connections
+  tlsCA:
+    enabled: false
+    # if lagoon-build-deploy chart is installed as part of lagoon-remote
+    # then this secret name could be defined by the "global" configs for lagoon-remote instead of here.
+    # if this chart and lagoon-remote are installed in isolation, but in the same namespace
+    # then you can use the same secret that lagoon-remote may be using if lagoon-remote is also configured
+    # to use the "global" settings for broker by setting the secretName manually to "lagoon-remote-broker-tls".
+    # in other cases, you may need to create this secret manually if not defining the CA in values.
+    secretName: lagoon-remote-build-deploy-broker-tls
+    # secretData:
+    #   ca.crt: |
+    #     ...
+  tls:
+    enabled: false
+    verifyPeer: true

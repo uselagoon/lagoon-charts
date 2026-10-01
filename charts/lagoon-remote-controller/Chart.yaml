@@ -1,23 +1,29 @@
 apiVersion: v2
-name: lagoon-build-deploy
+name: lagoon-remote-controller
 description:
-  A Helm chart for Kubernetes which installs Lagoon remote controllers which are used for handling build and task pods
+  A Helm chart for Kubernetes which installs Lagoon remote controller which is used for handling build and task pods
   (https://github.com/uselagoon/remote-controller).
 home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+maintainers:
+- name: shreddedbacon
+  email: ben.jackson@amazee.io
+  url: https://amazee.io
+- name: smlx
+  email: scott.leggett@amazee.io
+  url: https://amazee.io
 kubeVersion: ">= 1.25.0-0"
-deprecated: true
 
 type: application
 
-version: 0.44.0
+version: 1.0.0
 
 appVersion: v1.0.2
 
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: deprecated chart, replacement chart is lagoon-remote-controller
+      description: rename chart to better reflect the component installed
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
