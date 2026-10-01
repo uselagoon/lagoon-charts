@@ -43,7 +43,6 @@
 # keycloakAdminAPIClientSecret:
 # keycloakAuthServerClientSecret:
 # keycloakLagoonUIOIDCClientSecret:
-# keycloakLagoonAdminPassword:
 # logsDBAdminPassword:
 # rabbitMQPassword:
 # redisPassword:

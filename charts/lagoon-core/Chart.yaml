@@ -43,3 +43,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: security
       description: Add migitation for CVE-2026-114938
+    - kind: removed
+      description: unused lagoonadmin values

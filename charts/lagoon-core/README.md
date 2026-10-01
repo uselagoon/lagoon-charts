@@ -44,10 +44,10 @@ helm upgrade --install --create-namespace --namespace lagoon-core \
   --values ./charts/lagoon-core/ci/linter-values.yaml \
   --set lagoonAPIURL=http://localhost:7070/graphql \
   --set keycloakFrontEndURL=http://localhost:8080 \
+  --set lagoonSeedUsername=user@example.com \
+  --set lagoonSeedPassword=password \
   lagoon-core \
   ./charts/lagoon-core
-
-# make a note of the lagoonadmin credentials
 
 kubectl port-forward svc/lagoon-core-keycloak 8080 &
 kubectl port-forward svc/lagoon-core-api 7070:80 &
@@ -58,7 +58,7 @@ kubectl port-forward svc/lagoon-core-ssh 2020 &
 ### Use
 
 1. Visit [http://localhost:6060/](http://localhost:6060/).
-2. Log in using the `lagoonadmin` credentials from the helm chart installation.
+2. Log in using the `lagoonSeedUsername` and `lagoonSeedPassword` credentials set during installation.
 3. Click settings (top right).
 4. Add your ssh key.
 5. Add this config to `~/.lagoon.yml`:
