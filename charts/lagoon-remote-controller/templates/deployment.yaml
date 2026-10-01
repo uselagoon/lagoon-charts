@@ -1,0 +1,328 @@
+{{- $rabbitMQHostname := coalesce (.Values.global).rabbitMQHostname .Values.rabbitMQHostname }}
+{{- $rabbitMQTLSSecretName := coalesce (.Values.global.broker).tlsCA.secretName .Values.broker.tlsCA.secretName }}
+
+{{- $rabbitMQTLSEnabled := .Values.broker.tls.enabled }}
+{{- if (.Values.global.broker).tls.enabled }}
+{{- $rabbitMQTLSEnabled = (.Values.global.broker).tls.enabled }}
+{{- end }}
+{{- $rabbitMQTLSCAEnabled := .Values.broker.tlsCA.enabled }}
+{{- if (.Values.global.broker).tlsCA.enabled }}
+{{- $rabbitMQTLSCAEnabled = (.Values.global.broker).tlsCA.enabled }}
+{{- end }}
+{{- $rabbitMQTLSVerifyPeer := .Values.broker.tls.verifyPeer | quote }}
+{{- if (.Values.global.broker).tls.verifyPeer }}
+{{- $rabbitMQTLSVerifyPeer = (.Values.global.broker).tls.verifyPeer | quote }}
+{{- end }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-build-deploy.fullname" . }}
+  labels:
+    {{- include "lagoon-build-deploy.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lagoon-build-deploy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+      labels:
+        {{- include "lagoon-build-deploy.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "lagoon-build-deploy.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: manager
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion}}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+        - /manager
+        ports:
+        - containerPort: 8443
+          name: https
+        args:
+        - "--metrics-bind-address=:8443"
+        - "--leader-elect=true"
+        {{- if $rabbitMQTLSEnabled }}
+        - "--rabbitmq-tls"
+        {{- end }}
+        {{- if .Values.harbor.enabled }}
+        - "--enable-harbor=true"
+        - "--harbor-url={{ .Values.harbor.host }}"
+        - "--harbor-api={{ .Values.harbor.host }}/api"
+        {{- if .Values.harbor.rotationCron }}
+        - "--harbor-credential-cron={{ .Values.harbor.rotationCron }}"
+        {{- end }}
+        {{- if .Values.harbor.robotAccountExpiration }}
+        - "--harbor-robot-account-expiry={{ .Values.harbor.robotAccountExpiration }}"
+        {{- end }}
+        {{- if .Values.harbor.robotAccountExpiryInterval }}
+        - "--harbor-expiry-interval={{ .Values.harbor.robotAccountExpiryInterval }}"
+        {{- end }}
+        {{- if .Values.harbor.robotRotateInterval }}
+        - "--harbor-rotate-interval={{ .Values.harbor.robotRotateInterval }}"
+        {{- end }}
+        {{- if .Values.enableHarborRepositoryCleanUp }}
+        - "--cleanup-harbor-repository-on-delete"
+        {{- end }}
+        {{- end }}
+        {{- if .Values.enableExpiredNamespaceCleanup }}
+        - "--enable-namespace-cleanup"
+        {{- end }}
+        {{- if .Values.expiredNamespaceCleanupCron }}
+        - "--namespace-cleanup-cron={{ .Values.expiredNamespaceCleanupCron }}"
+        {{- end }}
+        {{- if .Values.rootlessBuildPods }}
+        - "--build-pod-run-as-user=10000"
+        - "--build-pod-run-as-group=0"
+        - "--build-pod-fs-group=10001"
+        {{- end }}
+        {{- if .Values.enablePodProxy }}
+        - "--enable-pod-proxy"
+        {{- end }}
+        {{- if .Values.podsUseDifferentProxy }}
+        - "--pods-use-different-proxy"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceRootlessWorkload }}
+        - "--lagoon-feature-flag-force-rootless-workload={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultRootlessWorkload }}
+        - "--lagoon-feature-flag-default-rootless-workload={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceIsolationNetworkPolicy }}
+        - "--lagoon-feature-flag-force-isolation-network-policy={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultIsolationNetworkPolicy }}
+        - "--lagoon-feature-flag-default-isolation-network-policy={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceInsights }}
+        - "--lagoon-feature-flag-force-insights={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultInsights }}
+        - "--lagoon-feature-flag-default-insights={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagForceRWX2RWO }}
+        - "--lagoon-feature-flag-force-rwx-rwo={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagDefaultRWX2RWO }}
+        - "--lagoon-feature-flag-default-rwx-rwo={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagBackupWeeklyRandom }}
+        - "--lagoon-feature-flag-backup-weekly-random={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonFeatureFlagSupportK8upV2 }}
+        - "--lagoon-feature-flag-support-k8upv2={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultSchedule }}
+        - "--backup-default-schedule={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultHourlyRetention }}
+        - "--backup-default-hourly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultDailyRetention }}
+        - "--backup-default-daily-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultWeeklyRetention }}
+        - "--backup-default-weekly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultMonthlyRetention }}
+        - "--backup-default-monthly-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultDevelopmentSchedule }}
+        - "--backup-default-dev-schedule={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultDevelopmentRetention }}
+        - "--backup-default-dev-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultPullrequestSchedule }}
+        - "--backup-default-pr-schedule={{ . }}"
+        {{- end }}
+        {{- with .Values.lagoonBackupDefaultPullrequestRetention }}
+        - "--backup-default-pr-retention={{ . }}"
+        {{- end }}
+        {{- with .Values.nativeCronPodMinFrequency }}
+        - "--native-cron-pod-min-frequency={{ . }}"
+        {{- end }}
+        {{- with or .Values.qos.maxBuilds .Values.QoSMaxBuilds }}
+        - "--qos-max-builds={{ . }}"
+        {{- end }}
+        {{- with .Values.qos.totalBuilds }}
+        - "--qos-total-builds={{ . }}"
+        {{- end }}
+        {{- with or .Values.qos.defaultBuildPriority .Values.QoSDefault }}
+        - "--qos-default={{ . }}"
+        {{- end }}
+        {{- with .Values.qos.enableTaskQoS }}
+        - "--enable-task-qos={{ . }}"
+        {{- end }}
+        {{- with .Values.qos.qosMaxTasks }}
+        - "--qos-max-tasks={{ . }}"
+        {{- end }}
+        {{- with .Values.qos.qosMaxNamespaceTasks }}
+        - "--qos-max-namespace-tasks={{ . }}"
+        {{- end }}
+        {{- with .Values.timeoutForLongRunningBuildPods }}
+        - "--timeout-longrunning-build-pod-cleanup={{ . }}"
+        {{- end }}
+        {{- with .Values.timeoutForLongRunningTaskPods }}
+        - "--timeout-longrunning-task-pod-cleanup={{ . }}"
+        {{- end }}
+        {{- with .Values.unauthenticatedRegistry }}
+        - "--unauthenticated-registry={{ . }}"
+        {{- end }}
+        {{- with .Values.extraArgs }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        env:
+        {{- with .Values.extraEnvs }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        - name: LAGOON_TARGET_NAME
+          value: {{ required "A valid .Values.lagoonTargetName required!" .Values.lagoonTargetName | quote }}
+        {{- with .Values.overrideBuildDeployImage }}
+        - name: OVERRIDE_BUILD_DEPLOY_DIND_IMAGE
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.sshPortalHost | default .Values.taskSSHHost}}
+        - name: LAGOON_CONFIG_SSH_HOST
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.sshPortalPort | default .Values.taskSSHPort }}
+        - name: LAGOON_CONFIG_SSH_PORT
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.lagoonTokenHost | default .Values.taskSSHHost }}
+        - name: LAGOON_CONFIG_TOKEN_HOST
+          value: {{ . | quote }}
+        - name: TASK_SSH_HOST
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.lagoonTokenPort | default .Values.taskSSHPort }}
+        - name: LAGOON_CONFIG_TOKEN_PORT
+          value: {{ . | quote }}
+        - name: TASK_SSH_PORT
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.lagoonAPIHost | default .Values.taskAPIHost }}
+        - name: LAGOON_CONFIG_API_HOST
+          value: {{ . | quote }}
+        - name: TASK_API_HOST
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.httpProxy }}
+        - name: HTTP_PROXY
+          value: {{ . | quote }}
+        - name: http_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.httpsProxy }}
+        - name: HTTPS_PROXY
+          value: {{ . | quote }}
+        - name: https_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.noProxy }}
+        - name: NO_PROXY
+          value: {{ . | quote }}
+        - name: no_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- if .Values.podsUseDifferentProxy }}
+        {{- with .Values.podHTTPProxy }}
+        - name: LAGOON_HTTP_PROXY
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.podHTTPSProxy }}
+        - name: LAGOON_HTTPS_PROXY
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.podNoProxy }}
+        - name: LAGOON_NO_PROXY
+          value: {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.adminLagoonFeatureFlag.containerMemoryLimit }}
+        - name: ADMIN_LAGOON_FEATURE_FLAG_CONTAINER_MEMORY_LIMIT
+          value: {{ . | quote}}
+        {{- end }}
+        {{- with .Values.adminLagoonFeatureFlag.ephemeralStorageRequests }}
+        - name: ADMIN_LAGOON_FEATURE_FLAG_EPHEMERAL_STORAGE_REQUESTS
+          value: {{ . | quote}}
+        {{- end }}
+        {{- with .Values.adminLagoonFeatureFlag.ephemeralStorageLimit }}
+        - name: ADMIN_LAGOON_FEATURE_FLAG_EPHEMERAL_STORAGE_LIMIT
+          value: {{ . | quote}}
+        {{- end }}
+        - name: PENDING_MESSAGE_CRON
+          value: {{ .Values.pendingMessageCron | quote }}
+        - name: RABBITMQ_HOSTNAME
+          value: {{ required "A valid rabbitMQHostname required!" $rabbitMQHostname | quote }}
+        {{- if $rabbitMQTLSCAEnabled }}
+        - name: RABBITMQ_CACERT
+          value: "/ca.crt"
+        {{- end }}
+        - name: RABBITMQ_VERIFY
+          value: {{ $rabbitMQTLSVerifyPeer }}
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-build-deploy.fullname" . }}
+              key: RABBITMQ_PASSWORD
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-build-deploy.fullname" . }}
+              key: RABBITMQ_USERNAME
+        {{- if .Values.harbor.enabled }}
+        - name: HARBOR_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-build-deploy.fullname" . }}
+              key: HARBOR_PASSWORD
+        - name: HARBOR_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-build-deploy.fullname" . }}
+              key: HARBOR_USERNAME
+        {{- end }}
+        - name: NAMESPACE_PREFIX
+          value: {{ .Values.namespacePrefix | quote }}
+        - name: CONTROLLER_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+        {{- if $rabbitMQTLSCAEnabled }}
+        - mountPath: /ca.crt
+          name: {{ include "lagoon-build-deploy.fullname" . }}-amqp-tls
+          subPath: ca.crt
+        {{- end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      volumes:
+      {{- if $rabbitMQTLSCAEnabled }}
+      - name: {{ include "lagoon-build-deploy.fullname" . }}-amqp-tls
+        secret:
+          secretName: {{ $rabbitMQTLSSecretName }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
