@@ -52,7 +52,7 @@ jobs:
         done
 
     - name: Set up chart-testing
-      uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
+      uses: helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510 # v2.9.0
 
     - name: Run chart-testing (list-changed)
       id: list-changed
@@ -80,15 +80,15 @@ jobs:
         PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
 
     - name: Create kind cluster
-      uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
+      uses: helm/kind-action@1544676c07bb3570fcb70166beaa07c4528fd4aa # v1.15.1
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (steps.get-labels.outputs.needsTesting == 'needs-testing') ||
         (steps.get-labels.outputs.nextRelease == 'next-release')
       with:
-        version: v0.27.0
-        node_image: kindest/node:v1.32.2@sha256:f226345927d7e348497136874b6d207e0b32cc52154ad8323129352923a3142f
-        kubectl_version: v1.32.2
+        version: v0.33.0
+        node_image: kindest/node:v1.37.0@sha256:a1ed56cfb0e7b93589bdf97c8cd566405a265939e3620fc4f5de89adff580ae5
+        kubectl_version: v1.37.1
         config: test-suite.kind-config.yaml
 
     - name: Configure registry for containerd
