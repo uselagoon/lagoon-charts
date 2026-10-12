@@ -1,6 +1,8 @@
 # Lagoon Helm charts
 
 [![Actions Status](https://github.com/uselagoon/lagoon-charts/workflows/Release%20Charts/badge.svg)](https://github.com/uselagoon/lagoon-charts/actions)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11882/badge)](https://www.bestpractices.dev/projects/11882)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/uselagoon/lagoon-charts/badge)](https://securityscorecards.dev/viewer/?uri=github.com/uselagoon/lagoon-charts)
 
 This repository contains [Helm](https://helm.sh/) charts related to [Lagoon](https://github.com/amazeeio/lagoon/).
 
