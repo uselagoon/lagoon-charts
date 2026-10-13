@@ -237,8 +237,8 @@ insightsRemote:
 
   replicaCount: 1
 
-  # Persistent storage for SBOMs, mounted in the pod at /data/sbom
-  sbomStorage:
+  # Persistent storage for insights data (e.g. SBOMs), mounted in the pod at /data
+  storage:
     enabled: false
     # use a pre-existing PVC instead of creating one
     existingClaim: ""

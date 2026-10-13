@@ -26,7 +26,7 @@ spec:
   {{- if not .Values.insightsRemote.autoscaling.enabled }}
   replicas: {{ .Values.insightsRemote.replicaCount }}
   {{- end }}
-  {{- if and .Values.insightsRemote.sbomStorage.enabled (has "ReadWriteOnce" .Values.insightsRemote.sbomStorage.accessModes) }}
+  {{- if and .Values.insightsRemote.storage.enabled (has "ReadWriteOnce" .Values.insightsRemote.storage.accessModes) }}
   # RWO volumes can't be attached to old and new pods at once during a rolling update
   strategy:
     type: Recreate
@@ -103,7 +103,7 @@ spec:
               name: {{ include "lagoon-remote.insightsRemote.fullname" . }}-amqp-tls
               subPath: ca.crt
           {{- end }}
-          {{- if .Values.insightsRemote.insightsStorage.enabled }}
+          {{- if .Values.insightsRemote.storage.enabled }}
             - mountPath: /data
               name: insights-data
           {{- end }}
@@ -119,10 +119,10 @@ spec:
           secret:
             secretName: {{ $rabbitMQTLSSecretName }}
       {{- end }}
-      {{- if .Values.insightsRemote.insightsStorage.enabled }}
+      {{- if .Values.insightsRemote.storage.enabled }}
         - name: insights-data
           persistentVolumeClaim:
-            claimName: {{ .Values.insightsRemote.insightsStorage.existingClaim | default (printf "%s-insightsStorage" (include "lagoon-remote.insightsRemote.fullname" .)) }}
+            claimName: {{ .Values.insightsRemote.storage.existingClaim | default (printf "%s-storage" (include "lagoon-remote.insightsRemote.fullname" .)) }}
       {{- end }}
       {{- with .Values.insightsRemote.nodeSelector }}
       nodeSelector:

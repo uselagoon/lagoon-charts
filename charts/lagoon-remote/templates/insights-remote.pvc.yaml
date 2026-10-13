@@ -1,21 +1,21 @@
-{{- if and .Values.insightsRemote.enabled .Values.insightsRemote.sbomStorage.enabled (not .Values.insightsRemote.sbomStorage.existingClaim) -}}
+{{- if and .Values.insightsRemote.enabled .Values.insightsRemote.storage.enabled (not .Values.insightsRemote.storage.existingClaim) -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}-sbom
+  name: {{ include "lagoon-remote.insightsRemote.fullname" . }}-storage
   labels:
     {{- include "lagoon-remote.insightsRemote.labels" . | nindent 4 }}
-  {{- with .Values.insightsRemote.sbomStorage.annotations }}
+  {{- with .Values.insightsRemote.storage.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   accessModes:
-    {{- toYaml .Values.insightsRemote.sbomStorage.accessModes | nindent 4 }}
-  {{- with .Values.insightsRemote.sbomStorage.storageClassName }}
+    {{- toYaml .Values.insightsRemote.storage.accessModes | nindent 4 }}
+  {{- with .Values.insightsRemote.storage.storageClassName }}
   storageClassName: {{ . | quote }}
   {{- end }}
   resources:
     requests:
-      storage: {{ .Values.insightsRemote.sbomStorage.size | quote }}
+      storage: {{ .Values.insightsRemote.storage.size | quote }}
 {{- end }}
