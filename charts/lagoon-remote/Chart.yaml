@@ -40,13 +40,5 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: use correct value name for enabling nats tls block
     - kind: added
-      description: automatically generate lagoon-remote ssh-portal hostkeys unless defined
-    - kind: changed
-      description: update lagoon-build-deploy subchart to v0.43.0
-    - kind: changed
-      description: update insights-remote to v0.0.20
-    - kind: changed
-      description: update storageCalculator to v0.9.5
+      description: add persistent storage for insights data

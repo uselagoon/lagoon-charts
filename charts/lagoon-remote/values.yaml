@@ -237,6 +237,17 @@ insightsRemote:
 
   replicaCount: 1
 
+  # Persistent storage for insights data (e.g. SBOMs), mounted in the pod at /data
+  storage:
+    enabled: false
+    # use a pre-existing PVC instead of creating one
+    existingClaim: ""
+    # storageClassName: ""
+    size: 5Gi
+    accessModes:
+    - ReadWriteOnce
+    annotations: {}
+
   # This is the secret used to sign JWT's injected into environments
   # This shouldn't need to be changed in most circumstances - here for completion
   # insightsTokenSecret: ""
