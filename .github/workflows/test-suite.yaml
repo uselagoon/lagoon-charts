@@ -37,7 +37,7 @@ jobs:
       uses: owenthereal/action-upterm@b9dfa526f890bbd5162d781f8d9c69b97731d73d # v2.7.0
       with:
         limit-access-to-actor: true # Restrict to the user who triggered the workflow
-        limit-access-to-users: shreddedbacon # Specific authorized users only
+        limit-access-to-users: shreddedbacon,bomoko,rocketeerbkw,smlx # Specific authorized users only
         detached: true
       continue-on-error: true
 
