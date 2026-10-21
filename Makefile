@@ -442,9 +442,10 @@ install-mongodb:
 		--create-namespace \
 		--namespace mongodb \
 		--wait \
+		--set image.tag=9.0.4 \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
-		--version=0.18.3 \
+		--version=0.20.1 \
 		mongodb \
 		oci://registry-1.docker.io/cloudpirates/mongodb
 
