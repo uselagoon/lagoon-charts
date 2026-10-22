@@ -32,10 +32,13 @@ jobs:
         ## - ssh-legacy
 
     steps:
-    # Continue after getting a shell via: `touch continue`
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113 # v3
-      timeout-minutes: 1
+    # Continue after getting a shell via: `touch $GITHUB_WORKSPACE/continue`
+    - name: Setup upterm session
+      uses: owenthereal/action-upterm@b9dfa526f890bbd5162d781f8d9c69b97731d73d # v2.7.0
+      with:
+        limit-access-to-actor: true # Restrict to the user who triggered the workflow
+        limit-access-to-users: shreddedbacon,bomoko,rocketeerbkw,smlx # Specific authorized users only
+        detached: true
       continue-on-error: true
 
     - name: Checkout
