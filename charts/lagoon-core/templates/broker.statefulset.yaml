@@ -137,4 +137,7 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 8Gi
+          storage: {{ .Values.broker.storage.size | quote }}
+      {{- with .Values.broker.storage.className }}
+      storageClassName: {{ . | quote }}
+      {{- end }}

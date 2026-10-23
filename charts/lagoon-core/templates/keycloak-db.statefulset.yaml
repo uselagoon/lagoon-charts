@@ -97,5 +97,8 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 16Gi
+          storage: {{ .Values.keycloakDB.storage.size | quote }}
+      {{- with .Values.keycloakDB.storage.className }}
+      storageClassName: {{ . | quote }}
+      {{- end }}
 {{- end }}
