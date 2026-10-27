@@ -43,3 +43,5 @@ annotations:
   artifacthub.io/changes: |
     - kind: fixed
       description: secret referenecs in webhook handler
+    - kind: added
+      description: add imagepullsecret support to jobs
