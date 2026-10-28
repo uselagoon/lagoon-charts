@@ -5,12 +5,12 @@ description: >
 home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
-- name: smlx
-  email: scott.leggett@amazee.io
-  url: https://amazee.io
-- name: shreddedbacon
-  email: ben.jackson@amazee.io
-  url: https://amazee.io
+  - name: smlx
+    email: scott.leggett@amazee.io
+    url: https://amazee.io
+  - name: shreddedbacon
+    email: ben.jackson@amazee.io
+    url: https://amazee.io
 kubeVersion: ">= 1.25.0-0"
 
 # Application charts are a collection of templates that can be packaged into
@@ -30,10 +30,10 @@ version: 1.63.0
 appVersion: v2.34.0
 
 dependencies:
-- name: nats
-  version: ~1.3.0
-  repository: https://nats-io.github.io/k8s/helm/charts/
-  condition: nats.enabled
+  - name: nats
+    version: ~1.3.0
+    repository: https://nats-io.github.io/k8s/helm/charts/
+    condition: nats.enabled
 
 # This section is used to collect a changelog for artifacthub.io
 # It should be started afresh for each release
@@ -45,3 +45,5 @@ annotations:
       description: secret referenecs in webhook handler
     - kind: added
       description: add imagepullsecret support to jobs
+    - kind: fixed
+      description: Ensure upgrades work for clusters without K8UP v2
