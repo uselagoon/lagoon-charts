@@ -45,3 +45,5 @@ annotations:
       description: secret referenecs in webhook handler
     - kind: added
       description: add imagepullsecret support to jobs
+    - kind: fixed
+      description: Ensure upgrades work for clusters without K8UP v2
