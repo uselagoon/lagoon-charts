@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.107.0
+version: 0.107.1
 
 dependencies:
 - name: lagoon-build-deploy
@@ -40,13 +40,7 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: fixed
-      description: use correct value name for enabling nats tls block
-    - kind: added
-      description: automatically generate lagoon-remote ssh-portal hostkeys unless defined
     - kind: changed
-      description: update lagoon-build-deploy subchart to v0.43.0
+      description: update lagoon-build-deploy subchart to v0.43.1
     - kind: changed
-      description: update insights-remote to v0.0.20
-    - kind: changed
-      description: update storageCalculator to v0.9.5
+      description: update storageCalculator to v0.9.6
