@@ -116,11 +116,17 @@ data:
         pattern ^ingress-nginx$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
       </rule>
-      # Last rule: catchall
       <rule>
         key     $.kubernetes.namespace_name
         pattern ^sigsci-ingress-nginx$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
+      </rule>
+      # Preserve logs from controllers outside the shared router namespaces.
+      <rule>
+        invert  true
+        key     $.kubernetes.namespace_name
+        pattern ^(syn-nginx-ingress|ingress-nginx|sigsci-ingress-nginx)$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
       </rule>
     </match>
 

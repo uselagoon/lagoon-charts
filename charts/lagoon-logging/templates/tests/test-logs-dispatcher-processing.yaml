@@ -89,11 +89,17 @@ data:
         pattern ^ingress-nginx$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
       </rule>
-      # Last rule: catchall
       <rule>
         key     $.kubernetes.namespace_name
         pattern ^sigsci-ingress-nginx$
         tag     "lagoon.#{ENV['CLUSTER_NAME']}.router.nginx"
+      </rule>
+      # Preserve logs from controllers outside the shared router namespaces.
+      <rule>
+        invert  true
+        key     $.kubernetes.namespace_name
+        pattern ^(syn-nginx-ingress|ingress-nginx|sigsci-ingress-nginx)$
+        tag     "lagoon.#{ENV['CLUSTER_NAME']}.container"
       </rule>
     </match>
     <match process.app_traefik_ingress>
@@ -374,6 +380,10 @@ data:
       </match>
     </label>
   input.log: |
+    {{- /* dedicated nginx controller with legacy labels */}}
+    {"stream":"stderr","logtag":"F","message":"Dedicated nginx controller started","kubernetes":{"namespace_name":"test-logs-deleteme-fakeproject-prod","pod_name":"dedicated-nginx-legacy","container_name":"controller","docker_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","labels":{"app":"nginx-ingress"}}}
+    {{- /* dedicated nginx controller with modern labels */}}
+    {"stream":"stderr","logtag":"F","message":"Dedicated nginx controller reloaded","kubernetes":{"namespace_name":"test-logs-deleteme-fakeproject-prod","pod_name":"dedicated-nginx-modern","container_name":"controller","docker_id":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","labels":{"app.kubernetes.io/name":"ingress-nginx"}}}
     {{- /* container log */}}
     {"stream":"stderr","logtag":"F","message":"Identity added: /home/.ssh/key (/home/.ssh/key)","kubernetes":{"pod_name":"cli-676f77fc56-pjm8r","namespace_name":"test-logs-deleteme-fakeproject-prod","pod_id":"2df4c564-2900-4b08-922f-36a0d032f670","labels":{"admission.datadoghq.com/enabled":"true","app.kubernetes.io/instance":"cli","app.kubernetes.io/managed-by":"Helm","app.kubernetes.io/name":"cli-persistent","helm.sh/chart":"cli-persistent-0.1.0","lagoon.sh/buildType":"branch","lagoon.sh/environment":"prod","lagoon.sh/environmentType":"production","lagoon.sh/project":"test-logs-deleteme-fakeproject","lagoon.sh/service":"cli","lagoon.sh/service-type":"cli-persistent","pod-template-hash":"676f77fc56"},"annotations":{"kubernetes.io/psp":"eks.privileged","lagoon.sh/branch":"prod","lagoon.sh/configMapSha":"4ef7cefb450b614a576f32bd5ceb23bb8f3b44f9ff3569dba498ea92551217ff","lagoon.sh/version":"22.4.1"},"host":"ip-10-200-18-51.eu-central-1.compute.internal","container_name":"cli","docker_id":"f3a44dc65462386c0e0ffdb31528b989c9e55eb2ba5c431683f72e8b6a5458f4"}}
     {{- /* traefik router log prod */}}
@@ -381,6 +391,10 @@ data:
     {{- /* traefik router log dev */}}
     {"stream":"stdout","logtag":"F","message":"{\"StartUTC\":\"2022-11-22T07:43:13.123456Z\",\"ClientHost\":\"198.51.100.10\",\"RequestHost\":\"test-logs-deleteme-fakeproject-dev.test1.amazee.io\",\"RequestMethod\":\"GET\",\"RequestPath\":\"/traefik-example?foo=bar\",\"RequestProtocol\":\"HTTP/2.0\",\"RequestScheme\":\"https\",\"RequestID\":\"traefik-req-123\",\"RequestLength\":321,\"RequestReferer\":\"https://ref.example/\",\"RequestUserAgent\":\"curl/8.7.1\",\"DownstreamStatus\":200,\"DownstreamContentSize\":987,\"Duration\":41000000,\"RouterName\":\"test-logs-deleteme-fakeproject-dev-nginx-http@kubernetescrd\",\"ServiceName\":\"test-logs-deleteme-fakeproject-dev-nginx-http@kubernetescrd\",\"ServiceURL\":\"http://nginx.test-logs-deleteme-fakeproject-dev.svc.cluster.local:8080\"}","kubernetes":{"pod_name":"traefik-ingress-dev-7f9b7d8df8-fghij","namespace_name":"infra-ingress","pod_id":"9555ef6d-bbf5-4276-8f5c-c91377feca12","labels":{"app.kubernetes.io/component":"controller","app.kubernetes.io/instance":"traefik-ingress","app.kubernetes.io/name":"traefik","pod-template-hash":"7f9b7d8df8"},"annotations":{"kubernetes.io/psp":"eks.privileged"},"host":"ip-10-20-30-40.eu-central-1.compute.internal","container_name":"traefik","docker_id":"123eee982a5afa82e0fc3dad5d5af10dd93363657bd18bd5e2c548b0d32a19f2"}}
   expected.output.log: |
+    {{- /* dedicated nginx controller with legacy labels */}}
+    {"stream":"stderr","logtag":"F","message":"Dedicated nginx controller started","kubernetes":{"container_name":"controller","namespace_name":"test-logs-deleteme-fakeproject-prod","pod_name":"dedicated-nginx-legacy","pod_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","namespace_labels":{"app.kubernetes.io/managed-by":"Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-prod","lagoon.sh/environment":"prod","lagoon.sh/environmentType":"production","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"cluster":"test-cluster-name","index_name":"container-logs-test-logs-deleteme-fakeproject-_-production-_-2022.11","log":""}
+    {{- /* dedicated nginx controller with modern labels */}}
+    {"stream":"stderr","logtag":"F","message":"Dedicated nginx controller reloaded","kubernetes":{"container_name":"controller","namespace_name":"test-logs-deleteme-fakeproject-prod","pod_name":"dedicated-nginx-modern","pod_id":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","namespace_labels":{"app.kubernetes.io/managed-by":"Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-prod","lagoon.sh/environment":"prod","lagoon.sh/environmentType":"production","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"cluster":"test-cluster-name","index_name":"container-logs-test-logs-deleteme-fakeproject-_-production-_-2022.11","log":""}
     {{- /* container log */}}
     {"stream":"stderr","logtag":"F","message":"Identity added: /home/.ssh/key (/home/.ssh/key)","kubernetes":{"container_name":"cli","namespace_name":"test-logs-deleteme-fakeproject-prod","pod_name":"cli-676f77fc56-pjm8r","pod_id":"f3a44dc65462386c0e0ffdb31528b989c9e55eb2ba5c431683f72e8b6a5458f4","namespace_labels":{"app.kubernetes.io/managed-by":"Helm","kubernetes.io/metadata.name":"test-logs-deleteme-fakeproject-prod","lagoon.sh/environment":"prod","lagoon.sh/environmentType":"production","lagoon.sh/project":"test-logs-deleteme-fakeproject"}},"cluster":"test-cluster-name","index_name":"container-logs-test-logs-deleteme-fakeproject-_-production-_-2022.11","log":""}
     {{- /* traefik router log prod */}}
