@@ -19,7 +19,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.98.1
+version: 0.99.0
 
 # AppVersion is set here the same as the logging-operator chart version to
 # autopopulate the post-install CRD message.
@@ -38,4 +38,6 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
     - kind: fixed
-      description: Preserve dedicated NGINX ingress controller logs outside shared router namespaces as container logs.
+      description: Container logs from pods with conflicting label keys (e.g. both `app` and `app.kubernetes.io/name`) are no longer rejected by OpenSearch. Configurable via resolveLabelKeyConflicts (enabled by default).
+    - kind: added
+      description: Add optional containerLogsPostProcess value to insert custom fluentd filters into the container logs pipeline.

@@ -482,6 +482,43 @@ excludeRouterFieldRegexps: []
 #     </record>
 #   </filter>
 
+# Resolve pod label key conflicts in container logs.
+#
+# OpenSearch expands dotted field names into objects. Some Helm charts (e.g.
+# GitLab) set both an `app` label and `app.kubernetes.io/*` labels on the same
+# pod, so `kubernetes.labels.app` would have to be both a string and an object,
+# and every log record from such a pod is rejected with a mapping conflict.
+#
+# When enabled, if a pod has a label K and also labels starting with "K.", the
+# dots in those conflicting "K.*" label keys are replaced with underscores
+# (e.g. `app.kubernetes.io/name` becomes `app_kubernetes_io/name`). All other
+# label keys, and records without a conflict, are left unchanged. Since only
+# records which would otherwise be rejected are modified, this is enabled by
+# default.
+resolveLabelKeyConflicts: true
+
+# Optional post-processing of container logs.
+#
+# This value allows you to insert a snippet of fluentd configuration into the
+# container logs processing pipeline, directly after the kubernetes_metadata
+# enrichment (so kubernetes.labels and kubernetes.namespace_labels are
+# populated). Please only use <filter lagoon.*.container>...</filter>, and do
+# not retag records in this field to avoid breaking the log pipeline. Do not
+# modify kubernetes.namespace_labels, as these are used to compute the index
+# name.
+#
+# This example removes the pod-template-hash and controller-revision-hash
+# labels from container logs.
+#
+# containerLogsPostProcess: |-
+#   <filter lagoon.*.container>
+#     @type record_modifier
+#     remove_keys _dummy_
+#     <record>
+#       _dummy_ ${record.dig('kubernetes','labels')&.delete('pod-template-hash'); record.dig('kubernetes','labels')&.delete('controller-revision-hash'); nil}
+#     </record>
+#   </filter>
+
 # Install test fixtures into the cluster.
 # This should _only_ be used in a test cluster, because it creates namespaces for testing.
 # Do not set testFixtures.create=true in a production environment.

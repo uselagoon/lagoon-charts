@@ -176,6 +176,25 @@ data:
       @type record_modifier
       remove_keys docker
     </filter>
+    {{- if .Values.resolveLabelKeyConflicts }}
+    # OpenSearch expands dotted field names into objects. If a pod has a label
+    # K and also labels starting with "K." (e.g. "app" and
+    # "app.kubernetes.io/name"), K would need to be both a string and an object
+    # and the whole record is rejected with a mapping conflict. For such pods
+    # only, replace the dots in the conflicting "K.*" label keys with
+    # underscores. Records without a conflict are not modified.
+    <filter lagoon.*.container>
+      @type record_modifier
+      remove_keys _dummy_
+      <record>
+        _dummy_ ${l = record.dig('kubernetes','labels'); if l.is_a?(Hash); ks = l.keys; leaves = ks.select { |k| ks.any? { |o| o.start_with?(k + '.') } }; record['kubernetes']['labels'] = l.each_with_object({}) { |(k, v), h| h[leaves.any? { |c| k.start_with?(c + '.') } ? k.tr('.', '_') : k] = v } unless leaves.empty?; end; nil}
+      </record>
+    </filter>
+    {{- end }}
+    {{- with .Values.containerLogsPostProcess }}
+    # optional user-supplied post-processing of container logs
+      {{- . | nindent 4 }}
+    {{- end }}
     # post-process to try to eke some more structure out of the logs.
     # the last "format none" block is a catch-all for unmatched messages.
     <filter lagoon.*.container>
