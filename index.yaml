@@ -6785,6 +6785,36 @@ entries:
   - annotations:
       artifacthub.io/changes: |
         - kind: fixed
+          description: Container logs from pods with conflicting label keys (e.g. both `app` and `app.kubernetes.io/name`) are no longer rejected by OpenSearch. Configurable via resolveLabelKeyConflicts (enabled by default).
+        - kind: added
+          description: Add optional containerLogsPostProcess value to insert custom fluentd filters into the container logs pipeline.
+      artifacthub.io/containsSecurityUpdates: "false"
+    apiVersion: v2
+    appVersion: 4.11.4
+    created: "2026-11-13T05:22:35.525612831Z"
+    dependencies:
+    - condition: logging-operator.enabled
+      name: logging-operator
+      repository: oci://ghcr.io/kube-logging/helm-charts
+      version: 4.11.4
+    description: 'A Helm chart for Kubernetes which installs the Lagoon container
+      and router logs collection system. '
+    digest: 79620af61bb2397ea055ecbe02139926977128e3de3a2c93ffc62311f87d43fc
+    home: https://github.com/amazeeio/charts
+    icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
+    kubeVersion: '>= 1.25.0-0'
+    maintainers:
+    - email: scott.leggett@amazee.io
+      name: smlx
+      url: https://amazee.io
+    name: lagoon-logging
+    type: application
+    urls:
+    - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-logging-0.99.0/lagoon-logging-0.99.0.tgz
+    version: 0.99.0
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: fixed
           description: Preserve dedicated NGINX ingress controller logs outside shared router namespaces as container logs.
       artifacthub.io/containsSecurityUpdates: "false"
     apiVersion: v2
@@ -17897,4 +17927,4 @@ entries:
     urls:
     - https://github.com/uselagoon/lagoon-charts/releases/download/lagoon-test-0.1.0/lagoon-test-0.1.0.tgz
     version: 0.1.0
-generated: "2026-11-13T03:21:38.411609501Z"
+generated: "2026-11-13T05:22:35.526503733Z"
