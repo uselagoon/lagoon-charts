@@ -42,6 +42,10 @@ jobs:
         rules:
           indentation:
             indent-sequences: consistent
+          comments:
+            min-spaces-from-content: 1
+          empty-lines:
+            max-end: 2
           line-length: disable
         EOF
         yamllint -f parsable /tmp/charts | awk -F: '{print; system("sed \"" $2 "q;d\" " $1)}'
