@@ -21,7 +21,7 @@ type: application
 # time you make changes to the chart and its templates, including the app
 # version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.63.1
+version: 1.63.2
 
 # This is the version number of the application being deployed. This version
 # number should be incremented each time you make changes to the application.
@@ -42,6 +42,4 @@ annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
     - kind: fixed
-      description: secret referenecs in webhook handler
-    - kind: added
-      description: add imagepullsecret support to job templates
+      description: Fixed formatting of host keys to to strip newline characters
