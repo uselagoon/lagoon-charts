@@ -53,6 +53,11 @@ spec:
             secretKeyRef:
               name: {{ include "lagoon-core.fullname" . }}-secrets
               key: JWTSECRET
+        - name: PROJECTSEED
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "lagoon-core.fullname" . }}-secrets
+              key: PROJECTSEED
         - name: GRAPHQL_ENDPOINT
           value: http://{{ include "lagoon-core.api.fullname" . }}:{{ .Values.api.service.port }}/graphql
         - name: DEFAULT_BUILD_DEPLOY_IMAGE
