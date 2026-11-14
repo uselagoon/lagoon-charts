@@ -23,12 +23,6 @@ dockerHost:
       repository: uselagoon/docker-host
     storage:
       size: 50Gi
-  additional:
-    task-docker-host:
-      storage:
-        size: 50Gi
-      service:
-        discoverable: false
 
 imageTag: ""
 
