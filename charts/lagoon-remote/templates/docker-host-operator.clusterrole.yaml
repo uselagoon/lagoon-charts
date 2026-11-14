@@ -9,6 +9,7 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - configmaps
   - persistentvolumeclaims
   - serviceaccounts
   - services
@@ -85,6 +86,7 @@ rules:
 - apiGroups:
   - networking.k8s.io
   resources:
+  - ingresses
   - networkpolicies
   verbs:
   - create

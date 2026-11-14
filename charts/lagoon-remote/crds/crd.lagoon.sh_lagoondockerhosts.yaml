@@ -2105,6 +2105,327 @@ spec:
                       type: string
                   type: object
                 type: array
+              ui:
+                description: |-
+                  UISpec configures the optional management web UI of the docker-host image (images, pull, purge). It runs as its
+                  own unprivileged deployment that connects to the daemon of every docker-host over the network, so it sees the whole
+                  pool as it scales, and is served through its own service and an ingress. It requires a docker-host image that
+                  contains the UI. Authentication is mandatory unless explicitly disabled: basic auth from a secret, or an OIDC
+                  provider.
+                properties:
+                  basicAuthSecretName:
+                    description: |-
+                      BasicAuthSecretName names a secret in the same namespace with the keys `username` and `password`. It is
+                      ignored when oauth is configured.
+                    type: string
+                  disableAuth:
+                    description: |-
+                      DisableAuth turns authentication off entirely so anyone who can reach the UI can manage the docker-host.
+                      It is only meant for local development and is never enabled by default.
+                    type: boolean
+                  enabled:
+                    type: boolean
+                  ingress:
+                    properties:
+                      allowFrom:
+                        description: |-
+                          AllowFrom lists the peers (the ingress controller pods) the network policy admits to the UI port. When
+                          empty the UI port is not opened by the network policy. The UI pods are always admitted to the docker daemon
+                          port of the docker-hosts.
+                        items:
+                          description: |-
+                            NetworkPolicyPeer describes a peer to allow traffic to/from. Only certain combinations of
+                            fields are allowed
+                          properties:
+                            ipBlock:
+                              description: |-
+                                ipBlock defines policy on a particular IPBlock. If this field is set then
+                                neither of the other fields can be.
+                              properties:
+                                cidr:
+                                  description: |-
+                                    cidr is a string representing the IPBlock
+                                    Valid examples are "192.168.1.0/24" or "2001:db8::/64"
+                                  type: string
+                                except:
+                                  description: |-
+                                    except is a slice of CIDRs that should not be included within an IPBlock
+                                    Valid examples are "192.168.1.0/24" or "2001:db8::/64"
+                                    Except values will be rejected if they are outside the cidr range
+                                  items:
+                                    type: string
+                                  type: array
+                                  x-kubernetes-list-type: atomic
+                              required:
+                              - cidr
+                              type: object
+                            namespaceSelector:
+                              description: |-
+                                namespaceSelector selects namespaces using cluster-scoped labels. This field follows
+                                standard label selector semantics; if present but empty, it selects all namespaces.
+
+                                If podSelector is also set, then the NetworkPolicyPeer as a whole selects
+                                the pods matching podSelector in the namespaces selected by namespaceSelector.
+                                Otherwise it selects all pods in the namespaces selected by namespaceSelector.
+                              properties:
+                                matchExpressions:
+                                  description: matchExpressions is a list of label
+                                    selector requirements. The requirements are ANDed.
+                                  items:
+                                    description: |-
+                                      A label selector requirement is a selector that contains values, a key, and an operator that
+                                      relates the key and values.
+                                    properties:
+                                      key:
+                                        description: key is the label key that the
+                                          selector applies to.
+                                        type: string
+                                      operator:
+                                        description: |-
+                                          operator represents a key's relationship to a set of values.
+                                          Valid operators are In, NotIn, Exists and DoesNotExist.
+                                        type: string
+                                      values:
+                                        description: |-
+                                          values is an array of string values. If the operator is In or NotIn,
+                                          the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                          the values array must be empty. This array is replaced during a strategic
+                                          merge patch.
+                                        items:
+                                          type: string
+                                        type: array
+                                        x-kubernetes-list-type: atomic
+                                    required:
+                                    - key
+                                    - operator
+                                    type: object
+                                  type: array
+                                  x-kubernetes-list-type: atomic
+                                matchLabels:
+                                  additionalProperties:
+                                    type: string
+                                  description: |-
+                                    matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                                    map is equivalent to an element of matchExpressions, whose key field is "key", the
+                                    operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                  type: object
+                              type: object
+                              x-kubernetes-map-type: atomic
+                            podSelector:
+                              description: |-
+                                podSelector is a label selector which selects pods. This field follows standard label
+                                selector semantics; if present but empty, it selects all pods.
+
+                                If namespaceSelector is also set, then the NetworkPolicyPeer as a whole selects
+                                the pods matching podSelector in the Namespaces selected by NamespaceSelector.
+                                Otherwise it selects the pods matching podSelector in the policy's own namespace.
+                              properties:
+                                matchExpressions:
+                                  description: matchExpressions is a list of label
+                                    selector requirements. The requirements are ANDed.
+                                  items:
+                                    description: |-
+                                      A label selector requirement is a selector that contains values, a key, and an operator that
+                                      relates the key and values.
+                                    properties:
+                                      key:
+                                        description: key is the label key that the
+                                          selector applies to.
+                                        type: string
+                                      operator:
+                                        description: |-
+                                          operator represents a key's relationship to a set of values.
+                                          Valid operators are In, NotIn, Exists and DoesNotExist.
+                                        type: string
+                                      values:
+                                        description: |-
+                                          values is an array of string values. If the operator is In or NotIn,
+                                          the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                          the values array must be empty. This array is replaced during a strategic
+                                          merge patch.
+                                        items:
+                                          type: string
+                                        type: array
+                                        x-kubernetes-list-type: atomic
+                                    required:
+                                    - key
+                                    - operator
+                                    type: object
+                                  type: array
+                                  x-kubernetes-list-type: atomic
+                                matchLabels:
+                                  additionalProperties:
+                                    type: string
+                                  description: |-
+                                    matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                                    map is equivalent to an element of matchExpressions, whose key field is "key", the
+                                    operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                  type: object
+                              type: object
+                              x-kubernetes-map-type: atomic
+                          type: object
+                        type: array
+                      annotations:
+                        additionalProperties:
+                          type: string
+                        description: Annotations are added to the ingress, for example
+                          for cert-manager.
+                        type: object
+                      className:
+                        description: ClassName sets the ingressClassName. Unset uses
+                          the cluster default ingress class.
+                        type: string
+                      host:
+                        type: string
+                      insecureCookies:
+                        description: InsecureCookies allows the oauth session cookie
+                          over plain http, only for testing.
+                        type: boolean
+                      tlsSecretName:
+                        description: |-
+                          TLSSecretName enables TLS on the host with this secret. Leave empty to serve plain http, in which case
+                          the UI must also be told so, see InsecureCookies.
+                        type: string
+                    type: object
+                  oauth:
+                    description: OAuth replaces basic auth with a login through an
+                      OIDC identity provider.
+                    properties:
+                      allowedDomains:
+                        items:
+                          type: string
+                        type: array
+                      allowedEmails:
+                        items:
+                          type: string
+                        type: array
+                      allowedGroups:
+                        items:
+                          type: string
+                        type: array
+                      clientID:
+                        type: string
+                      clientSecretRef:
+                        description: ClientSecretRef references the secret key holding
+                          the OAuth client secret.
+                        properties:
+                          key:
+                            description: The key of the secret to select from.  Must
+                              be a valid secret key.
+                            type: string
+                          name:
+                            default: ""
+                            description: |-
+                              Name of the referent.
+                              This field is effectively required, but due to backwards compatibility is
+                              allowed to be empty. Instances of this type with an empty value here are
+                              almost certainly wrong.
+                              More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                            type: string
+                          optional:
+                            description: Specify whether the Secret or its key must
+                              be defined
+                            type: boolean
+                        required:
+                        - key
+                        type: object
+                        x-kubernetes-map-type: atomic
+                      groupsClaim:
+                        default: groups
+                        type: string
+                      issuerURL:
+                        description: IssuerURL is the OIDC issuer, its discovery document
+                          is used to find the endpoints.
+                        type: string
+                      redirectURL:
+                        description: RedirectURL defaults to https://<ingress host>/oauth/callback.
+                        type: string
+                      scopes:
+                        default: openid email profile
+                        type: string
+                    required:
+                    - clientID
+                    - clientSecretRef
+                    - issuerURL
+                    type: object
+                    x-kubernetes-validations:
+                    - message: at least one of allowedEmails, allowedDomains or allowedGroups
+                        is required
+                      rule: size(self.allowedEmails) + size(self.allowedDomains) +
+                        size(self.allowedGroups) > 0
+                  port:
+                    default: 8080
+                    description: Port is the port the UI listens on.
+                    format: int32
+                    type: integer
+                  resources:
+                    description: Resources of the UI container.
+                    properties:
+                      claims:
+                        description: |-
+                          Claims lists the names of resources, defined in spec.resourceClaims,
+                          that are used by this container.
+
+                          This field depends on the
+                          DynamicResourceAllocation feature gate.
+
+                          This field is immutable. It can only be set for containers.
+                        items:
+                          description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                          properties:
+                            name:
+                              description: |-
+                                Name must match the name of one entry in pod.spec.resourceClaims of
+                                the Pod where this field is used. It makes that resource available
+                                inside a container.
+                              type: string
+                            request:
+                              description: |-
+                                Request is the name chosen for a request in the referenced claim.
+                                If empty, everything from the claim is made available, otherwise
+                                only the result of this request.
+                              type: string
+                          required:
+                          - name
+                          type: object
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
+                      limits:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          Limits describes the maximum amount of compute resources allowed.
+                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                        type: object
+                      requests:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        description: |-
+                          Requests describes the minimum amount of compute resources required.
+                          If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                          otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                          More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                        type: object
+                    type: object
+                type: object
+                x-kubernetes-validations:
+                - message: ui.ingress.host is required when the ui is enabled
+                  rule: '!has(self.enabled) || !self.enabled || (has(self.ingress)
+                    && has(self.ingress.host) && size(self.ingress.host) > 0)'
+                - message: ui requires either basicAuthSecretName, oauth or disableAuth
+                  rule: '!has(self.enabled) || !self.enabled || has(self.oauth) ||
+                    (has(self.disableAuth) && self.disableAuth) || (has(self.basicAuthSecretName)
+                    && size(self.basicAuthSecretName) > 0)'
             type: object
             x-kubernetes-validations:
             - message: maxReplicas must be greater than or equal to minReplicas

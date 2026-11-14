@@ -204,6 +204,31 @@ dockerHost:
       serviceMonitor:
         enabled: false
 
+    # optional management web UI (list, pull and purge images) that runs as its own deployment and manages every
+    # docker-host of the pool, served through an ingress. Requires a docker-host image that contains the UI and either basic auth or oauth.
+    ui:
+      enabled: false
+      # secret in the release namespace with the keys `username` and `password`, ignored when oauth is set
+      # basicAuthSecretName: docker-host-ui-auth
+      # login through an OIDC provider instead of basic auth, at least one allow list is required
+      # oauth:
+      #   issuerURL: https://idp.example.com
+      #   clientID: docker-host
+      #   clientSecretRef:
+      #     name: docker-host-ui-oauth
+      #     key: client-secret
+      #   allowedGroups: [ops]
+      # disableAuth turns authentication off entirely, for local development only. Never enable it on a shared cluster.
+      # disableAuth: false
+      ingress:
+        # ingressClassName, unset uses the cluster default
+        # className: nginx
+        # host: docker-host.example.com
+        # tlsSecretName: docker-host-ui-tls
+        # annotations: {}
+        # peers (the ingress controller pods) the network policy admits to the UI port
+        allowFrom: []
+
     # the operator defaults to tolerating the lagoon/build and lagoon.sh/build taints, set to override
     # tolerations: []
     # nodeSelector: {}
