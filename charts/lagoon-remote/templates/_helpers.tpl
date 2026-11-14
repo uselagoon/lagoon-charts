@@ -49,25 +49,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 {{/*
-Create the name of the service account to use for dockerHost.
-*/}}
-{{- define "lagoon-remote.dockerHost.serviceAccountName" -}}
-{{- default (include "lagoon-remote.dockerHost.fullname" .) .Values.dockerHost.serviceAccount.name }}
-{{- end }}
-
-{{/*
-Create a default fully qualified app name for dockerHost.
-*/}}
-{{- define "lagoon-remote.dockerHost.fullname" -}}
-{{- include "lagoon-remote.fullname" . }}-docker-host
-{{- end }}
-
-{{/*
 Common labels dockerHost.
 */}}
 {{- define "lagoon-remote.dockerHost.labels" -}}
 helm.sh/chart: {{ include "lagoon-remote.chart" . }}
-{{ include "lagoon-remote.dockerHost.selectorLabels" . }}
+app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -75,11 +62,37 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
-Selector labels dockerHost.
+Create the name of the service account to use for dockerHostOperator.
 */}}
-{{- define "lagoon-remote.dockerHost.selectorLabels" -}}
+{{- define "lagoon-remote.dockerHostOperator.serviceAccountName" -}}
+{{- default (include "lagoon-remote.dockerHostOperator.fullname" .) .Values.dockerHostOperator.serviceAccount.name }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for dockerHostOperator.
+*/}}
+{{- define "lagoon-remote.dockerHostOperator.fullname" -}}
+{{- include "lagoon-remote.fullname" . }}-docker-host-operator
+{{- end }}
+
+{{/*
+Common labels dockerHostOperator.
+*/}}
+{{- define "lagoon-remote.dockerHostOperator.labels" -}}
+helm.sh/chart: {{ include "lagoon-remote.chart" . }}
+{{ include "lagoon-remote.dockerHostOperator.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels dockerHostOperator.
+*/}}
+{{- define "lagoon-remote.dockerHostOperator.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "lagoon-remote.name" . }}
-app.kubernetes.io/component: {{ include "lagoon-remote.dockerHost.fullname" . }}
+app.kubernetes.io/component: {{ include "lagoon-remote.dockerHostOperator.fullname" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

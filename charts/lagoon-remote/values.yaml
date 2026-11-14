@@ -34,92 +34,157 @@ mxoutHost: ""
 # on the service level, if not set it uses chart appVersion
 imageTag: ""
 
-dockerHost:
-  image:
-    repository: uselagoon/docker-host
-    pullPolicy: Always
-    # Overrides the image tag whose default is "latest".
-    tag: "v3.6.1"
-
-  name: docker-host
-
-  registry: registry.lagoon.svc:5000
-
-  repositoryToUpdate: uselagoon
-
-  pruneImagesUntil: 168h
-
-  # Add annotations to pod template
-  podAnnotations: {}
-
+# dockerHostOperator runs the docker-host-operator, which provisions the docker-hosts described by the
+# LagoonDockerHost resource configured in dockerHost below.
+# https://github.com/uselagoon/docker-host-operator
+dockerHostOperator:
+  enabled: true
   replicaCount: 1
 
-  ## proxy configuration
-  # httpProxy: ""
-  # httpsProxy: ""
-  # noProxy: ""
+  image:
+    repository: uselagoon/docker-host-operator
+    pullPolicy: Always
+    tag: latest
 
-  # add extra environment variables if required
-  extraEnvs:
-
-  storage:
-    create: true
-    size: 750Gi
-    # className sets the storageClassName for the docker-host PVC. This is
-    # useful if the docker-host requires a specific storage class for features
-    # such as increased IOPS.
-    #
-    # WARNING: On platforms such as AKS not all storage volume classes can be
-    # bound to all node types. So if you configure a storage class that can't
-    # be bound to any nodes in the cluster it will cause the docker-host pod to
-    # fail to schedule. For example AKS requires Premium Storage suport on the
-    # node for the managed-premium storage class.
-    #
-    # If className is not defined the chart will not set any specify storage
-    # class on the PVC, effectively falling back to the cluster default.
-    #
-    # className: managed-premium
-
-  networkPolicy:
-    # Specifies whether the docker-host network policy should be enabled
-    enabled: true
+  imagePullSecrets: []
 
   serviceAccount:
-    # Specifies whether a service account should be created
-    create: true
     # The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname
-    # template
+    # If not set, a name is generated using the fullname template
     name:
 
+  extraArgs: []
+  extraEnvs: []
+
   podSecurityContext: {}
-
-  securityContext:
-    privileged: true
-    seLinuxOptions:
-      # Ensures selinux relabeling is disabled, this would case the container never to start
-      # as there can be so many files in the persistent storage
-      type: spc_t
-
+  securityContext: {}
   resources: {}
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
 
-  service:
-    type: ClusterIP
-    port: 2375
+# dockerHost creates the LagoonDockerHost resource that the operator reconciles into docker-hosts.
+# `spec` is the LagoonDockerHost spec, see the operator's documentation for every available field.
+# The remote-controller finds the docker-hosts by the dockerhost.lagoon.sh/dedicated service label, which the
+# operator sets unless `spec.service.discoverable` is false.
+dockerHost:
+  enabled: true
+  # name of the LagoonDockerHost resource. The docker-host objects are named after it: a service <name> and, for
+  # each docker-host, a deployment, volume and service <name>-N. The remote-controller falls back to a service
+  # named `docker-host`, so only change this if you also change that. It must not end in -<number> or -metrics.
+  name: docker-host
+  # extra labels and annotations for the LagoonDockerHost resource
+  labels: {}
+  annotations: {}
+  # additional isolated LagoonDockerHost resources (same layout as `spec`), keyed by the resource name,
+  # equivalent to installing the lagoon-docker-host chart. Set `service.discoverable: false` so the
+  # remote-controller never schedules builds on them, and do not name one `docker-host`.
+  additional: {}
+  #  task-docker-host:
+  #    minReplicas: 1
+  #    maxReplicas: 2
+  #    service:
+  #      discoverable: false
+  #    networkPolicy:
+  #      ingress:
+  #      - podSelector:
+  #          matchExpressions:
+  #          - key: lagoon.sh/taskName
+  #            operator: Exists
+  spec:
+    # Scaling bounds. Each docker-host is a separate deployment with its own volume.
+    # `spec.replicas` is deliberately NOT set by this chart, it is owned by whatever scales the pool (for example
+    # the remote-controller via the scale subresource) so that a helm upgrade can never revert a scaling decision.
+    # When replicas is unset the pool runs minReplicas docker-hosts, and replicas is always clamped to these bounds.
+    # Only set `replicas` here if nothing else will scale the pool, helm will then own the field.
+    minReplicas: 1
+    # maxReplicas: 5
+    # replicas:
 
-  tolerations:
-  - key: lagoon/build
-    effect: NoSchedule
-    operator: Exists
-  - key: lagoon/build
-    effect: PreferNoSchedule
-    operator: Exists
-  - key: lagoon.sh/build
-    effect: NoSchedule
-    operator: Exists
-  - key: lagoon.sh/build
-    effect: PreferNoSchedule
-    operator: Exists
+    image:
+      repository: uselagoon/docker-host
+      pullPolicy: Always
+      # when empty falls back to the top level imageTag, then to "v3.6.1"
+      tag: "v3.6.1"
+
+    registry: registry.lagoon.svc:5000
+
+    repositoryToUpdate: amazeeio|lagoon
+
+    pruneImagesUntil: 168h
+
+    # Add annotations to pod template
+    podAnnotations: {}
+
+    ## proxy configuration
+    # httpProxy: ""
+    # httpsProxy: ""
+    # noProxy: ""
+
+    # add extra environment variables if required
+    extraEnvs: []
+
+    storage:
+      size: 750Gi
+      # className sets the storageClassName for the docker-host PVCs. This is
+      # useful if the docker-host requires a specific storage class for features
+      # such as increased IOPS.
+      #
+      # WARNING: On platforms such as AKS not all storage volume classes can be
+      # bound to all node types. So if you configure a storage class that can't
+      # be bound to any nodes in the cluster it will cause the docker-host pod to
+      # fail to schedule. For example AKS requires Premium Storage suport on the
+      # node for the managed-premium storage class.
+      #
+      # If className is not defined no storage class is set on the PVCs,
+      # effectively falling back to the cluster default.
+      #
+      # className: managed-premium
+
+      # keep the volume of a docker-host that is scaled down so the image cache is reused when scaling back up
+      retainOnScaleDown: false
+
+    networkPolicy:
+      # Specifies whether the docker-host network policy should be enabled
+      enabled: true
+      # by default lagoon build pods and image scanners can access the docker-host, set to replace that
+      # ingress: []
+
+    serviceAccount:
+      # Specifies whether a service account should be created
+      create: true
+      # The name of the service account to use, defaults to the name of the LagoonDockerHost
+      # name:
+
+    podSecurityContext: {}
+
+    securityContext:
+      privileged: true
+      seLinuxOptions:
+        # Ensures selinux relabeling is disabled, this would case the container never to start
+        # as there can be so many files in the persistent storage
+        type: spc_t
+
+    resources: {}
+
+    service:
+      type: ClusterIP
+      port: 2375
+      # set to false to hide the docker-hosts from the remote-controller
+      discoverable: true
+
+    # export docker engine and `docker system df` metrics, requires a docker-host image with metrics support
+    metrics:
+      enabled: false
+      # allowFrom lists the peers (for example prometheus) that may scrape the metrics ports
+      allowFrom: []
+      serviceMonitor:
+        enabled: false
+
+    # the operator defaults to tolerating the lagoon/build and lagoon.sh/build taints, set to override
+    # tolerations: []
+    # nodeSelector: {}
+    # affinity: {}
 
 # sshCore creates a restricted, non-expiring ServiceAccount token for use by
 # lagoon-core.
