@@ -36,6 +36,19 @@ Additional isolated docker-hosts can be defined with `dockerHost.additional`, ke
 `LagoonDockerHost`. The main resource is named `dockerHost.name` (`docker-host`), which keeps the service name the
 `remote-controller` falls back to.
 
+#### Snapshots
+
+Set `dockerHost.spec.snapshots.enabled` to speed up the start of scaled up docker-hosts. The operator creates a
+cronjob (`dockerHost.spec.snapshots.schedule`, once a day at midnight by default) that takes a `VolumeSnapshot` of the
+primary docker-host volume (`<name>-0`) if no containers, and so no builds, are running on it. Only the latest
+snapshot is retained. When the pool scales up, the volumes of the new docker-hosts are provisioned from that snapshot
+so they start with the primary's image cache, and the volumes of scaled down docker-hosts are never retained
+(`storage.retainOnScaleDown` is ignored). Volumes that already exist are not changed.
+
+This requires the `VolumeSnapshot` CRDs, a snapshot controller and a CSI driver that supports snapshots, with
+`dockerHost.spec.storage.className` set to a storage class of that driver and a default `VolumeSnapshotClass`. If the
+CRDs are not installed the operator skips snapshots.
+
 #### Scaling
 
 The chart sets the scaling bounds (`dockerHost.spec.minReplicas` and `maxReplicas`) but does not render

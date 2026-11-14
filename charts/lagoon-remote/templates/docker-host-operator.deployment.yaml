@@ -42,8 +42,10 @@ spec:
           name: https
         - containerPort: 8081
           name: health
-        {{- with .Values.dockerHostOperator.extraEnvs }}
         env:
+        - name: SNAPSHOT_IMAGE
+          value: "{{ .Values.dockerHostOperator.image.repository }}:{{ .Values.dockerHostOperator.image.tag }}"
+        {{- with .Values.dockerHostOperator.extraEnvs }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
         livenessProbe:
