@@ -19,7 +19,7 @@ type: application
 # This is the chart version. This version number should be incremented each
 # time you make changes to the chart and its templates, including the app
 # version.
-version: 0.107.2
+version: 0.108.0
 
 dependencies:
 - name: lagoon-build-deploy
@@ -40,5 +40,11 @@ dependencies:
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
+    - kind: changed
+      description: docker-host is now provisioned by the docker-host-operator from a LagoonDockerHost resource instead of a StatefulSet, the dockerHost values are now under dockerHost.spec
+    - kind: added
+      description: add dockerHostOperator and the LagoonDockerHost CRD
+    - kind: removed
+      description: remove OpenShift support for the docker-host
     - kind: fixed
       description: Fixed formatting of host keys to to strip newline characters

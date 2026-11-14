@@ -1,0 +1,16 @@
+{{- if .Values.dockerHostOperator.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "lagoon-remote.dockerHostOperator.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.dockerHostOperator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "lagoon-remote.dockerHostOperator.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "lagoon-remote.dockerHostOperator.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace | quote }}
+{{- end }}

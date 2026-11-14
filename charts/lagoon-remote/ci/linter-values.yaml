@@ -18,10 +18,17 @@ lagoon-build-deploy:
   rabbitMQHostname: lagoon-core-broker.lagoon-core.svc:5671
 
 dockerHost:
-  image:
-    repository: uselagoon/docker-host
-  storage:
-    size: 50Gi
+  spec:
+    image:
+      repository: uselagoon/docker-host
+    storage:
+      size: 50Gi
+  additional:
+    task-docker-host:
+      storage:
+        size: 50Gi
+      service:
+        discoverable: false
 
 imageTag: ""
 
