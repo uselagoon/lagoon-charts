@@ -85,7 +85,7 @@ dockerHost:
   # name of the LagoonDockerHost resource. The docker-host objects are named after it: a service <name> and, for
   # each docker-host, a deployment, volume and service <name>-N. The remote-controller falls back to a service
   # named `docker-host`, so only change this if you also change that. It must not end in -<number> or -metrics.
-  name: docker-host
+  name: lagoon-remote-docker-host
   # extra labels and annotations for the LagoonDockerHost resource
   labels: {}
   annotations: {}
