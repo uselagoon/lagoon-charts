@@ -2031,6 +2031,22 @@ spec:
                     description: Name defaults to the docker-host name.
                     type: string
                 type: object
+              snapshots:
+                description: |-
+                  SnapshotsSpec configures VolumeSnapshots of the primary docker-host volume (index 0). They are taken only while
+                  no builds are running on it and only the latest snapshot is retained. New docker-host volumes created when
+                  scaling up are provisioned from that snapshot so they start with a warm image cache, and the volumes of scaled
+                  down docker-hosts are never retained. It requires the VolumeSnapshot CRDs and a CSI driver that supports
+                  snapshots.
+                properties:
+                  enabled:
+                    type: boolean
+                  schedule:
+                    default: 0 0 * * *
+                    description: Schedule is the cron schedule of the snapshot job,
+                      the default is once a day at midnight.
+                    type: string
+                type: object
               storage:
                 properties:
                   className:

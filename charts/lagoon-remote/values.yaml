@@ -144,6 +144,16 @@ dockerHost:
       # keep the volume of a docker-host that is scaled down so the image cache is reused when scaling back up
       retainOnScaleDown: false
 
+    # take VolumeSnapshots of the primary docker-host volume (index 0) and provision the volumes of new
+    # docker-hosts from the latest one, so scaled up docker-hosts start with a warm image cache. Snapshots are only
+    # taken while no builds are running, only the latest is kept, and the volumes of scaled down docker-hosts are
+    # never retained. Requires the VolumeSnapshot CRDs and a CSI driver that supports snapshots, use `storage.className`
+    # to select a storage class backed by one.
+    snapshots:
+      enabled: false
+      # cron schedule of the snapshot job, defaults to once a day at midnight
+      schedule: "0 0 * * *"
+
     networkPolicy:
       # Specifies whether the docker-host network policy should be enabled
       enabled: true
