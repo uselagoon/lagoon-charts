@@ -53,6 +53,12 @@ OVERRIDE_REMOTE_CONTROLLER_IMAGETAG =
 # Overrides the image repository for uselagoon/remote-controller whose default
 # is uselagoon/remote-controller.
 OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY =
+# Overrides the image tag for uselagoon/docker-host-operator whose default is
+# the lagoon-remote chart value dockerHostOperator.image.tag.
+OVERRIDE_DOCKER_HOST_OPERATOR_IMAGETAG =
+# Overrides the image repository for the docker-host-operator whose default
+# is uselagoon/docker-host-operator.
+OVERRIDE_DOCKER_HOST_OPERATOR_IMAGE_REPOSITORY =
 # If set, sets the lagoon-build-deploy chart .Value.rootless=true.
 REMOTE_CONTROLLER_ROOTLESS_BUILD_PODS =
 # Control the feature flags on the lagoon-build-deploy chart. Valid values: `enabled` or `disabled`.
@@ -777,6 +783,8 @@ endif
 		$$([ $(INSTALL_STABLE_REMOTE) = true ] && [ $(STABLE_REMOTE_CHART_VERSION) ] && echo '--version=$(STABLE_REMOTE_CHART_VERSION)') \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-remote-$(STABLE_REMOTE_CHART_VERSION)/charts/lagoon-remote/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-remote/ci/linter-values.yaml'; fi) \
 		--set "lagoon-build-deploy.enabled=false" \
+		$$([ $(OVERRIDE_DOCKER_HOST_OPERATOR_IMAGETAG) ] && [ $(INSTALL_STABLE_REMOTE) = false ] && echo '--set dockerHostOperator.image.tag=$(OVERRIDE_DOCKER_HOST_OPERATOR_IMAGETAG)') \
+		$$([ $(OVERRIDE_DOCKER_HOST_OPERATOR_IMAGE_REPOSITORY) ] && [ $(INSTALL_STABLE_REMOTE) = false ] && echo '--set dockerHostOperator.image.repository=$(OVERRIDE_DOCKER_HOST_OPERATOR_IMAGE_REPOSITORY)') \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set "global.rabbitMQPassword=$$($(KUBECTL) -n lagoon-core get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.environment=development') \
