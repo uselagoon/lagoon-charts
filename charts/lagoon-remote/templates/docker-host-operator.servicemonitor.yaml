@@ -1,0 +1,23 @@
+{{- if and .Values.dockerHostOperator.enabled .Values.dockerHostOperator.metricsService.enabled .Values.dockerHostOperator.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lagoon-remote.dockerHostOperator.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.dockerHostOperator.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - path: /metrics
+      port: https
+      scheme: https
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      tlsConfig:
+        insecureSkipVerify: true
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      metrics-only: "true"
+      {{- include "lagoon-remote.dockerHostOperator.selectorLabels" . | nindent 6 }}
+{{- end }}

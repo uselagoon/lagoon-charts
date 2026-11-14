@@ -36,6 +36,32 @@ Additional isolated docker-hosts can be defined with `dockerHost.additional`, ke
 `LagoonDockerHost`. The main resource is named `dockerHost.name` (`docker-host`), which keeps the service name the
 `remote-controller` falls back to.
 
+#### Metrics
+
+The operator serves its own metrics (`lagoon_dockerhost_desired_replicas`, `lagoon_dockerhost_ready_replicas` and the
+controller-runtime series) over https on the `<release>-docker-host-operator-metrics` service
+(`dockerHostOperator.metricsService`). Set `dockerHostOperator.serviceMonitor.enabled=true` to have the
+prometheus-operator scrape it.
+
+The metrics of the docker-hosts are configured separately in `dockerHost.spec.metrics`. Their ports are closed by the
+network policy unless the scraping pods are listed in `dockerHost.spec.metrics.allowFrom`:
+
+```yaml
+dockerHost:
+  spec:
+    metrics:
+      enabled: true
+      allowFrom:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
+      serviceMonitor:
+        enabled: true
+```
+
 #### Snapshots
 
 Set `dockerHost.spec.snapshots.enabled` to speed up the start of scaled up docker-hosts. The operator creates a

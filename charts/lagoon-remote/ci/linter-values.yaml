@@ -23,6 +23,14 @@ dockerHost:
       repository: uselagoon/docker-host
     storage:
       size: 50Gi
+    metrics:
+      allowFrom:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-prometheus
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
 
 imageTag: ""
 

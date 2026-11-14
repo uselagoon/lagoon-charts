@@ -53,6 +53,19 @@ dockerHostOperator:
     # If not set, a name is generated using the fullname template
     name:
 
+  # metricsService exposes the operator's own metrics (the lagoon_dockerhost_* series and the controller-runtime
+  # metrics), served over https and protected by token review. The metrics of the docker-hosts themselves are
+  # configured with dockerHost.spec.metrics.
+  metricsService:
+    enabled: true
+    type: ClusterIP
+    ports:
+      metrics: 8443
+
+  # serviceMonitor creates a prometheus-operator ServiceMonitor for the operator, it requires the metricsService
+  serviceMonitor:
+    enabled: false
+
   extraArgs: []
   extraEnvs: []
 
@@ -185,7 +198,7 @@ dockerHost:
 
     # export docker engine and `docker system df` metrics, requires a docker-host image with metrics support
     metrics:
-      enabled: false
+      enabled: true
       # allowFrom lists the peers (for example prometheus) that may scrape the metrics ports
       allowFrom: []
       serviceMonitor:
