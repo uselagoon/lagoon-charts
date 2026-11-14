@@ -19,6 +19,16 @@ lagoon-build-deploy:
 
 dockerHost:
   spec:
+    ui:
+      enabled: true
+      disableAuth: true
+      ingress:
+        host: docker-host.example.com
+        tlsSecretName: docker-host-ui-tls
+        allowFrom:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: ingress-nginx
     image:
       repository: uselagoon/docker-host
     storage:

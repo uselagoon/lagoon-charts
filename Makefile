@@ -841,6 +841,7 @@ endif
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set storageCalculator.serviceMonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set dockerHostOperator.serviceMonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set dockerHost.spec.metrics.serviceMonitor.enabled=true') \
+		--set dockerHost.spec.ui.ingress.host="remote-docker-host.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		lagoon-remote \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo 'lagoon/lagoon-remote'; else echo './charts/lagoon-remote'; fi)
 	# rerun the remote certs installation as a workaround for the way the localstack used to seed the nats certs from helm
