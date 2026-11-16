@@ -663,6 +663,7 @@ endif
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshPortalAPI.serviceMonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshToken.serviceMonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set broker.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set api.serviceMonitor.enabled=true') \
 		--set logs2notifications.logs2email.disabled=$(LOGS2EMAIL_DISABLED) \
 		--set logs2notifications.logs2microsoftteams.disabled=$(LOGS2MICROSOFTTEAMS_DISABLED) \
 		--set logs2notifications.logs2rocketchat.disabled=$(LOGS2ROCKETCHAT_DISABLED) \

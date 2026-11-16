@@ -140,6 +140,15 @@ api:
     type: ClusterIP
     port: 80
 
+  # Prometheus metrics endpoint (/metrics), served on a dedicated port that is
+  # not exposed through the API ingress.
+  metrics:
+    enabled: true
+    port: 9100
+
+  serviceMonitor:
+    enabled: false
+
   ingress:
     enabled: false
     annotations: {}

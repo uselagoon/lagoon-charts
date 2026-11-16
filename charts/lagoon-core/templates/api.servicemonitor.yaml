@@ -1,0 +1,19 @@
+{{- if and .Values.api.metrics.enabled .Values.api.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "lagoon-core.api.fullname" . }}
+  labels:
+    {{- include "lagoon-core.api.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 30s
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-core.api.selectorLabels" . | nindent 6 }}
+{{- end }}

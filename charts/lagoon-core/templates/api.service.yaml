@@ -10,5 +10,10 @@ spec:
   - port: {{ .Values.api.service.port }}
     targetPort: http-3000
     name: http-3000
+  {{- if .Values.api.metrics.enabled }}
+  - port: {{ .Values.api.metrics.port }}
+    targetPort: metrics
+    name: metrics
+  {{- end }}
   selector:
     {{- include "lagoon-core.api.selectorLabels" . | nindent 4 }}

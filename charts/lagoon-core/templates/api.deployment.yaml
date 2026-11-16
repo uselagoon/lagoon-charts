@@ -252,6 +252,10 @@ spec:
           {{- else }}
           value: https://{{ index .Values.webhookHandler.ingress.hosts 0 "host" }}
           {{- end }}
+        - name: METRICS_ENABLED
+          value: {{ .Values.api.metrics.enabled | quote }}
+        - name: METRICS_PORT
+          value: {{ .Values.api.metrics.port | quote }}
       {{- range $key, $val := .Values.api.additionalEnvs }}
         - name: {{ $key }}
           value: {{ $val | quote }}
@@ -264,6 +268,10 @@ spec:
         ports:
         - name: http-3000
           containerPort: 3000
+        {{- if .Values.api.metrics.enabled }}
+        - name: metrics
+          containerPort: {{ .Values.api.metrics.port }}
+        {{- end }}
         livenessProbe:
           httpGet:
             path: /status
