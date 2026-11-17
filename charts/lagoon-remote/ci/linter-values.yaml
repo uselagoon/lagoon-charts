@@ -29,8 +29,6 @@ dockerHost:
           - namespaceSelector:
               matchLabels:
                 kubernetes.io/metadata.name: ingress-nginx
-    image:
-      repository: uselagoon/docker-host
     storage:
       size: 50Gi
     metrics:
