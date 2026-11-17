@@ -34,17 +34,17 @@ mxoutHost: ""
 # on the service level, if not set it uses chart appVersion
 imageTag: ""
 
-# dockerHostOperator runs the docker-host-operator, which provisions the docker-hosts described by the
+# dockerHostOperator runs the thiasos-operator, which provisions the docker-hosts described by the
 # LagoonDockerHost resource configured in dockerHost below.
-# https://github.com/uselagoon/docker-host-operator
+# https://github.com/uselagoon/thiasos-operator
 dockerHostOperator:
   enabled: true
   replicaCount: 1
 
   image:
-    repository: uselagoon/docker-host-operator
+    repository: uselagoon/thiasos-operator
     pullPolicy: Always
-    tag: latest
+    tag: main
 
   imagePullSecrets: []
 
@@ -115,10 +115,10 @@ dockerHost:
     # replicas:
 
     image:
-      repository: uselagoon/docker-host
+      repository: uselagoon/thiasos-dockerhost
       pullPolicy: Always
       # when empty falls back to the top level imageTag, then to "v3.6.1"
-      tag: "v3.6.1"
+      tag: "main"
 
     registry: registry.lagoon.svc:5000
 
