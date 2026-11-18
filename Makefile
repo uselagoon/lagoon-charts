@@ -882,6 +882,7 @@ endif
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO) ] && echo '--set lagoonFeatureFlagDefaultRWX2RWO=$(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO)') \
 		$$([ $(ENABLE_INSIGHTS) = true ] && echo '--set lagoonFeatureFlagDefaultInsights=enabled') \
 		--set "lagoonAPIHost=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set enableServiceMonitor=true') \
 		lagoon-build-deploy \
 		$$(if [ $(INSTALL_STABLE_BUILDDEPLOY) = true ]; then echo 'lagoon/lagoon-build-deploy'; else echo './charts/lagoon-build-deploy'; fi)
 ifeq ($(INSTALL_STABLE_BUILDDEPLOY),true)
