@@ -80,6 +80,12 @@ jobs:
       run: |
         NEEDS_TESTING="$(gh api repos/$OWNER/$REPO_NAME/pulls/$PULL_REQUEST_NUMBER --jq '.labels.[].name | select(.=="needs-testing")')"
         NEXT_RELEASE="$(gh api repos/$OWNER/$REPO_NAME/pulls/$PULL_REQUEST_NUMBER --jq '.labels.[].name | select(.=="next-release")')"
+        SKIP_TESTING="$(gh api repos/$OWNER/$REPO_NAME/pulls/$PULL_REQUEST_NUMBER --jq '.labels.[].name | select(.=="skip-testing")')"
+        if [[ -n "$SKIP_TESTING" ]]; then
+          NEEDS_TESTING=""
+        elif ct list-changed --config ./default.ct.yaml | grep -qx 'charts/lagoon-logging'; then
+          NEEDS_TESTING="needs-testing"
+        fi
         echo "$NEEDS_TESTING"
         echo "$NEXT_RELEASE"
         echo "needsTesting=$NEEDS_TESTING" >> $GITHUB_OUTPUT
