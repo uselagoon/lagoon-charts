@@ -19,6 +19,7 @@ lagoon-build-deploy:
 
 dockerHost:
   spec:
+    maxReplicas: 3
     ui:
       enabled: true
       disableAuth: true
