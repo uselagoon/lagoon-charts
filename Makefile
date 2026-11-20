@@ -47,11 +47,11 @@ OVERRIDE_ACTIVE_STANDBY_TASK_IMAGE =
 # if OVERRIDE_PROJECTCLONE_TASK_IMAGE is not set, it will fall back to the
 # controller default (uselagoon/task-projectclone:${lagoonVersion}).
 OVERRIDE_PROJECTCLONE_TASK_IMAGE =
-# Overrides the image tag for amazeeio/lagoon-builddeploy whose default is
+# Overrides the image tag for uselagoon/remote-controller whose default is
 # the lagoon-build-deploy chart appVersion.
 OVERRIDE_REMOTE_CONTROLLER_IMAGETAG =
-# Overrides the image repository for amazeeio/lagoon-builddeploy whose default
-# is the amazeeio/lagoon-builddeploy.
+# Overrides the image repository for uselagoon/remote-controller whose default
+# is uselagoon/remote-controller.
 OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY =
 # If set, sets the lagoon-build-deploy chart .Value.rootless=true.
 REMOTE_CONTROLLER_ROOTLESS_BUILD_PODS =
