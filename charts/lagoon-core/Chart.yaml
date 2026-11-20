@@ -41,5 +41,5 @@ dependencies:
 annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
-    - kind: fixed
-      description: Fixed formatting of host keys to to strip newline characters
+    - kind: security
+      description: Add migitation for CVE-2026-114938
