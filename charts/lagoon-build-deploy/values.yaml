@@ -144,7 +144,7 @@ adminLagoonFeatureFlag:
   # ephemeralStorageLimit: 4Gi
 
 # rootlessBuildPods tells the build-deploy controller to create build pods
-# which do not run as root. See https://github.com/amazeeio/lagoon/pull/2481
+# which do not run as root. See https://github.com/uselagoon/lagoon/pull/2481
 # for details.
 rootlessBuildPods: false
 
