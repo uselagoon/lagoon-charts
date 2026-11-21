@@ -43,11 +43,11 @@ spec:
               secretKeyRef:
                 name: {{ include "lagoon-core.fullname" . }}-secrets
                 key: JWTSECRET
-          - name: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+          - name: KEYCLOAK_LAGOON_ADMIN_API_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
                 name: {{ include "lagoon-core.keycloak.fullname" . }}
-                key: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+                key: KEYCLOAK_LAGOON_ADMIN_API_CLIENT_SECRET
           - name: KEYCLOAK_FRONTEND_URL
             value: http://{{ include "lagoon-core.keycloak.fullname" . }}:{{ .Values.keycloak.service.port }}/auth
           - name: LAGOON_API_URL
