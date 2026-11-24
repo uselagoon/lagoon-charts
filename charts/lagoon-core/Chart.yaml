@@ -41,5 +41,7 @@ dependencies:
 annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
+    - kind: feature
+      description: Make storageclass and -size configurable for apiDB, broker and keycloakDB
     - kind: security
       description: Add migitation for CVE-2026-114938
