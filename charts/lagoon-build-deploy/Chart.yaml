@@ -22,8 +22,8 @@ appVersion: v1.0.3
 
 annotations:
   artifacthub.io/changes: |
-    - kind: changed
-      description: update remote-controller to v1.0.3
+    - kind: fixed
+      description: fix outdated chart comments
   artifacthub.io/crds: |
     - kind: LagoonBuild
       version: v1beta2
