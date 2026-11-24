@@ -41,7 +41,7 @@ dependencies:
 annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
-    - kind: fix
+    - kind: fixed
       description: Fix securitycontext usage in secret-migration and broker bootstrap jobs
     - kind: fixed
       description: fix outdated links/comments
