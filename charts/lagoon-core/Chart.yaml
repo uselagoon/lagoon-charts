@@ -41,6 +41,8 @@ dependencies:
 annotations:
   artifacthub.io/containsSecurityUpdates: "true"
   artifacthub.io/changes: |
+    - kind: changed
+      description: Make storageclass and -size configurable for apiDB, broker and keycloakDB
     - kind: fixed
       description: fix outdated links/comments
     - kind: security
