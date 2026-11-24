@@ -2,7 +2,7 @@
 
 [![Actions Status](https://github.com/uselagoon/lagoon-charts/workflows/Release%20Charts/badge.svg)](https://github.com/uselagoon/lagoon-charts/actions)
 
-This repository contains [Helm](https://helm.sh/) charts related to [Lagoon](https://github.com/amazeeio/lagoon/).
+This repository contains [Helm](https://helm.sh/) charts related to [Lagoon](https://github.com/uselagoon/lagoon/).
 
 ## Usage
 

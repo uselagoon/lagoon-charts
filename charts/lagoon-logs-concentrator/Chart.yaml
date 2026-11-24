@@ -3,7 +3,7 @@ name: lagoon-logs-concentrator
 description: >
   A Helm chart for Kubernetes which installs the Lagoon logs-concentrator
   service.
-home: https://github.com/amazeeio/charts
+home: https://github.com/uselagoon/lagoon-charts
 icon: https://raw.githubusercontent.com/uselagoon/lagoon-charts/main/icon.png
 maintainers:
 - name: smlx
@@ -26,5 +26,5 @@ version: 0.57.0
 # Valid supported kinds are added, changed, deprecated, removed, fixed and security
 annotations:
   artifacthub.io/changes: |
-    - kind: added
-      description: allow usage of existing secret for env
+    - kind: fixed
+      description: fix outdated links/comments
