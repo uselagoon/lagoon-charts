@@ -43,5 +43,7 @@ annotations:
   artifacthub.io/changes: |
     - kind: fix
       description: Fix securitycontext usage in secret-migration and broker bootstrap jobs
+    - kind: fixed
+      description: fix outdated links/comments
     - kind: security
       description: Add migitation for CVE-2026-114938

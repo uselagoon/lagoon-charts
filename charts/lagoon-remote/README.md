@@ -1,6 +1,6 @@
 # Lagoon Remote
 
-This chart installs the remote services for [Lagoon](https://github.com/amazeeio/lagoon/).
+This chart installs the remote services for [Lagoon](https://github.com/uselagoon/lagoon/).
 Install this chart into the cluster you want to deploy workloads to.
 
 ## Configuration

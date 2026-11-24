@@ -12,7 +12,7 @@ pruneImagesUntil: 168h
 
 # TODO: change this up once new docker-host is released
 registry: registry.lagoon.svc:5000
-repositoryToUpdate: amazeeio|lagoon
+repositoryToUpdate: uselagoon
 
 # Add annotations to pod template
 podAnnotations: {}

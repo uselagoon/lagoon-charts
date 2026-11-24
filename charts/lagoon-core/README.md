@@ -1,6 +1,6 @@
 # Lagoon Core
 
-This chart installs the core services for [Lagoon](https://github.com/amazeeio/lagoon/). See that repository for details on each of the microservices that make up Lagoon.
+This chart installs the core services for [Lagoon](https://github.com/uselagoon/lagoon/). See that repository for details on each of the microservices that make up Lagoon.
 
 ## Configuration
 
@@ -31,7 +31,7 @@ sshPortal:
 
 ## TL;DR Local testing using kind
 
-Prerequisite: download and install the [Lagoon CLI](https://github.com/amazeeio/lagoon-cli).
+Prerequisite: download and install the [Lagoon CLI](https://github.com/uselagoon/lagoon-cli).
 
 ### Install
 
@@ -150,7 +150,7 @@ ssh:
 ## ServiceAccounts
 
 * The `broker` has a serviceaccount bound to a role to allow service discovery for HA clustering.
-* The `ssh-portal` (disabled by default, eventually will be moved to `lagoon-remote`, see [amazeeio/lagoon#2179](https://github.com/amazeeio/lagoon/pull/2179)) has a serviceaccount bound to a clusterrole to allow exec into pods.
+* The `ssh-portal` has a serviceaccount bound to a clusterrole to allow exec into pods.
 
 
 ## Lagoon Files
