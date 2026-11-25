@@ -1133,7 +1133,7 @@ spec:
                       a container image
                     type: string
                   repository:
-                    default: uselagoon/docker-host
+                    default: uselagoon/thiasos-dockerhost
                     type: string
                   tag:
                     default: latest
@@ -1351,6 +1351,149 @@ spec:
                 type: integer
               networkPolicy:
                 properties:
+                  discovery:
+                    description: |-
+                      Discovery configures the separate policy that admits the remote-controller to the daemon port of
+                      discoverable or default docker-hosts. It is not affected by ingress.
+                    properties:
+                      from:
+                        description: |-
+                          From lists the peers admitted to the daemon port. The remote-controller may be installed on its own so its
+                          pod cannot be identified, when empty every pod in the namespace of the docker-host is admitted.
+                        items:
+                          description: |-
+                            NetworkPolicyPeer describes a peer to allow traffic to/from. Only certain combinations of
+                            fields are allowed
+                          properties:
+                            ipBlock:
+                              description: |-
+                                ipBlock defines policy on a particular IPBlock. If this field is set then
+                                neither of the other fields can be.
+                              properties:
+                                cidr:
+                                  description: |-
+                                    cidr is a string representing the IPBlock
+                                    Valid examples are "192.168.1.0/24" or "2001:db8::/64"
+                                  type: string
+                                except:
+                                  description: |-
+                                    except is a slice of CIDRs that should not be included within an IPBlock
+                                    Valid examples are "192.168.1.0/24" or "2001:db8::/64"
+                                    Except values will be rejected if they are outside the cidr range
+                                  items:
+                                    type: string
+                                  type: array
+                                  x-kubernetes-list-type: atomic
+                              required:
+                              - cidr
+                              type: object
+                            namespaceSelector:
+                              description: |-
+                                namespaceSelector selects namespaces using cluster-scoped labels. This field follows
+                                standard label selector semantics; if present but empty, it selects all namespaces.
+
+                                If podSelector is also set, then the NetworkPolicyPeer as a whole selects
+                                the pods matching podSelector in the namespaces selected by namespaceSelector.
+                                Otherwise it selects all pods in the namespaces selected by namespaceSelector.
+                              properties:
+                                matchExpressions:
+                                  description: matchExpressions is a list of label
+                                    selector requirements. The requirements are ANDed.
+                                  items:
+                                    description: |-
+                                      A label selector requirement is a selector that contains values, a key, and an operator that
+                                      relates the key and values.
+                                    properties:
+                                      key:
+                                        description: key is the label key that the
+                                          selector applies to.
+                                        type: string
+                                      operator:
+                                        description: |-
+                                          operator represents a key's relationship to a set of values.
+                                          Valid operators are In, NotIn, Exists and DoesNotExist.
+                                        type: string
+                                      values:
+                                        description: |-
+                                          values is an array of string values. If the operator is In or NotIn,
+                                          the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                          the values array must be empty. This array is replaced during a strategic
+                                          merge patch.
+                                        items:
+                                          type: string
+                                        type: array
+                                        x-kubernetes-list-type: atomic
+                                    required:
+                                    - key
+                                    - operator
+                                    type: object
+                                  type: array
+                                  x-kubernetes-list-type: atomic
+                                matchLabels:
+                                  additionalProperties:
+                                    type: string
+                                  description: |-
+                                    matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                                    map is equivalent to an element of matchExpressions, whose key field is "key", the
+                                    operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                  type: object
+                              type: object
+                              x-kubernetes-map-type: atomic
+                            podSelector:
+                              description: |-
+                                podSelector is a label selector which selects pods. This field follows standard label
+                                selector semantics; if present but empty, it selects all pods.
+
+                                If namespaceSelector is also set, then the NetworkPolicyPeer as a whole selects
+                                the pods matching podSelector in the Namespaces selected by NamespaceSelector.
+                                Otherwise it selects the pods matching podSelector in the policy's own namespace.
+                              properties:
+                                matchExpressions:
+                                  description: matchExpressions is a list of label
+                                    selector requirements. The requirements are ANDed.
+                                  items:
+                                    description: |-
+                                      A label selector requirement is a selector that contains values, a key, and an operator that
+                                      relates the key and values.
+                                    properties:
+                                      key:
+                                        description: key is the label key that the
+                                          selector applies to.
+                                        type: string
+                                      operator:
+                                        description: |-
+                                          operator represents a key's relationship to a set of values.
+                                          Valid operators are In, NotIn, Exists and DoesNotExist.
+                                        type: string
+                                      values:
+                                        description: |-
+                                          values is an array of string values. If the operator is In or NotIn,
+                                          the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                          the values array must be empty. This array is replaced during a strategic
+                                          merge patch.
+                                        items:
+                                          type: string
+                                        type: array
+                                        x-kubernetes-list-type: atomic
+                                    required:
+                                    - key
+                                    - operator
+                                    type: object
+                                  type: array
+                                  x-kubernetes-list-type: atomic
+                                matchLabels:
+                                  additionalProperties:
+                                    type: string
+                                  description: |-
+                                    matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                                    map is equivalent to an element of matchExpressions, whose key field is "key", the
+                                    operator is "In", and the values array contains only "value". The requirements are ANDed.
+                                  type: object
+                              type: object
+                              x-kubernetes-map-type: atomic
+                          type: object
+                        type: array
+                    type: object
                   enabled:
                     default: true
                     type: boolean
@@ -2003,6 +2146,13 @@ spec:
                 type: object
               service:
                 properties:
+                  default:
+                    description: |-
+                      Default additionally exposes the whole pool through a service named `docker-host`, which lagoon builds
+                      and tasks address as docker-host.<namespace>.svc, regardless of the name of the LagoonDockerHost. Only one
+                      LagoonDockerHost per namespace can be the default, if several set it the oldest wins and the others do not
+                      create the service.
+                    type: boolean
                   discoverable:
                     default: true
                     description: |-
@@ -2113,6 +2263,29 @@ spec:
                   contains the UI. Authentication is mandatory unless explicitly disabled: basic auth from a secret, or an OIDC
                   provider.
                 properties:
+                  api:
+                    description: API exposes a JSON API under /api/v1 on the UI port
+                      so outside tools can perform the operations of the UI.
+                    properties:
+                      disableAuth:
+                        description: |-
+                          DisableAuth turns authentication of the api off entirely, so anyone who can reach the UI port can manage the
+                          docker-hosts through it. It is only meant for local development and testing and is never enabled by default.
+                        type: boolean
+                      enabled:
+                        type: boolean
+                      secretName:
+                        description: |-
+                          SecretName names a secret in the same namespace holding the api key under the key `apikey`. It is ignored
+                          when disableAuth is set.
+                        type: string
+                    type: object
+                    x-kubernetes-validations:
+                    - message: ui.api requires either secretName or disableAuth when
+                        the api is enabled
+                      rule: '!has(self.enabled) || !self.enabled || (has(self.disableAuth)
+                        && self.disableAuth) || (has(self.secretName) && size(self.secretName)
+                        > 0)'
                   basicAuthSecretName:
                     description: |-
                       BasicAuthSecretName names a secret in the same namespace with the keys `username` and `password`. It is
@@ -2351,8 +2524,10 @@ spec:
                     x-kubernetes-validations:
                     - message: at least one of allowedEmails, allowedDomains or allowedGroups
                         is required
-                      rule: size(self.allowedEmails) + size(self.allowedDomains) +
-                        size(self.allowedGroups) > 0
+                      rule: '(has(self.allowedEmails) ? size(self.allowedEmails) :
+                        0) + (has(self.allowedDomains) ? size(self.allowedDomains)
+                        : 0) + (has(self.allowedGroups) ? size(self.allowedGroups)
+                        : 0) > 0'
                   port:
                     default: 8080
                     description: Port is the port the UI listens on.
@@ -2510,9 +2685,10 @@ spec:
             type: object
         type: object
         x-kubernetes-validations:
-        - message: the name must not end in -<number> or -metrics, those are used
-            for the objects created for each docker-host
-          rule: '!self.metadata.name.matches(''^.*-[0-9]+$'') && !self.metadata.name.endsWith(''-metrics'')'
+        - message: the name must not end in -<number>, -metrics or -discovery, those
+            are used for the objects created for each docker-host
+          rule: '!self.metadata.name.matches(''^.*-[0-9]+$'') && !self.metadata.name.endsWith(''-metrics'')
+            && !self.metadata.name.endsWith(''-discovery'')'
     served: true
     storage: true
     subresources:

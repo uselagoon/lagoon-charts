@@ -21,6 +21,9 @@ dockerHost:
   spec:
     maxReplicas: 3
     ui:
+      api:
+        enabled: true
+        disableAuth: true
       enabled: true
       disableAuth: true
       ingress:
