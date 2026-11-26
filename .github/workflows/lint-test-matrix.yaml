@@ -11,9 +11,9 @@ jobs:
       fail-fast: false
       matrix:
         kindest_node_version:
-        - v1.29.14@sha256:8703bd94ee24e51b778d5556ae310c6c0fa67d761fae6379c8e0bb480e6fea29
         - v1.30.10@sha256:4de75d0e82481ea846c0ed1de86328d821c1e6a6a91ac37bf804e5313670e507
         - v1.32.2@sha256:f226345927d7e348497136874b6d207e0b32cc52154ad8323129352923a3142f
+        - v1.37.0@sha256:a1ed56cfb0e7b93589bdf97c8cd566405a265939e3620fc4f5de89adff580ae5
     steps:
     - name: Checkout
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -57,7 +57,7 @@ jobs:
     - name: Create kind cluster
       uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
       with:
-        version: v0.27.0
+        version: v0.33.0
         node_image: kindest/node:${{ matrix.kindest_node_version }}
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
