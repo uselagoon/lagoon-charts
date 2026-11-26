@@ -97,9 +97,9 @@ jobs:
     - name: Create kind cluster
       uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1.14.0
       with:
-        version: v0.27.0
-        node_image: kindest/node:v1.31.6@sha256:28b7cbb993dfe093c76641a0c95807637213c9109b761f1d422c2400e22b8e87
-        kubectl_version: v1.31.6
+        version: v0.33.0
+        node_image: kindest/node:v1.37.0@sha256:a1ed56cfb0e7b93589bdf97c8cd566405a265939e3620fc4f5de89adff580ae5
+        kubectl_version: v1.37.0
       if: |
         (steps.list-changed.outputs.changed == 'true') ||
         (steps.get-labels.outputs.needsTesting == 'needs-testing') ||
