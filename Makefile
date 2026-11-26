@@ -53,6 +53,17 @@ OVERRIDE_REMOTE_CONTROLLER_IMAGETAG =
 # Overrides the image repository for uselagoon/remote-controller whose default
 # is uselagoon/remote-controller.
 OVERRIDE_REMOTE_CONTROLLER_IMAGE_REPOSITORY =
+# Overrides the image tag for uselagoon/docker-host-operator whose default is
+# the lagoon-remote chart value dockerHostOperator.image.tag.
+OVERRIDE_DOCKER_HOST_OPERATOR_IMAGETAG =
+# Overrides the image repository for the docker-host-operator whose default
+# is uselagoon/docker-host-operator.
+OVERRIDE_DOCKER_HOST_OPERATOR_IMAGE_REPOSITORY =
+# Overrides the image tag for uselagoon/docker-host.
+OVERRIDE_DOCKER_HOST_IMAGETAG =
+# Overrides the image repository for the docker-host whose default is
+# uselagoon/docker-host.
+OVERRIDE_DOCKER_HOST_IMAGE_REPOSITORY =
 # If set, sets the lagoon-build-deploy chart .Value.rootless=true.
 REMOTE_CONTROLLER_ROOTLESS_BUILD_PODS =
 # Control the feature flags on the lagoon-build-deploy chart. Valid values: `enabled` or `disabled`.
@@ -777,6 +788,10 @@ endif
 		$$([ $(INSTALL_STABLE_REMOTE) = true ] && [ $(STABLE_REMOTE_CHART_VERSION) ] && echo '--version=$(STABLE_REMOTE_CHART_VERSION)') \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo '--values https://raw.githubusercontent.com/uselagoon/lagoon-charts/refs/tags/lagoon-remote-$(STABLE_REMOTE_CHART_VERSION)/charts/lagoon-remote/ci/linter-values.yaml'; else echo '--values ./charts/lagoon-remote/ci/linter-values.yaml'; fi) \
 		--set "lagoon-build-deploy.enabled=false" \
+		$$([ $(OVERRIDE_DOCKER_HOST_OPERATOR_IMAGETAG) ] && [ $(INSTALL_STABLE_REMOTE) = false ] && echo '--set dockerHostOperator.image.tag=$(OVERRIDE_DOCKER_HOST_OPERATOR_IMAGETAG)') \
+		$$([ $(OVERRIDE_DOCKER_HOST_OPERATOR_IMAGE_REPOSITORY) ] && [ $(INSTALL_STABLE_REMOTE) = false ] && echo '--set dockerHostOperator.image.repository=$(OVERRIDE_DOCKER_HOST_OPERATOR_IMAGE_REPOSITORY)') \
+		$$([ $(OVERRIDE_DOCKER_HOST_IMAGETAG) ] && [ $(INSTALL_STABLE_REMOTE) = false ] && echo '--set dockerHost.spec.image.tag=$(OVERRIDE_DOCKER_HOST_IMAGETAG)') \
+		$$([ $(OVERRIDE_DOCKER_HOST_IMAGE_REPOSITORY) ] && [ $(INSTALL_STABLE_REMOTE) = false ] && echo '--set dockerHost.spec.image.repository=$(OVERRIDE_DOCKER_HOST_IMAGE_REPOSITORY)') \
 		--set "dockerHost.registry=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set "global.rabbitMQPassword=$$($(KUBECTL) -n lagoon-core get secret lagoon-core-broker -o json | $(JQ) -r '.data.RABBITMQ_PASSWORD | @base64d')" \
 		$$([ $(INSTALL_MARIADB_PROVIDER) = true ] && echo '--set dbaas-operator.mariadbProviders.development.environment=development') \
@@ -824,6 +839,9 @@ endif
 		$$([ $(INSTALL_STABLE_REMOTE) != true ] && [ $(SSHPORTAL_IMAGE_TAG) ] && echo '--set sshPortal.image.tag=$(SSHPORTAL_IMAGE_TAG)') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set sshPortal.serviceMonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set storageCalculator.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set dockerHostOperator.serviceMonitor.enabled=true') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set dockerHost.spec.metrics.serviceMonitor.enabled=true') \
+		--set dockerHost.spec.ui.ingress.host="remote-docker-host.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		lagoon-remote \
 		$$(if [ $(INSTALL_STABLE_REMOTE) = true ]; then echo 'lagoon/lagoon-remote'; else echo './charts/lagoon-remote'; fi)
 	# rerun the remote certs installation as a workaround for the way the localstack used to seed the nats certs from helm
@@ -880,6 +898,7 @@ endif
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY) ] && echo '--set lagoonFeatureFlagDefaultIsolationNetworkPolicy=$(LAGOON_FEATURE_FLAG_DEFAULT_ISOLATION_NETWORK_POLICY)') \
 		$$([ $(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO) ] && echo '--set lagoonFeatureFlagDefaultRWX2RWO=$(LAGOON_FEATURE_FLAG_DEFAULT_RWX_TO_RWO)') \
 		$$([ $(ENABLE_INSIGHTS) = true ] && echo '--set lagoonFeatureFlagDefaultInsights=enabled') \
+		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set enableServiceMonitor=true') \
 		--set "lagoonAPIHost=$$([ $(LAGOON_CORE_USE_HTTPS) = true ] && echo "https" || echo "http")://lagoon-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set enableServiceMonitor=true') \
 		lagoon-build-deploy \

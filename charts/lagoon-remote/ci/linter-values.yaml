@@ -18,10 +18,31 @@ lagoon-build-deploy:
   rabbitMQHostname: lagoon-core-broker.lagoon-core.svc:5671
 
 dockerHost:
-  image:
-    repository: uselagoon/docker-host
-  storage:
-    size: 50Gi
+  spec:
+    maxReplicas: 3
+    ui:
+      api:
+        enabled: true
+        disableAuth: true
+      enabled: true
+      disableAuth: true
+      ingress:
+        host: docker-host.example.com
+        tlsSecretName: docker-host-ui-tls
+        allowFrom:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: ingress-nginx
+    storage:
+      size: 50Gi
+    metrics:
+      allowFrom:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-prometheus
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
 
 imageTag: ""
 

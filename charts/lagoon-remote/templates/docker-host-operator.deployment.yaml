@@ -1,0 +1,73 @@
+{{- if .Values.dockerHostOperator.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lagoon-remote.dockerHostOperator.fullname" . }}
+  labels:
+    {{- include "lagoon-remote.dockerHostOperator.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.dockerHostOperator.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "lagoon-remote.dockerHostOperator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "lagoon-remote.dockerHostOperator.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.dockerHostOperator.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "lagoon-remote.dockerHostOperator.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.dockerHostOperator.podSecurityContext | nindent 8 }}
+      containers:
+      - name: manager
+        securityContext:
+          {{- toYaml .Values.dockerHostOperator.securityContext | nindent 10 }}
+        image: "{{ .Values.dockerHostOperator.image.repository }}:{{ .Values.dockerHostOperator.image.tag }}"
+        imagePullPolicy: {{ .Values.dockerHostOperator.image.pullPolicy }}
+        command:
+        - /manager
+        args:
+        - "--metrics-bind-address=:8443"
+        - "--leader-elect=true"
+        - "--leader-election-id={{ include "lagoon-remote.dockerHostOperator.fullname" . }}"
+        {{- with .Values.dockerHostOperator.extraArgs }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        ports:
+        - containerPort: 8443
+          name: https
+        - containerPort: 8081
+          name: health
+        env:
+        - name: SNAPSHOT_IMAGE
+          value: "{{ .Values.dockerHostOperator.image.repository }}:{{ .Values.dockerHostOperator.image.tag }}"
+        {{- with .Values.dockerHostOperator.extraEnvs }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: health
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: health
+        resources:
+          {{- toYaml .Values.dockerHostOperator.resources | nindent 10 }}
+      {{- with .Values.dockerHostOperator.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.dockerHostOperator.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.dockerHostOperator.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}

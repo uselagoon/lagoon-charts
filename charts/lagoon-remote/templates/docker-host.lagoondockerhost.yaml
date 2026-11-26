@@ -1,0 +1,36 @@
+{{- if .Values.dockerHost.enabled }}
+{{- $resources := dict .Values.dockerHost.name .Values.dockerHost.spec }}
+{{- range $name, $additional := .Values.dockerHost.additional }}
+{{- if hasKey $resources $name }}
+{{- fail (printf "dockerHost.additional.%s clashes with the name of another LagoonDockerHost" $name) }}
+{{- end }}
+{{- $_ := set $resources $name $additional }}
+{{- end }}
+{{- range $resourceName, $values := $resources }}
+{{- $spec := deepCopy $values }}
+{{- /* fall back to the top level imageTag, then to the tag the chart was released with */}}
+{{- $image := default (dict) $spec.image }}
+{{- $_ := set $image "tag" (coalesce $image.tag $.Values.imageTag "v3.6.1") }}
+{{- $_ := set $spec "image" $image }}
+{{- if and $.Values.imagePullSecrets (not $spec.imagePullSecrets) }}
+{{- $_ := set $spec "imagePullSecrets" $.Values.imagePullSecrets }}
+{{- end }}
+---
+apiVersion: crd.lagoon.sh/v1alpha1
+kind: LagoonDockerHost
+metadata:
+  name: {{ $resourceName }}
+  namespace: {{ $.Release.Namespace | quote }}
+  labels:
+    {{- include "lagoon-remote.dockerHost.labels" $ | nindent 4 }}
+    {{- with $.Values.dockerHost.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $.Values.dockerHost.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- toYaml $spec | nindent 2 }}
+{{- end }}
+{{- end }}
