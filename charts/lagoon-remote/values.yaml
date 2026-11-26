@@ -117,12 +117,11 @@ dockerHost:
     image:
       repository: uselagoon/thiasos-dockerhost
       pullPolicy: Always
-      # when empty falls back to the top level imageTag, then to "v3.6.1"
       tag: "main"
 
     registry: registry.lagoon.svc:5000
 
-    repositoryToUpdate: amazeeio|lagoon
+    repositoryToUpdate: uselagoon
 
     pruneImagesUntil: 168h
 
@@ -191,6 +190,8 @@ dockerHost:
     resources: {}
 
     service:
+      # creates the `docker-host.lagoon.svc` service
+      default: true
       type: ClusterIP
       port: 2375
       # set to false to hide the docker-hosts from the remote-controller

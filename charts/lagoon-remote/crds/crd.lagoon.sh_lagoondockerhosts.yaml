@@ -1893,7 +1893,7 @@ spec:
                 minimum: 0
                 type: integer
               repositoryToUpdate:
-                default: amazeeio|lagoon
+                default: uselagoon
                 type: string
               resources:
                 description: ResourceRequirements describes the compute resource requirements.
