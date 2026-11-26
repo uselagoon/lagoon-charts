@@ -5,7 +5,7 @@ const {
   INITIAL_USER_EMAIL,
   INITIAL_USER_PASSWORD,
   INITIAL_ORGANIZATION_NAME,
-  KEYCLOAK_ADMIN_API_CLIENT_SECRET,
+  KEYCLOAK_LAGOON_ADMIN_API_CLIENT_SECRET,,
   KEYCLOAK_FRONTEND_URL,
   LAGOON_API_URL,
   JWTUSER,
@@ -106,17 +106,17 @@ async function seedUser() {
   try {
     const response = await axios.post(LAGOON_API_URL, { query: seedUserGql }, { headers });
 
-    await waitForKeycloak(KEYCLOAK_FRONTEND_URL + "/admin/master/console");
+    await waitForKeycloak(KEYCLOAK_FRONTEND_URL + "/realms/lagoon/.well-known/openid-configuration");
     console.log(`Setting user password in keycloak at ${KEYCLOAK_FRONTEND_URL}`);
 
     const data = new URLSearchParams({
       grant_type: "client_credentials",
       client_id: "admin-api",
-      client_secret: KEYCLOAK_ADMIN_API_CLIENT_SECRET
+      client_secret: KEYCLOAK_LAGOON_ADMIN_API_CLIENT_SECRET,
     });
 
     const tokenResponse = await axios.post(
-      `${KEYCLOAK_FRONTEND_URL}/realms/master/protocol/openid-connect/token`,
+      `${KEYCLOAK_FRONTEND_URL}/realms/lagoon/protocol/openid-connect/token`,
       data
     );
 
