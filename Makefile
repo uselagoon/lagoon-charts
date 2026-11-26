@@ -154,7 +154,7 @@ HELM = helm
 KUBECTL = kubectl
 JQ = jq
 
-PROMETHEUS_VERSION = 75.9.0
+PROMETHEUS_VERSION = 94.1.0
 
 .PHONY: fill-test-ci-values
 fill-test-ci-values:
@@ -182,7 +182,7 @@ install-metallb:
 		--namespace metallb-system  \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--version=v0.14.9 \
+		--version=v0.16.2 \
 		metallb \
 		metallb/metallb && \
 	$$(envsubst < test-suite.metallb-pool.yaml.tpl > test-suite.metallb-pool.yaml) && \
@@ -208,7 +208,7 @@ install-certmanager: generate-ca
 		--set ingressShim.defaultIssuerKind=ClusterIssuer \
 		--set ingressShim.defaultIssuerGroup=cert-manager.io \
 		--set crds.enabled=true \
-		--version=v1.18.2 \
+		--version=v1.21.3 \
 		cert-manager \
 		jetstack/cert-manager
 	$(KUBECTL) -n cert-manager create secret generic lagoon-test-secret --from-file=tls.crt=certs/rootCA.pem --from-file=tls.key=certs/rootCA-key.pem --from-file=ca.crt=certs/rootCA.pem || true
@@ -235,7 +235,7 @@ install-gatekeeper:
 		--namespace gatekeeper-system \
 		--wait \
 		--timeout $(TIMEOUT) \
-		--version=v3.11.0 \
+		--version=v3.23.1 \
 		--set replicas=1 \
 		gatekeeper \
 		gatekeeper/gatekeeper
@@ -259,7 +259,7 @@ install-aergia:
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set servicemonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set metrics.enabled=true') \
 		--set unidling.verifyRequests.enabled=false \
-		--version=0.7.2 \
+		--version=0.9.0 \
 		aergia \
 		amazeeio/aergia
 
@@ -292,7 +292,7 @@ install-ingress: install-certmanager
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.serviceMonitor.enabled=true') \
 		$$([ $(INSTALL_PROMETHEUS) = true ] && echo '--set controller.metrics.serviceMonitor.additionalLabels.release=kube-prometheus') \
-		--version=4.12.1 \
+		--version=4.15.1 \
 		ingress-nginx \
 		ingress-nginx/ingress-nginx
 	export INGRESS_IP="$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')" && \
@@ -320,7 +320,7 @@ install-registry: install-ingress
 		--set clair.enabled=false \
 		--set notary.enabled=false \
 		--set trivy.enabled=false \
-		--version=1.19.1 \
+		--version=1.19.4 \
 		registry \
 		harbor/harbor
 else
@@ -340,7 +340,7 @@ install-registry: install-ingress
 		--set "ingress.hosts[0]=registry.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
 		--set ingress.path="/" \
 		--set persistence.enabled=true \
-		--version=2.2.3 \
+		--version=3.0.0 \
 		registry \
 		twuni/docker-registry
 endif
@@ -379,7 +379,7 @@ install-mailpit:
 		--set ingress.enabled=true \
 		--set-string ingress.annotations.kubernetes\\.io/tls-acme=true \
 		--set "ingress.hostname=mailpit.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io" \
-		--version=0.18.6 \
+		--version=0.39.1 \
 		mailpit \
 		jouve/mailpit
 
@@ -392,7 +392,7 @@ install-mariadb:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mariadb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mariadb mariadb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=0.16.14 \
+		--version=0.17.1 \
 		mariadb \
 		oci://registry-1.docker.io/cloudpirates/mariadb
 
@@ -406,7 +406,7 @@ install-mariadb-lagoon-databases:
 		--timeout $(TIMEOUT) \
 		--set auth.database=api \
 		$$($(KUBECTL) get ns lagoon-core-databases > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace lagoon-core-databases apidb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=0.16.14 \
+		--version=0.17.1 \
 		apidb \
 		oci://registry-1.docker.io/cloudpirates/mariadb
 	$(HELM) upgrade \
@@ -417,7 +417,7 @@ install-mariadb-lagoon-databases:
 		--timeout $(TIMEOUT) \
 		--set auth.database=keycloak \
 		$$($(KUBECTL) get ns lagoon-core-databases > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace lagoon-core-databases keycloakdb -o json | $(JQ) -r '.data."mariadb-root-password" | @base64d')) \
-		--version=0.16.14 \
+		--version=0.17.1 \
 		keycloakdb \
 		oci://registry-1.docker.io/cloudpirates/mariadb
 
@@ -431,7 +431,7 @@ install-postgresql:
 		--wait \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns postgresql > /dev/null 2>&1 && echo --set auth.postgresPassword=$$($(KUBECTL) get secret --namespace postgresql postgresql -o json | $(JQ) -r '.data."postgres-password" | @base64d')) \
-		--version=0.20.5 \
+		--version=0.22.1 \
 		postgresql \
 		oci://registry-1.docker.io/cloudpirates/postgres
 
@@ -445,7 +445,7 @@ install-mongodb:
 		--set image.tag=9.0.4 \
 		--timeout $(TIMEOUT) \
 		$$($(KUBECTL) get ns mongodb > /dev/null 2>&1 && echo --set auth.rootPassword=$$($(KUBECTL) get secret --namespace mongodb mongodb -o json | $(JQ) -r '.data."mongodb-root-password" | @base64d')) \
-		--version=0.20.1 \
+		--version=0.20.6 \
 		mongodb \
 		oci://registry-1.docker.io/cloudpirates/mongodb
 
@@ -466,7 +466,7 @@ install-minio: install-ingress
 		--set ingress.hosts[0].host=minio-api.$$($(KUBECTL) -n ingress-nginx get services ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}').nip.io \
 		--set ingress.hosts[0].paths[0].path="/" \
 		--set ingress.hosts[0].paths[0].pathType=Prefix \
-		--version=0.13.4 \
+		--version=0.14.0 \
 		minio \
 		oci://registry-1.docker.io/cloudpirates/minio
 	$(KUBECTL) -n minio exec -it $$($(KUBECTL) -n minio  get pod -l app.kubernetes.io/name=minio -o jsonpath="{.items[0].metadata.name}") -- sh -c 'mc alias set local http://localhost:9000 lagoonFilesAccessKey lagoonFilesSecretKey && mc mb local/lagoon-files && mc mb local/restores' || true
@@ -494,7 +494,7 @@ install-k8upv1:
 		appuio/k8up
 
 # renovate: datasource=github-releases depName=k8up-io/k8up
-K8UPV2_VERSION ?= 4.8.4
+K8UPV2_VERSION ?= 4.10.1
 .PHONY: install-k8upv2
 install-k8upv2:
 	$(KUBECTL) create -f https://github.com/k8up-io/k8up/releases/download/k8up-$(K8UPV2_VERSION)/k8up-crd.yaml || \
