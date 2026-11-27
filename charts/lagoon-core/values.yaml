@@ -89,6 +89,19 @@ rabbitMQUsername: lagoon
 
 k8upS3Endpoint: ""
 
+k8upSchedule:
+  backup:
+    schedule: '15 * * * *'
+  check:
+    schedule: '45 3 * * *'
+  prune:
+    schedule: '26 4 * * 0'
+    retention:
+      keepHourly: 36
+      keepDaily: 30
+      keepWeekly: 12
+      keepMonthly: 12
+
 keycloakAdminUser: admin
 # this is required if email sending is to be enabled in keycloak
 # keycloakAdminEmail: admin@example.com
