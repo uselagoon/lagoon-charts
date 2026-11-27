@@ -26,14 +26,11 @@ spec:
       endpoint: {{ . | quote }}
       {{ end }}
   backup:
-    schedule: '15 * * * *'
+    schedule: {{ .Values.k8upSchedule.backup.schedule | quote }}
   check:
-    schedule: '45 3 * * *'
+    schedule: {{ .Values.k8upSchedule.check.schedule | quote }}
   prune:
     retention:
-      keepHourly: 36
-      keepDaily: 30
-      keepWeekly: 12
-      keepMonthly: 12
-    schedule: '26 4 * * 0'
+      {{- toYaml .Values.k8upSchedule.prune.retention | nindent 6 }}
+    schedule: {{ .Values.k8upSchedule.prune.schedule | quote }}
 {{- end }}
