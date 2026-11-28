@@ -34,4 +34,13 @@ rules:
   - pods/exec
   verbs:
   - create
+- apiGroups: 
+  - ""
+  resources:
+  - "configmaps"
+  resourceNames:
+  - "aergia-control"
+  verbs: 
+  - "get"
+  - "patch"
 {{- end }}
